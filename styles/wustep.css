@@ -17,3 +17,113 @@
   text-transform: none;
   user-select: none;
 }
+
+/**
+ * Turn links with background colors into cool buttons!
+ *
+ * In Notion: first, apply the background color, then apply the link. 
+ * The reverse will not trigger these styles.
+ */
+.notion-link:has([class*='_background']) {
+  border-color: transparent;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  display: inline-flex;
+  width: unset;
+  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset,
+    rgb(15 15 15 / 10%) 0px 1px 2px;
+}
+.notion-link:has([class*='_background']):hover {
+  border: 1px solid transparent;
+  background-image: none;
+}
+.notion-link:has([class*='_background']):hover span[class*='_background'] {
+  filter: saturate(0.65);
+}
+.notion-link:has([class*='_background']) span[class*='_background'] {
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  color: #fff;
+}
+.notion-link:has([class*='_background']) span.notion-red_background {
+  background-color: var(--notion-red);
+}
+.notion-link:has([class*='_background']) span.notion-pink_background {
+  background-color: var(--notion-pink);
+}
+.notion-link:has([class*='_background']) span.notion-blue_background {
+  background-color: var(--notion-blue);
+}
+.notion-link:has([class*='_background']) span.notion-purple_background {
+  background-color: var(--notion-purple);
+}
+.notion-link:has([class*='_background']) span.notion-teal_background {
+  background-color: var(--notion-teal);
+}
+.notion-link:has([class*='_background']) span.notion-yellow_background {
+  background-color: var(--notion-yellow);
+}
+.notion-link:has([class*='_background']) span.notion-orange_background {
+  background-color: var(--notion-orange);
+}
+.notion-link:has([class*='_background']) span.notion-brown_background {
+  background-color: var(--notion-brown);
+}
+.notion-link:has([class*='_background']) span.notion-gray_background {
+  background-color: var(--notion-gray);
+}
+
+/**
+ * By default, the theme in notion.css disables highlighting in dark mode.
+ * I've commented that code out in notion.css, and revised styles here.
+*/
+.dark-mode .notion-red_background,
+.dark-mode .notion-pink_background,
+.dark-mode .notion-blue_background,
+.dark-mode .notion-purple_background,
+.dark-mode .notion-teal_background,
+.dark-mode .notion-yellow_background,
+.dark-mode .notion-orange_background,
+.dark-mode .notion-brown_background,
+.dark-mode .notion-gray_background {
+  color: #fff;
+}
+
+/**
+ * Revise default highlighting styles -- away from the gradient syle
+ */
+span[class*='_background'] {
+  background-image: none;
+  border-radius: 4px;
+  padding: unset;
+  margin: unset;
+}
+
+.notion-red_background {
+  background-color: var(--notion-red_background);
+}
+.notion-pink_background {
+  background-color: var(--notion-pink_background);
+}
+.notion-blue_background {
+  background-color: var(--notion-blue_background);
+}
+.notion-purple_background {
+  background-color: var(--notion-purple_background);
+}
+.notion-teal_background {
+  background-color: var(--notion-teal_background);
+}
+.notion-yellow_background {
+  background-color: var(--notion-yellow_background);
+}
+.notion-orange_background {
+  background-color: var(--notion-orange_background);
+}
+.notion-brown_background {
+  background-color: var(--notion-brown_background);
+}
+.notion-gray_background {
+  background-color: var(--notion-gray_background);
+}
