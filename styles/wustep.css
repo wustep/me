@@ -130,7 +130,7 @@ span[class*='_background'] {
 /**
  * Gracefully transition between dark mode and light mode
  */
-.notion-app {
+* {
   transition: background 1s;
 }
 
