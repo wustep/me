@@ -102,7 +102,9 @@
 }
 
 .github:hover {
-  color: #c9510c;
+  /* color: #c9510c; */
+  /* @wustep: make color purple instead of red */
+  color: rgb(61, 10, 155);
 }
 
 .youtube:hover {
