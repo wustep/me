@@ -147,3 +147,10 @@ span[class*='_background'] {
   transition-duration: 300ms;
   transition-property: inherit;
 }
+
+/**
+ * Bump up Notion search
+ */
+.notion-search {
+  border-radius: 6px /* prev: 3px */;
+}
