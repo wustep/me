@@ -127,3 +127,10 @@ span[class*='_background'] {
 .notion-gray_background {
   background-color: var(--notion-gray_background);
 }
+
+/**
+ * Gracefully transition between dark mode and light mode
+ */
+.notion-app {
+  transition: background 1s;
+}
