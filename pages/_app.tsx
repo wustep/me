@@ -18,6 +18,8 @@ import 'styles/global.css'
 import 'styles/notion.css'
 // global style overrides for prism theme (optional)
 import 'styles/prism-theme.css'
+// overrides from wustep
+import 'styles/wustep.css'
 
 import { bootstrap } from '@/lib/bootstrap-client'
 import {

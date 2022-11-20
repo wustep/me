@@ -1,0 +1,19 @@
+.notion-page-icon {
+  user-select: none;
+}
+
+.notion-header .notion-search-button {
+  flex-grow: 1;
+  max-width: 200px;
+  justify-content: start;
+}
+
+.notion-link {
+  border-bottom-width: 1px;
+}
+
+.notion-aside-table-of-contents-header {
+  align-self: start;
+  text-transform: none;
+  user-select: none;
+}
