@@ -241,6 +241,12 @@ export const NotionPage: React.FC<types.PageProps> = ({
     getPageProperty<string>('Description', block, recordMap) ||
     config.description
 
+  const shouldDisableCollectionLinks = getPageProperty<string>(
+    'Disable Collection Links',
+    block,
+    recordMap
+  )
+
   return (
     <>
       <PageHead
@@ -258,7 +264,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
       <NotionRenderer
         bodyClassName={cs(
           styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
+          pageId === site.rootNotionPageId && 'index-page',
+          shouldDisableCollectionLinks && 'disable-collection-links'
         )}
         darkMode={isDarkMode}
         components={components}
