@@ -178,3 +178,10 @@ span[class*='_background'] {
 .notion-gallery-grid .notion-page-title-text {
   font-size: 1.6em /* from 2em */;
 }
+
+/**
+ * Smaller quote size
+ */
+.notion-quote {
+  font-size: 1em /* from 1.2em */;
+}
