@@ -25,7 +25,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.notion-aside-table-of-contents .notion-table-of-contents-item {
+  line-height: 15px /* Avoid overflow-y cutting off the text */;
+}
 /**
  * Turn links with background colors into cool buttons!
  *
