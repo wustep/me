@@ -149,8 +149,17 @@ span[class*='_background'] {
 }
 
 /**
- * Bump up Notion search
+ * Notion search bar styles
  */
 .notion-search {
   border-radius: 6px /* prev: 3px */;
+}
+
+/**
+ * Notion collection header hiding
+ * Right now, notion-react-x doesn't support respecting the collection title hiding
+ * As a workaround, we'll just hide all collection headers for now
+ */
+.notion-collection-header {
+  display: none;
 }
