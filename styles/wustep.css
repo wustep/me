@@ -211,3 +211,39 @@ span[class*='_background'] {
 .notion-page-title-text:has(a) {
   border-bottom: none;
 }
+
+/**
+ * Personal footer
+ */
+.wustep-post-footer {
+  width: 100%;
+  margin-top: 1em;
+  padding: 1.5em 0;
+  border-top: 1px solid var(--fg-color-0);
+  border-bottom: 1px solid var(--fg-color-0);
+
+  display: flex;
+  align-items: center;
+}
+.wustep-post-footer hr {
+  margin-bottom: 1em;
+}
+.wustep-post-footer-left {
+  flex: 0;
+  margin-right: 1em;
+}
+.wustep-post-footer-left img {
+  width: 64px;
+  height: 64px;
+}
+.wustep-post-footer-content {
+  flex: 1;
+}
+.wustep-post-footer-right {
+  flex: 0;
+  align-self: baseline;
+}
+.wustep-post-footer-content-author {
+  font-weight: 600;
+  font-size: 1.1em;
+}
