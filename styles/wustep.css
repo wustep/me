@@ -163,3 +163,10 @@ span[class*='_background'] {
 .notion-collection-header {
   display: none;
 }
+
+/**
+ * Smaller titles
+ */
+.notion-gallery-grid .notion-page-title-text {
+  font-size: 1.6em /* from 2em */;
+}
