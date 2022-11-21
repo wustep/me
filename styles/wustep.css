@@ -12,10 +12,18 @@
   border-bottom-width: 1px;
 }
 
+/**
+ * Table of contents styling improvements
+ */
 .notion-aside-table-of-contents-header {
   align-self: start;
   text-transform: none;
   user-select: none;
+}
+.notion-table-of-contents-item-body {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /**
