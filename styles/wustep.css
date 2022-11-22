@@ -249,3 +249,12 @@ span[class*='_background'] {
   font-weight: 600;
   font-size: 1.1em;
 }
+
+/**
+ * By default, galleries make all the cards the same size.
+ * This makes it so that they only fill for their row instead,
+ * just on the main (index) page.
+ */
+.index-page .notion-gallery-grid {
+  grid-auto-rows: unset /* prev: 1fr */;
+}
