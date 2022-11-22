@@ -28,7 +28,6 @@ const getRandomColorVar = (): string => {
 }
 
 const getClaps = async (url): Promise<number> => {
-  console.log(url)
   const query = url ? `?url=${url}` : ''
   const response = await ky
     .get(`${API}/get-claps${query}`, {
@@ -39,7 +38,6 @@ const getClaps = async (url): Promise<number> => {
 }
 
 const updateClaps = async (url, claps = 1): Promise<number> => {
-  console.log('update claps!')
   const query = url ? `?url=${url}` : ''
   const response = await ky
     .post(`${API}/update-claps${query}`, {
