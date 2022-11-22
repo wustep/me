@@ -8,14 +8,14 @@
       "sizes": "32x32"
     },
     {
-      "src": "/favicon-128x128.png",
-      "type": "image/png",
-      "sizes": "128x128"
-    },
-    {
       "src": "/favicon-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "theme_color": "#000000",
