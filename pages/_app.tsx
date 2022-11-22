@@ -9,6 +9,7 @@ import 'katex/dist/katex.min.css'
 import posthog from 'posthog-js'
 // used for code syntax highlighting (optional)
 import 'prismjs/themes/prism-coy.css'
+import ReactGA from 'react-ga'
 // core styles shared by all of react-notion-x (required)
 import 'react-notion-x/src/styles.css'
 // @wustep: applause button
@@ -24,6 +25,9 @@ import 'styles/prism-theme.css'
 import 'styles/wustep.css'
 
 import { fathomConfig, fathomId, posthogConfig, posthogId } from '@/lib/config'
+
+const TRACKING_ID = 'UA-43013610-2'
+ReactGA.initialize(TRACKING_ID)
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
