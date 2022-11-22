@@ -126,11 +126,11 @@ const ApplauseButton = () => {
         </svg>
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'>
           <g className='sparkle'>
-            {new Array(5).fill(
-              <g>
+            {[...new Array(5).keys()].map((key) => (
+              <g key={key}>
                 <circle cx='0' cy='0' r='1' />
               </g>
-            )}
+            ))}
           </g>
         </svg>
       </div>
