@@ -18,5 +18,22 @@ module.exports = withBundleAnalyzer({
     formats: ['image/avif', 'image/webp'],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
-  }
+  },
+  redirects: [
+    {
+      source: '/articles/:slug',
+      destination: '/:slug',
+      permanent: true
+    },
+    {
+      source: '/projects/:slug',
+      destination: '/:slug',
+      permanent: true
+    },
+    {
+      source: '/notes/:slug',
+      destination: '/:slug',
+      permanent: true
+    }
+  ]
 })
