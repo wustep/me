@@ -258,3 +258,13 @@ span[class*='_background'] {
 .index-page .notion-gallery-grid {
   grid-auto-rows: unset /* prev: 1fr */;
 }
+
+/**
+ * 404 styling
+ */
+.error-404 {
+  text-align: center;
+}
+.error-404 .notion-link {
+  margin-top: 1em;
+}
