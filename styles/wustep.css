@@ -268,3 +268,13 @@ span[class*='_background'] {
 .error-404 .notion-link {
   margin-top: 1em;
 }
+
+/**
+ * Main page styling
+ */
+.index-page .notion-collection-group-title .notion-property-multi_select-item {
+  height: 25px;
+  padding: 10px;
+  margin-left: 5px;
+  font-weight: 600;
+}
