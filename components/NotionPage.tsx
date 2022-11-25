@@ -31,7 +31,7 @@ import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
-import { PostFooter } from './wustep/PostFooter'
+import { WustepFooter } from './wustep/WustepFooter'
 
 // -----------------------------------------------------------------------------
 // dynamic imports for optional components
@@ -196,7 +196,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
 
-  const showTableOfContents = !!isBlogPost
+  const showTableOfContents =
+    !!isBlogPost &&
+    !getPageProperty<string>('Disable Table of Contents', block, recordMap)
   const minTableOfContentsItems = 3
 
   const pageAside = React.useMemo(
@@ -256,6 +258,13 @@ export const NotionPage: React.FC<types.PageProps> = ({
     recordMap
   )
 
+  // @wustep: Custom post footers based on author
+  const postFooter =
+    !isRootPage &&
+    getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' ? (
+      <WustepFooter />
+    ) : undefined
+
   return (
     <>
       <PageHead
@@ -293,7 +302,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
-        pageFooter={!isRootPage && <PostFooter />}
+        pageFooter={postFooter}
         footer={footer}
       />
     </>

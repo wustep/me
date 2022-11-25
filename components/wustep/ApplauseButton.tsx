@@ -48,7 +48,7 @@ const updateClaps = async (url, claps = 1): Promise<number> => {
   return Number(response)
 }
 
-const ApplauseButton = () => {
+export const ApplauseButton = () => {
   const [count, setCount] = useState(0)
   const [isClapped, setIsClapped] = useState(false)
   const [isClapping, setIsClapping] = useState(false)
@@ -135,5 +135,3 @@ const ApplauseButton = () => {
     </div>
   )
 }
-
-export default ApplauseButton
