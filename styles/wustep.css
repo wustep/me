@@ -251,15 +251,6 @@ span[class*='_background'] {
 }
 
 /**
- * By default, galleries make all the cards the same size.
- * This makes it so that they only fill for their row instead,
- * just on the main (index) page.
- */
-.index-page .notion-gallery-grid {
-  grid-auto-rows: unset /* prev: 1fr */;
-}
-
-/**
  * 404 styling
  */
 .error-404 {
@@ -273,8 +264,30 @@ span[class*='_background'] {
  * Main page styling
  */
 .index-page .notion-collection-group-title .notion-property-multi_select-item {
-  height: 25px;
+  height: 1.4em;
   padding: 10px;
   margin-left: 5px;
   font-weight: 600;
+  font-size: 1.18em;
+  cursor: pointer;
+  user-select: none;
+}
+.index-page .notion-gallery-grid {
+  /**
+   * By default, galleries make all the cards the same size.
+   * This makes it so that they only fill for their row instead,
+   * just on the main (index) page.
+   */
+  grid-auto-rows: unset /* prev: 1fr */;
+  border-top: none;
+}
+.index-page .notion-hash-link {
+  display: none;
+}
+
+/**
+ * Page improvements
+ */
+.notion-title {
+  margin-bottom: 12px /* from 20px */;
 }
