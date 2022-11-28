@@ -291,3 +291,10 @@ span[class*='_background'] {
 .notion-title {
   margin-bottom: 12px /* from 20px */;
 }
+
+/**
+ * <hr> improvements
+ */
+.notion-hr {
+  margin: 1.2em 0 /* from 2em 0 */;
+}
