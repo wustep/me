@@ -1,19 +1,46 @@
-.notion-page-icon {
-  user-select: none;
+/**
+ * ========== Core Styling ========== 
+ */
+/**
+ * Make dark <-> light mode changes come in smoothly.
+ */
+* {
+  transition: background 1s;
 }
 
+/**
+ * ========== Header ========== 
+ */
 .notion-header .notion-search-button {
   flex-grow: 1;
   max-width: 200px;
   justify-content: start;
 }
 
-.notion-link {
-  border-bottom-width: 1px;
+.notion-search {
+  border-radius: 6px /* prev: 3px */;
 }
 
 /**
- * Table of contents styling improvements
+ * This removes a weird effect where the header bar gets smaller as you scroll.
+ */
+.notion > * {
+  padding: 0; /* from 3px 0 */
+}
+
+.notion-page-icon {
+  user-select: none /* from unset -- which leads to text hover cursor */;
+}
+
+/**
+ * ========== Notion Page Header ========== 
+ */
+.notion-title {
+  margin-bottom: 12px /* from 20px */;
+}
+
+/**
+ * ========== Table of Contents ==========
  */
 .notion-aside-table-of-contents-header {
   align-self: start;
@@ -28,8 +55,30 @@
 .notion-aside-table-of-contents .notion-table-of-contents-item {
   line-height: 15px /* Avoid overflow-y cutting off the text */;
 }
+
 /**
- * Turn links with background colors into cool buttons!
+ * ========== Links ========== 
+ */
+.notion-link {
+  border-bottom-width: 1px;
+}
+
+/**
+ * Minor behavior changes in link hover
+ */
+.notion-link:focus,
+.notion-link:hover {
+  background-image: linear-gradient(
+    90.68deg,
+    var(--notion-blue) 0.26%,
+    var(--notion-purple) 102.37%
+  );
+  transition-duration: 300ms;
+  transition-property: inherit;
+}
+
+/**
+ * ## Turn links with background colors into cool buttons! ##
  *
  * In Notion: first, apply the background color, then apply the link. 
  * The reverse will not trigger these styles.
@@ -85,9 +134,11 @@
 }
 
 /**
+ * ========= Notion Highlights ========= 
  * By default, the theme in notion.css disables highlighting in dark mode.
+ * In light mode, there used to be a bit of an odd gradient.
  * I've commented that code out in notion.css, and revised styles here.
-*/
+ */
 .dark-mode .notion-red_background,
 .dark-mode .notion-pink_background,
 .dark-mode .notion-blue_background,
@@ -100,9 +151,6 @@
   color: #fff;
 }
 
-/**
- * Revise default highlighting styles -- away from the gradient syle
- */
 span[class*='_background'] {
   background-image: none;
   border-radius: 4px;
@@ -138,33 +186,8 @@ span[class*='_background'] {
 }
 
 /**
- * Gracefully transition between dark mode and light mode
+ * ========== Notion Collections ==========
  */
-* {
-  transition: background 1s;
-}
-
-/**
- * Minor behavior changes in link hover
- */
-.notion-link:focus,
-.notion-link:hover {
-  background-image: linear-gradient(
-    90.68deg,
-    var(--notion-blue) 0.26%,
-    var(--notion-purple) 102.37%
-  );
-  transition-duration: 300ms;
-  transition-property: inherit;
-}
-
-/**
- * Notion search bar styles
- */
-.notion-search {
-  border-radius: 6px /* prev: 3px */;
-}
-
 /**
  * Notion collection header hiding
  * Right now, notion-react-x doesn't support respecting the collection title hiding
@@ -180,17 +203,16 @@ span[class*='_background'] {
 .notion-gallery-grid .notion-page-title-text {
   font-size: 1.6em /* from 2em */;
 }
-
 /**
- * Smaller quote size
+ * Revise gallery grid sizes to be better for smaller mobile sizes
  */
-.notion-quote {
-  font-size: 1em /* from 1.2em */;
+.notion-gallery-grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* from 360px */
 }
 
 /**
- * Disable collection links if property is set (see NotionPage.tsx)
- * Also, hide default collection title icons when none is set
+ * Disable page links inside the Collection's title property 
+ * if property "Disable Collection Links" is set for the page (see NotionPage.tsx)
  */
 .disable-collection-links .notion-page-link {
   pointer-events: none;
@@ -201,6 +223,9 @@ span[class*='_background'] {
   border-bottom: none;
 }
 
+/**
+ * Hide default collection title icons when none is set
+ */
 .disable-collection-links
   .notion-page-link
   .notion-page-icon-image:has(path[d='M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z']) {
@@ -215,17 +240,41 @@ span[class*='_background'] {
 }
 
 /**
- * Personal footer
+ * ========== Home Page ==========
+ */
+.index-page .notion-collection-group-title .notion-property-multi_select-item {
+  height: 1.4em;
+  padding: 10px;
+  margin-left: 5px;
+  font-weight: 600;
+  font-size: 1.18em;
+  cursor: pointer;
+  user-select: none;
+}
+.index-page .notion-gallery-grid {
+  /**
+   * By default, galleries make all the cards the same size.
+   * This makes it so that they only fill for their row instead,
+   * just on the main (index) page.
+   */
+  grid-auto-rows: unset /* prev: 1fr */;
+  border-top: none;
+}
+.index-page .notion-hash-link {
+  display: none;
+}
+
+/**
+ * ========== Personal Footer ==========
  */
 .wustep-post-footer {
+  display: flex;
+  align-items: center;
   width: 100%;
   margin-top: 1em;
   padding: 1.5em 0;
   border-top: 1px solid var(--fg-color-0);
   border-bottom: 1px solid var(--fg-color-0);
-
-  display: flex;
-  align-items: center;
 }
 .wustep-post-footer hr {
   margin-bottom: 1em;
@@ -251,7 +300,7 @@ span[class*='_background'] {
 }
 
 /**
- * 404 styling
+ * ========== 404 Page ==========
  */
 .error-404 {
   text-align: center;
@@ -261,55 +310,11 @@ span[class*='_background'] {
 }
 
 /**
- * Main page styling
- */
-.index-page .notion-collection-group-title .notion-property-multi_select-item {
-  height: 1.4em;
-  padding: 10px;
-  margin-left: 5px;
-  font-weight: 600;
-  font-size: 1.18em;
-  cursor: pointer;
-  user-select: none;
-}
-.index-page .notion-gallery-grid {
-  /**
-   * By default, galleries make all the cards the same size.
-   * This makes it so that they only fill for their row instead,
-   * just on the main (index) page.
-   */
-  grid-auto-rows: unset /* prev: 1fr */;
-  border-top: none;
-}
-.index-page .notion-hash-link {
-  display: none;
-}
-
-/**
- * Revise gallery grid sizes to be better for smaller mobile sizes
- */
-.notion-gallery-grid {
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* from 360px */
-}
-
-/**
- * Page improvements
- */
-.notion-title {
-  margin-bottom: 12px /* from 20px */;
-}
-
-/**
- * Remove padding from elements within .notion
- * This removes a weird effect where the header bar gets smaller as you scroll.
- */
-.notion > * {
-  padding: 0; /* from 3px 0 */
-}
-
-/**
- * <hr> improvements
+ * ========== Misc. Blocks ==========
  */
 .notion-hr {
   margin: 1.2em 0 /* from 2em 0 */;
+}
+.notion-quote {
+  font-size: 1em /* from 1.2em */;
 }
