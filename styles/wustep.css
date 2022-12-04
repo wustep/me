@@ -300,6 +300,14 @@ span[class*='_background'] {
 }
 
 /**
+ * Remove padding from elements within .notion
+ * This removes a weird effect where the header bar gets smaller as you scroll.
+ */
+.notion > * {
+  padding: 0; /* from 3px 0 */
+}
+
+/**
  * <hr> improvements
  */
 .notion-hr {
