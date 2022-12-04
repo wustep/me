@@ -12,7 +12,6 @@
  * ========== Header ========== 
  */
 .notion-header .notion-search-button {
-  flex-grow: 1;
   max-width: 200px;
   justify-content: start;
 }
@@ -30,6 +29,29 @@
 
 .notion-page-icon {
   user-select: none /* from unset -- which leads to text hover cursor */;
+}
+
+/**
+ * Make header breadcrumb truncate more gracefully.
+ * Keep the main page breadcrumb and search icon always fully sized,
+ * but truncate with ellipsis other breadcrumbs if needed.
+ */
+.notion-header .breadcrumb {
+  justify-content: unset;
+  overflow: hidden;
+}
+.notion-header .breadcrumb span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notion-header .breadcrumb .notion-page-icon-image {
+  flex-shrink: 0;
+}
+.notion-header .breadcrumb[href='/'] {
+  flex-shrink: 0;
+}
+.notion-header .notion-search-button {
+  flex-shrink: 0;
 }
 
 /**
