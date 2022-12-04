@@ -286,6 +286,13 @@ span[class*='_background'] {
 }
 
 /**
+ * Revise gallery grid sizes to be better for smaller mobile sizes
+ */
+.notion-gallery-grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* from 360px */
+}
+
+/**
  * Page improvements
  */
 .notion-title {
