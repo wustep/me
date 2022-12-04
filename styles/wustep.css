@@ -318,3 +318,10 @@ span[class*='_background'] {
 .notion-quote {
   font-size: 1em /* from 1.2em */;
 }
+
+/**
+ * Toggle blocks with images were going off screen
+ */
+.notion-toggle {
+  width: 100% /* from unset */;
+}
