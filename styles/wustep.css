@@ -285,6 +285,15 @@ span[class*='_background'] {
 .index-page .notion-hash-link {
   display: none;
 }
+/**
+ * The "Articles", "Notes", and "Projects" pages are technically nested within the root website page in Notion,
+ * but we don't want them to show up in the website, since it's redundant with the top navigation.
+ */
+.index-page a[href='/articles'],
+.index-page a[href='/notes'],
+.index-page a[href='/projects'] {
+  display: none;
+}
 
 /**
  * ========== Personal Footer ==========
