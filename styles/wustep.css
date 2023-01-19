@@ -220,6 +220,15 @@ span[class*='_background'] {
 }
 
 /**
+  * By default, galleries make all the cards the same size.
+  * This makes it so that they only fill for their row instead.
+  */
+.notion-gallery-grid {
+  grid-auto-rows: unset /* prev: 1fr */;
+  border-top: none;
+}
+
+/**
  * Smaller titles
  */
 .notion-gallery-grid .notion-page-title-text {
@@ -272,15 +281,6 @@ span[class*='_background'] {
   font-size: 1.18em;
   cursor: pointer;
   user-select: none;
-}
-.index-page .notion-gallery-grid {
-  /**
-   * By default, galleries make all the cards the same size.
-   * This makes it so that they only fill for their row instead,
-   * just on the main (index) page.
-   */
-  grid-auto-rows: unset /* prev: 1fr */;
-  border-top: none;
 }
 .index-page .notion-hash-link {
   display: none;
