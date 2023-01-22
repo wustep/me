@@ -294,7 +294,8 @@ span[class*='_background'] {
   cursor: pointer;
   user-select: none;
 }
-.index-page .notion-hash-link {
+.index-page .notion-hash-link,
+.notion-block-e597502d2cc241d98039291052e916fe .notion-hash-link {
   display: none;
 }
 /**
