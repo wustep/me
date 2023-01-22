@@ -44,7 +44,8 @@ export default siteConfig({
   pageUrlOverrides: {
     '/articles': 'e40efc67-31ea-4e1d-a262-6d709950fbe4',
     '/notes': 'a9d2669020314160b70110639617e822',
-    '/projects': '511994667bac45fda9fd8f9db136e476'
+    '/projects': '511994667bac45fda9fd8f9db136e476',
+    '/list': 'e597502d2cc241d98039291052e916fe'
   },
 
   // whether to use the default notion navigation style or a custom one with links to
