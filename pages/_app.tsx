@@ -9,6 +9,7 @@ import 'katex/dist/katex.min.css'
 import posthog from 'posthog-js'
 // used for code syntax highlighting (optional)
 import 'prismjs/themes/prism-coy.css'
+// @wustep: add ReactGA
 import ReactGA from 'react-ga'
 // core styles shared by all of react-notion-x (required)
 import 'react-notion-x/src/styles.css'
@@ -24,7 +25,13 @@ import 'styles/prism-theme.css'
 // @wustep: overides
 import 'styles/wustep.css'
 
-import { fathomConfig, fathomId, posthogConfig, posthogId } from '@/lib/config'
+import {
+  fathomConfig,
+  fathomId,
+  googleId,
+  posthogConfig,
+  posthogId
+} from '@/lib/config'
 
 const TRACKING_ID = 'UA-43013610-2'
 ReactGA.initialize(TRACKING_ID)
@@ -49,6 +56,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
     if (posthogId) {
       posthog.init(posthogId, posthogConfig)
+    }
+
+    if (googleId) {
+      ReactGA.initialize(googleId)
+      ReactGA.pageview(window.location.pathname + window.location.search)
     }
 
     router.events.on('routeChangeComplete', onRouteChangeComplete)
