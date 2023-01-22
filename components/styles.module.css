@@ -36,6 +36,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* @wustep fix container going off screen on small heights */
+  margin-top: auto;
+  margin-bottom: auto;
+  /* @wustep end */
 }
 
 .errorImage {
