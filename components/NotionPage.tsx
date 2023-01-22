@@ -265,6 +265,13 @@ export const NotionPage: React.FC<types.PageProps> = ({
       <WustepFooter />
     ) : undefined
 
+  // @wustep: Allow showing property names normally
+  const enablePagePropertyNames = getPageProperty<boolean>(
+    'Enable Page Property Names',
+    block,
+    recordMap
+  )
+
   return (
     <>
       <PageHead
@@ -283,7 +290,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
         bodyClassName={cs(
           styles.notion,
           pageId === site.rootNotionPageId && 'index-page',
-          shouldDisableCollectionLinks && 'disable-collection-links'
+          shouldDisableCollectionLinks && 'disable-collection-links',
+          enablePagePropertyNames && 'enable-page-property-names'
         )}
         darkMode={isDarkMode}
         components={components}

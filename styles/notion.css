@@ -170,11 +170,16 @@
   padding-bottom: 1em;
 }
 
-.notion-collection-page-properties .notion-collection-column-title {
+/* @wustep: added .notion-page:not(.enable-page-property-names) to allow manual enabling property names */
+.notion-page:not(.enable-page-property-names)
+  .notion-collection-page-properties
+  .notion-collection-column-title {
   display: none;
 }
 
-.notion-collection-row-property .notion-property {
+.notion-page:not(.enable-page-property-names)
+  .notion-collection-row-property
+  .notion-property {
   display: flex;
   justify-content: center;
 }
