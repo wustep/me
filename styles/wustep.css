@@ -271,6 +271,18 @@ span[class*='_background'] {
 }
 
 /**
+ * Remove the underline that's only under the title, and apply it to the whole thing instead.
+ */
+.notion-collection-row-property
+  .notion-property-relation
+  .notion-page-title-text {
+  border-bottom: none;
+}
+.notion-collection-row-property .notion-property-relation .notion-link {
+  border-bottom: 0.05em solid;
+}
+
+/**
  * ========== Home Page ==========
  */
 .index-page .notion-collection-group-title .notion-property-multi_select-item {
