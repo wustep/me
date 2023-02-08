@@ -39,6 +39,21 @@ const getNavigationLinkPages = pMemoize(
 
 export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
   let recordMap = await notion.getPage(pageId)
+  /**
+   * @wustep: fix for expiring images by removing signed AWS urls
+   * from https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818
+   */
+  if (recordMap && recordMap['signed_urls']) {
+    const signedUrls = recordMap['signed_urls']
+    const newSignedUrls = {}
+    for (const url in signedUrls) {
+      if (signedUrls[url] && signedUrls[url].includes('.amazonaws.com')) {
+        continue
+      }
+      newSignedUrls[url] = signedUrls[url]
+    }
+    recordMap['signed_urls'] = newSignedUrls
+  }
 
   if (navigationStyle !== 'default') {
     // ensure that any pages linked to in the custom navigation header have
