@@ -244,6 +244,7 @@ span[class*='_background'] {
 /**
  * Disable page links inside the Collection's title property 
  * if property "Disable Collection Links" is set for the page (see NotionPage.tsx)
+ * Don't disable for titles that are inline links.
  */
 .disable-collection-links .notion-page-link {
   pointer-events: none;
@@ -252,6 +253,9 @@ span[class*='_background'] {
 }
 .disable-collection-links .notion-page-link .notion-page-title-text {
   border-bottom: none;
+}
+.disable-collection-links .notion-page-link .notion-page-title-text a {
+  pointer-events: auto;
 }
 
 /**
