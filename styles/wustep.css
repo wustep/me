@@ -313,6 +313,23 @@ span[class*='_background'] {
 }
 
 /**
+ * ========== Home Page: List View ==========
+ * Some improvements for list view.
+ */
+ .notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
+  max-width: 100vw;
+}
+
+@media screen and (max-width: 768px) {
+  .notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
+    min-width: 100vw;
+  }
+  .notion-block-e597502d2cc241d98039291052e916fe .notion-property-date {
+    display: none;
+  }
+}
+
+/**
  * ========== Personal Footer ==========
  */
 .wustep-post-footer {
