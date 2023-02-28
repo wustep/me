@@ -287,6 +287,18 @@ span[class*='_background'] {
 }
 
 /**
+ * ========== Navigation ==========
+ */
+/**
+  * Hide the navigation links on mobile.
+  */
+@media screen and (max-width: 500px) {
+  .notion-nav-header-navigation-links {
+    display: none;
+  }
+}
+
+/**
  * ========== Home Page ==========
  */
 .index-page .notion-collection-group-title .notion-property-multi_select-item {
@@ -316,7 +328,7 @@ span[class*='_background'] {
  * ========== Home Page: List View ==========
  * Some improvements for list view.
  */
- .notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
+.notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
   max-width: 100vw;
 }
 
