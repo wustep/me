@@ -262,7 +262,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
   // @wustep: Show post comments!
   const postComments =
     !isRootPage &&
-    getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' ? (
+    getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' &&
+    getPageProperty<boolean>('Disable Comments', block, recordMap) !== true ? (
       <WustepComments />
     ) : undefined
 
