@@ -24,9 +24,7 @@ export const WustepComments = () => {
     giscusScript.setAttribute('data-input-position', 'top')
     giscusScript.setAttribute(
       'data-theme',
-      `https://raw.githubusercontent.com/wustep/me/main/giscus/${
-        isDarkMode ? 'dark' : 'light'
-      }.css`
+      `${config.host}/giscus/${isDarkMode ? 'dark' : 'light'}.css`
     )
     giscusScript.setAttribute('data-lang', 'en')
     giscusScript.setAttribute('data-loading', 'lazy')

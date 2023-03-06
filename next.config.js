@@ -37,5 +37,15 @@ module.exports = withBundleAnalyzer({
         permanent: true
       }
     ]
+  },
+  headers: async () => {
+    return [
+      {
+        source: '/giscus/:path',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: 'https://giscus.app' }
+        ]
+      }
+    ]
   }
 })
