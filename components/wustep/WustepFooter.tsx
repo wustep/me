@@ -4,6 +4,9 @@ import { site } from '@/lib/config'
 
 import { ApplauseButton } from './ApplauseButton'
 
+/**
+ * @wustep: Added my own personal footer
+ */
 export const WustepFooter = () => {
   return (
     <div className='wustep-post-footer'>

@@ -31,6 +31,7 @@ import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
+import { WustepComments } from './wustep/WustepComments'
 import { WustepFooter } from './wustep/WustepFooter'
 
 // -----------------------------------------------------------------------------
@@ -258,6 +259,13 @@ export const NotionPage: React.FC<types.PageProps> = ({
     recordMap
   )
 
+  // @wustep: Show post comments!
+  const postComments =
+    !isRootPage &&
+    getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' ? (
+      <WustepComments />
+    ) : undefined
+
   // @wustep: Custom post footers based on author
   const postFooter =
     !isRootPage &&
@@ -310,7 +318,12 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
-        pageFooter={postFooter}
+        pageFooter={
+          <>
+            {postFooter}
+            {postComments}
+          </>
+        }
         footer={footer}
       />
     </>

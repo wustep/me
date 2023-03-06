@@ -402,3 +402,10 @@ span[class*='_background'] {
 .notion-toggle {
   width: 100% /* from unset */;
 }
+
+/**
+ * ========== Comments ==========
+ */
+.giscus {
+  margin-top: 1em;
+}
