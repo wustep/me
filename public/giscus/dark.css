@@ -60,12 +60,17 @@ main {
   --color-fg-default: #c9d1d9;
   --color-fg-muted: #8b949e;
   --color-fg-subtle: #6e7681;
-  --color-canvas-default: #0d1117;
-  --color-canvas-overlay: #161b22;
-  --color-canvas-inset: #010409;
-  --color-canvas-subtle: #161b22;
-  --color-border-default: #30363d;
-  --color-border-muted: #21262d;
+  /* 
+   * @wustep: added opacity of 70 here to each of these. 
+   * this fits the theme better, but is a very lazy approach.
+   */
+  --color-canvas-default: #0d111770;
+  --color-canvas-overlay: #161b2270;
+  --color-canvas-inset: #01040970;
+  --color-canvas-subtle: #161b2270;
+  --color-border-default: #30363d70;
+  --color-border-muted: #21262d70;
+  /* @wustep: end */
   --color-neutral-muted: rgb(110 118 129 / 40%);
   --color-accent-fg: #58a6ff;
   --color-accent-emphasis: #1f6feb;
