@@ -53,17 +53,17 @@ export default siteConfig({
   // navigationStyle: 'default'
   navigationStyle: 'custom',
   navigationLinks: [
-    {
-      title: 'Articles',
-      pageId: 'e40efc67-31ea-4e1d-a262-6d709950fbe4'
-    },
-    {
-      title: 'Notes',
-      pageId: 'a9d2669020314160b70110639617e822'
-    },
-    {
-      title: 'Projects',
-      pageId: '511994667bac45fda9fd8f9db136e476'
-    }
+    // {
+    //   title: 'Articles',
+    //   pageId: 'e40efc67-31ea-4e1d-a262-6d709950fbe4'
+    // },
+    // {
+    //   title: 'Notes',
+    //   pageId: 'a9d2669020314160b70110639617e822'
+    // },
+    // {
+    //   title: 'Projects',
+    //   pageId: '511994667bac45fda9fd8f9db136e476'
+    // }
   ]
 })
