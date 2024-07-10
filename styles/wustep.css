@@ -320,7 +320,8 @@ span[class*='_background'] {
  */
 .index-page a[href='/articles'],
 .index-page a[href='/notes'],
-.index-page a[href='/projects'] {
+.index-page a[href='/projects'],
+.index-page a[href='/essays'] {
   display: none;
 }
 
