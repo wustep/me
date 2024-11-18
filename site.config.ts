@@ -38,6 +38,9 @@ export default siteConfig({
   // environment variables. see the readme for more info
   isRedisEnabled: false,
 
+  // (2024-11-18) disable search for now because it is not working.
+  isSearchEnabled: false,
+
   // map of notion page IDs to URL paths (optional)
   // any pages defined here will override their default URL paths
   //
