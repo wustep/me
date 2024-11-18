@@ -49,7 +49,7 @@ export default withBundleAnalyzer({
         ]
       }
     ]
-  }
+  },
   webpack: (config, _context) => {
     // Workaround for ensuring that `react` and `react-dom` resolve correctly
     // when using a locally-linked version of `react-notion-x`.
