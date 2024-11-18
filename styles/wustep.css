@@ -127,12 +127,20 @@
 }
 .notion-link:has([class*='_background']):hover span[class*='_background'],
 [class$='_background'] > .notion-link:hover {
-  filter: saturate(0.65);
+  filter: brightness(1.3);
 }
+
+.dark-mode
+  .notion-link:has([class*='_background']):hover
+  span[class*='_background'],
+.dark-mode [class$='_background'] > .notion-link:hover {
+  filter: brightness(0.9);
+}
+
 .notion-link:has([class*='_background']) span[class*='_background'],
 [class$='_background'] > .notion-link {
   margin: 0;
-  padding: 0.3rem 0.6rem;
+  padding: 0.25rem 0.55rem;
   color: #fff;
 }
 .notion-link:has([class*='_background']) span.notion-red_background,
