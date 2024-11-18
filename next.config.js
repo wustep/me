@@ -24,6 +24,12 @@ export default withBundleAnalyzer({
   redirects: async () => {
     return [
       {
+        source: '/contact',
+        destination:
+          'https://wustep.notion.site/1425cb08cf2c80cc89d4f322774aa02b',
+        permanent: true
+      },
+      {
         source: '/articles/:slug',
         destination: '/:slug',
         permanent: true
