@@ -17,7 +17,7 @@ export default siteConfig({
   description: 'Software Engineer, San Francisco, CA',
 
   // social usernames (optional)
-  twitter: 'wustep',
+  twitter: 'wusteps',
   github: 'wustep',
   linkedin: 'wustep',
   // mastodon: '#', // optional mastodon profile URL, provides link verification
@@ -26,7 +26,7 @@ export default siteConfig({
 
   // default notion icon and cover images for site-wide consistency (optional)
   // page-specific values will override these site-wide defaults
-  defaultPageIcon: null,
+  defaultPageIcon: 'https://wustep.me/wustep.png',
   defaultPageCover: null,
   defaultPageCoverPosition: 0.5,
 

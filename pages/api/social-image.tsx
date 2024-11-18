@@ -39,6 +39,12 @@ export default async function OGImage(
   const pageInfo = pageInfoOrError.data
   console.log(pageInfo)
 
+  // @wustep: Hack to avoid double Stephen Wu / Stephen Wu on homepage.
+  let detail = pageInfo.detail
+  if (pageInfo.detail === pageInfo.title && pageInfo.detail === 'Stephen Wu') {
+    detail = 'wustep.me'
+  }
+
   return new ImageResponse(
     (
       <div
@@ -48,7 +54,7 @@ export default async function OGImage(
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#1F2027',
+          backgroundColor: '#2f3437',
           alignItems: 'center',
           justifyContent: 'center',
           color: 'black'
@@ -86,8 +92,7 @@ export default async function OGImage(
             height: 465,
             display: 'flex',
             flexDirection: 'column',
-            border: '16px solid rgba(0,0,0,0.3)',
-            borderRadius: 8,
+            borderRadius: 64,
             zIndex: '1'
           }}
         >
@@ -101,27 +106,24 @@ export default async function OGImage(
               backgroundColor: '#fff',
               padding: 24,
               alignItems: 'center',
-              textAlign: 'center'
+              textAlign: 'center',
+              borderRadius: 18
             }}
           >
-            {pageInfo.detail && (
-              <div style={{ fontSize: 32, opacity: 0 }}>{pageInfo.detail}</div>
-            )}
-
             <div
               style={{
-                fontSize: 70,
-                fontWeight: 700,
-                fontFamily: 'Inter'
+                fontSize: 66,
+                fontWeight: 600,
+                fontFamily: 'Inter',
+                letterSpacing: '-1px',
+                marginTop: 64
               }}
             >
               {pageInfo.title}
             </div>
 
-            {pageInfo.detail && (
-              <div style={{ fontSize: 32, opacity: 0.6 }}>
-                {pageInfo.detail}
-              </div>
+            {detail && (
+              <div style={{ fontSize: 38, opacity: 0.6 }}>{detail}</div>
             )}
           </div>
         </div>
@@ -130,13 +132,13 @@ export default async function OGImage(
           <div
             style={{
               position: 'absolute',
-              top: 47,
-              left: 104,
-              height: 128,
-              width: 128,
+              top: 32,
+              left: 82,
+              height: 144,
+              width: 144,
               display: 'flex',
               borderRadius: '50%',
-              border: '4px solid #fff',
+              border: '5px solid #fff',
               zIndex: '5'
             }}
           >

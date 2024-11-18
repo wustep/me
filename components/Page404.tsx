@@ -13,8 +13,6 @@ import styles from './styles.module.css'
 export function Page404({ site, pageId, error }: types.PageProps) {
   const title = site?.name || 'Page Not Found'
 
-  console.log(site)
-
   const devErrorMessage =
     config.isDev &&
     (error ? (
