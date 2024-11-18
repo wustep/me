@@ -1,9 +1,8 @@
-import * as React from 'react'
-
+import type * as React from 'react'
 import cs from 'classnames'
 
+import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
-import * as types from '@/lib/types'
 
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
@@ -11,7 +10,7 @@ import styles from './styles.module.css'
 /**
  * @wustep: revised text and styling, added go home button
  */
-export const Page404: React.FC<types.PageProps> = ({ site, pageId, error }) => {
+export function Page404({ site, pageId, error }: types.PageProps) {
   const title = site?.name || 'Page Not Found'
 
   console.log(site)

@@ -7,12 +7,12 @@ import { site } from '@/lib/config'
 /**
  * @wustep: Added my own personal footer
  */
-export const WustepFooter = () => {
+export function WustepFooter() {
   return (
     <div className='wustep-post-footer'>
       <div className='wustep-post-footer-left'>
         <a href={`https://${site.domain}`}>
-          <img src='/wustep.png' alt='Photo of Stephen Wu'></img>
+          <img src='/wustep.png' alt='Stephen Wu'></img>
         </a>
       </div>
       <div className='wustep-post-footer-content'>

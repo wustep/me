@@ -2,9 +2,8 @@
  * ApplauseButton
  * using applause-button.com
  */
-import React, { useEffect, useState } from 'react'
-
 import ky from 'ky'
+import React, { useEffect, useState } from 'react'
 import { cs } from 'react-notion-x'
 
 const API = 'https://api.applause-button.com'
@@ -48,7 +47,7 @@ const updateClaps = async (url, claps = 1): Promise<number> => {
   return Number(response)
 }
 
-export const ApplauseButton = () => {
+export function ApplauseButton() {
   const [count, setCount] = useState(0)
   const [isClapped, setIsClapped] = useState(false)
   const [isClapping, setIsClapping] = useState(false)
@@ -61,7 +60,7 @@ export const ApplauseButton = () => {
   }, [])
 
   useEffect(() => {
-    if (typeof window !== undefined) {
+    if (typeof window !== 'undefined') {
       const { location } = window
       setUrl(location.protocol + '//' + location.host + location.pathname)
     }
@@ -124,7 +123,7 @@ export const ApplauseButton = () => {
         </svg>
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'>
           <g className='sparkle'>
-            {[...new Array(5).keys()].map((key) => (
+            {[...Array.from({ length: 5 }).keys()].map((key) => (
               <g key={key}>
                 <circle cx='0' cy='0' r='1' />
               </g>

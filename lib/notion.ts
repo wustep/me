@@ -48,8 +48,8 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
    * @wustep: fix for expiring images by removing signed AWS urls
    * from https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818
    */
-  if (recordMap && recordMap['signed_urls']) {
-    const signedUrls = recordMap['signed_urls']
+  if (recordMap && recordMap.signed_urls) {
+    const signedUrls = recordMap.signed_urls
     const newSignedUrls = {}
     for (const url in signedUrls) {
       if (signedUrls[url] && signedUrls[url].includes('.amazonaws.com')) {
@@ -57,7 +57,7 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
       }
       newSignedUrls[url] = signedUrls[url]
     }
-    recordMap['signed_urls'] = newSignedUrls
+    recordMap.signed_urls = newSignedUrls
   }
 
   if (navigationStyle !== 'default') {

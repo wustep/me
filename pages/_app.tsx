@@ -2,8 +2,6 @@
 import 'katex/dist/katex.min.css'
 // used for code syntax highlighting (optional)
 import 'prismjs/themes/prism-coy.css'
-// @wustep: add ReactGA
-import ReactGA from 'react-ga'
 // core styles shared by all of react-notion-x (required)
 import 'react-notion-x/src/styles.css'
 // @wustep: applause button
@@ -24,6 +22,8 @@ import * as Fathom from 'fathom-client'
 import { useRouter } from 'next/router'
 import posthog from 'posthog-js'
 import * as React from 'react'
+// @wustep: add ReactGA
+import ReactGA from 'react-ga'
 
 import {
   fathomConfig,
