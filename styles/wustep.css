@@ -102,56 +102,73 @@
 /**
  * ## Turn links with background colors into cool buttons! ##
  *
- * In Notion: first, apply the background color, then apply the link. 
- * The reverse will not trigger these styles.
+ * This should work whether the link is inside or outside the background color.
  */
-.notion-link:has([class*='_background']) {
+.notion-link:has([class*='_background']),
+[class$='_background'] > .notion-link {
   border-color: transparent;
   align-items: center;
   border: 1px solid transparent;
   border-radius: 4px;
   display: inline-flex;
   width: unset;
-  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px inset,
-    rgb(15 15 15 / 10%) 0px 1px 2px;
 }
-.notion-link:has([class*='_background']):hover {
+
+[class$='_background']:has(> .notion-link) {
+  display: inline-block;
+  /* Adds some space in case of wrapping. */
+  margin-bottom: 0.5em;
+}
+
+.notion-link:has([class*='_background']):hover,
+[class$='_background'] > .notion-link:hover {
   border: 1px solid transparent;
   background-image: none;
 }
-.notion-link:has([class*='_background']):hover span[class*='_background'] {
+.notion-link:has([class*='_background']):hover span[class*='_background'],
+[class$='_background'] > .notion-link:hover {
   filter: saturate(0.65);
 }
-.notion-link:has([class*='_background']) span[class*='_background'] {
+.notion-link:has([class*='_background']) span[class*='_background'],
+[class$='_background'] > .notion-link {
   margin: 0;
   padding: 0.3rem 0.6rem;
   color: #fff;
 }
-.notion-link:has([class*='_background']) span.notion-red_background {
+.notion-link:has([class*='_background']) span.notion-red_background,
+span.notion-red_background > .notion-link {
   background-color: var(--notion-red);
 }
-.notion-link:has([class*='_background']) span.notion-pink_background {
+.notion-link:has([class*='_background']) span.notion-pink_background,
+span.notion-pink_background > .notion-link {
   background-color: var(--notion-pink);
 }
-.notion-link:has([class*='_background']) span.notion-blue_background {
+.notion-link:has([class*='_background']) span.notion-blue_background,
+span.notion-blue_background > .notion-link {
   background-color: var(--notion-blue);
 }
-.notion-link:has([class*='_background']) span.notion-purple_background {
+.notion-link:has([class*='_background']) span.notion-purple_background,
+span.notion-purple_background > .notion-link {
   background-color: var(--notion-purple);
 }
-.notion-link:has([class*='_background']) span.notion-teal_background {
+.notion-link:has([class*='_background']) span.notion-teal_background,
+span.notion-teal_background > .notion-link {
   background-color: var(--notion-teal);
 }
-.notion-link:has([class*='_background']) span.notion-yellow_background {
+.notion-link:has([class*='_background']) span.notion-yellow_background,
+span.notion-yellow_background > .notion-link {
   background-color: var(--notion-yellow);
 }
-.notion-link:has([class*='_background']) span.notion-orange_background {
+.notion-link:has([class*='_background']) span.notion-orange_background,
+span.notion-orange_background > .notion-link {
   background-color: var(--notion-orange);
 }
-.notion-link:has([class*='_background']) span.notion-brown_background {
+.notion-link:has([class*='_background']) span.notion-brown_background,
+span.notion-brown_background > .notion-link {
   background-color: var(--notion-brown);
 }
-.notion-link:has([class*='_background']) span.notion-gray_background {
+.notion-link:has([class*='_background']) span.notion-gray_background,
+span.notion-gray_background > .notion-link {
   background-color: var(--notion-gray);
 }
 
@@ -263,7 +280,9 @@ span[class*='_background'] {
  */
 .disable-collection-links
   .notion-page-link
-  .notion-page-icon-image:has(path[d='M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z']) {
+  .notion-page-icon-image:has(
+    path[d='M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z']
+  ) {
   display: none;
 }
 
