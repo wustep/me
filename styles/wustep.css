@@ -130,6 +130,11 @@
   filter: brightness(1.3);
 }
 
+.notion-link:has([class*='_background']):focus span[class*='_background'],
+[class$='_background'] > .notion-link:focus {
+  background-image: none;
+}
+
 .dark-mode
   .notion-link:has([class*='_background']):hover
   span[class*='_background'],
@@ -412,6 +417,9 @@ span[class*='_background'] {
 }
 .error-404 .notion-link {
   margin-top: 1em;
+}
+.dark-mode .error-404 {
+  color: var(--fg-color);
 }
 
 /**

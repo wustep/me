@@ -337,6 +337,24 @@
   );
 }
 
+/* @wustep: dark mode tags */
+.dark-mode {
+  --notion-item-blue: var(--notion-blue_background);
+  --notion-item-orange: var(--notion-orange_background);
+  --notion-item-green: var(--notion-teal_background);
+  --notion-item-pink: var(--notion-pink_background);
+  --notion-item-brown: var(--notion-brown_background);
+  --notion-item-red: var(--notion-red_background);
+  --notion-item-yellow: var(--notion-yellow_background);
+  --notion-item-default: var(--notion-gray_background);
+  --notion-item-purple: var(--notion-purple_background);
+  --notion-item-gray: var(--notion-gray_background);
+}
+.dark-mode .notion-property-multi_select-item,
+.dark-mode .notion-property-select-item {
+  color: var(--notion-fg-color);
+}
+
 /* disable highlighting in dark mode */
 /* @wustep: re-enabled highlighting, but revise colors in wustep.css */
 /* .dark-mode .notion-red_background,
