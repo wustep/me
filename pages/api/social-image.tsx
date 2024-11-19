@@ -108,7 +108,7 @@ export default async function OGImage(
               alignItems: 'center',
               textAlign: 'center',
               borderRadius: 18,
-              boxShadow: '4px 6px 12px 3px rgba(0, 0, 0, 0.6)'
+              boxShadow: '4px 6px 12px 2px rgba(0, 0, 0, 0.4)'
             }}
           >
             <div
@@ -140,16 +140,17 @@ export default async function OGImage(
               display: 'flex',
               borderRadius: '50%',
               border: '6px solid #fff',
-              boxShadow: '0 8px 40px 0 rgba(0,0,0,.21)',
-              zIndex: 5
+              boxShadow: '0 4px 12px 0 rgba(0,0,0,.4)',
+              zIndex: 5,
+              backgroundColor: '#fff'
             }}
           >
             <img
               src={pageInfo.authorImage}
               style={{
                 width: '100%',
-                height: '100%'
-                // transform: 'scale(1.04)'
+                height: '100%',
+                borderRadius: '50%'
               }}
             />
           </div>
