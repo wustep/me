@@ -108,7 +108,9 @@ const Modal = dynamic(
 
 function Tweet({ id }: { id: string }) {
   const { recordMap } = useNotionContext()
-  const tweet = (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[id]
+  // @wustep: id is a URL with a query string that includes spaceId, like [id]&spaceId=[spaceId]
+  const tweetId = id.split('&')[0]
+  const tweet = (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[tweetId]
 
   return (
     <React.Suspense fallback={<TweetSkeleton />}>
