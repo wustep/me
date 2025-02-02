@@ -9,10 +9,11 @@
 .action {
   position: relative;
   border-radius: 50%;
-  border: 1px solid var(--fg-color-6); /* @wustep: from 2px */
-  transition: all 300ms ease-out;
-  width: 3em; /* @wustep: from 3.5em */
-  height: 3em; /* @wustep: from 3.5em */
+  /* @wustep: removing -- looks better */
+  /* border: 2px solid var(--fg-color-6);  */
+  /* transition: all 300ms ease-out; */
+  width: 3em;
+  height: 3em;
   margin: 0 0 1em;
   display: flex;
   flex-direction: column;
@@ -44,6 +45,8 @@
   width: 50%;
   height: 50%;
   fill: var(--fg-color-6);
+  /* @wustep: this 3px makes the svg look more centered */
+  margin-top: 3px;
 }
 
 .actionBgPane {
