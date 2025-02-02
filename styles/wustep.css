@@ -1,6 +1,67 @@
 /**
  * ========== Core Styling ========== 
  */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+:root {
+  /* Color system */
+  --primary: #2d2d2d;
+  --secondary: #636363;
+  --accent: #7c76bb;
+  --background: #ffffff;
+  --surface: #f7f7f7;
+  --divider: rgba(0, 0, 0, 0.1);
+
+  /* Dark mode colors - will be applied via .dark-mode class */
+  --dark-primary: #e4e4e4;
+  --dark-secondary: #a0a0a0;
+  --dark-accent: #9d97dc;
+  --dark-background: #1a1a1a;
+  --dark-surface: #2d2d2d;
+  --dark-divider: rgba(255, 255, 255, 0.1);
+
+  /* Spacing system */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-serif: 'Crimson Pro', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Dark mode */
+.dark-mode {
+  --primary: var(--dark-primary);
+  --secondary: var(--dark-secondary);
+  --accent: var(--dark-accent);
+  --background: var(--dark-background);
+  --surface: var(--dark-surface);
+  --divider: var(--dark-divider);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+}
+
 /**
  * Make dark <-> light mode changes come in smoothly.
  */
@@ -31,6 +92,28 @@
   user-select: none /* from unset -- which leads to text hover cursor */;
 }
 
+.notion-header .breadcrumb {
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.notion-header .breadcrumb.button {
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.breadcrumb .title {
+  font-family: var(--font-serif);
+  font-weight: 550;
+  font-size: 1.2em;
+}
+
+/* Dark mode icon */
+.breadcrumb .button .svg {
+  height: 1.1em;
+  width: 1.1em;
+}
+
 /**
  * Make header breadcrumb truncate more gracefully.
  * Keep the main page breadcrumb and search icon always fully sized,
@@ -58,6 +141,7 @@
  * ========== Notion Page Header ========== 
  */
 .notion-title {
+  font-size: 2.75em;
   margin-bottom: 12px /* from 20px */;
 }
 
@@ -68,11 +152,15 @@
   align-self: start;
   text-transform: none;
   user-select: none;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.2em;
 }
 .notion-table-of-contents-item-body {
   max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: var(--font-serif);
 }
 .notion-aside-table-of-contents .notion-table-of-contents-item {
   line-height: 15px /* Avoid overflow-y cutting off the text */;
@@ -268,7 +356,10 @@ span[class*='_background'] {
  * Revise gallery grid sizes to be better for smaller mobile sizes
  */
 .notion-gallery-grid {
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* from 360px */
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  grid-auto-flow: row;
 }
 
 /**
@@ -304,6 +395,36 @@ span[class*='_background'] {
  */
 .notion-page-title-text:has(a) {
   border-bottom: none;
+}
+
+/**
+  * ========== Post Header ==========
+  */
+
+.notion-collection-row {
+  border-bottom: none;
+}
+
+/**
+ * Compact property styling for non-mobile
+ */
+@media screen and (min-width: 500px) {
+  .notion-collection-row {
+    padding-bottom: 0;
+  }
+
+  .notion-collection-row-body {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0em;
+  }
+
+  .notion-collection-row-property:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    color: var(--secondary);
+  }
 }
 
 /**
@@ -375,6 +496,85 @@ span[class*='_background'] {
 }
 
 /**
+ * ========== Gallery Cards ========== 
+ */
+.notion-gallery-grid {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  grid-auto-flow: row;
+}
+
+.notion-gallery-grid .notion-page-icon-inline {
+  display: none;
+}
+
+.notion-gallery-grid .notion-page-title-text {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
+}
+
+.notion-gallery-grid .notion-collection-card-property {
+  margin-bottom: 0.2rem;
+}
+
+.notion-collection-card {
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  transition: all 0.2s ease;
+  border: 1px solid var(--divider);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  transform-origin: center bottom;
+}
+
+.notion-collection-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.notion-collection-card-cover {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--divider);
+  aspect-ratio: 16/9;
+  background: var(--surface);
+}
+
+.notion-collection-card-cover img {
+  transition: transform 0.3s ease;
+}
+
+.notion-collection-card:hover .notion-collection-card-cover img {
+  transform: scale(1.02);
+}
+
+.notion-collection-card-body {
+  padding: 1rem 1.25rem;
+}
+
+/* Dark mode adjustments */
+.dark-mode .notion-collection-card {
+  background: var(--dark-surface);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .notion-collection-card:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/**
  * ========== Personal Footer ==========
  */
 .wustep-post-footer {
@@ -405,8 +605,10 @@ span[class*='_background'] {
   align-self: baseline;
 }
 .wustep-post-footer-content-author {
+  margin-top: -5px;
+  font-family: var(--font-serif);
   font-weight: 600;
-  font-size: 1.1em;
+  font-size: 1.3em;
 }
 
 /**
@@ -444,4 +646,15 @@ span[class*='_background'] {
  */
 .giscus {
   margin-top: 1em;
+}
+
+/**
+ * ========== Callouts ==========
+ */
+.notion-callout {
+  border-radius: var(--radius-lg);
+}
+
+.notion-callout-text > div:last-child {
+  padding-bottom: 0;
 }
