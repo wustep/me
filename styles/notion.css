@@ -97,7 +97,8 @@
 
 .notion-collection-card-cover {
   border-radius: 16px;
-  box-shadow: 2px 2px 8px 4px rgba(15, 15, 15, 0.1);
+  /* @wustep: removed box shadow */
+  /* box-shadow: 2px 2px 8px 4px rgba(15, 15, 15, 0.1); */
 }
 
 .notion-collection-card-cover {
