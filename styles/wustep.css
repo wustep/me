@@ -481,6 +481,16 @@ span[class*='_background'] {
   display: none;
 }
 
+/* Hide date and description for the "Updates" posts */
+.notion-block-53b7387d109944a8ab8b424fabb0b6e2
+  .notion-collection-group:nth-child(5)
+  .notion-collection-card-property:nth-child(2),
+.notion-block-53b7387d109944a8ab8b424fabb0b6e2
+  .notion-collection-group:nth-child(5)
+  .notion-collection-card-property:nth-child(3) {
+  display: none;
+}
+
 /**
  * ========== Home Page: List View ==========
  * Some improvements for list view.
@@ -522,7 +532,7 @@ span[class*='_background'] {
 }
 
 .notion-gallery-grid .notion-collection-card-property {
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.1em;
 }
 
 .notion-collection-card {
