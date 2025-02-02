@@ -488,10 +488,7 @@ span[class*='_background'] {
 /* Hide date and description for the "Updates" posts */
 .notion-block-53b7387d109944a8ab8b424fabb0b6e2
   .notion-collection-group:nth-child(5)
-  .notion-collection-card-property:nth-child(2),
-.notion-block-53b7387d109944a8ab8b424fabb0b6e2
-  .notion-collection-group:nth-child(5)
-  .notion-collection-card-property:nth-child(3) {
+  .notion-collection-card-property:nth-child(2) {
   display: none;
 }
 
