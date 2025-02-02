@@ -145,7 +145,12 @@ h6 {
  */
 .notion-title {
   font-size: 2.75em;
-  margin-bottom: 12px /* from 20px */;
+  margin-bottom: 0.25em;
+}
+
+/** Extra for main page */
+.notion-block-832654cbd40b4ee39ef92f6c5f268c70 .notion-title {
+  margin-bottom: 0.5em;
 }
 
 /**
@@ -361,7 +366,6 @@ span[class*='_background'] {
 .notion-gallery-grid {
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: var(--space-lg);
-  padding: var(--space-md);
   grid-auto-flow: row;
 }
 
@@ -514,7 +518,6 @@ span[class*='_background'] {
 .notion-gallery-grid {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-lg);
-  padding: var(--space-md);
   grid-auto-flow: row;
 }
 
