@@ -679,3 +679,24 @@ span[class*='_background'] {
 .notion-callout-text > div:last-child {
   padding-bottom: 0;
 }
+
+/**
+ * ========== Borders ==========
+ */
+.dark-mode .notion-list-body,
+.dark-mode .notion-hr,
+.dark-mode .wustep-post-footer,
+.dark-mode .notion-table-row,
+.dark-mode .notion-table-header-inner,
+.dark-mode .notion-table-cell {
+  border-width: 0.5px /* from 1px */;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
