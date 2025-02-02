@@ -499,7 +499,7 @@ span[class*='_background'] {
  * ========== Gallery Cards ========== 
  */
 .notion-gallery-grid {
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-lg);
   padding: var(--space-md);
   grid-auto-flow: row;
@@ -553,7 +553,7 @@ span[class*='_background'] {
 }
 
 .notion-collection-card:hover .notion-collection-card-cover img {
-  transform: scale(1.02);
+  transform: scale(1.04);
 }
 
 .notion-collection-card-body {
