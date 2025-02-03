@@ -65,6 +65,13 @@
   align-items: center;
 }
 
+/* @wustep hide social icons in footer when it's also in sidebar */
+@media (min-width: 1300px) and (min-height: 300px) {
+  .social {
+    display: none;
+  }
+}
+
 .copyright {
   font-size: 80%;
   padding: 0.5em;
