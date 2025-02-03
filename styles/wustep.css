@@ -165,6 +165,10 @@ h6 {
 /**
  * ========== Table of Contents ==========
  */
+.notion-aside-table-of-contents {
+  background: none;
+}
+
 .notion-aside-table-of-contents-header {
   align-self: start;
   text-transform: none;
