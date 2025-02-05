@@ -705,3 +705,12 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/**
+ * ========== Select pills ==========
+ */
+.notion-property-multi_select-item,
+.notion-property-select-item,
+.notion-property-status-item {
+  border-radius: 8px;
+}
