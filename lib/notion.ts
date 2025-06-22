@@ -50,12 +50,12 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
    */
   if (recordMap && recordMap.signed_urls) {
     const signedUrls = recordMap.signed_urls
-    const newSignedUrls = {}
+    const newSignedUrls: Record<string, string> = {}
     for (const url in signedUrls) {
       if (signedUrls[url] && signedUrls[url].includes('.amazonaws.com')) {
         continue
       }
-      newSignedUrls[url] = signedUrls[url]
+      newSignedUrls[url] = signedUrls[url]!
     }
     recordMap.signed_urls = newSignedUrls
   }
