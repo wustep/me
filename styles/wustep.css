@@ -714,3 +714,11 @@ body {
 .notion-property-status-item {
   border-radius: 8px;
 }
+
+/**
+ * ========== Bugfix for videos ========== 
+ * Height seems to not be set properly.
+ */
+.notion-asset-wrapper-video > div {
+  height: unset !important;
+}
