@@ -79,30 +79,6 @@ export function NotionPageHeader({
             })
             .filter(Boolean)}
 
-                if (link.pageId) {
-                  return (
-                    <components.PageLink
-                      href={mapPageUrl(link.pageId)}
-                      key={index}
-                      className={cs(styles.navLink, 'breadcrumb', 'button')}
-                    >
-                      {link.title}
-                    </components.PageLink>
-                  )
-                } else {
-                  return (
-                    <components.Link
-                      href={link.url}
-                      key={index}
-                      className={cs(styles.navLink, 'breadcrumb', 'button')}
-                    >
-                      {link.title}
-                    </components.Link>
-                  )
-                }
-              })
-              .filter(Boolean)}
-          </div>
           <ToggleThemeButton />
 
           {isSearchEnabled && <Search block={block} title={null} />}
