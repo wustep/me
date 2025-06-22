@@ -141,7 +141,9 @@ function Tweet({ id }: { id: string }) {
   const { recordMap } = useNotionContext()
   // @wustep: id is a URL with a query string that includes spaceId, like [id]&spaceId=[spaceId]
   const tweetId = id.split('&')[0]
-  const tweet = (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[tweetId]
+  const tweet = tweetId
+    ? (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[tweetId]
+    : undefined
 
   return (
     <React.Suspense fallback={<TweetSkeleton />}>
@@ -242,7 +244,7 @@ export function NotionPage({
 
   const showTableOfContents =
     !!isBlogPost &&
-    !getPageProperty<string>('Disable Table of Contents', block, recordMap)
+    !getPageProperty<string>('Disable Table of Contents', block, recordMap!)
   const minTableOfContentsItems = 3
 
   const pageAside = React.useMemo(
