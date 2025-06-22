@@ -23,10 +23,10 @@ const COLOR_VARS = [
 ]
 
 const getRandomColorVar = (): string => {
-  return COLOR_VARS[Math.floor(Math.random() * COLOR_VARS.length)]
+  return COLOR_VARS[Math.floor(Math.random() * COLOR_VARS.length)]!
 }
 
-const getClaps = async (url): Promise<number> => {
+const getClaps = async (url: string): Promise<number> => {
   const query = url ? `?url=${url}` : ''
   const response = await ky
     .get(`${API}/get-claps${query}`, {
@@ -36,7 +36,7 @@ const getClaps = async (url): Promise<number> => {
   return Number(response)
 }
 
-const updateClaps = async (url, claps = 1): Promise<number> => {
+const updateClaps = async (url: string, claps = 1): Promise<number> => {
   const query = url ? `?url=${url}` : ''
   const response = await ky
     .post(`${API}/update-claps${query}`, {
@@ -66,7 +66,7 @@ export function ApplauseButton() {
     }
   }, [])
 
-  const doApplause = () => {
+  const doApplause = async () => {
     if (!isClapped) {
       setIsClapping(true)
       setIsClapped(true)
@@ -77,7 +77,7 @@ export function ApplauseButton() {
         const result = await updateClaps(url, 1)
         setCount(result)
       }
-      clap()
+      void clap()
     }
   }
 
@@ -89,7 +89,7 @@ export function ApplauseButton() {
         setIsLoading(false)
       }
     }
-    fetchData()
+    void fetchData()
   }, [url])
 
   return (
