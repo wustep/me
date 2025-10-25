@@ -18,11 +18,12 @@ import 'styles/prism-theme.css'
 import 'styles/wustep.css'
 
 import type { AppProps } from 'next/app'
+import { Analytics } from '@vercel/analytics/react'
 import * as Fathom from 'fathom-client'
 import { useRouter } from 'next/router'
 import { posthog } from 'posthog-js'
 import * as React from 'react'
-// @wustep: add ReactGA
+// @wustep: add ReactGA and Vercel analytics
 import ReactGA from 'react-ga'
 
 import {
@@ -70,5 +71,10 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router.events])
 
-  return <Component {...pageProps} />
+  return (
+    <>
+      <Component {...pageProps} />
+      <Analytics />
+    </>
+  )
 }
