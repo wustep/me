@@ -17,7 +17,7 @@ export default siteConfig({
   description: 'Software Engineer, San Francisco, CA',
 
   // social usernames (optional)
-  twitter: 'wusteps',
+  twitter: 'wustep',
   github: 'wustep',
   linkedin: 'wustep',
   // mastodon: '#', // optional mastodon profile URL, provides link verification
