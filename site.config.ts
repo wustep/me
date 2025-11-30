@@ -41,6 +41,21 @@ export default siteConfig({
   // (2024-11-18) disable search for now because it is not working.
   isSearchEnabled: false,
 
+  // Giscus comments configuration (optional)
+  giscus: {
+    repo: 'wustep/me',
+    repoId: 'R_kgDOId_ODg',
+    category: 'Posts',
+    categoryId: 'DIC_kwDOId_ODs4CUre0',
+    mapping: 'pathname',
+    strict: '1',
+    reactionsEnabled: '0',
+    emitMetadata: '0',
+    inputPosition: 'top',
+    lang: 'en',
+    loading: 'lazy'
+  },
+
   // map of notion page IDs to URL paths (optional)
   // any pages defined here will override their default URL paths
   //

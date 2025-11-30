@@ -312,6 +312,7 @@ export function NotionPage({
   // @wustep: Show post comments!
   const postComments =
     !isRootPage &&
+    config.showComments &&
     getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' &&
     getPageProperty<boolean>('Disable Comments', block, recordMap) !== true ? (
       <WustepComments />

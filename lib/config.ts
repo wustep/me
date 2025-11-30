@@ -12,7 +12,7 @@ import {
   getRequiredSiteConfig,
   getSiteConfig
 } from './get-config-value'
-import { type NavigationLink } from './site-config'
+import { type GiscusConfig, type NavigationLink } from './site-config'
 import {
   type NavigationStyle,
   type PageUrlOverridesInverseMap,
@@ -109,6 +109,9 @@ export const navigationLinks: Array<NavigationLink | undefined> = getSiteConfig(
 
 // Optional site search
 export const isSearchEnabled: boolean = getSiteConfig('isSearchEnabled', true)
+
+// Optional Giscus comments configuration
+export const giscus: GiscusConfig | undefined = getSiteConfig('giscus')  
 
 // ----------------------------------------------------------------------------
 
