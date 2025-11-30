@@ -417,6 +417,22 @@ span[class*='_background'] {
   border-bottom: none;
 }
 
+
+@media screen and (min-width: 769px) {
+  .notion-list-item {
+    padding: 0 4px 0 0 /* from 0 4px */;
+  }
+  .notion-list-item:hover {
+    border-radius: 4px;
+  }
+}
+
+
+.notion-list-item-property {
+  /** Vertically align properties on the right of list views */
+  display: flex;
+}
+
 /**
   * ========== Post Header ==========
   */
