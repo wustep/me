@@ -417,22 +417,6 @@ span[class*='_background'] {
   border-bottom: none;
 }
 
-
-@media screen and (min-width: 769px) {
-  .notion-list-item {
-    padding: 0 4px 0 0 /* from 0 4px */;
-  }
-  .notion-list-item:hover {
-    border-radius: 4px;
-  }
-}
-
-
-.notion-list-item-property {
-  /** Vertically align properties on the right of list views */
-  display: flex;
-}
-
 /**
   * ========== Post Header ==========
   */
@@ -533,9 +517,30 @@ span[class*='_background'] {
   .notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
     min-width: 100vw;
   }
-  .notion-block-e597502d2cc241d98039291052e916fe .notion-property-date {
-    display: none;
+  /* Allow list item titles to wrap instead of being truncated */
+  .notion-block-e597502d2cc241d98039291052e916fe .notion-list-item-title {
+    white-space: normal;
+    overflow: visible;
   }
+  .notion-block-e597502d2cc241d98039291052e916fe .notion-page-link {
+    height: 36px;
+  }
+}
+
+
+@media screen and (min-width: 769px) {
+  .notion-list-item {
+    padding: 0 4px 0 0 /* from 0 4px */;
+  }
+  .notion-list-item:hover {
+    border-radius: 4px;
+  }
+}
+
+
+.notion-list-item-property {
+  /** Vertically align properties on the right of list views */
+  display: flex;
 }
 
 /**
