@@ -60,7 +60,7 @@ export default siteConfig({
   // any pages defined here will override their default URL paths
   //
   pageUrlOverrides: {
-    '/articles': 'e40efc67-31ea-4e1d-a262-6d709950fbe4',
+    '/articles': 'e40efc6731ea4e1da2626d709950fbe4',
     '/notes': 'a9d2669020314160b70110639617e822',
     '/projects': '511994667bac45fda9fd8f9db136e476',
     '/list': 'e597502d2cc241d98039291052e916fe',
