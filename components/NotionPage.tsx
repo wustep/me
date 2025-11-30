@@ -179,6 +179,15 @@ const propertyDateValue = (
     }
   }
 
+  /* [@wustep: For list view dates, format as "Dec 2016" instead of "Dec 31, 2016"] */
+  if (!pageHeader && data?.[0]?.[1]?.[0]?.[1]?.start_date) {
+    const dateStr = data[0][1][0][1].start_date
+    const date = new Date(dateStr)
+    const month = date.toLocaleString('en-US', { month: 'short' })
+    const year = date.getFullYear()
+    return `${month} ${year}`
+  }
+
   return defaultFn()
 }
 

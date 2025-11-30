@@ -521,10 +521,21 @@ span[class*='_background'] {
   .notion-block-e597502d2cc241d98039291052e916fe .notion-list-item-title {
     white-space: normal;
     overflow: visible;
+    flex: 1;
+    min-width: 0; /* Allow flex items to shrink below content size */
   }
+  /* Fix layout for list items to prevent date from being pushed off screen */
   .notion-block-e597502d2cc241d98039291052e916fe .notion-page-link {
-    height: 36px;
+    height: auto;
+    padding: 4px 6px 4px 2px;
+    align-items: flex-start !important;
   }
+}
+
+/* Prevent dates from wrapping */
+.notion-block-e597502d2cc241d98039291052e916fe .notion-property-date {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 
