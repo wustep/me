@@ -82,11 +82,11 @@
   border-color: #3b5998;
 }
 
-.twitter .actionBgPane {
-  background: #2795e9;
+.x .actionBgPane {
+  background: #000000;
 }
-.twitter:hover {
-  border-color: #2795e9;
+.x:hover {
+  border-color: #000000;
 }
 
 .linkedin .actionBgPane {
