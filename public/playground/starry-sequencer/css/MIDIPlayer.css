@@ -23,6 +23,11 @@ div#playerdiv {
   text-align: center;
 }
 div.player {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   background-image: -webkit-gradient(
     linear,
     left top,
@@ -64,7 +69,7 @@ div.player {
   color: rgba(255, 255, 255, 0.8);
   text-shadow: 1px 1px 2px #000;
   -moz-text-shadow: 1px 1px 2px #000;
-  height: 33px;
+  min-height: 33px;
   margin: 0 auto;
   float: right;
 }
@@ -74,6 +79,7 @@ div.player button {
   height: 23px;
   width: 23px;
   border-radius: 11px;
+  flex: 0 0 auto;
 }
 
 h1 {

@@ -70,6 +70,16 @@ export const playgroundSections: PlaygroundSection[] = [
         article: '/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
         image: '/playground/starry-sequencer/cover.png'
+      },
+      {
+        title: 'TBDBITL',
+        url: '/playground/tbdbitl',
+        description: 'Interactive D3.js infographic for the OSU Marching Band.',
+        summary: 'D3.js infographic celebrating the Ohio State Marching band',
+        date: 'Dec 2016',
+        year: '2016',
+        article: '/tbdbitl',
+        image: '/playground/tbdbitl/cover.png'
       }
     ]
   }
