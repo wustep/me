@@ -839,14 +839,15 @@ span[class*='_background'] {
   width: 100%;
   margin-top: 1em;
   padding: 1.5em 0;
-  border-top: 1px solid var(--fg-color-0);
-  border-bottom: 1px solid var(--fg-color-0);
+  border-top: 0.5px solid var(--color-border) /* from var(--fg-color-1) */;
+  border-bottom: 0.5px solid var(--color-border) /* from var(--fg-color-1) */;
+  border-left: 0;
+  border-right: 0;
 }
 .wustep-post-footer hr {
   margin-bottom: 1em;
 }
 .wustep-post-footer-left {
-  flex: 0;
   margin-right: 1em;
 }
 .wustep-post-footer-left img {
@@ -917,17 +918,26 @@ span[class*='_background'] {
 
 /**
  * ========== Borders ==========
+ * Reduce borders from 1px to 0.5px and swap to the tailwind color.
  */
-.dark-mode .notion-list-body,
-.dark-mode .notion-hr,
-.dark-mode .wustep-post-footer,
-.dark-mode .notion-table-row,
-.dark-mode .notion-table-header-inner,
-.dark-mode .notion-table-cell {
-  border-width: 0.5px /* from 1px */;
+
+.notion-hr {
+  border-top: 0.5px solid var(--color-border);
 }
 
-::-webkit-scrollbar {
+.notion-simple-table {
+  border: 0.5px solid var(--color-border);
+}
+
+.notion-simple-table td {
+  border: 0.5px solid var(--color-border);
+}
+
+.notion-list-body {
+  border-top: 0.5px solid var(--color-border);
+}
+
+*/ ::-webkit-scrollbar {
   display: none;
 }
 
