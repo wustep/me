@@ -1,6 +1,6 @@
 'use client'
 
-import { useDarkMode } from '@/lib/use-dark-mode'
+import Link from 'next/link'
 
 const PHYSICS_URL = 'https://shadbook-app.vercel.app/physics'
 
@@ -9,7 +9,12 @@ export default function ShadcnPhysicsExperiment() {
     <div className='space-y-6'>
       <p className='text-muted-foreground'>
         Stack and fling shadcn/ui components inside a playful physics sandbox.
-        Built with Matter.js. Mostly vibe coded with Opus 4.1.
+        <br />
+        Built with{' '}
+        <Link href='https://brm.io/matter-js/' target='_blank'>
+          Matter.js
+        </Link>
+        . Click 'Spawn' to begin.
       </p>
       <div className='rounded-2xl border bg-muted/30 shadow-inner overflow-hidden'>
         <iframe

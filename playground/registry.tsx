@@ -28,7 +28,7 @@ export const playgroundSections: PlaygroundSection[] = [
           'Throw, stack, and collide shadcn/ui components with Matter.js',
         date: 'Dec 2025',
         year: '2025',
-        gradient: 'from-emerald-500 via-cyan-500 to-blue-500'
+        image: '/playground/covers/shadcn-physics.png'
       }
     ]
   },
