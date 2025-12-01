@@ -7,22 +7,29 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  SidebarRail
 } from '@/components/ui/sidebar'
 
-const playgroundItems = [
+const sections = [
   {
-    title: 'WebGL Shaders',
-    url: '/playground/webgl-shaders',
-    description: 'Interactive shader experiments'
+    title: 'Live Experiments',
+    items: [
+      { title: 'WebGL Shaders', url: '/playground/webgl-shaders' },
+      { title: 'Particle Systems', url: '/playground/particle-systems' }
+    ]
   },
   {
-    title: 'Particle Systems',
-    url: '/playground/particle-systems',
-    description: 'Dynamic particle animations'
+    title: 'In Progress',
+    items: [
+      { title: 'Generative Art', url: '#', disabled: true },
+      { title: 'Audio Visualizer', url: '#', disabled: true }
+    ]
   }
 ]
 
@@ -32,39 +39,37 @@ export function PlaygroundSidebar({
   const router = useRouter()
 
   return (
-    <Sidebar variant='sidebar' collapsible='icon' {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size='lg' asChild>
-              <Link href='/playground'>
-                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-                  <Beaker className='size-4' />
-                </div>
-                <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Playground</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+    <Sidebar {...props}>
+      <SidebarHeader className='gap-3'>
+        <div className='flex items-center gap-3  p-3'>
+          <div className='leading-tight'>
+            <p className='text-sm font-semibold'>Playground</p>
+          </div>
+        </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            {playgroundItems.map((item) => (
-              <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={router.pathname === item.url}
-                >
-                  <Link href={item.url}>{item.title}</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+        {sections.map((section) => (
+          <SidebarGroup key={section.title}>
+            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={router.pathname === item.url}
+                      disabled={item.disabled}
+                    >
+                      <Link href={item.url}>{item.title}</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   )
 }

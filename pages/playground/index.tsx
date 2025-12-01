@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { PlaygroundLayout } from '@/components/PlaygroundLayout'
+import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 
 const projects = [
   {

@@ -1,4 +1,4 @@
-import { PlaygroundLayout } from '@/components/PlaygroundLayout'
+import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 
 export default function ParticleSystemsPage() {
   return (
