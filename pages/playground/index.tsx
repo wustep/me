@@ -17,13 +17,15 @@ export default function PlaygroundPage() {
           <Link
             key={project.url}
             href={project.url}
-            className='group relative overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow'
+            className='group notion-collection-card relative flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
           >
-            <div className='aspect-video w-full overflow-hidden'>
+            <div className='notion-collection-card-cover aspect-video w-full'>
               {project.image ? (
-                <div
-                  className='h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
-                  style={{ backgroundImage: `url(${project.image})` }}
+                <img
+                  src={project.image}
+                  alt={`${project.title} cover`}
+                  loading='lazy'
+                  className='h-full w-full object-cover transition-transform duration-500'
                 />
               ) : (
                 <div
@@ -33,7 +35,7 @@ export default function PlaygroundPage() {
                 />
               )}
             </div>
-            <div className='p-4'>
+            <div className='notion-collection-card-body p-4 flex-1'>
               <h3 className='font-semibold mb-1'>{project.title}</h3>
               <p className='text-sm text-muted-foreground'>
                 {project.summary ?? project.description}
