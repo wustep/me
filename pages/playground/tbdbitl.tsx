@@ -15,7 +15,7 @@ export default function PlaygroundTbdbitlPage() {
         </p>
         <div className='rounded-3xl border bg-card shadow-lg'>
           <iframe
-            src='/playground/tbdbitl/index.html'
+            src='https://wustep.github.io/tbdbitl/'
             title='TBDBITL Infographic'
             className='h-[900px] w-full rounded-3xl'
           />

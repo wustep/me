@@ -53,7 +53,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2024',
         article: '/bomberman',
         gradient: 'from-orange-500 to-rose-500',
-        image: '/playground/bomberman/cover.png'
+        image: '/playground/covers/bomberman.png'
       }
     ]
   },
@@ -69,7 +69,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2016',
         article: '/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
-        image: '/playground/starry-sequencer/cover.png'
+        image: '/playground/covers/starry-sequencer.png'
       },
       {
         title: 'TBDBITL',
@@ -79,7 +79,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Dec 2016',
         year: '2016',
         article: '/tbdbitl',
-        image: '/playground/tbdbitl/cover.png'
+        image: '/playground/covers/tbdbitl.png'
       }
     ]
   }
