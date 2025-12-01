@@ -19,7 +19,9 @@ export function PostsHeadingToggle({
 
   return (
     <div className='posts-heading-toggle'>
-      <h1 className={cs('notion-h-title', 'notion-h1')}>{headingText}</h1>
+      <h1 className={cs('notion-h-title', 'notion-h1', 'notion-h-indent-0')}>
+        {headingText}
+      </h1>
       <div className='posts-heading-toggle-group'>
         <button
           className={cs('posts-heading-toggle-button', {

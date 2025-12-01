@@ -33,6 +33,7 @@ import {
   posthogConfig,
   posthogId
 } from '@/lib/config'
+import { crimsonPro, inter } from '@/lib/fonts/fonts'
 
 const TRACKING_ID = 'UA-43013610-2'
 ReactGA.initialize(TRACKING_ID)
@@ -73,7 +74,15 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Component {...pageProps} />
+      <style jsx global>{`
+        :root {
+          --font-sans: ${inter.style.fontFamily};
+          --font-serif: ${crimsonPro.style.fontFamily};
+        }
+      `}</style>
+      <div className={`${inter.variable} ${crimsonPro.variable}`}>
+        <Component {...pageProps} />
+      </div>
       <Analytics />
     </>
   )

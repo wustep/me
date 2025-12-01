@@ -2,7 +2,7 @@
  * ========== Core Styling ========== 
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+/* Fonts are now loaded via next/font/google in _app.tsx */
 
 :root {
   /* Color system */
@@ -539,9 +539,9 @@ span[class*='_background'] {
   margin-top: 0.5em;
 }
 
-.posts-heading-toggle h2 {
+.posts-heading-toggle h1 {
   margin: 0;
-  padding: 0;
+  padding: 3px 0px 3px2px;
   flex: 1;
   font-family: var(--font-serif);
   font-weight: 600;
