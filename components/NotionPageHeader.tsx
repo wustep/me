@@ -87,7 +87,11 @@ function ToggleThemeButton() {
       role='button'
       title='Toggle theme'
     >
-      {hasMounted && isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
+      {hasMounted && isDarkMode ? (
+        <IoMoonSharp className='w-4 h-4' />
+      ) : (
+        <IoSunnyOutline className='w-4 h-4' />
+      )}
     </div>
   )
 }

@@ -131,14 +131,14 @@ function LayoutContent({
         <div className='ml-auto flex items-center gap-2'>
           <Link
             href='/'
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-border hover:bg-accent hover:text-accent-foreground transition-colors'
+            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors'
             aria-label='Go home'
           >
             <Home className='h-4 w-4' />
           </Link>
           <button
             onClick={toggleDarkMode}
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-border hover:bg-accent hover:text-accent-foreground transition-colors'
+            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors'
             title={
               hasMounted
                 ? isDarkMode
