@@ -13,7 +13,7 @@ export default function PlaygroundTbdbitlPage() {
           we walk through the marching band’s history, instrumentation,
           uniforms, and famous traditions.
         </p>
-        <div className='rounded-3xl border bg-card shadow-lg'>
+        <div className='border bg-card shadow-xl'>
           <iframe
             src='https://wustep.github.io/tbdbitl/'
             title='TBDBITL Infographic'
