@@ -17,7 +17,7 @@ export default function PlaygroundTbdbitlPage() {
           <iframe
             src='https://wustep.github.io/tbdbitl/'
             title='TBDBITL Infographic'
-            className='h-[900px] w-full rounded-3xl'
+            className='h-[900px] w-full'
           />
         </div>
       </div>
