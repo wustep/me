@@ -155,17 +155,28 @@ export function PlaygroundSidebar({
                       onMouseLeave={resetDescription}
                       onBlur={resetDescription}
                     >
-                      <Link
-                        href={item.url}
-                        className='flex w-full items-center justify-between gap-2'
-                      >
-                        <span>{item.title}</span>
-                        {item.year ? (
-                          <span className='text-[11px] text-muted-foreground'>
-                            {item.year}
-                          </span>
-                        ) : null}
-                      </Link>
+                      {item.disabled ? (
+                        <span className='flex w-full items-center justify-between gap-2 text-muted-foreground/60'>
+                          <span className='truncate'>{item.title}</span>
+                          {item.year ? (
+                            <span className='text-[11px] text-muted-foreground/60'>
+                              {item.year}
+                            </span>
+                          ) : null}
+                        </span>
+                      ) : (
+                        <Link
+                          href={item.url}
+                          className='flex w-full items-center justify-between gap-2'
+                        >
+                          <span className='truncate'>{item.title}</span>
+                          {item.year ? (
+                            <span className='text-[11px] text-muted-foreground/60'>
+                              {item.year}
+                            </span>
+                          ) : null}
+                        </Link>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
