@@ -192,13 +192,11 @@ h6 {
 }
 
 .playground-action-button:hover {
-  background-color: rgba(39, 149, 233, 0.14);
-  color: #0f67cf;
+  background-color: var(--fg-color-0);
 }
 
 .dark-mode .playground-action-button:hover {
-  background-color: rgba(39, 149, 233, 0.28);
-  color: #8ac9ff;
+  background-color: var(--bg-color-0);
 }
 
 .playground-sidebar-brand {
