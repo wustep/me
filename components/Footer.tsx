@@ -1,20 +1,22 @@
-import { FaEnvelopeOpenText } from "@react-icons/all-files/fa/FaEnvelopeOpenText";
-import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
-import { FaMastodon } from "@react-icons/all-files/fa/FaMastodon";
-import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
-import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
-import { FaZhihu } from "@react-icons/all-files/fa/FaZhihu";
-import * as React from "react";
+import * as React from 'react'
 
-import * as config from "@/lib/config";
+import * as config from '@/lib/config'
 
-import styles from "./styles.module.css";
+import {
+  GithubIcon,
+  LinkedinIcon,
+  MastodonIcon,
+  NewsletterIcon,
+  XIcon,
+  YoutubeIcon,
+  ZhihuIcon
+} from '../icons/SocialIcons'
+import styles from './styles.module.css'
 
 // TODO: merge the data and icons from PageSocial with the social links in Footer
 
 export function FooterImpl() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   // @wustep: Remove dark mode button.
   // const [hasMounted, setHasMounted] = React.useState(false)
@@ -51,15 +53,15 @@ export function FooterImpl() {
       </div> */}
 
       <div className={styles.social}>
-        {config.twitter && (
+        {config.x && (
           <a
             className={styles.twitter}
-            href={`https://twitter.com/${config.twitter}`}
-            title={`Twitter @${config.twitter}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`https://x.com/${config.x}`}
+            title={`X @${config.x}`}
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaTwitter />
+            <XIcon />
           </a>
         )}
 
@@ -68,9 +70,9 @@ export function FooterImpl() {
             className={styles.mastodon}
             href={config.mastodon}
             title={`Mastodon ${config.getMastodonHandle()}`}
-            rel="me"
+            rel='me'
           >
-            <FaMastodon />
+            <MastodonIcon />
           </a>
         )}
 
@@ -79,10 +81,10 @@ export function FooterImpl() {
             className={styles.zhihu}
             href={`https://zhihu.com/people/${config.zhihu}`}
             title={`Zhihu @${config.zhihu}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaZhihu />
+            <ZhihuIcon />
           </a>
         )}
 
@@ -91,10 +93,10 @@ export function FooterImpl() {
             className={styles.github}
             href={`https://github.com/${config.github}`}
             title={`GitHub @${config.github}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaGithub />
+            <GithubIcon />
           </a>
         )}
 
@@ -103,10 +105,10 @@ export function FooterImpl() {
             className={styles.linkedin}
             href={`https://www.linkedin.com/in/${config.linkedin}`}
             title={`LinkedIn ${config.author}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaLinkedin />
+            <LinkedinIcon />
           </a>
         )}
 
@@ -115,10 +117,10 @@ export function FooterImpl() {
             className={styles.newsletter}
             href={`${config.newsletter}`}
             title={`Newsletter ${config.author}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaEnvelopeOpenText />
+            <NewsletterIcon />
           </a>
         )}
 
@@ -127,15 +129,15 @@ export function FooterImpl() {
             className={styles.youtube}
             href={`https://www.youtube.com/${config.youtube}`}
             title={`YouTube ${config.author}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <FaYoutube />
+            <YoutubeIcon />
           </a>
         )}
       </div>
     </footer>
-  );
+  )
 }
 
-export const Footer = React.memo(FooterImpl);
+export const Footer = React.memo(FooterImpl)

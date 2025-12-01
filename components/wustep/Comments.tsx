@@ -21,7 +21,8 @@ export function Comments() {
     giscusScript.dataset.categoryId = config.giscus.categoryId
     giscusScript.dataset.mapping = config.giscus.mapping || 'pathname'
     giscusScript.dataset.strict = config.giscus.strict || '1'
-    giscusScript.dataset.reactionsEnabled = config.giscus.reactionsEnabled || '0'
+    giscusScript.dataset.reactionsEnabled =
+      config.giscus.reactionsEnabled || '0'
     giscusScript.dataset.emitMetadata = config.giscus.emitMetadata || '0'
     giscusScript.dataset.inputPosition = config.giscus.inputPosition || 'top'
     giscusScript.dataset.theme = `${config.host}/giscus/${isDarkMode ? 'dark' : 'light'}.css`

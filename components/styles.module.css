@@ -57,7 +57,7 @@
   width: 100%;
   max-width: 1100px;
   margin: auto auto 0;
-  padding: 8px;
+  padding: 8px 12px;
 
   display: flex;
   flex-direction: row;
@@ -90,6 +90,14 @@
   padding: 0.25em;
   margin-right: 1vw;
   transition: color 250ms ease-out;
+}
+
+.settings a svg,
+.social a svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+  fill: currentColor;
 }
 
 .settings a:last-of-type,

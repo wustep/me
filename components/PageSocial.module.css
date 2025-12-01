@@ -44,7 +44,8 @@
 .actionBg svg {
   width: 50%;
   height: 50%;
-  fill: var(--fg-color-6);
+  color: var(--fg-color-6);
+  fill: currentColor;
   /* @wustep: this 3px makes the svg look more centered */
   margin-top: 3px;
 }
@@ -67,12 +68,12 @@
 }
 
 .action:hover svg {
-  transition: fill 100ms ease-out;
-  fill: var(--bg-color);
+  transition: color 100ms ease-out;
+  color: #ffffff;
 }
 
 :global(.dark-mode) .action:hover svg {
-  fill: var(--fg-color);
+  color: var(--fg-color);
 }
 
 .facebook .actionBgPane {
