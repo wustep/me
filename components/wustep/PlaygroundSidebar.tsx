@@ -52,8 +52,10 @@ const sections: { title: string; items: SidebarItem[] }[] = [
       {
         title: 'Bomberman',
         url: '/playground/bomberman',
-        disabled: true,
-        description: 'Work-in-progress remake of the SNES classic.',
+        disabled: false,
+        description:
+          'Two-player Bomberman clone with emojis. Fully vibe coded with Cursor & Claude 3.5 Sonnet.',
+        date: 'Nov 2024',
         year: '2024'
       }
     ]

@@ -14,6 +14,12 @@ const projects = [
     url: '/playground/particle-systems',
     description: 'Dynamic particle animations and physics',
     gradient: 'from-blue-500 to-cyan-500'
+  },
+  {
+    title: 'Bomberman',
+    url: '/playground/bomberman',
+    description: 'Two-player Bomberman clone with pets & power-ups',
+    gradient: 'from-orange-500 to-rose-500'
   }
 ]
 
