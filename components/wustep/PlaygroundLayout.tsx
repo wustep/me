@@ -95,7 +95,7 @@ function LayoutContent({
       className='transition-[padding] duration-200 bg-background'
       style={insetStyle as React.CSSProperties}
     >
-      <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-background'>
+      <header className='flex h-[54px] shrink-0 items-center gap-2 border-b px-4 pr-3 bg-background'>
         <SidebarTrigger className='-ml-1' />
         <Separator
           orientation='vertical'
