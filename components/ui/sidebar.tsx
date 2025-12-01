@@ -1,6 +1,5 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
-import Cookies from 'js-cookie'
 import { PanelLeft } from 'lucide-react'
 import * as React from 'react'
 
@@ -24,8 +23,6 @@ import {
 import { useIsMobile } from '@/lib/use-mobile'
 import { cn } from '@/lib/utils'
 
-const SIDEBAR_COOKIE_NAME = 'sidebar_state'
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
@@ -87,12 +84,6 @@ const SidebarProvider = React.forwardRef<
         } else {
           _setOpen(openState)
         }
-
-        // Persist the sidebar preference without touching document.cookie directly.
-        Cookies.set(SIDEBAR_COOKIE_NAME, String(openState), {
-          path: '/',
-          expires: SIDEBAR_COOKIE_MAX_AGE / (60 * 60 * 24)
-        })
       },
       [setOpenProp, open]
     )

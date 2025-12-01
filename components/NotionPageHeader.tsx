@@ -1,4 +1,5 @@
 import type * as types from 'notion-types'
+import { ImLab } from '@react-icons/all-files/im/ImLab'
 import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
 import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
 import cs from 'classnames'
@@ -9,28 +10,6 @@ import { isSearchEnabled, navigationLinks, navigationStyle } from '@/lib/config'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import styles from './styles.module.css'
-
-function ToggleThemeButton() {
-  const [hasMounted, setHasMounted] = React.useState(false)
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-  React.useEffect(() => {
-    setHasMounted(true)
-  }, [])
-
-  const onToggleTheme = React.useCallback(() => {
-    toggleDarkMode()
-  }, [toggleDarkMode])
-
-  return (
-    <div
-      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
-      onClick={onToggleTheme}
-    >
-      {hasMounted && isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
-    </div>
-  )
-}
 
 export function NotionPageHeader({
   block
@@ -79,11 +58,58 @@ export function NotionPageHeader({
             })
             .filter(Boolean)}
 
+          <PlaygroundButton />
           <ToggleThemeButton />
 
           {isSearchEnabled && <Search block={block} title={null} />}
         </div>
       </div>
     </header>
+  )
+}
+
+function ToggleThemeButton() {
+  const [hasMounted, setHasMounted] = React.useState(false)
+  const { isDarkMode, toggleDarkMode } = useDarkMode()
+
+  React.useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  const onToggleTheme = React.useCallback(() => {
+    toggleDarkMode()
+  }, [toggleDarkMode])
+
+  return (
+    <div
+      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
+      onClick={onToggleTheme}
+      role='button'
+      title='Toggle theme'
+    >
+      {hasMounted && isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
+    </div>
+  )
+}
+
+function PlaygroundButton() {
+  const [hasMounted, setHasMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  return (
+    <div
+      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
+      onClick={() => {
+        window.location.href = '/playground'
+      }}
+      aria-label='Open playground'
+      title='Open playground'
+      role='button'
+    >
+      <ImLab className='w-4 h-4' />
+    </div>
   )
 }
