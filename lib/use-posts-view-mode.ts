@@ -8,7 +8,11 @@ const DEFAULT_VIEW_MODE: ViewMode = 'list'
 /**
  * Custom hook to manage and persist the posts view mode (gallery/list) in localStorage
  */
-export function usePostsViewMode(): [ViewMode, (mode: ViewMode) => void] {
+export function usePostsViewMode(): [
+  ViewMode,
+  (mode: ViewMode) => void,
+  boolean
+] {
   const [viewMode, setViewModeState] = useState<ViewMode>(DEFAULT_VIEW_MODE)
   const [isInitialized, setIsInitialized] = useState(false)
 
@@ -44,5 +48,9 @@ export function usePostsViewMode(): [ViewMode, (mode: ViewMode) => void] {
     }
   }, [])
 
-  return [isInitialized ? viewMode : DEFAULT_VIEW_MODE, setViewMode]
+  return [
+    isInitialized ? viewMode : DEFAULT_VIEW_MODE,
+    setViewMode,
+    isInitialized
+  ]
 }

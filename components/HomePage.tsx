@@ -9,7 +9,7 @@ import { NotionPage } from './NotionPage'
 import { PostsHeadingToggle } from './wustep/PostsHeadingToggle'
 
 export function HomePage(props: types.PageProps) {
-  const [viewMode, setViewMode] = usePostsViewMode()
+  const [viewMode, setViewMode, isInitialized] = usePostsViewMode()
   const toggleRef = React.useRef<HTMLDivElement>(null)
 
   const hasPostsToggle =
@@ -54,8 +54,20 @@ export function HomePage(props: types.PageProps) {
 
     const css: string[] = []
 
-    // Hide the original heading block
-    if (config.homePostsHeadingBlockId) {
+    // Hide both views while initializing
+    if (!isInitialized) {
+      css.push(`
+        .home-view-mode-gallery .notion-block-${config.homeGalleryBlockIds.join(', .notion-block-')} {
+          display: none !important;
+        }
+        .home-view-mode-list .notion-block-${config.homeListBlockIds.join(', .notion-block-')} {
+          display: none !important;
+        }
+      `)
+    }
+
+    // Hide the original heading block (we're replacing it with our own one)
+    if (config.homePostsHeadingBlockId && isInitialized) {
       css.push(`
         .home-posts-toggle-enabled .notion-block-${config.homePostsHeadingBlockId} {
           display: none;
@@ -88,7 +100,7 @@ export function HomePage(props: types.PageProps) {
     }
 
     return css.join('\n')
-  }, [hasPostsToggle])
+  }, [hasPostsToggle, isInitialized])
 
   if (!hasPostsToggle) {
     return <NotionPage {...props} />

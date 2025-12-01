@@ -8,7 +8,7 @@ export default siteConfig({
   // that lets you swap between Gallery and List views
   // appends Posts view switcher to below callout block
   homePostsCalloutBlockId: '2bc5cb08cf2c8141a7c7d4cd615e2ec0',
-  homePostsHeadingBlockId: '2bc5cb08cf2c8139a85ee9e88503d31d',
+  homePostsHeadingBlockId: '2bc5cb08cf2c80e0ab93cce769a4d7dd',
   homeGalleryBlockIds: ['2bc5cb08cf2c8152b11be37c2c1bfe73'],
   homeListBlockIds: [
     '2bc5cb08cf2c817fa359c0f598dca6c3',
