@@ -1,27 +1,9 @@
 import Link from 'next/link'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
+import { playgroundEntries } from '@/playground/registry'
 
-const projects = [
-  {
-    title: 'WebGL Shaders',
-    url: '/playground/webgl-shaders',
-    description: 'Interactive shader experiments with WebGL',
-    gradient: 'from-purple-500 to-pink-500'
-  },
-  {
-    title: 'Particle Systems',
-    url: '/playground/particle-systems',
-    description: 'Dynamic particle animations and physics',
-    gradient: 'from-blue-500 to-cyan-500'
-  },
-  {
-    title: 'Bomberman',
-    url: '/playground/bomberman',
-    description: 'Two-player Bomberman clone with pets & power-ups',
-    gradient: 'from-orange-500 to-rose-500'
-  }
-]
+const projects = playgroundEntries.filter((project) => !project.disabled)
 
 export default function PlaygroundPage() {
   return (
@@ -37,13 +19,24 @@ export default function PlaygroundPage() {
             href={project.url}
             className='group relative overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow'
           >
-            <div
-              className={`aspect-video bg-linear-to-br ${project.gradient}`}
-            />
+            <div className='aspect-video w-full overflow-hidden'>
+              {project.image ? (
+                <div
+                  className='h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
+                  style={{ backgroundImage: `url(${project.image})` }}
+                />
+              ) : (
+                <div
+                  className={`h-full w-full bg-linear-to-br ${
+                    project.gradient ?? 'from-slate-700 to-slate-900'
+                  }`}
+                />
+              )}
+            </div>
             <div className='p-4'>
               <h3 className='font-semibold mb-1'>{project.title}</h3>
               <p className='text-sm text-muted-foreground'>
-                {project.description}
+                {project.summary ?? project.description}
               </p>
             </div>
           </Link>

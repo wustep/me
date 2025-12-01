@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 
-const ParticleSystems = dynamic(() => import('playground/particle-systems'), {
+const ParticleSystems = dynamic(() => import('@/playground/particle-systems'), {
   ssr: false
 })
 

@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 
-const WebGLShaders = dynamic(() => import('playground/webgl-shaders'), {
+const WebGLShaders = dynamic(() => import('@/playground/webgl-shaders'), {
   ssr: false
 })
 
