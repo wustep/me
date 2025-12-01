@@ -502,6 +502,35 @@ span[class*='_background'] {
   width: 100%;
 }
 
+/* Hide posts blocks by default to prevent flash on load */
+/* These rules apply immediately, before React hydrates */
+.notion-block-2bc5cb08cf2c8139a85ee9e88503d31d,
+.notion-block-2bc5cb08cf2c8152b11be37c2c1bfe73,
+.notion-block-2bc5cb08cf2c817fa359c0f598dca6c3,
+.notion-block-2bc5cb08cf2c81ad8323f21e6a64ec22,
+.notion-block-2bc5cb08cf2c8126802dff95486eaaba,
+.notion-block-2bc5cb08cf2c81d7b0edcf5beeb49783,
+.notion-block-2bc5cb08cf2c810ea3a4d86a0c5a30b9,
+.notion-block-2bc5cb08cf2c81ffa978c6d237f6b18d,
+.notion-block-2bc5cb08cf2c8190b3a0f1b33c3c913f,
+.notion-block-2bc5cb08cf2c812a9cf6db90ec304208 {
+  display: none !important;
+}
+
+/* Additional specificity with body class */
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c8139a85ee9e88503d31d,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c8152b11be37c2c1bfe73,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c817fa359c0f598dca6c3,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c81ad8323f21e6a64ec22,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c8126802dff95486eaaba,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c81d7b0edcf5beeb49783,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c810ea3a4d86a0c5a30b9,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c81ffa978c6d237f6b18d,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c8190b3a0f1b33c3c913f,
+.home-posts-toggle-enabled .notion-block-2bc5cb08cf2c812a9cf6db90ec304208 {
+  display: none !important;
+}
+
 /* Posts heading with toggle buttons */
 .posts-heading-toggle {
   display: flex;

@@ -54,7 +54,7 @@ export function HomePage(props: types.PageProps) {
 
     const css: string[] = []
 
-    // Hide the original heading block
+    // Hide the original heading block (always)
     if (config.homePostsHeadingBlockId) {
       css.push(`
         .home-posts-toggle-enabled .notion-block-${config.homePostsHeadingBlockId} {
@@ -63,7 +63,7 @@ export function HomePage(props: types.PageProps) {
       `)
     }
 
-    // Hide ALL posts blocks by default (both gallery and list)
+    // ALWAYS hide ALL posts blocks by default (both gallery and list)
     const allBlockIds = [
       ...config.homeGalleryBlockIds,
       ...config.homeListBlockIds
@@ -80,10 +80,10 @@ export function HomePage(props: types.PageProps) {
       `)
     }
 
-    // Only show blocks if initialized
+    // Only show the appropriate blocks after initialization
     if (isInitialized) {
       // Show list blocks in list mode
-      if (config.homeListBlockIds.length > 0) {
+      if (config.homeListBlockIds.length > 0 && viewMode === 'list') {
         const listSelectors = config.homeListBlockIds
           .map(
             (id) =>
@@ -98,7 +98,7 @@ export function HomePage(props: types.PageProps) {
       }
 
       // Show gallery blocks in gallery mode
-      if (config.homeGalleryBlockIds.length > 0) {
+      if (config.homeGalleryBlockIds.length > 0 && viewMode === 'gallery') {
         const gallerySelectors = config.homeGalleryBlockIds
           .map(
             (id) =>
@@ -114,9 +114,7 @@ export function HomePage(props: types.PageProps) {
     }
 
     return css.join('\n')
-  }, [hasPostsToggle, isInitialized])
-
-  console.log(bodyClasses, dynamicCSS, isInitialized)
+  }, [hasPostsToggle, isInitialized, viewMode])
 
   if (!hasPostsToggle) {
     return <NotionPage {...props} />
