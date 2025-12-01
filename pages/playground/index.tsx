@@ -32,7 +32,7 @@ export default function PlaygroundPage() {
             className='group relative overflow-hidden rounded-lg border bg-card hover:shadow-lg transition-shadow'
           >
             <div
-              className={`aspect-video bg-gradient-to-br ${project.gradient}`}
+              className={`aspect-video bg-linear-to-br ${project.gradient}`}
             />
             <div className='p-4'>
               <h3 className='font-semibold mb-1'>{project.title}</h3>

@@ -18,7 +18,7 @@ export default function ParticleSystemsPage() {
 
         <section>
           <h2 className='text-2xl font-semibold mb-4'>Demo</h2>
-          <div className='aspect-video rounded-lg border bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center'>
+          <div className='aspect-video rounded-lg border bg-linear-to-br from-blue-500 to-cyan-500 flex items-center justify-center'>
             <p className='text-white text-lg'>Canvas Placeholder</p>
           </div>
         </section>

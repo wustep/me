@@ -77,7 +77,6 @@ function LayoutContent({
   toggleDarkMode
 }: LayoutContentProps) {
   const { state, isMobile } = useSidebar()
-  console.log(state)
   const insetStyle = React.useMemo(() => {
     if (isMobile) return undefined
 
@@ -102,13 +101,14 @@ function LayoutContent({
         />
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem className='hidden md:block'>
-              <BreadcrumbLink href='/playground'>Playground</BreadcrumbLink>
-            </BreadcrumbItem>
-            {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={crumb.label ?? index}>
-                <BreadcrumbSeparator className='hidden md:block' />
-                <BreadcrumbItem>
+            {[
+              { label: 'Playground', href: '/playground', hideOnMobile: true },
+              ...(breadcrumbs ?? [])
+            ].map((crumb, index, arr) => (
+              <React.Fragment key={`${crumb.label}-${index}`}>
+                <BreadcrumbItem
+                  className={index === 0 ? 'hidden md:block' : undefined}
+                >
                   {crumb.href ? (
                     <BreadcrumbLink href={crumb.href}>
                       {crumb.label}
@@ -117,6 +117,11 @@ function LayoutContent({
                     <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
                   )}
                 </BreadcrumbItem>
+                {index < arr.length - 1 && (
+                  <BreadcrumbSeparator
+                    className={index === 0 ? 'hidden md:block' : undefined}
+                  />
+                )}
               </React.Fragment>
             ))}
           </BreadcrumbList>
@@ -124,14 +129,14 @@ function LayoutContent({
         <div className='ml-auto flex items-center gap-2'>
           <Link
             href='/'
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors'
+            className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-border hover:bg-accent hover:text-accent-foreground transition-colors'
             aria-label='Go home'
           >
             <Home className='h-4 w-4' />
           </Link>
           <button
             onClick={toggleDarkMode}
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:cursor-pointer hover:text-accent-foreground transition-colors'
+            className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-border hover:bg-accent hover:text-accent-foreground transition-colors'
             title={
               hasMounted
                 ? isDarkMode

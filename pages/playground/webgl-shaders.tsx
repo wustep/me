@@ -18,7 +18,7 @@ export default function WebGLShadersPage() {
 
         <section>
           <h2 className='text-2xl font-semibold mb-4'>Demo</h2>
-          <div className='aspect-video rounded-lg border bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center'>
+          <div className='aspect-video rounded-lg border bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center'>
             <p className='text-white text-lg'>WebGL Canvas Placeholder</p>
           </div>
         </section>
