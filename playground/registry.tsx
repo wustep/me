@@ -21,22 +21,14 @@ export const playgroundSections: PlaygroundSection[] = [
     title: 'Experiments',
     items: [
       {
-        title: 'WebGL Shaders',
-        url: '/playground/webgl-shaders',
-        description: 'Realtime fragment shader sketches rendered in WebGL.',
-        summary: 'Interactive shader experiments with WebGL',
-        date: 'Jan 2025',
+        title: 'Shadcn + Physics',
+        url: '/playground/shadcn-physics',
+        description: 'An iframe-powered physics sandbox built with shadcn UI.',
+        summary:
+          'Throw, stack, and collide shadcn/ui components with Matter.js',
+        date: 'Dec 2025',
         year: '2025',
-        gradient: 'from-purple-500 to-pink-500'
-      },
-      {
-        title: 'Particle Systems',
-        url: '/playground/particle-systems',
-        description: '10k+ particles with custom physics integrator.',
-        summary: 'Dynamic particle animations and physics',
-        date: 'Feb 2025',
-        year: '2025',
-        gradient: 'from-blue-500 to-cyan-500'
+        gradient: 'from-emerald-500 via-cyan-500 to-blue-500'
       }
     ]
   },
@@ -63,7 +55,7 @@ export const playgroundSections: PlaygroundSection[] = [
       {
         title: 'Starry Night Sequencer',
         url: '/playground/starry-sequencer',
-        description: 'Audio-reactive visualizer inspired by Van Gogh.',
+        description: 'MIDI visualizer inspired by Van Gogh.',
         summary: 'Audio-reactive MIDI visualizer inspired by Van Gogh',
         date: 'Dec 2016',
         year: '2016',
