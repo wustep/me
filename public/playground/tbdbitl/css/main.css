@@ -1,0 +1,474 @@
+/* Main container */
+body {
+  /*background-color: #E9E9E9;*/
+  padding-top: 55px;
+}
+
+.navbar-brand {
+  font-family: "Helvetica Neue", "Helvetica", "Open Sans", Arial, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+}
+@media screen and (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+  h1.display-3 {
+    font-size: 2.7rem;
+  }
+}
+b {
+  /* Fix for fonts not appearing as bold */
+  font-weight: bolder;
+  font-weight: bold;
+}
+/* Bootstrap Tooltips */
+.tooltip-inner {
+  text-align: left;
+  max-width: none;
+}
+.tooltipper {
+  display: inline-block;
+  border-bottom: 4px double #bb0000;
+}
+.tooltipper-2 {
+  color: #bb0000;
+}
+.tooltipper-2:hover {
+  cursor: default;
+}
+.tooltip.tooltip-top,
+.tooltip.bs-tether-element-attached-bottom {
+  margin-top: 10px;
+}
+/* Statistics */
+.stat,
+.stat-alt {
+  font-weight: bold;
+}
+.stat {
+  color: #bb0000 !important;
+}
+.stat-alt {
+  color: #666666 !important;
+}
+.stat0,
+#acronym {
+  font-size: 95px;
+}
+.stat1 {
+  font-size: 58px;
+}
+.stat2,
+#expansion {
+  font-size: 39px;
+}
+.stat3 {
+  font-size: 27px;
+}
+.stat4 {
+  font-size: 17px;
+}
+#acronym,
+#expansion {
+  font-family: "Georgia", "Times", "Open-Sans", "Helvetica Neue", "Helvetica",
+    sans-serif;
+  color: #bb0000;
+}
+@media screen and (max-width: 992px) {
+  .stat0,
+  #acronym {
+    font-size: 84px;
+  }
+  .stat1 {
+    font-size: 64px;
+  }
+  .stat2,
+  #expansion {
+    font-size: 36px;
+  }
+}
+.acro,
+.stat {
+  cursor: default;
+}
+.acro.selected {
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* History */
+#band-guy,
+#band-guy-tooltip {
+  /* Tooltip is for credits at bottom */
+  background: url("../img-p/band-guy.png");
+  width: 100px;
+}
+#drum-major {
+  background: url("../img/drum-major.png");
+  width: 86px;
+}
+#band-guy,
+#drum-major,
+#band-guy-tooltip {
+  margin-top: 53px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 200px;
+  display: inline-block;
+}
+#band-guy-tooltip {
+  margin: 3px;
+  text-align: center;
+}
+#player-0,
+#player-1 {
+  position: absolute;
+  width: 38px;
+  height: 40px;
+  margin-top: 73px;
+  background-color: white;
+  border-radius: 100%;
+  border: 1px solid black;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+}
+#player-0 {
+  margin-left: 23px;
+}
+#player-1 {
+  margin-left: 32px;
+}
+.play,
+.pause {
+  position: absolute;
+  margin-left: -10.5px;
+  margin-top: 4px;
+}
+.play {
+  width: 22px;
+  height: 30px;
+  border-top: 15px solid transparent;
+  border-left: 24px solid #bb0000;
+  border-bottom: 15px solid transparent;
+}
+.play:hover {
+  border-left: 25px solid #666666;
+}
+.pause {
+  width: 21px;
+  height: 30px;
+  border-right: 8px solid #bb0000;
+  border-left: 8px solid #bb0000;
+}
+.pause:hover {
+  border-right: 9px solid #666666;
+  border-left: 9px solid #666666;
+}
+/* History Timeline, adapted from https://webdesign.tutsplus.com/tutorials/building-a-vertical-timeline-with-css-and-a-touch-of-javascript--cms-26528 */
+.timeline ul {
+  color: white;
+}
+
+.timeline ul li {
+  list-style-type: none;
+  position: relative;
+  width: 6px;
+  margin: 0 auto;
+  padding-top: 50px;
+  background: #cacaca;
+}
+
+.timeline ul li::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.timeline ul li div {
+  position: relative;
+  bottom: 0;
+  width: 400px;
+  padding: 15px;
+  background: #bb0000;
+}
+
+.timeline ul li div::before {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.timeline ul li:nth-child(odd) div {
+  left: 45px;
+}
+
+.timeline ul li:nth-child(odd) div::before {
+  left: -15px;
+  border-width: 8px 16px 8px 0;
+  border-color: transparent #bb0000 transparent transparent;
+}
+
+.timeline ul li:nth-child(even) div {
+  left: -439px;
+}
+
+.timeline ul li:nth-child(even) div::before {
+  right: -15px;
+  border-width: 8px 0 8px 16px;
+  border-color: transparent transparent transparent #bb0000;
+}
+
+time {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.timeline ul li::after {
+  transition: background 0.5s ease-in-out;
+}
+
+.timeline ul li.in-view::after {
+  background: #666666;
+}
+
+.timeline ul li div {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+}
+
+.timeline ul li:nth-child(odd) div {
+  transform: translate3d(200px, 0, 0);
+}
+
+.timeline ul li:nth-child(even) div {
+  transform: translate3d(-200px, 0, 0);
+}
+
+.timeline ul li.in-view div {
+  transform: none;
+  visibility: visible;
+  opacity: 1;
+}
+@media screen and (max-width: 900px) {
+  .timeline ul li div {
+    width: 250px;
+  }
+  .timeline ul li:nth-child(even) div {
+    left: -289px;
+    /*250+45-6*/
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .timeline ul li {
+    margin-left: 5%;
+  }
+  .timeline ul li div {
+    width: 250px;
+  }
+  .timeline ul li:nth-child(even) div {
+    left: 45px;
+  }
+  .timeline ul li:nth-child(even) div::before {
+    left: -15px;
+    border-width: 8px 16px 8px 0;
+    border-color: transparent #f45b69 transparent transparent;
+  }
+}
+/* People */
+#members {
+  text-align: center;
+}
+#members-inner {
+  text-align: left;
+  display: inline-block;
+}
+#genders {
+  vertical-align: center;
+  text-align: center;
+}
+#male {
+  background: url("../img/M.png");
+  width: 68px;
+  margin: 0 30px 0 0;
+}
+#female {
+  background: url("../img/F.png");
+  width: 44px;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+}
+#male,
+#female {
+  background-size: contain;
+  height: 100px;
+  display: inline-block;
+}
+#engineering {
+  background: url("../img/engineering.png");
+}
+#music {
+  background: url("../img/music.png");
+}
+#engineering,
+#music {
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+}
+#majors {
+  text-align: center;
+  vertical-align: center;
+  max-width: 250px;
+}
+.borderless td,
+.borderless th {
+  border: none;
+  padding: 0;
+}
+table.borderless {
+  margin: 0 auto;
+}
+#years-chart {
+  width: 370px;
+  height: 350px;
+}
+.bar > rect {
+  fill: #bb0000;
+}
+.bar > .value {
+  fill: white;
+}
+/* Instruments - Dynamic Donut Pie Chart */
+#instruments-pie {
+  width: 660px;
+  height: 450px;
+}
+svg {
+  width: 100%;
+  height: 100%;
+}
+path.slice {
+  stroke-width: 2px;
+}
+polyline {
+  opacity: 0.3;
+  stroke: black;
+  stroke-width: 2px;
+  fill: none;
+}
+.labelValue {
+  font-size: 60%;
+  opacity: 0.5;
+}
+.toolTip {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: absolute;
+  display: none;
+  width: auto;
+  height: auto;
+  background: none repeat scroll 0 0 white;
+  border: 0 none;
+  border-radius: 8px;
+  box-shadow: -3px 3px 15px #888888;
+  color: black;
+  font: 12px sans-serif;
+  padding: 5px;
+  text-align: center;
+}
+.instrument-arrow {
+  /* Prevent highlighting for arrow */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+}
+.instrument-arrow:hover {
+  color: #bb0000;
+  cursor: pointer;
+}
+/* Instruments - Dynamic Instruments Chart */
+#instruments-chart {
+  width: 460px;
+  height: 450px;
+}
+.instrument-0 {
+  background: url("../img/instruments/0.png");
+  height: 70px;
+}
+.instrument-1 {
+  background: url("../img/instruments/1.png");
+  height: 70px;
+}
+.instrument-2 {
+  background: url("../img/instruments/2.png");
+  height: 70px;
+}
+.instrument-3 {
+  background: url("../img/instruments/3.png");
+  height: 70px;
+}
+.instrument-4 {
+  background: url("../img/instruments/4.png");
+  height: 50px;
+}
+.instrument-5 {
+  background: url("../img/instruments/5.png");
+  height: 95px;
+}
+.instrument-6 {
+  background: url("../img/instruments/6.png");
+  height: 70px;
+}
+.instrument-7 {
+  background: url("../img/instruments/7.png");
+  height: 70px;
+}
+.instrument-8 {
+  background: url("../img/instruments/8.png");
+  height: 70px;
+}
+.instrument-9 {
+  background: url("../img/instruments/9.png");
+  height: 80px;
+}
+.instrument-10 {
+  background: url("../img/instruments/10.png");
+  height: 90px;
+}
+.instrument {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 100%;
+  margin: 2px auto;
+  text-align: center;
+  display: block;
+}
+/* Show Buttons and Modal */
+.show-btn {
+  margin: 3px;
+}
+.show-btn:hover {
+  cursor: pointer;
+}
+#showModal .modal-content {
+  text-align: center;
+}

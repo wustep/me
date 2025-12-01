@@ -12,7 +12,7 @@ export default function PlaygroundBombermanPage() {
       <div className='space-y-6'>
         <p className='text-muted-foreground'>
           Bomberman clone with emojis. Fully vibe coded with Cursor & Claude 3.5
-          Sonnet in half a day.
+          Sonnet in half a day for fun.
         </p>
         <Bomberman />
       </div>

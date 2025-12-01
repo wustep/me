@@ -31,49 +31,45 @@ const armoredTurtle: Pet = {
   })
 }
 
-export const PETS: Record<string, Pet> = {
+export const PETS = {
   OWL: speedOwl,
   TURTLE: armoredTurtle
 }
 
-const createPowerups = () => {
-  const speed: PowerUp = {
-    type: 'buff',
-    emoji: '⚡️' as const,
-    name: 'Speed Boost',
-    effect: (player: Player) => ({
-      speed: player.speed + 0.5,
-      baseSpeed: player.baseSpeed + 0.5
-    })
-  }
-  const range: PowerUp = {
-    type: 'buff',
-    emoji: '💪' as const,
-    name: 'Range Up',
-    effect: (player: Player) => ({
-      bombRange: player.bombRange + 1
-    })
-  }
-
-  const bomb: PowerUp = {
-    type: 'buff',
-    emoji: '➕' as const,
-    name: 'Extra Bomb',
-    effect: (player: Player) => ({
-      maxBombs: player.maxBombs + 1
-    })
-  }
-
-  return {
-    SPEED: speed,
-    RANGE: range,
-    BOMB: bomb,
-    OWL: PETS.OWL,
-    TURTLE: PETS.TURTLE
-  }
+const speed: PowerUp = {
+  type: 'buff',
+  emoji: '⚡️' as const,
+  name: 'Speed Boost',
+  effect: (player: Player) => ({
+    speed: player.speed + 0.5,
+    baseSpeed: player.baseSpeed + 0.5
+  })
+}
+const range: PowerUp = {
+  type: 'buff',
+  emoji: '💪' as const,
+  name: 'Range Up',
+  effect: (player: Player) => ({
+    bombRange: player.bombRange + 1
+  })
 }
 
-export const POWERUPS: Record<string, PowerUp> = createPowerups()
+const bomb: PowerUp = {
+  type: 'buff',
+  emoji: '➕' as const,
+  name: 'Extra Bomb',
+  effect: (player: Player) => ({
+    maxBombs: player.maxBombs + 1
+  })
+}
+
+export const POWERUPS = {
+  SPEED: speed,
+  RANGE: range,
+  BOMB: bomb,
+  OWL: PETS.OWL,
+  TURTLE: PETS.TURTLE
+}
 
 export const POWERUP_EMOJIS = Object.values(POWERUPS).map((p) => p.emoji)
 type PowerUpEmoji = (typeof POWERUP_EMOJIS)[number]
