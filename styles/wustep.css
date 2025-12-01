@@ -125,6 +125,8 @@ h6 {
   width: 1.1em;
 }
 
+/* Colorful playground/home nav buttons */
+
 @keyframes playground-home-pulse {
   0% {
     transform: scale(1);
@@ -1055,7 +1057,8 @@ span[class*='_background'] {
   border-top: 0.5px solid var(--color-border);
 }
 
-*/ ::-webkit-scrollbar {
+/* Hide scrollbars */
+::-webkit-scrollbar {
   display: none;
 }
 
