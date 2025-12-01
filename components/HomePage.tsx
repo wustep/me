@@ -1,127 +1,116 @@
-import type { Block } from 'notion-types'
-import cs from 'classnames'
-import { getBlockTitle, parsePageId } from 'notion-utils'
 import * as React from 'react'
 import BodyClassName from 'react-body-classname'
 
-import { NotionPage } from '@/components/NotionPage'
+import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
-import { type PostsViewMode } from '@/lib/posts-view'
-import { type PageProps } from '@/lib/types'
-import { useHomePostsViewPreference } from '@/lib/use-home-posts-view'
+import { usePostsViewMode } from '@/lib/use-posts-view-mode'
 
+import { NotionPage } from './NotionPage'
 import { PostsHeadingToggle } from './wustep/PostsHeadingToggle'
 
-const POSTS_HEADING_TEXT = 'posts'
-const POSTS_HEADING_TYPES = new Set(['header', 'sub_header', 'sub_sub_header'])
+export function HomePage(props: types.PageProps) {
+  const [viewMode, setViewMode] = usePostsViewMode()
+  const toggleRef = React.useRef<HTMLDivElement>(null)
 
-const HOME_VIEW_VISIBILITY_STYLES = [
-  config.homeGalleryBlockId
-    ? `.home-view-list .notion-block-${config.homeGalleryBlockId} { display: none !important; }`
-    : '',
-  ...(config.homeListBlockIds ?? []).map(
-    (blockId) =>
-      `.home-view-gallery .notion-block-${blockId} { display: none !important; }`
-  ),
-  config.homePostsHeadingBlockId
-    ? `.home-view .notion-block-${config.homePostsHeadingBlockId} { display: none !important; }`
-    : ''
-]
-  .filter(Boolean)
-  .join('\n')
+  const hasPostsToggle =
+    config.homePostsCalloutBlockId &&
+    config.homePostsHeadingBlockId &&
+    config.homeGalleryBlockIds.length > 0 &&
+    config.homeListBlockIds.length > 0
 
-export function HomePage(props: PageProps) {
-  const { recordMap } = props
-  const [view, setView] = useHomePostsViewPreference('gallery')
-
-  const headingBlock = React.useMemo(() => {
-    const overrideBlock = getBlockValue(
-      recordMap,
-      normalizeNotionId(config.homePostsHeadingBlockId)
-    )
-
-    if (overrideBlock) {
-      return overrideBlock
+  // Insert the posts toggle after the callout block
+  // This is a bit hacky and non-Reacty, but it's sorta a workaround that must be done because we can't otherwise override the components inside.
+  React.useEffect(() => {
+    if (!hasPostsToggle || !toggleRef.current) {
+      return
     }
 
-    return getBlockValue(
-      recordMap,
-      findHeadingBlockId(recordMap, POSTS_HEADING_TEXT)
+    // Find the callout block by its ID
+    const calloutBlock = document.querySelector(
+      `.notion-block-${config.homePostsCalloutBlockId}`
     )
-  }, [recordMap])
 
-  const bodyClassName = cs('home-view', `home-view-${view}`)
+    if (calloutBlock && toggleRef.current) {
+      // Insert the toggle after the callout block
+      calloutBlock.after(toggleRef.current)
+    }
+  }, [hasPostsToggle, props.recordMap])
 
-  const handleSelectView = React.useCallback(
-    (nextView: PostsViewMode) => {
-      setView(nextView)
-    },
-    [setView]
-  )
+  // Build CSS classes to hide the appropriate blocks
+  const bodyClasses = React.useMemo(() => {
+    if (!hasPostsToggle) {
+      return undefined
+    }
+
+    const classes = ['home-posts-toggle-enabled', `home-view-mode-${viewMode}`]
+    return classes.join(' ')
+  }, [hasPostsToggle, viewMode])
+
+  // Generate dynamic CSS to hide blocks based on view mode
+  const dynamicCSS = React.useMemo(() => {
+    if (!hasPostsToggle) {
+      return null
+    }
+
+    const css: string[] = []
+
+    // Hide the original heading block
+    if (config.homePostsHeadingBlockId) {
+      css.push(`
+        .home-posts-toggle-enabled .notion-block-${config.homePostsHeadingBlockId} {
+          display: none;
+        }
+      `)
+    }
+
+    // Hide list blocks in gallery mode
+    if (config.homeListBlockIds.length > 0) {
+      const listSelectors = config.homeListBlockIds
+        .map((id) => `.home-view-mode-gallery .notion-block-${id}`)
+        .join(',\n')
+      css.push(`
+        ${listSelectors} {
+          display: none !important;
+        }
+      `)
+    }
+
+    // Hide gallery blocks in list mode
+    if (config.homeGalleryBlockIds.length > 0) {
+      const gallerySelectors = config.homeGalleryBlockIds
+        .map((id) => `.home-view-mode-list .notion-block-${id}`)
+        .join(',\n')
+      css.push(`
+        ${gallerySelectors} {
+          display: none !important;
+        }
+      `)
+    }
+
+    return css.join('\n')
+  }, [hasPostsToggle])
+
+  if (!hasPostsToggle) {
+    return <NotionPage {...props} />
+  }
 
   return (
     <>
-      <BodyClassName className={bodyClassName} />
-      {HOME_VIEW_VISIBILITY_STYLES && (
-        <style jsx global>{HOME_VIEW_VISIBILITY_STYLES}</style>
-      )}
+      {bodyClasses && <BodyClassName className={bodyClasses} />}
 
-      {headingBlock && (
+      {/* Inject dynamic CSS for hiding blocks */}
+      {dynamicCSS && <style dangerouslySetInnerHTML={{ __html: dynamicCSS }} />}
+
+      {/* Render the toggle - will be moved into position by useEffect */}
+      <div ref={toggleRef} className='custom-posts-toggle-wrapper'>
         <PostsHeadingToggle
-          headingBlock={headingBlock}
-          currentView={view}
-          onSelectView={handleSelectView}
+          blockId={config.homePostsHeadingBlockId!}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
         />
-      )}
+      </div>
 
       <NotionPage {...props} />
     </>
   )
 }
-
-function findHeadingBlockId(
-  recordMap: PageProps['recordMap'],
-  title: string
-): string | null {
-  if (!recordMap?.block) {
-    return null
-  }
-
-  const normalizedTitle = title.trim().toLowerCase()
-
-  for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = block?.value as Block | undefined
-
-    if (!blockValue || !POSTS_HEADING_TYPES.has(blockValue.type)) {
-      continue
-    }
-
-    const blockTitle = getBlockTitle(blockValue, recordMap)
-
-    if (blockTitle?.trim().toLowerCase() === normalizedTitle) {
-      return normalizeNotionId(blockId)
-    }
-  }
-
-  return null
-}
-
-function getBlockValue(
-  recordMap: PageProps['recordMap'],
-  blockId?: string | null
-) {
-  if (!recordMap?.block || !blockId) {
-    return null
-  }
-
-  return recordMap.block[blockId]?.value ?? null
-}
-
-function normalizeNotionId(id?: string | null) {
-  if (!id) {
-    return null
-  }
-
-  return parsePageId(id, { uuid: false })
-}
-

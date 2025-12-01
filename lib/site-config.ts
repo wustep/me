@@ -17,8 +17,9 @@ export interface GiscusConfig {
 export interface SiteConfig {
   rootNotionPageId: string
   rootNotionSpaceId?: string | null
+  homePostsCalloutBlockId?: string
   homePostsHeadingBlockId?: string
-  homeGalleryBlockId?: string
+  homeGalleryBlockIds?: string[]
   homeListBlockIds?: string[]
 
   name: string

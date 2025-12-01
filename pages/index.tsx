@@ -1,5 +1,5 @@
 import type { PageProps } from '@/lib/types'
-import { NotionPage } from '@/components/NotionPage'
+import { HomePage } from '@/components/HomePage'
 import { domain } from '@/lib/config'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 
@@ -18,5 +18,5 @@ export const getStaticProps = async () => {
 }
 
 export default function NotionHomePage(props: PageProps) {
-  return <NotionPage {...props} />
+  return <HomePage {...props} />
 }

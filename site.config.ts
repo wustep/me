@@ -6,8 +6,10 @@ export default siteConfig({
 
   // optional block ids for the special "Posts" toggle switcher
   // that lets you swap between Gallery and List views
+  // appends Posts view switcher to below callout block
+  homePostsCalloutBlockId: '2bc5cb08cf2c8141a7c7d4cd615e2ec0',
   homePostsHeadingBlockId: '2bc5cb08cf2c8139a85ee9e88503d31d',
-  homeGalleryBlockId: '2bc5cb08cf2c8171a909000cdc0067ca',
+  homeGalleryBlockIds: ['2bc5cb08cf2c8152b11be37c2c1bfe73'],
   homeListBlockIds: [
     '2bc5cb08cf2c817fa359c0f598dca6c3',
     '2bc5cb08cf2c81ad8323f21e6a64ec22',
@@ -16,7 +18,7 @@ export default siteConfig({
     '2bc5cb08cf2c810ea3a4d86a0c5a30b9',
     '2bc5cb08cf2c81ffa978c6d237f6b18d',
     '2bc5cb08cf2c8190b3a0f1b33c3c913f',
-    '2bc5cb08cf2c812a9cf6db90ec304208',
+    '2bc5cb08cf2c812a9cf6db90ec304208'
   ],
 
   // if you want to restrict pages to a single notion workspace (optional)

@@ -489,6 +489,83 @@ span[class*='_background'] {
 }
 
 /**
+ * ========== Home Page: Posts Toggle View Mode ==========
+ * Hide gallery or list blocks based on the selected view mode
+ */
+
+.notion-block-2bc5cb08cf2c817fa359c0f598dca6c3 {
+  margin-top: 0.4em; /* from 1.1em, better spacing below Posts heading */
+}
+
+.custom-posts-toggle-wrapper {
+  width: 100%;
+}
+
+/* Posts heading with toggle buttons */
+.posts-heading-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5em;
+}
+
+.posts-heading-toggle h2 {
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  font-family: var(--font-serif);
+  font-weight: 600;
+}
+
+.posts-heading-toggle-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--fg-color-1);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.posts-heading-toggle-button {
+  padding: 0.4em 0.8em;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: var(--fg-color-1);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.posts-heading-toggle-button:first-child {
+  border-right: 1px solid var(--fg-color-1);
+}
+
+.posts-heading-toggle-button:hover {
+  background: var(--bg-color-1);
+}
+
+.posts-heading-toggle-button.active {
+  background: var(--fg-color-6);
+  color: var(--bg-color);
+}
+
+.posts-heading-toggle-button:focus-visible {
+  outline: 2px solid var(--fg-color-6);
+  outline-offset: 2px;
+}
+
+/* Dark mode adjustments */
+.dark-mode .posts-heading-toggle-button.active {
+  background: var(--fg-color-0);
+  color: var(--bg-color);
+}
+
+/**
  * Posts view toggle
  */
 .posts-section {
@@ -631,7 +708,6 @@ span[class*='_background'] {
   flex-shrink: 0;
 }
 
-
 @media screen and (min-width: 769px) {
   .notion-list-item {
     padding: 0 4px 0 0 /* from 0 4px */;
@@ -640,7 +716,6 @@ span[class*='_background'] {
     border-radius: 4px;
   }
 }
-
 
 .notion-list-item-property {
   /** Vertically align properties on the right of list views */

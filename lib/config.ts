@@ -41,6 +41,14 @@ const normalizeBlockId = (id?: string | null) => {
   return parsePageId(id, { uuid: false }) ?? null
 }
 
+const rawHomePostsCalloutBlockId = getSiteConfig(
+  'homePostsCalloutBlockId',
+  null
+) as string | null
+export const homePostsCalloutBlockId = rawHomePostsCalloutBlockId
+  ? normalizeBlockId(rawHomePostsCalloutBlockId)
+  : null
+
 const rawHomePostsHeadingBlockId = getSiteConfig(
   'homePostsHeadingBlockId',
   null
@@ -49,12 +57,15 @@ export const homePostsHeadingBlockId = rawHomePostsHeadingBlockId
   ? normalizeBlockId(rawHomePostsHeadingBlockId)
   : null
 
-const rawHomeGalleryBlockId = getSiteConfig('homeGalleryBlockId', null) as
+const rawHomeGalleryBlockIds = getSiteConfig('homeGalleryBlockIds', []) as
+  | string[]
   | string
   | null
-export const homeGalleryBlockId = rawHomeGalleryBlockId
-  ? normalizeBlockId(rawHomeGalleryBlockId)
-  : null
+export const homeGalleryBlockIds = Array.isArray(rawHomeGalleryBlockIds)
+  ? rawHomeGalleryBlockIds
+      .map((id) => normalizeBlockId(id))
+      .filter((id): id is string => !!id)
+  : []
 
 const rawHomeListBlockIds = getSiteConfig('homeListBlockIds', []) as string[]
 export const homeListBlockIds = Array.isArray(rawHomeListBlockIds)
@@ -141,7 +152,7 @@ export const navigationLinks: Array<NavigationLink | undefined> = getSiteConfig(
 export const isSearchEnabled: boolean = getSiteConfig('isSearchEnabled', true)
 
 // Optional Giscus comments configuration
-export const giscus: GiscusConfig | undefined = getSiteConfig('giscus')  
+export const giscus: GiscusConfig | undefined = getSiteConfig('giscus')
 
 // ----------------------------------------------------------------------------
 

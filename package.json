@@ -67,6 +67,7 @@
     "@types/prismjs": "^1.26.5",
     "@types/react": "^19.1.13",
     "@types/react-body-classname": "^1.1.10",
+    "@types/react-dom": "^19.2.3",
     "@types/rss": "^0.0.32",
     "cross-env": "^10.0.0",
     "eslint": "^9.35.0",
