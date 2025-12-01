@@ -2,9 +2,7 @@ import { siteConfig } from './lib/site-config'
 
 export default siteConfig({
   // the site's root Notion page (required)
-  rootNotionPageId: '832654cbd40b4ee39ef92f6c5f268c70',
-
-  homeListPageId: '2bc5cb08cf2c8036a1e3cddcb2c61d97',
+  rootNotionPageId: '2bc5cb08cf2c8036a1e3cddcb2c61d97',
 
   // optional block ids for the special "Posts" toggle switcher
   // that lets you swap between Gallery and List views
