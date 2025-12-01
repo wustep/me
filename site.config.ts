@@ -80,7 +80,8 @@ export default siteConfig({
     '/articles': 'e40efc6731ea4e1da2626d709950fbe4',
     '/notes': 'a9d2669020314160b70110639617e822',
     '/projects': '511994667bac45fda9fd8f9db136e476',
-    '/essays': '8e54226891a6450a8192ea5f8611a214'
+    '/essays': '8e54226891a6450a8192ea5f8611a214',
+    '/updates': '2bc5cb08cf2c8036a1e3cddcb2c61d97'
   },
 
   // whether to use the default notion navigation style or a custom one with links to
