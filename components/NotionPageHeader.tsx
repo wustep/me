@@ -82,15 +82,24 @@ function ToggleThemeButton() {
 
   return (
     <div
-      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
+      className={cs(
+        'breadcrumb',
+        'button',
+        styles.themeButton,
+        !hasMounted && styles.hidden
+      )}
       onClick={onToggleTheme}
       role='button'
       title='Toggle theme'
     >
       {hasMounted && isDarkMode ? (
-        <IoMoonSharp className='w-4 h-4' />
+        <IoMoonSharp
+          className={cs('w-4 h-4', styles.themeIcon, styles.moonIcon)}
+        />
       ) : (
-        <IoSunnyOutline className='w-4 h-4' />
+        <IoSunnyOutline
+          className={cs('w-4 h-4', styles.themeIcon, styles.sunIcon)}
+        />
       )}
     </div>
   )
@@ -105,7 +114,12 @@ function PlaygroundButton() {
 
   return (
     <div
-      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
+      className={cs(
+        'breadcrumb',
+        'button',
+        styles.playgroundButton,
+        !hasMounted && styles.hidden
+      )}
       onClick={() => {
         window.location.href = '/playground'
       }}
@@ -113,7 +127,7 @@ function PlaygroundButton() {
       title='Open playground'
       role='button'
     >
-      <ImLab className='w-4 h-4' />
+      <ImLab className={cs('w-4 h-4', styles.playgroundIcon)} />
     </div>
   )
 }

@@ -131,14 +131,14 @@ function LayoutContent({
         <div className='ml-auto flex items-center gap-2'>
           <Link
             href='/'
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors'
+            className='playground-home-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
             aria-label='Go home'
           >
-            <Home className='h-4 w-4' />
+            <Home className='playground-home-icon h-4 w-4' />
           </Link>
           <button
             onClick={toggleDarkMode}
-            className='inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors'
+            className='playground-theme-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
             title={
               hasMounted
                 ? isDarkMode
@@ -149,12 +149,12 @@ function LayoutContent({
           >
             {hasMounted ? (
               isDarkMode ? (
-                <IoMoonSharp />
+                <IoMoonSharp className='playground-theme-icon playground-theme-icon--moon h-4 w-4' />
               ) : (
-                <IoSunnyOutline />
+                <IoSunnyOutline className='playground-theme-icon playground-theme-icon--sun h-4 w-4' />
               )
             ) : (
-              <IoSunnyOutline />
+              <IoSunnyOutline className='playground-theme-icon playground-theme-icon--sun h-4 w-4' />
             )}
           </button>
         </div>

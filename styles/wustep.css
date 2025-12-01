@@ -125,6 +125,124 @@ h6 {
   width: 1.1em;
 }
 
+@keyframes playground-home-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.playground-home-icon {
+  transition:
+    color 160ms ease,
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.playground-home-button:hover .playground-home-icon {
+  color: #09c772;
+  animation: playground-home-pulse 720ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-home-button:hover .playground-home-icon {
+    animation: none;
+  }
+}
+
+.playground-theme-icon {
+  transition:
+    color 160ms ease,
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.playground-theme-button:hover .playground-theme-icon {
+  animation: playground-home-pulse 720ms ease-in-out infinite;
+}
+
+.playground-theme-button:hover .playground-theme-icon--sun {
+  color: #a855f7;
+}
+
+.playground-theme-button:hover .playground-theme-icon--moon {
+  color: #f97316;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-theme-button:hover .playground-theme-icon {
+    animation: none;
+  }
+}
+
+.playground-action-button {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.playground-action-button:hover {
+  background-color: rgba(39, 149, 233, 0.14);
+  color: #0f67cf;
+}
+
+.dark-mode .playground-action-button:hover {
+  background-color: rgba(39, 149, 233, 0.28);
+  color: #8ac9ff;
+}
+
+.playground-sidebar-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.35rem;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.playground-sidebar-brand:hover,
+.playground-sidebar-brand:focus-visible {
+  outline: none;
+  background-color: rgba(39, 149, 233, 0.12);
+}
+
+.playground-sidebar-lab {
+  color: #0f67cf;
+  fill: currentColor;
+  transition:
+    color 160ms ease,
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.playground-sidebar-brand:hover .playground-sidebar-lab,
+.playground-sidebar-brand:focus-visible .playground-sidebar-lab {
+  color: #2795e9;
+  animation: playground-home-pulse 720ms ease-in-out infinite;
+}
+
+.dark-mode .playground-sidebar-brand:hover,
+.dark-mode .playground-sidebar-brand:focus-visible {
+  background-color: rgba(39, 149, 233, 0.26);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-sidebar-brand:hover .playground-sidebar-lab,
+  .playground-sidebar-brand:focus-visible .playground-sidebar-lab {
+    animation: none;
+  }
+}
+
 /**
  * Make header breadcrumb truncate more gracefully.
  * Keep the main page breadcrumb and search icon always fully sized,

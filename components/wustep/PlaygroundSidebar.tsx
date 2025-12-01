@@ -63,8 +63,8 @@ export function PlaygroundSidebar({
     <Sidebar className='sidebar-animate' {...props}>
       <SidebarHeader className='gap-3'>
         <div className='flex items-center gap-2 rounded-lg border border-border/60 bg-sidebar p-3'>
-          <Link href='/playground'>
-            <ImLab className='size-4' />
+          <Link href='/playground' aria-label='Playground home'>
+            <ImLab className='playground-sidebar-lab size-4' />
           </Link>
           <div className='leading-tight flex items-center gap-1 align-baseline'>
             <Link href='/playground' className='text-sm font-semibold'>
