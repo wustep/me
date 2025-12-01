@@ -1,10 +1,4 @@
-import dynamic from 'next/dynamic'
-
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
-
-const Bomberman = dynamic(() => import('@/playground/bomberman'), {
-  ssr: false
-})
 
 export default function PlaygroundBombermanPage() {
   return (
@@ -14,7 +8,16 @@ export default function PlaygroundBombermanPage() {
           Bomberman clone with emojis. Fully vibe coded with Cursor & Claude 3.5
           Sonnet in half a day for fun.
         </p>
-        <Bomberman />
+        <div className='relative w-full overflow-hidden rounded-3xl border bg-card shadow-lg'>
+          <iframe
+            src='https://wustep-bomberman.vercel.app/'
+            title='Bomberman iframe'
+            className='h-[720px] w-full border-0'
+            loading='lazy'
+            allow='fullscreen *; gamepad *'
+            allowFullScreen
+          />
+        </div>
       </div>
     </PlaygroundLayout>
   )
