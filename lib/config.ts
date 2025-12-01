@@ -33,6 +33,43 @@ if (!rootNotionPageId) {
 export const rootNotionSpaceId: string | null =
   parsePageId(getSiteConfig('rootNotionSpaceId'), { uuid: true }) ?? null
 
+const rawHomeListPageId = getSiteConfig('homeListPageId', null) as
+  | string
+  | null
+export const homeListPageId: string | null = rawHomeListPageId
+  ? parsePageId(rawHomeListPageId, { uuid: false }) ?? null
+  : null
+
+const normalizeBlockId = (id?: string | null) => {
+  if (!id) {
+    return null
+  }
+
+  return parsePageId(id, { uuid: false }) ?? null
+}
+
+const rawHomePostsHeadingBlockId = getSiteConfig(
+  'homePostsHeadingBlockId',
+  null
+) as string | null
+export const homePostsHeadingBlockId = rawHomePostsHeadingBlockId
+  ? normalizeBlockId(rawHomePostsHeadingBlockId)
+  : null
+
+const rawHomeGalleryBlockId = getSiteConfig('homeGalleryBlockId', null) as
+  | string
+  | null
+export const homeGalleryBlockId = rawHomeGalleryBlockId
+  ? normalizeBlockId(rawHomeGalleryBlockId)
+  : null
+
+const rawHomeListBlockIds = getSiteConfig('homeListBlockIds', []) as string[]
+export const homeListBlockIds = Array.isArray(rawHomeListBlockIds)
+  ? rawHomeListBlockIds
+      .map((id) => normalizeBlockId(id))
+      .filter((id): id is string => !!id)
+  : []
+
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},
   { label: 'pageUrlOverrides' }
@@ -44,6 +81,11 @@ export const pageUrlAdditions = cleanPageUrlMap(
 )
 
 export const inversePageUrlOverrides = invertPageUrlOverrides(pageUrlOverrides)
+
+export const homeListPath: string | null =
+  homeListPageId && inversePageUrlOverrides[homeListPageId]
+    ? `/${inversePageUrlOverrides[homeListPageId]!}`
+    : null
 
 export const environment = process.env.NODE_ENV || 'development'
 export const isDev = environment === 'development'

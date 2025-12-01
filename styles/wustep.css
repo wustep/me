@@ -157,7 +157,7 @@ h6 {
 }
 
 /** Extra for main page */
-.notion-block-832654cbd40b4ee39ef92f6c5f268c70 .notion-title {
+.notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-title {
   font-size: 3em;
   margin-bottom: 0.5em;
 }
@@ -484,9 +484,102 @@ span[class*='_background'] {
   user-select: none;
 }
 .index-page .notion-hash-link,
-.notion-block-e597502d2cc241d98039291052e916fe .notion-hash-link {
+.notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-hash-link {
   display: none;
 }
+
+/**
+ * Posts view toggle
+ */
+.posts-section {
+  width: 100%;
+}
+
+.posts-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.posts-heading__title {
+  flex: 1 1 auto;
+  margin-right: var(--space-sm);
+}
+
+.posts-view-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--divider);
+  background: var(--surface);
+  gap: 0.15rem;
+}
+
+.dark-mode .posts-view-toggle {
+  background: var(--dark-surface);
+  border-color: var(--divider);
+}
+
+.posts-view-toggle__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  background: transparent;
+  font-weight: 600;
+  color: var(--secondary);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
+}
+
+.posts-view-toggle__button svg {
+  font-size: 1.1rem;
+}
+
+.posts-view-toggle__button:hover {
+  color: var(--primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.posts-view-toggle__button--active {
+  background: var(--primary);
+  color: var(--background);
+}
+
+.posts-view-toggle__button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.dark-mode .posts-view-toggle__button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.posts-view-toggle__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 /**
  * The "Articles", "Notes", and "Projects" pages are technically nested within the root website page in Notion,
  * but we don't want them to show up in the website, since it's redundant with the top navigation.
@@ -509,23 +602,23 @@ span[class*='_background'] {
  * ========== Home Page: List View ==========
  * Some improvements for list view.
  */
-.notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
+.notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-view {
   max-width: 100vw;
 }
 
 @media screen and (max-width: 768px) {
-  .notion-block-e597502d2cc241d98039291052e916fe .notion-list-view {
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-view {
     min-width: 100vw;
   }
   /* Allow list item titles to wrap instead of being truncated */
-  .notion-block-e597502d2cc241d98039291052e916fe .notion-list-item-title {
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item-title {
     white-space: normal;
     overflow: visible;
     flex: 1;
     min-width: 0; /* Allow flex items to shrink below content size */
   }
   /* Fix layout for list items to prevent date from being pushed off screen */
-  .notion-block-e597502d2cc241d98039291052e916fe .notion-page-link {
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-page-link {
     height: auto;
     padding: 4px 6px 4px 2px;
     align-items: flex-start !important;
@@ -533,7 +626,7 @@ span[class*='_background'] {
 }
 
 /* Prevent dates from wrapping */
-.notion-block-e597502d2cc241d98039291052e916fe .notion-property-date {
+.notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-property-date {
   white-space: nowrap;
   flex-shrink: 0;
 }

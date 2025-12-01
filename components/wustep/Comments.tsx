@@ -7,7 +7,7 @@ import { useDarkMode } from '@/lib/use-dark-mode'
  * @wustep: Added comments system powered by Giscus
  * Configurable via site.config.ts
  */
-export function WustepComments() {
+export function Comments() {
   const { isDarkMode } = useDarkMode()
 
   React.useEffect(() => {

@@ -34,7 +34,7 @@ import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
-import { WustepComments } from './wustep/WustepComments'
+import { Comments } from './wustep/Comments'
 import { WustepFooter } from './wustep/WustepFooter'
 
 // -----------------------------------------------------------------------------
@@ -202,12 +202,17 @@ const propertyTextValue = (
   return defaultFn()
 }
 
+interface NotionPageWrapperProps extends types.PageProps {
+  componentOverrides?: Partial<NotionComponents>
+}
+
 export function NotionPage({
   site,
   recordMap,
   error,
-  pageId
-}: types.PageProps) {
+  pageId,
+  componentOverrides
+}: NotionPageWrapperProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
 
@@ -224,9 +229,10 @@ export function NotionPage({
       Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
-      propertyDateValue
+      propertyDateValue,
+      ...componentOverrides
     }),
-    []
+    [componentOverrides]
   )
 
   // lite mode is for oembed
@@ -323,7 +329,7 @@ export function NotionPage({
     !isRootPage &&
     getPageProperty<string>('Author', block, recordMap) === 'Stephen Wu' &&
     getPageProperty<boolean>('Disable Comments', block, recordMap) !== true ? (
-      <WustepComments />
+      <Comments />
     ) : undefined
 
   // @wustep: Custom post footers based on author

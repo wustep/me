@@ -4,6 +4,23 @@ export default siteConfig({
   // the site's root Notion page (required)
   rootNotionPageId: '832654cbd40b4ee39ef92f6c5f268c70',
 
+  homeListPageId: '2bc5cb08cf2c8036a1e3cddcb2c61d97',
+
+  // optional block ids for the special "Posts" toggle switcher
+  // that lets you swap between Gallery and List views
+  homePostsHeadingBlockId: '2bc5cb08cf2c8139a85ee9e88503d31d',
+  homeGalleryBlockId: '2bc5cb08cf2c8171a909000cdc0067ca',
+  homeListBlockIds: [
+    '2bc5cb08cf2c817fa359c0f598dca6c3',
+    '2bc5cb08cf2c81ad8323f21e6a64ec22',
+    '2bc5cb08cf2c8126802dff95486eaaba',
+    '2bc5cb08cf2c81d7b0edcf5beeb49783',
+    '2bc5cb08cf2c810ea3a4d86a0c5a30b9',
+    '2bc5cb08cf2c81ffa978c6d237f6b18d',
+    '2bc5cb08cf2c8190b3a0f1b33c3c913f',
+    '2bc5cb08cf2c812a9cf6db90ec304208',
+  ],
+
   // if you want to restrict pages to a single notion workspace (optional)
   // (this should be a Notion ID; see the docs for how to extract this)
   rootNotionSpaceId: '30725683-e071-41f1-988d-e6e6fa72abd8',
@@ -63,7 +80,6 @@ export default siteConfig({
     '/articles': 'e40efc6731ea4e1da2626d709950fbe4',
     '/notes': 'a9d2669020314160b70110639617e822',
     '/projects': '511994667bac45fda9fd8f9db136e476',
-    '/list': 'e597502d2cc241d98039291052e916fe',
     '/essays': '8e54226891a6450a8192ea5f8611a214'
   },
 
