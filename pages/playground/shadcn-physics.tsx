@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'

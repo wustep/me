@@ -12,7 +12,7 @@ export function WustepFooter() {
     <div className='wustep-post-footer'>
       <div className='wustep-post-footer-left'>
         <a href={`https://${site.domain}`}>
-          <img src='/wustep.png' alt='Stephen Wu'></img>
+          <img src='/wustep.png' alt='Stephen Wu' className='w-10 h-10' />
         </a>
       </div>
       <div className='wustep-post-footer-content'>
