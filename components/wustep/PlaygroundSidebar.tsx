@@ -1,4 +1,5 @@
-import { Beaker, Info } from 'lucide-react'
+import { ImLab } from '@react-icons/all-files/im/ImLab'
+import { Info } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
@@ -66,9 +67,10 @@ const sections: { title: string; items: SidebarItem[] }[] = [
       {
         title: 'Starry Night Sequencer',
         url: '/playground/starry-night',
-        disabled: true,
-        description: 'Audio-reactive orchestration inspired by Van Gogh.',
-        year: '2016'
+        disabled: false,
+        description: 'Audio-reactive visualizer inspired by Van Gogh.',
+        date: 'Mar 2025',
+        year: '2025'
       }
     ]
   }
@@ -113,12 +115,14 @@ export function PlaygroundSidebar({
   return (
     <Sidebar className='sidebar-animate' {...props}>
       <SidebarHeader className='gap-3'>
-        <div className='flex items-center gap-3 rounded-lg border border-border/60 bg-sidebar p-3'>
-          <div className='flex size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground'>
-            <Beaker className='size-4' />
-          </div>
-          <div className='leading-tight'>
-            <p className='text-sm font-semibold'>Playground</p>
+        <div className='flex items-center gap-2 rounded-lg border border-border/60 bg-sidebar p-3'>
+          <Link href='/playground'>
+            <ImLab className='size-4' />
+          </Link>
+          <div className='leading-tight flex items-center gap-1 align-baseline'>
+            <Link href='/playground' className='text-sm font-semibold'>
+              Playground
+            </Link>
             <Link
               href='https://wustep.me'
               className='text-xs text-muted-foreground hover:text-sidebar-primary transition-colors'
