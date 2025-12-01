@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 
-const Bomberman = dynamic(() => import('playground/bomberman'), {
+const Bomberman = dynamic(() => import('@/playground/bomberman'), {
   ssr: false
 })
 

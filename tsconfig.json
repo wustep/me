@@ -6,7 +6,8 @@
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
       "@/styles/*": ["styles/*"],
-      "@/hooks/*": ["lib/hooks/*"]
+      "@/hooks/*": ["lib/hooks/*"],
+      "@/playground/*": ["playground/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "*.config.ts"],
