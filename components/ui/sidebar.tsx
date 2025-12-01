@@ -1,5 +1,6 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import Cookies from 'js-cookie'
 import { PanelLeft } from 'lucide-react'
 import * as React from 'react'
 
@@ -87,8 +88,11 @@ const SidebarProvider = React.forwardRef<
           _setOpen(openState)
         }
 
-        // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+        // Persist the sidebar preference without touching document.cookie directly.
+        Cookies.set(SIDEBAR_COOKIE_NAME, String(openState), {
+          path: '/',
+          expires: SIDEBAR_COOKIE_MAX_AGE / (60 * 60 * 24)
+        })
       },
       [setOpenProp, open]
     )
@@ -145,7 +149,7 @@ const SidebarProvider = React.forwardRef<
               } as React.CSSProperties
             }
             className={cn(
-              'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar',
+              'group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar',
               className
             )}
             ref={ref}
