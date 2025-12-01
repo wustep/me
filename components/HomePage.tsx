@@ -54,53 +54,69 @@ export function HomePage(props: types.PageProps) {
 
     const css: string[] = []
 
-    // Hide both views while initializing
-    if (!isInitialized) {
-      css.push(`
-        .home-view-mode-gallery .notion-block-${config.homeGalleryBlockIds.join(', .notion-block-')} {
-          display: none !important;
-        }
-        .home-view-mode-list .notion-block-${config.homeListBlockIds.join(', .notion-block-')} {
-          display: none !important;
-        }
-      `)
-    }
-
-    // Hide the original heading block (we're replacing it with our own one)
-    if (config.homePostsHeadingBlockId && isInitialized) {
+    // Hide the original heading block
+    if (config.homePostsHeadingBlockId) {
       css.push(`
         .home-posts-toggle-enabled .notion-block-${config.homePostsHeadingBlockId} {
-          display: none;
-        }
-      `)
-    }
-
-    // Hide list blocks in gallery mode
-    if (config.homeListBlockIds.length > 0) {
-      const listSelectors = config.homeListBlockIds
-        .map((id) => `.home-view-mode-gallery .notion-block-${id}`)
-        .join(',\n')
-      css.push(`
-        ${listSelectors} {
           display: none !important;
         }
       `)
     }
 
-    // Hide gallery blocks in list mode
-    if (config.homeGalleryBlockIds.length > 0) {
-      const gallerySelectors = config.homeGalleryBlockIds
-        .map((id) => `.home-view-mode-list .notion-block-${id}`)
+    // Hide ALL posts blocks by default (both gallery and list)
+    const allBlockIds = [
+      ...config.homeGalleryBlockIds,
+      ...config.homeListBlockIds
+    ]
+
+    if (allBlockIds.length > 0) {
+      const allSelectors = allBlockIds
+        .map((id) => `.home-posts-toggle-enabled .notion-block-${id}`)
         .join(',\n')
       css.push(`
-        ${gallerySelectors} {
+        ${allSelectors} {
           display: none !important;
         }
       `)
+    }
+
+    // Only show blocks if initialized
+    if (isInitialized) {
+      // Show list blocks in list mode
+      if (config.homeListBlockIds.length > 0) {
+        const listSelectors = config.homeListBlockIds
+          .map(
+            (id) =>
+              `.home-posts-toggle-enabled.home-view-mode-list .notion-block-${id}`
+          )
+          .join(',\n')
+        css.push(`
+          ${listSelectors} {
+            display: block !important;
+          }
+        `)
+      }
+
+      // Show gallery blocks in gallery mode
+      if (config.homeGalleryBlockIds.length > 0) {
+        const gallerySelectors = config.homeGalleryBlockIds
+          .map(
+            (id) =>
+              `.home-posts-toggle-enabled.home-view-mode-gallery .notion-block-${id}`
+          )
+          .join(',\n')
+        css.push(`
+          ${gallerySelectors} {
+            display: block !important;
+          }
+        `)
+      }
     }
 
     return css.join('\n')
   }, [hasPostsToggle, isInitialized])
+
+  console.log(bodyClasses, dynamicCSS, isInitialized)
 
   if (!hasPostsToggle) {
     return <NotionPage {...props} />
@@ -114,7 +130,11 @@ export function HomePage(props: types.PageProps) {
       {dynamicCSS && <style dangerouslySetInnerHTML={{ __html: dynamicCSS }} />}
 
       {/* Render the toggle - will be moved into position by useEffect */}
-      <div ref={toggleRef} className='custom-posts-toggle-wrapper'>
+      <div
+        ref={toggleRef}
+        className='custom-posts-toggle-wrapper'
+        style={{ display: isInitialized ? 'block' : 'none' }}
+      >
         <PostsHeadingToggle
           blockId={config.homePostsHeadingBlockId!}
           viewMode={viewMode}

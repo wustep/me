@@ -493,7 +493,8 @@ span[class*='_background'] {
  * Hide gallery or list blocks based on the selected view mode
  */
 
-.notion-block-2bc5cb08cf2c817fa359c0f598dca6c3 {
+.notion-block-2bc5cb08cf2c817fa359c0f598dca6c3,
+.notion-block-2bc5cb08cf2c80e0ab93cce769a4d7dd {
   margin-top: 0.4em; /* from 1.1em, better spacing below Posts heading */
 }
 
