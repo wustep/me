@@ -32,10 +32,10 @@ export function Page404({ site, pageId, error }: types.PageProps) {
 
       <div className={styles.container}>
         <main className={cs(styles.main, 'error-404')}>
-          <h1>😳 Page not found</h1>
+          <h1 className={styles.errorHeading}>😳 Page not found</h1>
           {devErrorMessage}
           <p>
-            Oops, not sure how we got here.
+            Oops, not sure how we got here!
             <br />
             <a className='notion-link' href={config.host}>
               <span className='notion-blue_background'>

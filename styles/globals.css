@@ -1,0 +1,139 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Color palette for light mode - matching wustep.me theme */
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.228 0 0);
+  --color-card: oklch(0.988 0 0);
+  --color-card-foreground: oklch(0.228 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.228 0 0);
+  --color-primary: oklch(0.228 0 0);
+  --color-primary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.471 0 0);
+  --color-secondary-foreground: oklch(1 0 0);
+  --color-muted: oklch(0.973 0 0);
+  --color-muted-foreground: oklch(0.471 0 0);
+  --color-accent: oklch(0.595 0.084 288.89);
+  --color-accent-foreground: oklch(1 0 0);
+  --color-destructive: oklch(0.648 0.207 27.33);
+  --color-destructive-foreground: oklch(1 0 0);
+  --color-border: oklch(0.933 0 0);
+  --color-input: oklch(0.933 0 0);
+  --color-ring: oklch(0.595 0.084 288.89);
+
+  /* Sidebar colors for light mode */
+  --color-sidebar-background: oklch(0.988 0 0);
+  --color-sidebar-foreground: oklch(0.228 0 0);
+  --color-sidebar-primary: oklch(0.595 0.084 288.89);
+  --color-sidebar-primary-foreground: oklch(1 0 0);
+  --color-sidebar-accent: oklch(0.973 0 0);
+  --color-sidebar-accent-foreground: oklch(0.228 0 0);
+  --color-sidebar-border: oklch(0.933 0 0);
+  --color-sidebar-ring: oklch(0.595 0.084 288.89);
+
+  --radius: 0.5rem;
+}
+
+/* Dark mode colors using .dark-mode class to match existing site behavior */
+.dark-mode {
+  @theme {
+    --color-background: oklch(0.197 0.005 264.54);
+    --color-foreground: oklch(0.933 0 0);
+    --color-card: oklch(0.197 0.005 264.54);
+    --color-card-foreground: oklch(0.933 0 0);
+    --color-popover: oklch(0.197 0.005 264.54);
+    --color-popover-foreground: oklch(0.933 0 0);
+    --color-primary: oklch(0.933 0 0);
+    --color-primary-foreground: oklch(0.228 0 0);
+    --color-secondary: oklch(0.688 0 0);
+    --color-secondary-foreground: oklch(0.933 0 0);
+    --color-muted: oklch(0.3 0.005 264.54);
+    --color-muted-foreground: oklch(0.688 0 0);
+    --color-accent: oklch(0.686 0.092 288.89);
+    --color-accent-foreground: oklch(1 0 0);
+    --color-destructive: oklch(0.405 0.141 27.33);
+    --color-destructive-foreground: oklch(0.933 0 0);
+    --color-border: oklch(0.3 0.005 264.54);
+    --color-input: oklch(0.3 0.005 264.54);
+    --color-ring: oklch(0.686 0.092 288.89);
+
+    /* Sidebar dark colors */
+    --color-sidebar-background: oklch(0.197 0.005 264.54);
+    --color-sidebar-foreground: oklch(0.933 0 0);
+    --color-sidebar-primary: oklch(0.686 0.092 288.89);
+    --color-sidebar-primary-foreground: oklch(1 0 0);
+    --color-sidebar-accent: oklch(0.3 0.005 264.54);
+    --color-sidebar-accent-foreground: oklch(0.933 0 0);
+    --color-sidebar-border: oklch(0.3 0.005 264.54);
+    --color-sidebar-ring: oklch(0.686 0.092 288.89);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--color-border);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  --notion-font:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', 'Noto Sans', sans-serif;
+  font-family: var(--notion-font);
+  overflow-x: hidden;
+}
+
+.static-tweet blockquote {
+  margin: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
+.static-tweet-emoji {
+  height: 1.2em !important;
+  width: 1.2em !important;
+}
+
+.searchInput {
+  color: var(--fg-color);
+  caret-color: var(--fg-color);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: #f5f5f5;
+  background-color: var(--bg-color-1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #555;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: var(--fg-color-1);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--bg-color);
+}

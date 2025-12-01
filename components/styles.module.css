@@ -48,9 +48,14 @@
   /* @wustep end */
 }
 
+.errorHeading {
+  font-size: 1.5rem;
+  padding-top: 10vh;
+}
+
 .errorImage {
   max-width: 100%;
-  width: 640px;
+  width: 420px;
 }
 
 .footer {
