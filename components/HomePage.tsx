@@ -1,5 +1,4 @@
 import * as React from 'react'
-import BodyClassName from 'react-body-classname'
 
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
@@ -36,16 +35,6 @@ export function HomePage(props: types.PageProps) {
     }
   }, [hasPostsToggle, props.recordMap])
 
-  // Build CSS classes to hide the appropriate blocks
-  const bodyClasses = React.useMemo(() => {
-    if (!hasPostsToggle) {
-      return undefined
-    }
-
-    const classes = ['home-posts-toggle-enabled', `home-view-mode-${viewMode}`]
-    return classes.join(' ')
-  }, [hasPostsToggle, viewMode])
-
   // Generate dynamic CSS to hide blocks based on view mode
   const dynamicCSS = React.useMemo(() => {
     if (!hasPostsToggle) {
@@ -57,7 +46,7 @@ export function HomePage(props: types.PageProps) {
     // Hide the original heading block (always)
     if (config.homePostsHeadingBlockId) {
       css.push(`
-        .home-posts-toggle-enabled .notion-block-${config.homePostsHeadingBlockId} {
+        .notion-block-${config.homePostsHeadingBlockId} {
           display: none !important;
         }
       `)
@@ -71,7 +60,7 @@ export function HomePage(props: types.PageProps) {
 
     if (allBlockIds.length > 0) {
       const allSelectors = allBlockIds
-        .map((id) => `.home-posts-toggle-enabled .notion-block-${id}`)
+        .map((id) => `.notion-block-${id}`)
         .join(',\n')
       css.push(`
         ${allSelectors} {
@@ -85,10 +74,7 @@ export function HomePage(props: types.PageProps) {
       // Show list blocks in list mode
       if (config.homeListBlockIds.length > 0 && viewMode === 'list') {
         const listSelectors = config.homeListBlockIds
-          .map(
-            (id) =>
-              `.home-posts-toggle-enabled.home-view-mode-list .notion-block-${id}`
-          )
+          .map((id) => `.notion-block-${id}`)
           .join(',\n')
         css.push(`
           ${listSelectors} {
@@ -100,10 +86,7 @@ export function HomePage(props: types.PageProps) {
       // Show gallery blocks in gallery mode
       if (config.homeGalleryBlockIds.length > 0 && viewMode === 'gallery') {
         const gallerySelectors = config.homeGalleryBlockIds
-          .map(
-            (id) =>
-              `.home-posts-toggle-enabled.home-view-mode-gallery .notion-block-${id}`
-          )
+          .map((id) => `.notion-block-${id}`)
           .join(',\n')
         css.push(`
           ${gallerySelectors} {
@@ -122,8 +105,6 @@ export function HomePage(props: types.PageProps) {
 
   return (
     <>
-      {bodyClasses && <BodyClassName className={bodyClasses} />}
-
       {/* Inject dynamic CSS for hiding blocks */}
       {dynamicCSS && <style dangerouslySetInnerHTML={{ __html: dynamicCSS }} />}
 
