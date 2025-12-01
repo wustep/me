@@ -23,8 +23,8 @@ export function usePostsViewMode(): [ViewMode, (mode: ViewMode) => void] {
       if (stored === 'gallery' || stored === 'list') {
         setViewModeState(stored)
       }
-    } catch (error) {
-      console.error('Failed to load view mode from localStorage:', error)
+    } catch (err) {
+      console.error('Failed to load view mode from localStorage:', err)
     } finally {
       setIsInitialized(true)
     }
@@ -39,11 +39,10 @@ export function usePostsViewMode(): [ViewMode, (mode: ViewMode) => void] {
 
     try {
       localStorage.setItem(STORAGE_KEY, mode)
-    } catch (error) {
-      console.error('Failed to save view mode to localStorage:', error)
+    } catch (err) {
+      console.error('Failed to save view mode to localStorage:', err)
     }
   }, [])
 
   return [isInitialized ? viewMode : DEFAULT_VIEW_MODE, setViewMode]
 }
-

@@ -533,7 +533,7 @@ span[class*='_background'] {
   border: none;
   cursor: pointer;
   font-size: 1.1em;
-  color: var(--fg-color-1);
+  color: var(--fg-color-2);
   transition: all 0.2s ease;
   position: relative;
   display: flex;
