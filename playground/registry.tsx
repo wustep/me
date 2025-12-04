@@ -7,6 +7,7 @@ export type PlaygroundEntry = {
   year?: string
   disabled?: boolean
   article?: string
+  source?: string
   gradient?: string
   image?: string
 }
@@ -28,6 +29,8 @@ export const playgroundSections: PlaygroundSection[] = [
           'Throw, stack, and collide shadcn/ui components with Matter.js',
         date: 'Dec 2025',
         year: '2025',
+        source:
+          'https://github.com/wustep/shadbook/blob/main/src/app/pages/experiments/physics-playground.tsx',
         image: '/playground/covers/shadcn-physics.png'
       }
     ]
@@ -44,6 +47,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Nov 2024',
         year: '2024',
         article: '/bomberman',
+        source: 'https://github.com/wustep/bomberman',
         gradient: 'from-orange-500 to-rose-500',
         image: '/playground/covers/bomberman.png'
       }
@@ -60,6 +64,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Dec 2016',
         year: '2016',
         article: '/starry-sequencer',
+        source: 'https://github.com/wustep/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
         image: '/playground/covers/starry-sequencer.png'
       },
@@ -71,6 +76,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Dec 2016',
         year: '2016',
         article: '/tbdbitl',
+        source: 'http://github.com/wustep/tbdbitl',
         image: '/playground/covers/tbdbitl.png'
       }
     ]

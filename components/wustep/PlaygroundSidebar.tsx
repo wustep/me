@@ -25,6 +25,7 @@ type AboutState = {
   description: string
   date?: string
   article?: string
+  source?: string
 }
 
 export function PlaygroundSidebar({
@@ -41,14 +42,16 @@ export function PlaygroundSidebar({
   const [aboutInfo, setAboutInfo] = React.useState<AboutState>({
     description: activeItem?.description ?? defaultDescription,
     date: activeItem?.date,
-    article: activeItem?.article
+    article: activeItem?.article,
+    source: activeItem?.source
   })
 
   React.useEffect(() => {
     setAboutInfo({
       description: activeItem?.description ?? defaultDescription,
       date: activeItem?.date,
-      article: activeItem?.article
+      article: activeItem?.article,
+      source: activeItem?.source
     })
   }, [activeItem])
 
@@ -56,8 +59,36 @@ export function PlaygroundSidebar({
     setAboutInfo({
       description: activeItem?.description ?? defaultDescription,
       date: activeItem?.date,
-      article: activeItem?.article
+      article: activeItem?.article,
+      source: activeItem?.source
     })
+
+  const metadataItems: React.ReactNode[] = []
+  if (aboutInfo.date) {
+    metadataItems.push(<span key='date'>{aboutInfo.date}</span>)
+  }
+  if (aboutInfo.article) {
+    metadataItems.push(
+      <Link
+        key='article'
+        href={aboutInfo.article}
+        className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
+      >
+        Article
+      </Link>
+    )
+  }
+  if (aboutInfo.source) {
+    metadataItems.push(
+      <Link
+        key='source'
+        href={aboutInfo.source}
+        className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
+      >
+        Source
+      </Link>
+    )
+  }
 
   return (
     <Sidebar className='sidebar-animate' {...props}>
@@ -97,14 +128,16 @@ export function PlaygroundSidebar({
                         setAboutInfo({
                           description: item.description,
                           date: item.date,
-                          article: item.article
+                          article: item.article,
+                          source: item.source
                         })
                       }
                       onFocus={() =>
                         setAboutInfo({
                           description: item.description,
                           date: item.date,
-                          article: item.article
+                          article: item.article,
+                          source: item.source
                         })
                       }
                       onMouseLeave={resetDescription}
@@ -146,20 +179,14 @@ export function PlaygroundSidebar({
           <span>About</span>
         </div>
         <p>{aboutInfo.description}</p>
-        {aboutInfo.date || aboutInfo.article ? (
+        {metadataItems.length ? (
           <p className='mt-1 text-[11px] text-muted-foreground/80 flex items-center gap-1'>
-            {aboutInfo.date ? <span>{aboutInfo.date}</span> : null}
-            {aboutInfo.date && aboutInfo.article ? (
-              <span aria-hidden='true'>&bull;</span>
-            ) : null}
-            {aboutInfo.article ? (
-              <Link
-                href={aboutInfo.article}
-                className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
-              >
-                Article
-              </Link>
-            ) : null}
+            {metadataItems.map((item, index) => (
+              <React.Fragment key={index}>
+                {index > 0 ? <span aria-hidden='true'>&bull;</span> : null}
+                {item}
+              </React.Fragment>
+            ))}
           </p>
         ) : null}
       </SidebarFooter>
