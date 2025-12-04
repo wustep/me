@@ -153,9 +153,7 @@ function LayoutContent({
               ) : (
                 <IoSunnyOutline className='playground-theme-icon playground-theme-icon--sun h-4 w-4' />
               )
-            ) : (
-              <IoSunnyOutline className='playground-theme-icon playground-theme-icon--sun h-4 w-4' />
-            )}
+            ) : null}
           </button>
         </div>
       </header>
