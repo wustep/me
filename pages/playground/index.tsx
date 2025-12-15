@@ -3,7 +3,17 @@ import Link from 'next/link'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { playgroundEntries } from '@/playground/registry'
 
-const projects = playgroundEntries.filter((project) => !project.disabled)
+const parseDate = (dateStr?: string): Date => {
+  if (!dateStr) return new Date(0)
+  const [month, year] = dateStr.split(' ')
+  if (!year) return new Date(0)
+  const monthIndex = new Date(`${month} 1, 2000`).getMonth()
+  return new Date(Number.parseInt(year), monthIndex)
+}
+
+const projects = playgroundEntries
+  .filter((project) => !project.disabled)
+  .toSorted((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime())
 
 export default function PlaygroundPage() {
   return (

@@ -27,7 +27,7 @@ export const playgroundSections: PlaygroundSection[] = [
         description: 'An iframe-powered physics sandbox built with shadcn UI.',
         summary:
           'Throw, stack, and collide shadcn/ui components with Matter.js',
-        date: 'Dec 2025',
+        date: 'May 2025',
         year: '2025',
         source:
           'https://github.com/wustep/shadbook/blob/main/src/app/pages/experiments/physics-playground.tsx',
