@@ -39,6 +39,18 @@ export const playgroundSections: PlaygroundSection[] = [
     title: 'Games',
     items: [
       {
+        title: 'Spot it!',
+        url: '/playground/spot-it',
+        description:
+          'An exploration of Spot it!, the symbols matching game and its mathematical properties.',
+        summary: 'Explore the symbol matching card game and its mechanics',
+        date: 'Dec 2025',
+        year: '2025',
+        source: 'https://github.com/wustep/spot-it',
+        gradient: 'from-amber-400 to-pink-500',
+        image: '/playground/covers/spot-it.png'
+      },
+      {
         title: 'Bomberman',
         url: '/playground/bomberman',
         description:
