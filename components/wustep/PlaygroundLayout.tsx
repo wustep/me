@@ -28,12 +28,15 @@ interface PlaygroundLayoutProps {
   children: React.ReactNode
   title: string
   breadcrumbs?: { label: string; href?: string }[]
+  /** When true, children fill the entire frame (no padding, no title, no max-width) */
+  fullFrame?: boolean
 }
 
 export function PlaygroundLayout({
   children,
   title,
-  breadcrumbs = []
+  breadcrumbs = [],
+  fullFrame = false
 }: PlaygroundLayoutProps) {
   const [hasMounted, setHasMounted] = React.useState(false)
   const { isDarkMode, toggleDarkMode } = useDarkMode()
@@ -57,6 +60,7 @@ export function PlaygroundLayout({
         hasMounted={hasMounted}
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
+        fullFrame={fullFrame}
       >
         {children}
       </LayoutContent>
@@ -76,7 +80,8 @@ function LayoutContent({
   breadcrumbs,
   hasMounted,
   isDarkMode,
-  toggleDarkMode
+  toggleDarkMode,
+  fullFrame
 }: LayoutContentProps) {
   const { state, isMobile } = useSidebar()
   const insetStyle = React.useMemo(() => {
@@ -157,12 +162,16 @@ function LayoutContent({
           </button>
         </div>
       </header>
-      <div className='flex flex-1 flex-col gap-4 p-4 pt-8 bg-background'>
-        <div className='w-full max-w-4xl mx-auto'>
-          <h1 className='text-4xl font-bold mb-8'>{title}</h1>
-          {children}
+      {fullFrame ? (
+        <div className='flex flex-1 flex-col bg-background'>{children}</div>
+      ) : (
+        <div className='flex flex-1 flex-col gap-4 p-4 pt-8 bg-background'>
+          <div className='w-full max-w-4xl mx-auto'>
+            <h1 className='text-4xl font-bold mb-8'>{title}</h1>
+            {children}
+          </div>
         </div>
-      </div>
+      )}
     </SidebarInset>
   )
 }
