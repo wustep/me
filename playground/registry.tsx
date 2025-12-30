@@ -22,6 +22,15 @@ export const playgroundSections: PlaygroundSection[] = [
     title: 'Experiments',
     items: [
       {
+        title: 'Bookshelf',
+        url: '/playground/bookshelf',
+        description: 'An interactive bookshelf of some of my favorite books.',
+        summary: 'An interactive bookshelf of my favorite books',
+        date: 'Dec 2025',
+        year: '2025',
+        image: '/playground/covers/bookshelf.svg'
+      },
+      {
         title: 'Shadcn + Physics',
         url: '/playground/shadcn-physics',
         description: 'An iframe-powered physics sandbox built with shadcn UI.',
