@@ -28,6 +28,7 @@ export const playgroundSections: PlaygroundSection[] = [
         summary: 'An interactive bookshelf of my favorite books',
         date: 'Dec 2025',
         year: '2025',
+        source: 'https://github.com/wustep/bookshelf',
         image: '/playground/covers/bookshelf.svg'
       },
       {
