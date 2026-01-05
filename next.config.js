@@ -15,6 +15,8 @@ export default withBundleAnalyzer({
   turbopack: {
     root: dirname
   },
+  // Fix for @react-icons/all-files not loading in serverless functions
+  serverExternalPackages: ['@react-icons/all-files'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'www.notion.so' },
