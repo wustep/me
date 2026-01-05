@@ -121,14 +121,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     res.end()
 
     return { props: {} }
-  } catch (error) {
-    console.error('RSS feed error:', error)
+  } catch (err) {
+    console.error('RSS feed error:', err)
     res.statusCode = 500
     res.setHeader('Content-Type', 'application/json')
     res.write(
       JSON.stringify({
         error: 'Failed to generate RSS feed',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: err instanceof Error ? err.message : 'Unknown error'
       })
     )
     res.end()
