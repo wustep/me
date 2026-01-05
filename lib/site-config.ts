@@ -21,6 +21,8 @@ export interface SiteConfig {
   homePostsHeadingBlockId?: string
   homeGalleryBlockIds?: string[]
   homeListBlockIds?: string[]
+  // The collection/data source ID for the Posts database (used for RSS feed)
+  postsCollectionId?: string
 
   name: string
   domain: string

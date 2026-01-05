@@ -74,6 +74,12 @@ export const homeListBlockIds = Array.isArray(rawHomeListBlockIds)
       .filter((id): id is string => !!id)
   : []
 
+// Posts collection ID for RSS feed (configured directly in site.config.ts)
+export const postsCollectionId: string | null = getSiteConfig(
+  'postsCollectionId',
+  null
+)
+
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},
   { label: 'pageUrlOverrides' }

@@ -63,6 +63,22 @@ export default withBundleAnalyzer({
       }
     ]
   },
+  rewrites: async () => {
+    return [
+      {
+        source: '/feed.xml',
+        destination: '/feed'
+      },
+      {
+        source: '/rss',
+        destination: '/feed'
+      },
+      {
+        source: '/rss.xml',
+        destination: '/feed'
+      }
+    ]
+  },
   webpack: (config) => {
     // Workaround for ensuring that `react` and `react-dom` resolve correctly
     // when using a locally-linked version of `react-notion-x`.

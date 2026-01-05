@@ -1,11 +1,6 @@
 import type { GetServerSideProps } from 'next'
 import { type ExtendedRecordMap } from 'notion-types'
-import {
-  getBlockParentPage,
-  getBlockTitle,
-  getPageProperty,
-  idToUuid
-} from 'notion-utils'
+import { getBlockTitle, getPageProperty, uuidToId } from 'notion-utils'
 import RSS from 'rss'
 
 import * as config from '@/lib/config'
@@ -34,6 +29,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     ttl: ttlMinutes
   })
 
+  interface FeedItem {
+    title: string
+    url: string
+    date: Date
+    description: string
+    enclosure?: { url: string; type: string }
+  }
+
+  const feedItems: FeedItem[] = []
+
   for (const pagePath of Object.keys(siteMap.canonicalPageMap)) {
     const pageId = siteMap.canonicalPageMap[pagePath]!
     const recordMap = siteMap.pageMap[pageId] as ExtendedRecordMap
@@ -43,12 +48,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const block = recordMap?.block?.[keys[0]!]?.value
     if (!block) continue
 
-    const parentPage = getBlockParentPage(block, recordMap)
-    const isBlogPost =
+    // Check if this page is from the Posts collection
+    const isFromPostsCollection =
       block.type === 'page' &&
       block.parent_table === 'collection' &&
-      parentPage?.id === idToUuid(config.rootNotionPageId)
-    if (!isBlogPost) {
+      config.postsCollectionId &&
+      uuidToId(block.parent_id) === config.postsCollectionId
+
+    if (!isFromPostsCollection) {
+      continue
+    }
+
+    // Check if the post is public
+    const isPublic = getPageProperty<boolean>('Public', block, recordMap)
+    if (!isPublic) {
       continue
     }
 
@@ -63,14 +76,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       recordMap
     )
     const publishedTime = getPageProperty<number>('Published', block, recordMap)
-    const date = lastUpdatedTime
-      ? new Date(lastUpdatedTime)
-      : publishedTime
-        ? new Date(publishedTime)
+    const date = publishedTime
+      ? new Date(publishedTime)
+      : lastUpdatedTime
+        ? new Date(lastUpdatedTime)
         : new Date()
     const socialImageUrl = getSocialImageUrl(pageId)
 
-    feed.item({
+    feedItems.push({
       title,
       url,
       date,
@@ -82,6 +95,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
           }
         : undefined
     })
+  }
+
+  // Sort by date descending (newest first)
+  feedItems.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+  // Add sorted items to feed
+  for (const item of feedItems) {
+    feed.item(item)
   }
 
   const feedText = feed.xml({ indent: true })
