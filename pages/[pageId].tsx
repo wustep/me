@@ -1,7 +1,7 @@
 import { type GetStaticProps } from 'next'
 
 import { NotionPage } from '@/components/NotionPage'
-import { domain, isDev } from '@/lib/config'
+import { domain, isDev, pageUrlOverrides } from '@/lib/config'
 import { getSiteMap } from '@/lib/get-site-map'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import { type PageProps, type Params } from '@/lib/types'
@@ -34,13 +34,36 @@ export async function getStaticPaths() {
 
   const siteMap = await getSiteMap()
 
+  // ======== @wustep: add sitemap pages to be included ========
+
+  // Get paths from sitemap
+  const siteMapPaths = Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
+    params: {
+      pageId
+    }
+  }))
+
+  // Add URL override paths (e.g., /articles, /notes, /projects)
+  // These might not be in the sitemap if they're not directly linked from root
+  const overridePaths = Object.keys(pageUrlOverrides).map((path) => ({
+    params: {
+      pageId: path
+    }
+  }))
+
+  // Combine and deduplicate paths
+  const allPaths = [...siteMapPaths]
+  const existingPageIds = new Set(siteMapPaths.map((p) => p.params.pageId))
+  for (const overridePath of overridePaths) {
+    if (!existingPageIds.has(overridePath.params.pageId)) {
+      allPaths.push(overridePath)
+    }
+  }
+
+  // ================
+
   const staticPaths = {
-    paths: Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
-      params: {
-        pageId
-      }
-    })),
-    // paths: [],
+    paths: allPaths,
     fallback: true
   }
 
