@@ -691,7 +691,8 @@ span[class*='_background'] {
 }
 
 .posts-heading-toggle-button:hover:not(.active) {
-  color: var(--fg-color-5);
+  color: var(--fg-color-4);
+  background: var(--bg-color-0);
 }
 
 .posts-heading-toggle-button.active {
