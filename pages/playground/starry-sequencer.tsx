@@ -9,8 +9,8 @@ export default function PlaygroundStarryNightPage() {
       <div className='space-y-6'>
         <p className='text-muted-foreground'>
           At MIDI visualizer I made in 2016, built with MIDI.js, jQuery UI, and
-          pure canvas rendering. Best viewed on desktop, sometimes WebAudio
-          struggles on mobile browsers.
+          pure canvas rendering. Best viewed on desktop, sometimes audio doesn't
+          work on mobile browsers.
         </p>
         <div className='rounded-3xl border bg-card shadow-lg'>
           <iframe
