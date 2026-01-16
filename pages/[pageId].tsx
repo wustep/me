@@ -17,17 +17,23 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
     return { props, revalidate: 10 }
   } catch (err: unknown) {
     console.error('page error', domain, rawPageId, err)
-
-    // Return a proper 404 error page instead of throwing
-    // This prevents showing "Error Loading Page" and shows the 404 page instead
+    if (err instanceof Error && err.message.includes('404')) {
+      return {
+        props: {
+          error: {
+            message: 'Page not found',
+            statusCode: 404
+          }
+        }
+      }
+    }
     return {
       props: {
         error: {
-          message: `Page not found: "${rawPageId}"`,
-          statusCode: 404
+          message: 'Error',
+          statusCode: 500
         }
-      },
-      revalidate: 10
+      }
     }
   }
 }
