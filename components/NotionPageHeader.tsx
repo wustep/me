@@ -1,7 +1,9 @@
 import type * as types from 'notion-types'
-import { ImLab } from '@react-icons/all-files/im/ImLab'
-import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
-import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
+import {
+  ImLab,
+  IoMoonSharp,
+  IoSunnyOutline
+} from '@/components/icons/InlineIcons'
 import cs from 'classnames'
 import * as React from 'react'
 import { Breadcrumbs, Header, Search, useNotionContext } from 'react-notion-x'

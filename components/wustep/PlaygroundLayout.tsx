@@ -1,11 +1,13 @@
 'use client'
 
-import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
-import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
 import { Home } from 'lucide-react'
 import Link from 'next/link'
 import * as React from 'react'
 
+import {
+  IoMoonSharp,
+  IoSunnyOutline
+} from '@/components/icons/InlineIcons'
 import {
   Breadcrumb,
   BreadcrumbItem,

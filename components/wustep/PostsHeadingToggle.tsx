@@ -1,5 +1,7 @@
-import { IoGridOutline } from '@react-icons/all-files/io5/IoGridOutline'
-import { IoListOutline } from '@react-icons/all-files/io5/IoListOutline'
+import {
+  IoGridOutline,
+  IoListOutline
+} from '@/components/icons/InlineIcons'
 import cs from 'classnames'
 import * as React from 'react'
 

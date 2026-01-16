@@ -1,9 +1,9 @@
-import { ImLab } from '@react-icons/all-files/im/ImLab'
 import { Info } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
+import { ImLab } from '@/components/icons/InlineIcons'
 import {
   Sidebar,
   SidebarContent,
