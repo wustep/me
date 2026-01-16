@@ -15,12 +15,20 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
     const props = await resolveNotionPage(domain, rawPageId)
 
     return { props, revalidate: 10 }
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('page error', domain, rawPageId, err)
 
-    // we don't want to publish the error version of this page, so
-    // let next.js know explicitly that incremental SSG failed
-    throw err
+    // Return a proper 404 error page instead of throwing
+    // This prevents showing "Error Loading Page" and shows the 404 page instead
+    return {
+      props: {
+        error: {
+          message: `Page not found: "${rawPageId}"`,
+          statusCode: 404
+        }
+      },
+      revalidate: 10
+    }
   }
 }
 
