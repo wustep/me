@@ -29,6 +29,8 @@ export default siteConfig({
   // Find this in Notion: open your Posts database, use the Notion MCP fetch tool,
   // and look for the collection:// URL in the data-source section (without dashes)
   postsCollectionId: '2bc5cb08cf2c81bfbc62000b2d6fd232',
+  // Posts collection view ID for RSS feed (without dashes)
+  postsCollectionViewId: '24ceb766ce004e879f529ad0361e2258',
 
   // basic site info (required)
   name: 'Stephen Wu',

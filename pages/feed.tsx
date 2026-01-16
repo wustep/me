@@ -1,5 +1,11 @@
 import type { GetServerSideProps } from 'next'
-import { getBlockTitle, getPageProperty, idToUuid, parsePageId } from 'notion-utils'
+import type { CollectionInstance, ExtendedRecordMap } from 'notion-types'
+import {
+  getBlockTitle,
+  getPageProperty,
+  idToUuid,
+  parsePageId
+} from 'notion-utils'
 import RSS from 'rss'
 
 import * as config from '@/lib/config'
@@ -15,21 +21,27 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return { props: {} }
   }
 
-  if (!config.postsCollectionId) {
+  if (!config.postsCollectionId || !config.postsCollectionViewId) {
     res.statusCode = 500
     res.setHeader('Content-Type', 'application/json')
-    res.write(JSON.stringify({ error: 'postsCollectionId not configured' }))
+    res.write(
+      JSON.stringify({
+        error: 'postsCollectionId/postsCollectionViewId not configured'
+      })
+    )
     res.end()
     return { props: {} }
   }
 
   try {
-    // Fetch the root page which contains the posts collection
-    const recordMap = await notion.getPage(config.rootNotionPageId, {
-      fetchMissingBlocks: false,
-      fetchCollections: true,
-      signFileUrls: false
-    })
+    // Fetch the posts collection directly using collection + view IDs
+    const postsCollectionUuid = idToUuid(config.postsCollectionId)
+    const postsCollectionViewUuid = idToUuid(config.postsCollectionViewId)
+    const collectionData = (await notion.getCollectionData(
+      postsCollectionUuid,
+      postsCollectionViewUuid
+    )) as CollectionInstance
+    const recordMap = collectionData.recordMap as ExtendedRecordMap | undefined
 
     const ttlMinutes = 24 * 60 // 24 hours
     const ttlSeconds = ttlMinutes * 60
@@ -52,17 +64,31 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     const feedItems: FeedItem[] = []
 
-    // Convert postsCollectionId to UUID format (with dashes) for recordMap lookup
-    const postsCollectionUuid = idToUuid(config.postsCollectionId)
-
-    // Find the collection that matches our postsCollectionId
-    const collection = recordMap.collection?.[postsCollectionUuid]?.value
-    if (!collection) {
-      // Collection not found, return empty feed
+    if (!recordMap) {
+      // Collection record map missing, return empty feed
       const feedText = feed.xml({ indent: true })
       res.setHeader(
         'Cache-Control',
-        `public, max-age=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
+        `public, max-age=${ttlSeconds}, s-maxage=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
+      )
+      res.setHeader('Content-Type', 'text/xml; charset=utf-8')
+      res.write(feedText)
+      res.end()
+      return { props: {} }
+    }
+
+    const collectionResult = collectionData.result
+    const collectionBlockIds =
+      collectionResult?.blockIds ??
+      collectionResult?.collection_group_results?.blockIds ??
+      collectionResult?.reducerResults?.collection_group_results?.blockIds ??
+      []
+
+    if (!collectionBlockIds.length) {
+      const feedText = feed.xml({ indent: true })
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=${ttlSeconds}, s-maxage=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
       )
       res.setHeader('Content-Type', 'text/xml; charset=utf-8')
       res.write(feedText)
@@ -71,8 +97,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
 
     // Get all pages that belong to this collection
-    for (const blockId of Object.keys(recordMap.block || {})) {
-      const block = recordMap.block[blockId]?.value
+    for (const blockId of collectionBlockIds) {
+      const block =
+        recordMap.block?.[blockId]?.value ??
+        recordMap.block?.[idToUuid(blockId)]?.value
       if (!block) continue
 
       // Check if this is a page from our posts collection
@@ -102,8 +130,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         getPageProperty<string>('Slug', block, recordMap) ||
         title
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
+          .replaceAll(/[^a-z0-9]+/g, '-')
+          .replaceAll(/^-|-$/g, '')
       const url = `${config.host}/${slug}`
 
       const lastUpdatedTime = getPageProperty<number>(
@@ -149,7 +177,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
     res.setHeader(
       'Cache-Control',
-      `public, max-age=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
+      `public, max-age=${ttlSeconds}, s-maxage=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
     )
     res.setHeader('Content-Type', 'text/xml; charset=utf-8')
     res.write(feedText)

@@ -79,6 +79,10 @@ export const postsCollectionId: string | null = getSiteConfig(
   'postsCollectionId',
   null
 )
+export const postsCollectionViewId: string | null = getSiteConfig(
+  'postsCollectionViewId',
+  null
+)
 
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},

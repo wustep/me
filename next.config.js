@@ -72,6 +72,14 @@ export default withBundleAnalyzer({
         destination: '/feed'
       },
       {
+        source: '/feeds',
+        destination: '/feed'
+      },
+      {
+        source: '/feeds.xml',
+        destination: '/feed'
+      },
+      {
         source: '/rss',
         destination: '/feed'
       },

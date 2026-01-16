@@ -17,23 +17,14 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
     return { props, revalidate: 10 }
   } catch (err: unknown) {
     console.error('page error', domain, rawPageId, err)
-    if (err instanceof Error && err.message.includes('404')) {
-      return {
-        props: {
-          error: {
-            message: 'Page not found',
-            statusCode: 404
-          }
-        }
-      }
-    }
     return {
       props: {
         error: {
           message: 'Error',
           statusCode: 500
         }
-      }
+      },
+      revalidate: 10
     }
   }
 }

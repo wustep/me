@@ -23,6 +23,8 @@ export interface SiteConfig {
   homeListBlockIds?: string[]
   // The collection/data source ID for the Posts database (used for RSS feed)
   postsCollectionId?: string
+  // The collection view ID for the Posts database (used for RSS feed)
+  postsCollectionViewId?: string
 
   name: string
   domain: string
