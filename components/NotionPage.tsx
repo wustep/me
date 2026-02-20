@@ -7,6 +7,7 @@ import { type PageBlock } from 'notion-types'
 import {
   formatDate,
   getBlockTitle,
+  getBlockValue,
   getPageProperty,
   parsePageId
 } from 'notion-utils'
@@ -249,7 +250,7 @@ export function NotionPage({
   }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]!]?.value
+  const block = getBlockValue(recordMap?.block?.[keys[0]!])
 
   const isRootPage =
     parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
@@ -279,7 +280,7 @@ export function NotionPage({
     return <Loading />
   }
 
-  if (error || !site || !block) {
+  if (error || !site || !block || !recordMap) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 

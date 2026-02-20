@@ -2,6 +2,7 @@ import type { GetServerSideProps } from 'next'
 import type { CollectionInstance, ExtendedRecordMap } from 'notion-types'
 import {
   getBlockTitle,
+  getBlockValue,
   getPageProperty,
   idToUuid,
   parsePageId
@@ -99,8 +100,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     // Get all pages that belong to this collection
     for (const blockId of collectionBlockIds) {
       const block =
-        recordMap.block?.[blockId]?.value ??
-        recordMap.block?.[idToUuid(blockId)]?.value
+        getBlockValue(recordMap.block?.[blockId]) ??
+        getBlockValue(recordMap.block?.[idToUuid(blockId)])
       if (!block) continue
 
       // Check if this is a page from our posts collection

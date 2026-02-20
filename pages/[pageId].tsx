@@ -39,36 +39,17 @@ export async function getStaticPaths() {
 
   const siteMap = await getSiteMap()
 
-  // ======== @wustep: add sitemap pages to be included ========
-
-  // Get paths from sitemap
-  const siteMapPaths = Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
-    params: {
-      pageId
-    }
-  }))
-
-  // Add URL override paths (e.g., /articles, /notes, /projects)
-  // These might not be in the sitemap if they're not directly linked from root
-  const overridePaths = Object.keys(pageUrlOverrides).map((path) => ({
-    params: {
-      pageId: path
-    }
-  }))
-
-  // Combine and deduplicate paths
-  const allPaths = [...siteMapPaths]
-  const existingPageIds = new Set(siteMapPaths.map((p) => p.params.pageId))
-  for (const overridePath of overridePaths) {
-    if (!existingPageIds.has(overridePath.params.pageId)) {
-      allPaths.push(overridePath)
-    }
-  }
-
-  // ================
+  // Combine sitemap paths with URL overrides (e.g., /articles, /notes)
+  // URL overrides might not be in the sitemap if not directly linked from root
+  const allPageIds = [
+    ...new Set([
+      ...Object.keys(siteMap.canonicalPageMap),
+      ...Object.keys(pageUrlOverrides)
+    ])
+  ]
 
   const staticPaths = {
-    paths: allPaths,
+    paths: allPageIds.map((pageId) => ({ params: { pageId } })),
     fallback: true
   }
 

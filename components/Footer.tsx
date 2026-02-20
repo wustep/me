@@ -13,8 +13,6 @@ import {
 } from '../icons/SocialIcons'
 import styles from './styles.module.css'
 
-// TODO: merge the data and icons from PageSocial with the social links in Footer
-
 export function FooterImpl() {
   const currentYear = new Date().getFullYear()
 
@@ -37,7 +35,7 @@ export function FooterImpl() {
       <div className={styles.copyright}>
         Copyright {currentYear} {config.author}
       </div>
-      {/* 
+      {/*
       <div className={styles.settings}>
         {hasMounted && (
           <a
@@ -47,7 +45,7 @@ export function FooterImpl() {
             onClick={onToggleDarkMode}
             title='Toggle dark mode'
           >
-            {isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
+            {isDarkMode ? <MoonIcon /> : <SunIcon />}
           </a>
         )}
       </div> */}
