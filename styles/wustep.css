@@ -873,6 +873,22 @@ span[class*='_background'] {
   }
 }
 
+/* iOS Safari can apply sticky hover while finger-scrolling over links.
+   Disable list-row hover feedback on touch devices to prevent false highlights. */
+@media (hover: none) and (pointer: coarse) {
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item,
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item .notion-page-link {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item:hover,
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item:active,
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item .notion-page-link:hover,
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item .notion-page-link:active {
+    background: transparent !important;
+  }
+}
+
 .notion-list-item-property {
   /** Vertically align properties on the right of list views */
   display: flex;
