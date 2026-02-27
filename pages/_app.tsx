@@ -72,6 +72,30 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router.events])
 
+  React.useEffect(() => {
+    const root = document.documentElement
+
+    const onTouchStart = () => {
+      // Clear scroll state at the start of each new gesture so taps can
+      // still receive normal pressed feedback.
+      root.classList.remove('is-touch-scrolling')
+    }
+
+    const onTouchMove = () => {
+      // While finger-dragging, suppress sticky hover artifacts on iOS Safari.
+      root.classList.add('is-touch-scrolling')
+    }
+
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      root.classList.remove('is-touch-scrolling')
+    }
+  }, [])
+
   return (
     <>
       <style jsx global>{`

@@ -874,11 +874,15 @@ span[class*='_background'] {
 }
 
 /* iOS Safari can apply sticky hover while finger-scrolling over links.
-   Disable list-row hover feedback on touch devices to prevent false highlights,
-   but keep native tap/click feedback for navigation. */
+   Disable list-row hover feedback only while touch-scrolling. */
 @media (hover: none) and (pointer: coarse) {
-  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item:hover,
-  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item .notion-page-link:hover {
+  .is-touch-scrolling
+    .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97
+    .notion-list-item:hover,
+  .is-touch-scrolling
+    .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97
+    .notion-list-item
+    .notion-page-link:hover {
     background: transparent !important;
   }
 }
