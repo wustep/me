@@ -960,10 +960,12 @@ span[class*='_background'] {
 .notion-list-item[data-external-link] .notion-list-item-title::after {
   content: '';
   display: inline-block;
-  width: 0.65em;
-  height: 0.65em;
-  margin-left: 0.25em;
-  vertical-align: middle;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.3em;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.05em;
   background-color: currentColor;
   opacity: 0;
   transition: opacity 0.15s ease;
