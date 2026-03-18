@@ -23,6 +23,7 @@ import { useSearchParam } from 'react-use'
 
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
+import { getExternalUrlMap } from '@/lib/get-external-url-map'
 import { mapImageUrl } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
 import { searchNotion } from '@/lib/search-notion'
@@ -217,6 +218,52 @@ export function NotionPage({
   const router = useRouter()
   const lite = useSearchParam('lite')
 
+  // lite mode is for oembed
+  const isLiteMode = lite === 'true'
+
+  const { isDarkMode } = useDarkMode()
+
+  const externalUrlMap = React.useMemo(
+    () => (recordMap ? getExternalUrlMap(recordMap) : new Map<string, string>()),
+    [recordMap]
+  )
+
+  const siteMapPageUrl = React.useMemo(() => {
+    const params: any = {}
+    if (lite) params.lite = lite
+
+    const searchParams = new URLSearchParams(params)
+    if (!site) return undefined
+    const baseMapPageUrl = mapPageUrl(site, recordMap!, searchParams)
+    return (pageId = '') => {
+      const externalUrl = externalUrlMap.get(
+        parsePageId(pageId, { uuid: false })!
+      )
+      if (externalUrl) return externalUrl
+      return baseMapPageUrl(pageId)
+    }
+  }, [site, recordMap, lite, externalUrlMap])
+
+  const ExternalAwarePageLink = React.useMemo(() => {
+    const PageLinkComponent = (props: any) => {
+      const { href, ...rest } = props
+      if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+        return (
+          <a
+            href={href}
+            target='_blank'
+            rel='noopener noreferrer'
+            data-external-link
+            {...rest}
+          />
+        )
+      }
+      return <a href={href} {...rest} />
+    }
+    PageLinkComponent.displayName = 'ExternalAwarePageLink'
+    return PageLinkComponent
+  }, [])
+
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
       nextLegacyImage: Image,
@@ -228,26 +275,14 @@ export function NotionPage({
       Modal,
       Tweet,
       Header: NotionPageHeader,
+      PageLink: ExternalAwarePageLink,
       propertyLastEditedTimeValue,
       propertyTextValue,
       propertyDateValue,
       ...componentOverrides
     }),
-    [componentOverrides]
+    [componentOverrides, ExternalAwarePageLink]
   )
-
-  // lite mode is for oembed
-  const isLiteMode = lite === 'true'
-
-  const { isDarkMode } = useDarkMode()
-
-  const siteMapPageUrl = React.useMemo(() => {
-    const params: any = {}
-    if (lite) params.lite = lite
-
-    const searchParams = new URLSearchParams(params)
-    return site ? mapPageUrl(site, recordMap!, searchParams) : undefined
-  }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
   const block = getBlockValue(recordMap?.block?.[keys[0]!])
@@ -276,7 +311,25 @@ export function NotionPage({
 
   const footer = React.useMemo(() => <Footer />, [])
 
+  // Redirect to external URL if the page has one configured
+  const externalRedirectUrl = React.useMemo(() => {
+    if (!block || !recordMap) return null
+    const isExternal = getPageProperty<boolean>('External', block, recordMap)
+    if (!isExternal) return null
+    return getPageProperty<string>('External URL', block, recordMap) || null
+  }, [block, recordMap])
+
+  React.useEffect(() => {
+    if (externalRedirectUrl) {
+      window.location.replace(externalRedirectUrl)
+    }
+  }, [externalRedirectUrl])
+
   if (router.isFallback) {
+    return <Loading />
+  }
+
+  if (externalRedirectUrl) {
     return <Loading />
   }
 

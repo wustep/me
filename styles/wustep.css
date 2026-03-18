@@ -952,6 +952,30 @@ span[class*='_background'] {
   padding: 1rem 1.25rem;
 }
 
+/**
+ * ========== External Links in Collections ==========
+ * Show an arrow icon next to titles for posts that link externally.
+ */
+.notion-collection-card[data-external-link] .notion-page-title-text::after,
+.notion-list-item[data-external-link] .notion-list-item-title::after {
+  content: '';
+  display: inline-block;
+  width: 0.65em;
+  height: 0.65em;
+  margin-left: 0.25em;
+  vertical-align: middle;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+.notion-collection-card[data-external-link]:hover .notion-page-title-text::after,
+.notion-list-item[data-external-link]:hover .notion-list-item-title::after {
+  opacity: 1;
+}
+
 /* Dark mode adjustments */
 .dark-mode .notion-collection-card {
   background: var(--dark-surface);
