@@ -22,6 +22,17 @@ export const playgroundSections: PlaygroundSection[] = [
     title: 'Experiments',
     items: [
       {
+        title: 'DOM-ino',
+        url: '/playground/dom-ino',
+        description:
+          'A physics-driven text layout experiment. Grab any element on the page and throw it through the text — paragraphs reflow around moving obstacles in real time.',
+        summary: 'Throw elements through text with real-time paragraph reflow',
+        date: 'Apr 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/dom-ino',
+        image: '/playground/covers/dom-ino.svg'
+      },
+      {
         title: 'Bookshelf',
         url: '/playground/bookshelf',
         description: 'An interactive bookshelf of some of my favorite books.',
