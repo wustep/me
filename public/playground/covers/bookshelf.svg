@@ -1,75 +1,189 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Light warm background (Bookshelf app) -->
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2d1b69"/>
-      <stop offset="40%" stop-color="#6c5ce7"/>
-      <stop offset="100%" stop-color="#a29bfe"/>
+      <stop offset="0%" stop-color="#faf9f7"/>
+      <stop offset="100%" stop-color="#f5f3f0"/>
     </linearGradient>
-    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="white" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="white" stop-opacity="0.8"/>
+    
+    <!-- Book spine gradients for depth -->
+    <linearGradient id="spineShade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.06)"/>
+      <stop offset="12%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="88%" stop-color="rgba(0,0,0,0)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
     </linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    
+    <!-- Shelf wood -->
+    <linearGradient id="shelfTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c9c0b5"/>
+      <stop offset="100%" stop-color="#bbb1a5"/>
+    </linearGradient>
+    <linearGradient id="shelfFront" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a89d91"/>
+      <stop offset="100%" stop-color="#978c80"/>
+    </linearGradient>
+    
+    <filter id="bookShadow" x="-20%" y="-10%" width="140%" height="130%">
+      <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.1"/>
     </filter>
-    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#2d1b69" flood-opacity="0.3"/>
+    
+    <filter id="shelfShadow" x="-5%" y="-30%" width="110%" height="160%">
+      <feDropShadow dx="0" dy="-10" stdDeviation="15" flood-color="#000" flood-opacity="0.06"/>
     </filter>
   </defs>
   
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bg)"/>
   
-  <!-- Decorative circles -->
-  <circle cx="200" cy="100" r="300" fill="white" fill-opacity="0.03"/>
-  <circle cx="1000" cy="530" r="250" fill="white" fill-opacity="0.03"/>
+  <!-- Books on shelf -->
+  <g transform="translate(115, 95)" filter="url(#bookShadow)">
+    
+    <!-- Book 1 - Purple (accent) -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="60" width="55" height="320" rx="2" fill="#6c5ce7"/>
+      <rect x="0" y="60" width="55" height="320" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="95" width="35" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="10" y="108" width="25" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+      <rect x="10" y="340" width="35" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+    </g>
+    
+    <!-- Book 2 - Warm terracotta -->
+    <g transform="translate(65, 0)">
+      <rect x="0" y="100" width="48" height="280" rx="2" fill="#c9705d"/>
+      <rect x="0" y="100" width="48" height="280" rx="2" fill="url(#spineShade)"/>
+      <rect x="9" y="130" width="30" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="9" y="142" width="20" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+    <!-- Book 3 - Deep teal -->
+    <g transform="translate(123, 0)">
+      <rect x="0" y="40" width="60" height="340" rx="2" fill="#2a7d6e"/>
+      <rect x="0" y="40" width="60" height="340" rx="2" fill="url(#spineShade)"/>
+      <rect x="12" y="72" width="36" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="12" y="84" width="26" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+      <rect x="12" y="340" width="36" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+    </g>
+    
+    <!-- Book 4 - Warm ochre -->
+    <g transform="translate(193, 0)">
+      <rect x="0" y="140" width="44" height="240" rx="2" fill="#d4a55a"/>
+      <rect x="0" y="140" width="44" height="240" rx="2" fill="url(#spineShade)"/>
+      <rect x="8" y="168" width="28" height="4" rx="2" fill="rgba(0,0,0,0.12)"/>
+      <rect x="8" y="180" width="18" height="3" rx="1.5" fill="rgba(0,0,0,0.08)"/>
+    </g>
+    
+    <!-- Book 5 - Light gray -->
+    <g transform="translate(247, 0)">
+      <rect x="0" y="75" width="52" height="305" rx="2" fill="#e8e4e0"/>
+      <rect x="0" y="75" width="52" height="305" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="105" width="32" height="4" rx="2" fill="rgba(0,0,0,0.12)"/>
+      <rect x="10" y="117" width="22" height="3" rx="1.5" fill="rgba(0,0,0,0.08)"/>
+      <rect x="10" y="345" width="32" height="3" rx="1.5" fill="rgba(0,0,0,0.06)"/>
+    </g>
+    
+    <!-- Book 6 - Dusty rose -->
+    <g transform="translate(309, 0)">
+      <rect x="0" y="50" width="56" height="330" rx="2" fill="#c97b84"/>
+      <rect x="0" y="50" width="56" height="330" rx="2" fill="url(#spineShade)"/>
+      <rect x="11" y="82" width="34" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="11" y="94" width="24" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+    <!-- Book 7 - Soft blue -->
+    <g transform="translate(375, 0)">
+      <rect x="0" y="110" width="50" height="270" rx="2" fill="#6a9bc3"/>
+      <rect x="0" y="110" width="50" height="270" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="140" width="30" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+      <rect x="10" y="152" width="20" height="3" rx="1.5" fill="rgba(255,255,255,0.25)"/>
+    </g>
+    
+    <!-- Book 8 - Deep burgundy -->
+    <g transform="translate(435, 0)">
+      <rect x="0" y="30" width="62" height="350" rx="2" fill="#8b3a4c"/>
+      <rect x="0" y="30" width="62" height="350" rx="2" fill="url(#spineShade)"/>
+      <rect x="12" y="62" width="38" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="12" y="74" width="26" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+      <rect x="12" y="345" width="38" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+    </g>
+    
+    <!-- Book 9 - Lavender (accent light) -->
+    <g transform="translate(507, 0)">
+      <rect x="0" y="150" width="46" height="230" rx="2" fill="#a29bfe"/>
+      <rect x="0" y="150" width="46" height="230" rx="2" fill="url(#spineShade)"/>
+      <rect x="9" y="178" width="28" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+      <rect x="9" y="190" width="18" height="3" rx="1.5" fill="rgba(255,255,255,0.25)"/>
+    </g>
+    
+    <!-- Book 10 - Sage green -->
+    <g transform="translate(563, 0)">
+      <rect x="0" y="85" width="54" height="295" rx="2" fill="#7d9d85"/>
+      <rect x="0" y="85" width="54" height="295" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="115" width="34" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="10" y="127" width="22" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+    <!-- Book 11 - Burnt orange -->
+    <g transform="translate(627, 0)">
+      <rect x="0" y="55" width="54" height="325" rx="2" fill="#c76f3b"/>
+      <rect x="0" y="55" width="54" height="325" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="85" width="34" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="10" y="97" width="24" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+    <!-- Book 12 - Cream -->
+    <g transform="translate(691, 0)">
+      <rect x="0" y="120" width="48" height="260" rx="2" fill="#f5f0e8"/>
+      <rect x="0" y="120" width="48" height="260" rx="2" fill="url(#spineShade)"/>
+      <rect x="9" y="150" width="30" height="4" rx="2" fill="rgba(0,0,0,0.1)"/>
+      <rect x="9" y="162" width="20" height="3" rx="1.5" fill="rgba(0,0,0,0.06)"/>
+    </g>
+    
+    <!-- Book 13 - Rich crimson -->
+    <g transform="translate(749, 0)">
+      <rect x="0" y="45" width="58" height="335" rx="2" fill="#a63d40"/>
+      <rect x="0" y="45" width="58" height="335" rx="2" fill="url(#spineShade)"/>
+      <rect x="11" y="75" width="36" height="4" rx="2" fill="rgba(255,255,255,0.32)"/>
+      <rect x="11" y="87" width="26" height="3" rx="1.5" fill="rgba(255,255,255,0.18)"/>
+      <rect x="11" y="345" width="36" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+    </g>
+    
+    <!-- Book 14 - Muted plum -->
+    <g transform="translate(817, 0)">
+      <rect x="0" y="160" width="44" height="220" rx="2" fill="#7a5980"/>
+      <rect x="0" y="160" width="44" height="220" rx="2" fill="url(#spineShade)"/>
+      <rect x="8" y="188" width="28" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="8" y="200" width="18" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+    <!-- Book 15 - Deep navy -->
+    <g transform="translate(871, 0)">
+      <rect x="0" y="35" width="58" height="345" rx="2" fill="#2c3e50"/>
+      <rect x="0" y="35" width="58" height="345" rx="2" fill="url(#spineShade)"/>
+      <rect x="11" y="65" width="36" height="4" rx="2" fill="rgba(255,255,255,0.28)"/>
+      <rect x="11" y="77" width="24" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+      <rect x="11" y="345" width="36" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+    </g>
+    
+    <!-- Book 16 - Soft coral -->
+    <g transform="translate(939, 0)">
+      <rect x="0" y="95" width="52" height="285" rx="2" fill="#d49a8d"/>
+      <rect x="0" y="95" width="52" height="285" rx="2" fill="url(#spineShade)"/>
+      <rect x="10" y="125" width="32" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="10" y="137" width="22" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    </g>
+    
+  </g>
   
-  <!-- Book icon - stacked books style -->
-  <g transform="translate(600, 325)" filter="url(#softShadow)">
-    <!-- Bottom book (horizontal) -->
-    <g transform="translate(0, 55)">
-      <rect x="-90" y="-12" width="180" height="24" rx="2" fill="white" fill-opacity="0.25"/>
-      <rect x="-86" y="-12" width="4" height="24" fill="white" fill-opacity="0.15"/>
-    </g>
-    
-    <!-- Middle book (horizontal) -->
-    <g transform="translate(0, 27)">
-      <rect x="-85" y="-12" width="170" height="24" rx="2" fill="white" fill-opacity="0.35"/>
-      <rect x="-81" y="-12" width="4" height="24" fill="white" fill-opacity="0.2"/>
-    </g>
-    
-    <!-- Standing open book -->
-    <g transform="translate(0, -40)" filter="url(#glow)">
-      <!-- Left page -->
-      <path d="M-8 -55 C-8 -55 -70 -65 -95 -55 L-95 55 C-70 45 -8 55 -8 55 Z" 
-            fill="white" fill-opacity="0.9" stroke="white" stroke-width="1.5"/>
-      <!-- Right page -->
-      <path d="M8 -55 C8 -55 70 -65 95 -55 L95 55 C70 45 8 55 8 55 Z" 
-            fill="white" fill-opacity="0.9" stroke="white" stroke-width="1.5"/>
-      <!-- Spine highlight -->
-      <ellipse cx="0" cy="0" rx="10" ry="58" fill="white" fill-opacity="0.3"/>
-      
-      <!-- Text lines - left page -->
-      <g stroke="rgba(108,92,231,0.4)" stroke-width="1.5" stroke-linecap="round">
-        <line x1="-80" y1="-35" x2="-25" y2="-40"/>
-        <line x1="-78" y1="-20" x2="-22" y2="-25"/>
-        <line x1="-75" y1="-5" x2="-18" y2="-10"/>
-        <line x1="-72" y1="10" x2="-15" y2="5"/>
-        <line x1="-68" y1="25" x2="-55" y2="22"/>
-      </g>
-      
-      <!-- Text lines - right page -->
-      <g stroke="rgba(108,92,231,0.4)" stroke-width="1.5" stroke-linecap="round">
-        <line x1="80" y1="-35" x2="25" y2="-40"/>
-        <line x1="78" y1="-20" x2="22" y2="-25"/>
-        <line x1="75" y1="-5" x2="18" y2="-10"/>
-        <line x1="72" y1="10" x2="15" y2="5"/>
-        <line x1="68" y1="25" x2="55" y2="22"/>
-      </g>
-    </g>
+  <!-- Wooden shelf -->
+  <g filter="url(#shelfShadow)">
+    <!-- Shelf top surface -->
+    <rect x="80" y="475" width="1040" height="16" fill="url(#shelfTop)"/>
+    <!-- Shelf front face -->
+    <rect x="80" y="491" width="1040" height="28" fill="url(#shelfFront)"/>
+    <!-- Shelf edge highlight -->
+    <rect x="80" y="475" width="1040" height="1.5" fill="rgba(255,255,255,0.3)"/>
+    <!-- Shelf bottom edge -->
+    <rect x="80" y="518" width="1040" height="1" fill="rgba(0,0,0,0.2)"/>
   </g>
 </svg>
