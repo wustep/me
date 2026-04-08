@@ -86,11 +86,6 @@
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
   },
-  "pnpm": {
-    "patchedDependencies": {
-      "notion-client@7.8.2": "patches/notion-client@7.8.2.patch"
-    }
-  },
   "overrides": {
     "cacheable-request": {
       "keyv": "npm:@keyvhq/core@~1.6.6"
