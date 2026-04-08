@@ -1,12 +1,15 @@
 packages:
-  - "."
-
-onlyBuiltDependencies:
-  - sharp
-  - simple-git-hooks
+  - .
 
 enablePrePostScripts: true
 
 minimumReleaseAge: 1440
 
+onlyBuiltDependencies:
+  - sharp
+  - simple-git-hooks
+
 packageManagerStrict: false
+
+patchedDependencies:
+  notion-client@7.8.2: patches/notion-client@7.8.2.patch

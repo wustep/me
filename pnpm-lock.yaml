@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  notion-client@7.8.2:
+    hash: 540dde127cc4f1d60c94a5c4664eddb0e53937373f3b80f1472fb4ae8c4777ed
+    path: patches/notion-client@7.8.2.patch
+
 importers:
 
   .:
@@ -76,7 +81,7 @@ importers:
         version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       notion-client:
         specifier: ^7.8.1
-        version: 7.8.2
+        version: 7.8.2(patch_hash=540dde127cc4f1d60c94a5c4664eddb0e53937373f3b80f1472fb4ae8c4777ed)
       notion-types:
         specifier: ^7.8.1
         version: 7.8.2
@@ -5704,7 +5709,7 @@ snapshots:
 
   normalize-url@8.0.2: {}
 
-  notion-client@7.8.2:
+  notion-client@7.8.2(patch_hash=540dde127cc4f1d60c94a5c4664eddb0e53937373f3b80f1472fb4ae8c4777ed):
     dependencies:
       notion-types: 7.8.2
       notion-utils: 7.8.2
