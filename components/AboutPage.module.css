@@ -101,11 +101,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: 12px;
   background: transparent;
   color: var(--about-muted);
   cursor: pointer;
@@ -118,23 +118,34 @@
 }
 
 .themeToggle svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .themeToggle:hover {
-  color: var(--about-accent);
-  background: var(--about-card-hover);
   transform: rotate(15deg);
+}
+
+.dark .themeToggle:hover {
+  color: #f5c542;
+}
+
+.light .themeToggle:hover {
+  color: #6366f1;
 }
 
 .themeToggle:active {
   transform: rotate(30deg) scale(0.95);
 }
 
-.nameRow:hover .themeToggle,
+.header:hover .themeToggle,
 .themeToggle:focus-visible {
   opacity: 1;
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid var(--about-accent);
+  outline-offset: 2px;
 }
 
 .title {
@@ -184,7 +195,6 @@
 .light .navIcon:hover {
   border-color: rgba(0, 0, 0, 0.15);
 }
-
 
 .hero {
   margin-bottom: 48px;
@@ -325,7 +335,7 @@
   flex-direction: column;
   gap: 0;
   margin-bottom: 56px;
-  padding: 20px 0;
+  padding: 20px 0 4px;
   border-top: 1px solid var(--about-border);
   border-bottom: 1px solid var(--about-border);
   transition: border-color 300ms ease;
@@ -405,7 +415,7 @@
 
 .projectGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
   gap: 12px;
 }
 
@@ -503,11 +513,19 @@
   line-height: 1.4;
 }
 
-.domino {
+.projectDivider {
   grid-column: 1 / -1;
+  height: 0;
+  margin: 2px 0;
+}
+
+.domino,
+.spotIt,
+.bookshelf {
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  height: 120px;
+  overflow: hidden;
 }
 
 .dominoTitle {
@@ -519,6 +537,17 @@
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--about-accent);
+  animation: dominoFloat 4s ease-in-out infinite;
+}
+
+@keyframes dominoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 .dominoBlock {
@@ -529,12 +558,147 @@
   background: var(--about-accent);
   color: var(--about-bg);
   border-radius: 6px;
-  transform: rotate(2deg);
-  transition: transform 300ms ease;
+  animation: dominoRock 3s ease-in-out infinite;
+}
+
+@keyframes dominoRock {
+  0%,
+  100% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+}
+
+.domino:hover .dominoTitle {
+  animation: none;
 }
 
 .domino:hover .dominoBlock {
+  animation: none;
   transform: rotate(-3deg) translateY(-2px);
+  transition: transform 300ms ease;
+}
+
+.spotIt {
+  gap: 0;
+  padding: 0;
+}
+
+.spotItBg {
+  position: absolute;
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  pointer-events: none;
+  animation: spotItSpin 45s linear infinite;
+}
+
+@keyframes spotItSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spotIt:hover .spotItBg {
+  animation: none;
+  transform: rotate(8deg) scale(1.05);
+  transition: transform 500ms ease;
+}
+
+.spotIt h3 {
+  position: relative;
+  z-index: 1;
+  font-size: 1.25rem;
+  text-shadow:
+    0 0 8px var(--about-card),
+    0 0 16px var(--about-card),
+    0 0 24px var(--about-card);
+}
+
+.bookshelf {
+  gap: 6px;
+  padding: 14px 18px;
+  justify-content: flex-end;
+}
+
+.bookshelfBooks {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 56px;
+}
+
+.book {
+  display: block;
+  width: 9px;
+  border-radius: 2px 2px 0 0;
+  transition: transform 300ms ease;
+}
+
+.book:nth-child(1) {
+  animation: bookBob 3.2s ease-in-out 0s infinite;
+}
+.book:nth-child(2) {
+  animation: bookBob 3.2s ease-in-out 0.3s infinite;
+}
+.book:nth-child(3) {
+  animation: bookBob 3.2s ease-in-out 0.6s infinite;
+}
+.book:nth-child(4) {
+  animation: bookBob 3.2s ease-in-out 0.9s infinite;
+}
+.book:nth-child(5) {
+  animation: bookBob 3.2s ease-in-out 1.2s infinite;
+}
+.book:nth-child(6) {
+  animation: bookBob 3.2s ease-in-out 1.5s infinite;
+}
+.book:nth-child(7) {
+  animation: bookBob 3.2s ease-in-out 1.8s infinite;
+}
+
+@keyframes bookBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.bookshelf:hover .book:nth-child(1) {
+  animation: none;
+  transform: translateY(-3px) rotate(-2deg);
+}
+.bookshelf:hover .book:nth-child(2) {
+  animation: none;
+  transform: translateY(-5px);
+}
+.bookshelf:hover .book:nth-child(3) {
+  animation: none;
+  transform: translateY(-2px) rotate(1deg);
+}
+.bookshelf:hover .book:nth-child(4) {
+  animation: none;
+  transform: translateY(-6px) rotate(-1deg);
+}
+.bookshelf:hover .book:nth-child(5) {
+  animation: none;
+  transform: translateY(-4px) rotate(2deg);
+}
+.bookshelf:hover .book:nth-child(6) {
+  animation: none;
+  transform: translateY(-3px) rotate(-1deg);
+}
+.bookshelf:hover .book:nth-child(7) {
+  animation: none;
+  transform: translateY(-5px) rotate(1deg);
 }
 
 .writing {
@@ -637,8 +801,14 @@
   grid-column: 1 / -1;
 }
 
-.tooltipWrapper:has(.domino) {
-  grid-column: 1 / -1;
+.tooltipWrapper:has(.compact) {
+  grid-column: span 3;
+}
+
+.tooltipWrapper:has(.domino),
+.tooltipWrapper:has(.spotIt),
+.tooltipWrapper:has(.bookshelf) {
+  grid-column: span 2;
 }
 
 .tooltip {
@@ -743,6 +913,12 @@
     justify-content: flex-start;
   }
 
+  .themeToggle {
+    order: 99;
+    margin-left: auto;
+    opacity: 1;
+  }
+
   .heroContent {
     flex-direction: column;
     gap: 16px;
@@ -752,7 +928,7 @@
   .writingColumns {
     grid-template-columns: 1fr;
   }
-  
+
   .writingColumns {
     gap: 24px;
   }
@@ -760,6 +936,13 @@
   .featured,
   .domino {
     grid-column: 1;
+  }
+
+  .tooltipWrapper:has(.compact),
+  .tooltipWrapper:has(.domino),
+  .tooltipWrapper:has(.spotIt),
+  .tooltipWrapper:has(.bookshelf) {
+    grid-column: 1 / -1;
   }
 
   .dominoTitle {
@@ -792,7 +975,11 @@
   .projectCard,
   .writingLink,
   .navIcon,
-  .tooltip {
+  .tooltip,
+  .spotItBg,
+  .book,
+  .bookshelfBooks,
+  .dominoBlock {
     animation: none;
     transition: none;
     opacity: 1;

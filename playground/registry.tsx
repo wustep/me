@@ -1,5 +1,6 @@
 import type React from 'react'
 
+import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 
 export type PlaygroundEntry = {
@@ -46,7 +47,8 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Dec 2025',
         year: '2025',
         source: 'https://github.com/wustep/bookshelf',
-        image: '/playground/covers/bookshelf.svg'
+        image: '/playground/covers/bookshelf.svg',
+        CoverComponent: BookshelfCover
       },
       {
         title: 'Shadcn + Physics',

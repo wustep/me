@@ -142,25 +142,20 @@ export function AboutPage() {
               <Link href='/' className={styles.wordmark}>
                 Stephen Wu
               </Link>
-              <button
-                onClick={() => setIsDark(!isDark)}
-                className={styles.themeToggle}
-                aria-label={
-                  isDark ? 'Switch to light mode' : 'Switch to dark mode'
-                }
-              >
-                {isDark ? <SunIcon /> : <MoonIcon />}
-              </button>
             </div>
             <span className={styles.title}>Engineering at Notion</span>
           </div>
 
           <nav className={styles.nav}>
-            <Tooltip label='Check out my main website!'>
-              <Link href='/' className={styles.navIcon} aria-label='Home'>
-                <span className={styles.turtleIcon}>🐢</span>
-              </Link>
-            </Tooltip>
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className={styles.themeToggle}
+              aria-label={
+                isDark ? 'Switch to light mode' : 'Switch to dark mode'
+              }
+            >
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </button>
             {x && (
               <a
                 href={`https://x.com/${x}`}
@@ -310,15 +305,59 @@ export function AboutPage() {
               </a>
             </Tooltip>
 
+            <div className={styles.projectDivider} />
+
             <Tooltip label='Matter.js and pretext playground with playful DOM interactions'>
               <a
-                href='https://dom-ino.vercel.app/'
+                href='/playground/dom-ino'
                 className={`${styles.projectCard} ${styles.domino}`}
               >
                 <div className={styles.dominoTitle}>
                   <span>DOM</span>
                   <span className={styles.dominoBlock}>ino</span>
                 </div>
+              </a>
+            </Tooltip>
+
+            <Tooltip label='A browser-based Spot It! card game'>
+              <a
+                href='/playground/spot-it'
+                className={`${styles.projectCard} ${styles.spotIt}`}
+              >
+                <svg
+                  className={styles.spotItBg}
+                  viewBox='0 0 120 120'
+                  fill='none'
+                  aria-hidden='true'
+                >
+                  <circle cx='60' cy='60' r='56' stroke='currentColor' strokeWidth='1' opacity='0.12' />
+                  <circle cx='28' cy='35' r='8' fill='#e74c3c' />
+                  <circle cx='85' cy='28' r='6' fill='#3b82f6' />
+                  <circle cx='58' cy='62' r='10' fill='#22c55e' />
+                  <circle cx='90' cy='72' r='5' fill='#f59e0b' />
+                  <circle cx='30' cy='85' r='7' fill='#a855f7' />
+                  <circle cx='82' cy='92' r='4' fill='#ec4899' />
+                  <circle cx='52' cy='22' r='4.5' fill='#06b6d4' />
+                </svg>
+                <h3>Spot It!</h3>
+              </a>
+            </Tooltip>
+
+            <Tooltip label='An interactive 3D bookshelf of my reading list'>
+              <a
+                href='/playground/bookshelf'
+                className={`${styles.projectCard} ${styles.bookshelf}`}
+              >
+                <div className={styles.bookshelfBooks}>
+                  <span className={styles.book} style={{ background: '#e74c3c', height: '70%' }} />
+                  <span className={styles.book} style={{ background: '#3b82f6', height: '85%' }} />
+                  <span className={styles.book} style={{ background: '#22c55e', height: '60%' }} />
+                  <span className={styles.book} style={{ background: '#f59e0b', height: '90%' }} />
+                  <span className={styles.book} style={{ background: '#a855f7', height: '75%' }} />
+                  <span className={styles.book} style={{ background: '#06b6d4', height: '65%' }} />
+                  <span className={styles.book} style={{ background: '#ec4899', height: '80%' }} />
+                </div>
+                <h3>Bookshelf</h3>
               </a>
             </Tooltip>
           </div>
@@ -366,9 +405,11 @@ export function AboutPage() {
         </section>
 
         <footer className={styles.footer}>
-          <a href='/contact' className={styles.contactLink}>
-            Get in touch →
-          </a>
+          <Tooltip label="Thanks for stopping by! Feel free to reach out here">
+            <a href='/contact' className={styles.contactLink}>
+              Get in touch →
+            </a>
+          </Tooltip>
         </footer>
       </div>
     </main>

@@ -343,11 +343,11 @@
 }
 
 .themeButton:hover .sunIcon {
-  color: #a855f7;
+  color: #f5c542;
 }
 
 .themeButton:hover .moonIcon {
-  color: #f97316;
+  color: #6366f1;
 }
 
 @media (prefers-reduced-motion: reduce) {
