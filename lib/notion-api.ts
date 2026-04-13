@@ -2,9 +2,8 @@ import { NotionAPI } from 'notion-client'
 
 const RETRY_STATUS_CODES = new Set([429, 502, 503, 504])
 
-const RUNTIME_MAX_RETRIES = 2
-const RUNTIME_INITIAL_DELAY_MS = 1100
-const RUNTIME_MAX_DELAY_MS = 5000
+const RUNTIME_MAX_RETRIES = 1
+const RUNTIME_RETRY_DELAY_MS = 1100
 
 const BUILD_MAX_RETRIES = 5
 const BUILD_INITIAL_DELAY_MS = 5000
@@ -47,14 +46,14 @@ class RetryNotionAPI extends NotionAPI {
 
 /**
  * Standard client with short retry for runtime use (ISR, API routes).
- * Retries 429/5xx up to 3 times (1s → 2s → 4s) to handle transient errors.
+ * Retries 429/5xx once after a short delay to handle transient errors.
  */
 export const notion = new RetryNotionAPI(
   { apiBaseUrl: process.env.NOTION_API_BASE_URL },
   {
     maxRetries: RUNTIME_MAX_RETRIES,
-    initialDelay: RUNTIME_INITIAL_DELAY_MS,
-    maxDelay: RUNTIME_MAX_DELAY_MS
+    initialDelay: RUNTIME_RETRY_DELAY_MS,
+    maxDelay: RUNTIME_RETRY_DELAY_MS
   }
 )
 
