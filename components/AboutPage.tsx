@@ -248,25 +248,13 @@ export function AboutPage() {
             <h2>Projects</h2>
             <div className={styles.sectionLinks}>
               <Tooltip label='Check out my playground of lil tech demos'>
-                <span
-                  role='link'
-                  tabIndex={0}
+                <Link
+                  href='/playground'
                   className={styles.sectionLink}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    window.location.href = '/playground'
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      window.location.href = '/playground'
-                    }
-                  }}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <LabIcon />
-                </span>
+                </Link>
               </Tooltip>
               <span className={styles.chevron}>
                 <ChevronIcon />
