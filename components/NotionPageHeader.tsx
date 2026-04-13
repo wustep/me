@@ -1,17 +1,28 @@
 import type * as types from 'notion-types'
+import cs from 'classnames'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import * as React from 'react'
+import { Breadcrumbs, Header, Search, useNotionContext } from 'react-notion-x'
+
 import {
   ImLab,
   IoMoonSharp,
   IoSunnyOutline
 } from '@/components/icons/InlineIcons'
-import cs from 'classnames'
-import * as React from 'react'
-import { Breadcrumbs, Header, Search, useNotionContext } from 'react-notion-x'
-
-import { isSearchEnabled, navigationLinks, navigationStyle } from '@/lib/config'
+import {
+  isSearchEnabled,
+  navigationLinks,
+  navigationStyle,
+  pageUrlOverrides
+} from '@/lib/config'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import styles from './styles.module.css'
+
+const auxiliaryPaths = new Set(
+  Object.keys(pageUrlOverrides).map((path) => `/${path}`)
+)
 
 export function NotionPageHeader({
   block
@@ -19,6 +30,8 @@ export function NotionPageHeader({
   block: types.CollectionViewPageBlock | types.PageBlock
 }) {
   const { components, mapPageUrl } = useNotionContext()
+  const router = useRouter()
+  const isAuxiliaryPage = auxiliaryPaths.has(router.asPath.split('?')[0]!.split('#')[0]!)
 
   if (navigationStyle === 'default') {
     return <Header block={block} />
@@ -27,7 +40,13 @@ export function NotionPageHeader({
   return (
     <header className='notion-header'>
       <div className='notion-nav-header'>
-        <Breadcrumbs block={block} rootOnly={true} />
+        {isAuxiliaryPage ? (
+          <Link href='/' className={styles.homeBackButton} aria-label='Back to home'>
+            <span className={styles.homeBackArrow}>←</span>
+          </Link>
+        ) : (
+          <Breadcrumbs block={block} rootOnly={true} />
+        )}
 
         <div className='notion-nav-header-rhs breadcrumbs'>
           {navigationLinks

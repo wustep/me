@@ -88,7 +88,8 @@ export default siteConfig({
     '/notes': 'a9d2669020314160b70110639617e822',
     '/projects': '511994667bac45fda9fd8f9db136e476',
     '/essays': '8e54226891a6450a8192ea5f8611a214',
-    '/updates': '2bc5cb08cf2c8036a1e3cddcb2c61d97'
+    '/updates': '2bc5cb08cf2c8036a1e3cddcb2c61d97',
+    '/writing': '3415cb08cf2c80128c06eb41ddf69c79'
   },
 
   // whether to use the default notion navigation style or a custom one with links to
@@ -96,6 +97,10 @@ export default siteConfig({
   // navigationStyle: 'default'
   navigationStyle: 'custom',
   navigationLinks: [
+    // {
+    //   title: 'About',
+    //   url: '/about'
+    // }
     // {
     //   title: 'Articles',
     //   pageId: 'e40efc67-31ea-4e1d-a262-6d709950fbe4'

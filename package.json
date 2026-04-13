@@ -28,6 +28,7 @@
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
   },
   "dependencies": {
+    "@chenglou/pretext": "^0.0.5",
     "@fisch0920/use-dark-mode": "^2.4.0",
     "@keyvhq/core": "^1.6.9",
     "@keyvhq/redis": "^1.6.10",
@@ -49,6 +50,7 @@
     "ky": "^1.14.3",
     "lqip-modern": "^2.2.1",
     "lucide-react": "^0.555.0",
+    "matter-js": "^0.20.0",
     "next": "^16.1.6",
     "notion-client": "^7.8.1",
     "notion-types": "^7.8.1",
@@ -71,6 +73,7 @@
     "@fisch0920/config": "^1.4.0",
     "@next/bundle-analyzer": "^16.1.1",
     "@tailwindcss/postcss": "^4.1.17",
+    "@types/matter-js": "^0.20.2",
     "@types/node": "^25.2.3",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^19.2.14",

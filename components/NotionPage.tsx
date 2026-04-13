@@ -290,6 +290,10 @@ export function NotionPage({
   const isRootPage =
     parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
 
+  const auxiliaryPageIds = new Set(Object.values(config.pageUrlOverrides))
+  const isAuxiliaryPage =
+    !isRootPage && auxiliaryPageIds.has(parsePageId(block?.id, { uuid: false })!)
+
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
 
@@ -419,6 +423,7 @@ export function NotionPage({
         bodyClassName={cs(
           styles.notion,
           pageId === site.rootNotionPageId && 'index-page',
+          isAuxiliaryPage && 'auxiliary-page',
           shouldDisableCollectionLinks && 'disable-collection-links',
           enablePagePropertyNames && 'enable-page-property-names'
         )}

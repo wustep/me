@@ -30,7 +30,9 @@ export default function PlaygroundPage() {
             className='group notion-collection-card relative flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
           >
             <div className='notion-collection-card-cover aspect-video w-full'>
-              {project.image ? (
+              {project.CoverComponent ? (
+                <project.CoverComponent />
+              ) : project.image ? (
                 <img
                   src={project.image}
                   alt={`${project.title} cover`}

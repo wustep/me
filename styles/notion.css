@@ -29,6 +29,34 @@
   --notion-max-width: 900px;
 }
 
+.auxiliary-page {
+  --notion-max-width: 860px;
+}
+
+.auxiliary-page .notion-page-icon-hero {
+  display: none;
+}
+
+.auxiliary-page .notion-title {
+  text-align: left;
+  font-size: 2.2em;
+  margin-bottom: 0.6em;
+}
+
+.auxiliary-page.notion-page {
+  padding-top: 2.5vh !important;
+}
+
+.auxiliary-page .notion-gallery-grid .notion-page-title-text {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
+  white-space: unset;
+}
+
 .notion-text {
   padding: 0.5em 2px;
 }

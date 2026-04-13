@@ -5,21 +5,25 @@
 /* Fonts are now loaded via next/font/google in _app.tsx */
 
 :root {
-  /* Color system */
-  --primary: #2d2d2d;
-  --secondary: #636363;
-  --accent: #9d97dc;
+  /* Color system - matching About page */
+  --primary: #1a1a1a;
+  --secondary: #666;
+  --accent: #000;
   --background: #ffffff;
-  --surface: #f7f7f7;
-  --divider: rgba(0, 0, 0, 0.1);
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.06);
+  --divider: rgba(0, 0, 0, 0.08);
+  --divider-hover: rgba(0, 0, 0, 0.15);
 
   /* Dark mode colors - will be applied via .dark-mode class */
-  --dark-primary: #e4e4e4;
-  --dark-secondary: #a0a0a0;
-  --dark-accent: #9d97dc;
-  --dark-background: #1a1b1c;
-  --dark-surface: var(--fg-color-1);
+  --dark-primary: #e8e8e8;
+  --dark-secondary: #888;
+  --dark-accent: #fff;
+  --dark-background: #0d0d0d;
+  --dark-surface: rgba(255, 255, 255, 0.04);
+  --dark-surface-hover: rgba(255, 255, 255, 0.08);
   --dark-divider: rgba(255, 255, 255, 0.1);
+  --dark-divider-hover: rgba(255, 255, 255, 0.2);
 
   /* Spacing system */
   --space-xs: 0.25rem;
@@ -44,7 +48,9 @@
   --accent: var(--dark-accent);
   --background: var(--dark-background);
   --surface: var(--dark-surface);
+  --surface-hover: var(--dark-surface-hover);
   --divider: var(--dark-divider);
+  --divider-hover: var(--dark-divider-hover);
 }
 
 body {
@@ -544,6 +550,13 @@ span[class*='_background'] {
 }
 
 /**
+ * Hide empty property rows (properties with no value render an empty span)
+ */
+.notion-collection-row-property:has(.notion-property:empty) {
+  display: none;
+}
+
+/**
  * Compact property styling for non-mobile
  */
 @media screen and (min-width: 500px) {
@@ -916,20 +929,20 @@ span[class*='_background'] {
 
 .notion-collection-card {
   border-radius: var(--radius-lg);
-  background: var(--background);
-  transition: all 0.2s ease;
+  background: var(--surface);
+  transition:
+    transform 0.2s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
   border: 1px solid var(--divider);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.02),
-    0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
   transform-origin: center bottom;
 }
 
 .notion-collection-card:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.04),
-    0 8px 24px rgba(0, 0, 0, 0.08);
+  background: var(--surface-hover);
+  border-color: var(--divider-hover);
 }
 
 .notion-collection-card-cover {
@@ -937,7 +950,12 @@ span[class*='_background'] {
   overflow: hidden;
   border-bottom: 1px solid var(--divider);
   aspect-ratio: 16/9;
-  background: var(--surface);
+  background: var(--background);
+  transition: border-color 0.3s ease;
+}
+
+.notion-collection-card:hover .notion-collection-card-cover {
+  border-color: var(--divider-hover);
 }
 
 .notion-collection-card-cover img {
@@ -978,19 +996,7 @@ span[class*='_background'] {
   opacity: 1;
 }
 
-/* Dark mode adjustments */
-.dark-mode .notion-collection-card {
-  background: var(--dark-surface);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.dark-mode .notion-collection-card:hover {
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.2);
-}
+/* Dark mode adjustments - uses CSS variables automatically */
 
 /**
  * ========== Personal Footer ==========

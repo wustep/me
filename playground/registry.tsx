@@ -1,3 +1,7 @@
+import type React from 'react'
+
+import { DominoCover } from '@/components/wustep/DominoCover'
+
 export type PlaygroundEntry = {
   title: string
   url: string
@@ -10,6 +14,7 @@ export type PlaygroundEntry = {
   source?: string
   gradient?: string
   image?: string
+  CoverComponent?: React.ComponentType
 }
 
 export type PlaygroundSection = {
@@ -30,7 +35,8 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Apr 2026',
         year: '2026',
         source: 'https://github.com/wustep/dom-ino',
-        image: '/playground/covers/dom-ino.svg'
+        image: '/playground/covers/dom-ino.svg',
+        CoverComponent: DominoCover
       },
       {
         title: 'Bookshelf',
