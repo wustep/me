@@ -7,11 +7,20 @@ import { getSiteMap } from '@/lib/get-site-map'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import { type PageProps, type Params } from '@/lib/types'
 
-function getNotionFallbackUrl(rawPageId: string): string | null {
-  const notionPageId =
+async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
+  let notionPageId =
     pageUrlOverrides[rawPageId] ||
     pageUrlAdditions[rawPageId] ||
     parsePageId(rawPageId, { uuid: false })
+
+  if (!notionPageId) {
+    try {
+      const siteMap = await getSiteMap()
+      notionPageId = siteMap.canonicalPageMap[rawPageId]
+    } catch (err) {
+      console.warn('error resolving notion fallback URL', rawPageId, err)
+    }
+  }
 
   if (!notionPageId) return null
   return `https://wustep.notion.site/${notionPageId}`
@@ -29,7 +38,7 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   } catch (err: unknown) {
     console.error('page error', domain, rawPageId, err)
 
-    const fallbackUrl = getNotionFallbackUrl(rawPageId)
+    const fallbackUrl = await getNotionFallbackUrl(rawPageId)
 
     return {
       props: {

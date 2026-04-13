@@ -39,6 +39,7 @@ import { PageHead } from './PageHead'
 import styles from './styles.module.css'
 import { Comments } from './wustep/Comments'
 import { WustepFooter } from './wustep/WustepFooter'
+import { ErrorPage } from './ErrorPage'
 
 // -----------------------------------------------------------------------------
 // dynamic imports for optional components
@@ -350,6 +351,10 @@ export function NotionPage({
   }
 
   if (error || !site || !block || !recordMap) {
+    if (error && error.statusCode !== 404) {
+      return <ErrorPage statusCode={error.statusCode} />
+    }
+
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 
