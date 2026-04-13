@@ -88,7 +88,9 @@ function Tooltip({
   position?: 'above' | 'below'
 }) {
   const wrapperRef = React.useRef<HTMLSpanElement>(null)
-  const [position, setPosition] = React.useState<'above' | 'below'>(forcedPosition ?? 'below')
+  const [position, setPosition] = React.useState<'above' | 'below'>(
+    forcedPosition ?? 'below'
+  )
 
   const updatePosition = React.useCallback(() => {
     if (forcedPosition) return
@@ -248,13 +250,12 @@ export function AboutPage() {
             <h2>Projects</h2>
             <div className={styles.sectionLinks}>
               <Tooltip label='Check out my playground of lil tech demos'>
-                <Link
-                  href='/playground'
+                <span
+                  onClick={() => (window.location.href = '/playground')}
                   className={styles.sectionLink}
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <LabIcon />
-                </Link>
+                </span>
               </Tooltip>
               <span className={styles.chevron}>
                 <ChevronIcon />
@@ -506,7 +507,10 @@ export function AboutPage() {
         </section>
 
         <footer className={styles.footer}>
-          <Tooltip label='Thanks for stopping by! Feel free to reach out here' position='above'>
+          <Tooltip
+            label='Thanks for stopping by! Feel free to reach out here'
+            position='above'
+          >
             <a href='/contact' className={styles.contactLink}>
               Get in touch →
             </a>

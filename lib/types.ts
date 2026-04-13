@@ -16,6 +16,7 @@ export interface PageProps {
   recordMap?: ExtendedRecordMap
   pageId?: string
   error?: PageError
+  notionFallbackUrl?: string
 }
 
 export interface ExtendedTweetRecordMap extends ExtendedRecordMap {

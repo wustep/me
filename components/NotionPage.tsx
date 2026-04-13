@@ -1,3 +1,4 @@
+import { track } from '@vercel/analytics'
 import cs from 'classnames'
 import dynamic from 'next/dynamic'
 import Image from 'next/legacy/image'
@@ -213,6 +214,7 @@ export function NotionPage({
   recordMap,
   error,
   pageId,
+  notionFallbackUrl,
   componentOverrides
 }: NotionPageWrapperProps) {
   const router = useRouter()
@@ -329,11 +331,21 @@ export function NotionPage({
     }
   }, [externalRedirectUrl])
 
+  React.useEffect(() => {
+    if (notionFallbackUrl) {
+      track('notion-fallback-redirect', {
+        page: pageId ?? 'unknown',
+        destination: notionFallbackUrl
+      })
+      window.location.replace(notionFallbackUrl)
+    }
+  }, [notionFallbackUrl, pageId])
+
   if (router.isFallback) {
     return <Loading />
   }
 
-  if (externalRedirectUrl) {
+  if (externalRedirectUrl || notionFallbackUrl) {
     return <Loading />
   }
 
