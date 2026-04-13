@@ -4,19 +4,25 @@ import { parsePageId } from 'notion-utils'
 import { NotionPage } from '@/components/NotionPage'
 import { domain, isDev, pageUrlAdditions, pageUrlOverrides } from '@/lib/config'
 import { getSiteMap } from '@/lib/get-site-map'
+import { normalizePageIdPath } from '@/lib/normalize-page-id-path'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import { type PageProps, type Params } from '@/lib/types'
 
 async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
+  const normalizedRawPageId = normalizePageIdPath(rawPageId)
   let notionPageId =
     pageUrlOverrides[rawPageId] ||
     pageUrlAdditions[rawPageId] ||
-    parsePageId(rawPageId, { uuid: false })
+    pageUrlOverrides[normalizedRawPageId] ||
+    pageUrlAdditions[normalizedRawPageId] ||
+    parsePageId(normalizedRawPageId, { uuid: false })
 
   if (!notionPageId) {
     try {
       const siteMap = await getSiteMap()
-      notionPageId = siteMap.canonicalPageMap[rawPageId]
+      notionPageId =
+        siteMap.canonicalPageMap[rawPageId] ||
+        siteMap.canonicalPageMap[normalizedRawPageId]
     } catch (err) {
       console.warn('error resolving notion fallback URL', rawPageId, err)
     }
@@ -29,16 +35,17 @@ async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   context
 ) => {
-  const rawPageId = context.params?.pageId as string
+  const requestedPageId = context.params?.pageId as string
+  const normalizedPageId = normalizePageIdPath(requestedPageId)
 
   try {
-    const props = await resolveNotionPage(domain, rawPageId)
+    const props = await resolveNotionPage(domain, normalizedPageId)
 
     return { props, revalidate: 86_400 }
   } catch (err: unknown) {
-    console.error('page error', domain, rawPageId, err)
+    console.error('page error', domain, requestedPageId, err)
 
-    const fallbackUrl = await getNotionFallbackUrl(rawPageId)
+    const fallbackUrl = await getNotionFallbackUrl(normalizedPageId)
 
     return {
       props: {

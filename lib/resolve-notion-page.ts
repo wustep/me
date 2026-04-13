@@ -6,6 +6,7 @@ import * as acl from './acl'
 import { environment, pageUrlAdditions, pageUrlOverrides, site } from './config'
 import { db } from './db'
 import { getSiteMap } from './get-site-map'
+import { normalizePageIdPath } from './normalize-page-id-path'
 import { getPage } from './notion'
 
 export async function resolveNotionPage(
@@ -16,13 +17,17 @@ export async function resolveNotionPage(
   let recordMap: ExtendedRecordMap
 
   if (rawPageId && rawPageId !== 'index') {
-    pageId = parsePageId(rawPageId)!
+    const normalizedRawPageId = normalizePageIdPath(rawPageId)
+    pageId = parsePageId(normalizedRawPageId)!
 
     if (!pageId) {
       // check if the site configuration provides an override or a fallback for
       // the page's URI
       const override =
-        pageUrlOverrides[rawPageId] || pageUrlAdditions[rawPageId]
+        pageUrlOverrides[rawPageId] ||
+        pageUrlAdditions[rawPageId] ||
+        pageUrlOverrides[normalizedRawPageId] ||
+        pageUrlAdditions[normalizedRawPageId]
 
       if (override) {
         pageId = parsePageId(override)!
@@ -30,7 +35,7 @@ export async function resolveNotionPage(
     }
 
     const useUriToPageIdCache = true
-    const cacheKey = `uri-to-page-id:${domain}:${environment}:${rawPageId}`
+    const cacheKey = `uri-to-page-id:${domain}:${environment}:${normalizedRawPageId}`
     // TODO: should we use a TTL for these mappings or make them permanent?
     // const cacheTTL = 8.64e7 // one day in milliseconds
     const cacheTTL = undefined // disable cache TTL
@@ -53,7 +58,9 @@ export async function resolveNotionPage(
       // handle mapping of user-friendly canonical page paths to Notion page IDs
       // e.g., /developer-x-entrepreneur versus /71201624b204481f862630ea25ce62fe
       const siteMap = await getSiteMap()
-      pageId = siteMap?.canonicalPageMap[rawPageId]
+      pageId =
+        siteMap?.canonicalPageMap[rawPageId] ||
+        siteMap?.canonicalPageMap[normalizedRawPageId]
 
       if (pageId) {
         // TODO: we're not re-using the page recordMap from siteMaps because it is
