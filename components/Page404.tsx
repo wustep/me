@@ -1,54 +1,57 @@
-import type * as React from 'react'
-import cs from 'classnames'
-
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
 
 import { PageHead } from './PageHead'
-import styles from './styles.module.css'
+import styles from './Page404.module.css'
 
-/**
- * @wustep: revised text and styling, added go home button
- */
 export function Page404({ site, pageId, error }: types.PageProps) {
   const title = site?.name || 'Page Not Found'
-
-  const devErrorMessage =
-    config.isDev &&
-    (error ? (
-      <p>{error.message}</p>
-    ) : (
-      pageId && (
-        <p>
-          Make sure that Notion page &quot;{pageId}&quot; is publicly
-          accessible.
-        </p>
-      )
-    ))
 
   return (
     <>
       <PageHead site={site} title={title} />
 
-      <div className={styles.container}>
-        <main className={cs(styles.main, 'error-404')}>
-          <h1 className={styles.errorHeading}>😳 Page not found</h1>
-          {devErrorMessage}
-          <p>
-            Oops, not sure how we got here!
-            <br />
-            <a className='notion-link' href={config.host}>
-              <span className='notion-blue_background'>
-                Let&apos;s go back home!
-              </span>
-            </a>
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <p className={styles.code}>404</p>
+
+          <div className={styles.divider} />
+
+          <h1 className={styles.heading}>Page not found</h1>
+
+          <p className={styles.description}>
+            The page you&apos;re looking for doesn&apos;t exist or has been
+            moved.
           </p>
-          <img
-            src='/404.png'
-            alt='404 Not Found'
-            className={styles.errorImage}
-          />
-        </main>
+
+          <a className={styles.homeLink} href={config.host}>
+            <svg
+              viewBox='0 0 16 16'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            >
+              <path d='M10 3L5 8l5 5' />
+            </svg>
+            Back home
+          </a>
+
+          {config.isDev && (
+            <div className={styles.devError}>
+              {error ? (
+                <p>{error.message}</p>
+              ) : (
+                pageId && (
+                  <p>
+                    Notion page &quot;{pageId}&quot; is not publicly accessible.
+                  </p>
+                )
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
   )

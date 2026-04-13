@@ -1,0 +1,128 @@
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background);
+  color: var(--primary);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 800ms ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.code {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(6rem, 15vw, 10rem);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin: 0;
+  color: var(--primary);
+  opacity: 0.12;
+  user-select: none;
+  animation: fadeIn 1000ms ease both;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--divider);
+  margin: 1.5rem 0;
+  animation: expandLine 800ms ease 200ms both;
+}
+
+@keyframes expandLine {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 48px;
+    opacity: 1;
+  }
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.01em;
+  animation: fadeIn 800ms ease 300ms both;
+}
+
+.description {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 320px;
+  animation: fadeIn 800ms ease 400ms both;
+}
+
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--secondary);
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid var(--divider);
+  border-radius: 100px;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+  animation: fadeIn 800ms ease 500ms both;
+}
+
+.homeLink:hover {
+  color: var(--primary);
+  border-color: var(--divider-hover);
+  background: var(--surface);
+}
+
+.homeLink svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
+}
+
+.homeLink:hover svg {
+  transform: translateX(-2px);
+}
+
+.devError {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  color: var(--secondary);
+  max-width: 400px;
+  font-family: monospace;
+  animation: fadeIn 800ms ease 600ms both;
+}

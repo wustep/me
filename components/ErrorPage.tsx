@@ -1,21 +1,43 @@
+import * as config from '@/lib/config'
+
 import { PageHead } from './PageHead'
-import styles from './styles.module.css'
+import styles from './Page404.module.css'
 
 export function ErrorPage({ statusCode }: { statusCode: number }) {
-  const title = 'Error'
+  const title = `Error ${statusCode}`
+  const description =
+    statusCode === 500
+      ? "Something went wrong on our end. We're looking into it."
+      : 'An unexpected error occurred. Please try again later.'
 
   return (
     <>
       <PageHead title={title} />
 
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <h1>Error Loading Page</h1>
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <p className={styles.code}>{statusCode}</p>
 
-          {statusCode && <p>Error code: {statusCode}</p>}
+          <div className={styles.divider} />
 
-          <img src='/error.png' alt='Error' className={styles.errorImage} />
-        </main>
+          <h1 className={styles.heading}>Something went wrong</h1>
+
+          <p className={styles.description}>{description}</p>
+
+          <a className={styles.homeLink} href={config.host}>
+            <svg
+              viewBox='0 0 16 16'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            >
+              <path d='M10 3L5 8l5 5' />
+            </svg>
+            Back home
+          </a>
+        </div>
       </div>
     </>
   )

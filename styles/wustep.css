@@ -420,9 +420,9 @@ span.notion-gray_background > .notion-link {
 
 /**
  * ========= Notion Highlights ========= 
- * By default, the theme in notion.css disables highlighting in dark mode.
- * In light mode, there used to be a bit of an odd gradient.
- * I've commented that code out in notion.css, and revised styles here.
+ * Gradient highlight code in notion.css has been removed.
+ * These rules set solid background colors using the CSS variables
+ * defined by react-notion-x for both light and dark mode.
  */
 .dark-mode .notion-red_background,
 .dark-mode .notion-pink_background,
@@ -436,7 +436,7 @@ span.notion-gray_background > .notion-link {
   color: #fff;
 }
 
-span[class*='_background'] {
+[class*='notion-'][class*='_background'] {
   background-image: none;
   border-radius: 4px;
   padding: unset;

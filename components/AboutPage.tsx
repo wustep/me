@@ -7,7 +7,7 @@ import { github, linkedin, x } from '@/lib/config'
 
 import styles from './AboutPage.module.css'
 
-const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I care about craft, systems that age well, and the small interface details that help tools disappear into the background. I write to think, reflect, and make ideas come to life — about software, systems, psychology, and life.`
+const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I care about craft, systems that age well, and the small design details that help tools disappear into the background. I write to think, reflect, and make ideas come to life — about software, systems, philosophy, and life.`
 
 const workHistory = [
   {
@@ -80,21 +80,24 @@ function useAnimateIn() {
 
 function Tooltip({
   children,
-  label
+  label,
+  position: forcedPosition
 }: {
   children: React.ReactNode
   label: string
+  position?: 'above' | 'below'
 }) {
   const wrapperRef = React.useRef<HTMLSpanElement>(null)
-  const [position, setPosition] = React.useState<'above' | 'below'>('below')
+  const [position, setPosition] = React.useState<'above' | 'below'>(forcedPosition ?? 'below')
 
   const updatePosition = React.useCallback(() => {
+    if (forcedPosition) return
     if (!wrapperRef.current) return
     const rect = wrapperRef.current.getBoundingClientRect()
     const tooltipHeight = 50
     const spaceBelow = window.innerHeight - rect.bottom
     setPosition(spaceBelow >= tooltipHeight ? 'below' : 'above')
-  }, [])
+  }, [forcedPosition])
 
   return (
     <span
@@ -115,15 +118,14 @@ function Tooltip({
 
 export function AboutPage() {
   const animateIn = useAnimateIn()
-  const [isDark, setIsDark] = React.useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('darkMode')
-        if (saved !== null) return JSON.parse(saved) as boolean
-      } catch {}
-    }
-    return true
-  })
+  const [isDark, setIsDark] = React.useState(true)
+
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem('darkMode')
+      if (saved !== null) setIsDark(JSON.parse(saved) as boolean)
+    } catch {}
+  }, [])
 
   React.useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(isDark))
@@ -246,13 +248,25 @@ export function AboutPage() {
             <h2>Projects</h2>
             <div className={styles.sectionLinks}>
               <Tooltip label='Check out my playground of lil tech demos'>
-                <a
-                  href='/playground'
+                <span
+                  role='link'
+                  tabIndex={0}
                   className={styles.sectionLink}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    window.location.href = '/playground'
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      window.location.href = '/playground'
+                    }
+                  }}
                 >
                   <LabIcon />
-                </a>
+                </span>
               </Tooltip>
               <span className={styles.chevron}>
                 <ChevronIcon />
@@ -319,45 +333,144 @@ export function AboutPage() {
               </a>
             </Tooltip>
 
-            <Tooltip label='A browser-based Spot It! card game'>
-              <a
-                href='/playground/spot-it'
-                className={`${styles.projectCard} ${styles.spotIt}`}
-              >
-                <svg
-                  className={styles.spotItBg}
-                  viewBox='0 0 120 120'
-                  fill='none'
-                  aria-hidden='true'
-                >
-                  <circle cx='60' cy='60' r='56' stroke='currentColor' strokeWidth='1' opacity='0.12' />
-                  <circle cx='28' cy='35' r='8' fill='#e74c3c' />
-                  <circle cx='85' cy='28' r='6' fill='#3b82f6' />
-                  <circle cx='58' cy='62' r='10' fill='#22c55e' />
-                  <circle cx='90' cy='72' r='5' fill='#f59e0b' />
-                  <circle cx='30' cy='85' r='7' fill='#a855f7' />
-                  <circle cx='82' cy='92' r='4' fill='#ec4899' />
-                  <circle cx='52' cy='22' r='4.5' fill='#06b6d4' />
-                </svg>
-                <h3>Spot It!</h3>
-              </a>
-            </Tooltip>
-
             <Tooltip label='An interactive 3D bookshelf of my reading list'>
               <a
                 href='/playground/bookshelf'
                 className={`${styles.projectCard} ${styles.bookshelf}`}
               >
                 <div className={styles.bookshelfBooks}>
-                  <span className={styles.book} style={{ background: '#e74c3c', height: '70%' }} />
-                  <span className={styles.book} style={{ background: '#3b82f6', height: '85%' }} />
-                  <span className={styles.book} style={{ background: '#22c55e', height: '60%' }} />
-                  <span className={styles.book} style={{ background: '#f59e0b', height: '90%' }} />
-                  <span className={styles.book} style={{ background: '#a855f7', height: '75%' }} />
-                  <span className={styles.book} style={{ background: '#06b6d4', height: '65%' }} />
-                  <span className={styles.book} style={{ background: '#ec4899', height: '80%' }} />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#e74c3c', height: '70%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#3b82f6', height: '85%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#22c55e', height: '60%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#f59e0b', height: '90%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#a855f7', height: '75%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#06b6d4', height: '65%' }}
+                  />
+                  <span
+                    className={styles.book}
+                    style={{ background: '#ec4899', height: '80%' }}
+                  />
                 </div>
                 <h3>Bookshelf</h3>
+              </a>
+            </Tooltip>
+
+            <Tooltip label='A browser-based Spot It! card game'>
+              <a
+                href='/playground/spot-it'
+                className={`${styles.projectCard} ${styles.spotIt}`}
+              >
+                <div className={styles.spotItCards} aria-hidden='true'>
+                  <svg
+                    className={`${styles.spotItCard} ${styles.spotItCardBack}`}
+                    viewBox='0 0 100 100'
+                    fill='none'
+                  >
+                    <circle
+                      cx='50'
+                      cy='50'
+                      r='48'
+                      className={styles.spotItCardFill}
+                    />
+                    <circle
+                      cx='50'
+                      cy='50'
+                      r='46'
+                      className={styles.spotItCardStroke}
+                    />
+                  </svg>
+                  <svg
+                    className={styles.spotItCard}
+                    viewBox='0 0 100 100'
+                    fill='none'
+                  >
+                    <circle
+                      cx='50'
+                      cy='50'
+                      r='48'
+                      className={styles.spotItCardFill}
+                    />
+                    <circle
+                      cx='50'
+                      cy='50'
+                      r='46'
+                      className={styles.spotItCardStroke}
+                    />
+                    <polygon
+                      className={styles.spotItSymbol}
+                      points='30,20 32.5,27 40,27 34,31.5 36,39 30,35 24,39 26,31.5 20,27 27.5,27'
+                      fill='#f59e0b'
+                    />
+                    <path
+                      className={styles.spotItSymbol}
+                      d='M70,28 C70,24 74,22 76,24 C78,22 82,24 82,28 C82,33 76,37 76,37 C76,37 70,33 70,28Z'
+                      fill='#ec4899'
+                    />
+                    <polygon
+                      className={styles.spotItSymbol}
+                      points='52,14 48,28 53,26 49,40 57,23 52,25'
+                      fill='#fb923c'
+                    />
+                    <polygon
+                      className={styles.spotItSymbol}
+                      points='24,55 31,48 38,55 31,62'
+                      fill='#3b82f6'
+                    />
+                    <circle
+                      className={styles.spotItSymbol}
+                      cx='70'
+                      cy='58'
+                      r='8'
+                      fill='#22c55e'
+                    />
+                    <polygon
+                      className={styles.spotItSymbol}
+                      points='50,60 42,74 58,74'
+                      fill='#e74c3c'
+                    />
+                    <g className={styles.spotItSymbol}>
+                      <rect
+                        x='22'
+                        y='77'
+                        width='12'
+                        height='4'
+                        rx='1'
+                        fill='#a855f7'
+                      />
+                      <rect
+                        x='26'
+                        y='73'
+                        width='4'
+                        height='12'
+                        rx='1'
+                        fill='#a855f7'
+                      />
+                    </g>
+                    <path
+                      className={styles.spotItSymbol}
+                      d='M72,76 A7,7 0 1,1 72,90 A5,5 0 1,0 72,76Z'
+                      fill='#06b6d4'
+                    />
+                  </svg>
+                </div>
+                <h3>Spot it!</h3>
               </a>
             </Tooltip>
           </div>
@@ -405,7 +518,7 @@ export function AboutPage() {
         </section>
 
         <footer className={styles.footer}>
-          <Tooltip label="Thanks for stopping by! Feel free to reach out here">
+          <Tooltip label='Thanks for stopping by! Feel free to reach out here' position='above'>
             <a href='/contact' className={styles.contactLink}>
               Get in touch →
             </a>
