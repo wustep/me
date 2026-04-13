@@ -436,7 +436,7 @@ span.notion-gray_background > .notion-link {
   color: #fff;
 }
 
-[class*='notion-'][class*='_background'] {
+span[class*='_background'] {
   background-image: none;
   border-radius: 4px;
   padding: unset;
@@ -711,7 +711,9 @@ span.notion-gray_background > .notion-link {
 .posts-heading-toggle-button.active {
   background: var(--bg-color);
   color: var(--fg-color-6);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .posts-heading-toggle-button:focus-visible {
@@ -891,7 +893,9 @@ span.notion-gray_background > .notion-link {
    but keep native tap/click feedback for navigation. */
 @media (hover: none) and (pointer: coarse) {
   .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item:hover,
-  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-list-item .notion-page-link:hover {
+  .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97
+    .notion-list-item
+    .notion-page-link:hover {
     background: transparent !important;
   }
 }
@@ -987,11 +991,14 @@ span.notion-gray_background > .notion-link {
   background-color: currentColor;
   opacity: 0;
   transition: opacity 0.15s ease;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E") no-repeat center / contain;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E") no-repeat center / contain;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E")
+    no-repeat center / contain;
 }
 
-.notion-collection-card[data-external-link]:hover .notion-page-title-text::after,
+.notion-collection-card[data-external-link]:hover
+  .notion-page-title-text::after,
 .notion-list-item[data-external-link]:hover .notion-list-item-title::after {
   opacity: 1;
 }
