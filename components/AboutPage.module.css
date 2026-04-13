@@ -1043,6 +1043,12 @@
   }
 }
 
+@media (hover: none), (pointer: coarse) {
+  .tooltip {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page,
   .header,
@@ -1053,7 +1059,6 @@
   .projectCard,
   .writingLink,
   .navIcon,
-  .tooltip,
   .spotItSymbol,
   .spotItCard,
   .book,
@@ -1063,5 +1068,9 @@
     transition: none;
     opacity: 1;
     transform: none;
+  }
+
+  .tooltip {
+    transition: none;
   }
 }
