@@ -29,7 +29,10 @@ async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
   }
 
   if (!notionPageId) return null
-  return `https://wustep.notion.site/${notionPageId}`
+  const normalizedNotionPageId = parsePageId(notionPageId, { uuid: false })
+  if (!normalizedNotionPageId) return null
+
+  return `https://wustep.notion.site/${normalizedNotionPageId}`
 }
 
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
