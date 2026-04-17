@@ -51,29 +51,41 @@
 }
 
 .actionBgPane {
-  transition: all 300ms ease-out;
+  transition:
+    width 300ms ease-out,
+    height 300ms ease-out;
   border-radius: 50%;
   width: 0;
   height: 0;
 }
 
-.action:hover {
-  transition: all 100ms ease-out;
+.action svg {
+  transition: color 300ms ease-out;
 }
 
-.action:hover .actionBgPane {
-  width: 100%;
-  height: 100%;
-  transition: all 100ms ease-out;
+.action:focus-visible {
+  outline: 2px solid var(--fg-color);
+  outline-offset: 3px;
+  border-radius: 50%;
 }
 
-.action:hover svg {
-  transition: color 100ms ease-out;
-  color: #ffffff;
-}
+@media (hover: hover) {
+  .action:hover .actionBgPane {
+    width: 100%;
+    height: 100%;
+    transition:
+      width 100ms ease-out,
+      height 100ms ease-out;
+  }
 
-:global(.dark-mode) .action:hover svg {
-  color: var(--fg-color);
+  .action:hover svg {
+    transition: color 100ms ease-out;
+    color: #ffffff;
+  }
+
+  :global(.dark-mode) .action:hover svg {
+    color: var(--fg-color);
+  }
 }
 
 .facebook .actionBgPane {

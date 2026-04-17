@@ -117,43 +117,50 @@
   margin-right: 0;
 }
 
-.settings a:hover,
-.social a:hover {
-  transition: color 50ms ease-out;
+.settings a:focus-visible,
+.social a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.toggleDarkMode:hover {
-  color: #2795e9;
-}
+@media (hover: hover) {
+  .settings a:hover,
+  .social a:hover {
+    transition: color 50ms ease-out;
+  }
 
-.twitter:hover {
-  color: #2795e9;
-}
+  .toggleDarkMode:hover {
+    color: #2795e9;
+  }
 
-.mastodon:hover {
-  color: #5a4be1;
-}
+  .twitter:hover {
+    color: #2795e9;
+  }
 
-.zhihu:hover {
-  color: #0066ff;
-}
+  .mastodon:hover {
+    color: #5a4be1;
+  }
 
-.github:hover {
-  /* color: #c9510c; */
-  /* @wustep: make color purple instead of red */
-  color: rgb(61, 10, 155);
-}
+  .zhihu:hover {
+    color: #0066ff;
+  }
 
-.youtube:hover {
-  color: #ff0000;
-}
+  .github:hover {
+    color: rgb(61, 10, 155);
+  }
 
-.linkedin:hover {
-  color: #0077b5;
-}
+  .youtube:hover {
+    color: #ff0000;
+  }
 
-.newsletter:hover {
-  color: #777777;
+  .linkedin:hover {
+    color: #0077b5;
+  }
+
+  .newsletter:hover {
+    color: #777777;
+  }
 }
 
 .comments {
@@ -197,25 +204,31 @@
   margin-right: 1vw;
   border-radius: 50%;
   background: transparent;
-  transition: all 250ms ease-out;
+  transition:
+    background-color 250ms ease-out,
+    color 250ms ease-out;
 }
 
 .pageActions a:last-of-type {
   margin-right: 0;
 }
 
-.pageActions a:hover {
-  transition: all 50ms ease-out;
-}
+@media (hover: hover) {
+  .pageActions a:hover {
+    transition:
+      background-color 50ms ease-out,
+      color 50ms ease-out;
+  }
 
-.likeTweet:hover {
-  background: #f6e3e8;
-  color: #e0265e;
-}
+  .likeTweet:hover {
+    background: #f6e3e8;
+    color: #e0265e;
+  }
 
-.retweet:hover {
-  color: #19bf64;
-  background: #e5f2e8;
+  .retweet:hover {
+    color: #19bf64;
+    background: #e5f2e8;
+  }
 }
 
 @media (max-width: 1360px) {
@@ -224,8 +237,10 @@
   }
 }
 
-.githubCorner:hover .octoArm {
-  animation: octocat-wave 560ms ease-in-out;
+@media (hover: hover) {
+  .githubCorner:hover .octoArm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
 }
 
 @keyframes octocat-wave {
@@ -250,6 +265,13 @@
 
   .githubCorner .octoArm {
     animation: octocat-wave 560ms ease-in-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .githubCorner:hover .octoArm,
+  .githubCorner .octoArm {
+    animation: none !important;
   }
 }
 

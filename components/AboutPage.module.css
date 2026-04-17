@@ -59,7 +59,7 @@
 
 .container {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   width: min(680px, calc(100vw - 48px));
   margin: 0 auto;
   padding: 48px 0 100px;
@@ -690,7 +690,7 @@
 
 .spotIt h3 {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   font-size: 1.5rem;
 }
 
@@ -906,7 +906,7 @@
   transition:
     opacity 200ms ease,
     transform 200ms ease;
-  z-index: 100;
+  z-index: var(--z-tooltip);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 

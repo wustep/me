@@ -93,7 +93,8 @@ export function ApplauseButton() {
   }, [url])
 
   return (
-    <div
+    <button
+      type='button'
       className={cs(
         'applause-button',
         isLoading && 'loading',
@@ -105,6 +106,9 @@ export function ApplauseButton() {
         color: `var(--${color})`
       }}
       onClick={doApplause}
+      disabled={isLoading || isClapped}
+      aria-label={isClapped ? `Applauded — ${count} claps` : 'Applaud this page'}
+      aria-pressed={isClapped}
     >
       <div className='style-root'>
         <div className='shockwave'></div>
@@ -131,6 +135,6 @@ export function ApplauseButton() {
           </g>
         </svg>
       </div>
-    </div>
+    </button>
   )
 }
