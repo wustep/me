@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
+import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 
 export type PlaygroundEntry = {
   title: string
@@ -60,7 +61,8 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2025',
         source:
           'https://github.com/wustep/shadbook/blob/main/src/app/pages/experiments/physics-playground.tsx',
-        image: '/playground/covers/shadcn-physics.png'
+        image: '/playground/covers/shadcn-physics.png',
+        CoverComponent: ShadcnPhysicsCover
       }
     ]
   },

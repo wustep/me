@@ -6,6 +6,8 @@ import * as React from 'react'
 import { github, linkedin, x } from '@/lib/config'
 
 import styles from './AboutPage.module.css'
+import { LabsButton } from './wustep/LabsButton'
+import { ThemeToggle } from './wustep/ThemeToggle'
 
 export const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I care about craft, systems that age well, and the small design details that help tools disappear into the background. I write to think, reflect, and make ideas come to life — about software, systems, philosophy, and life.`
 
@@ -151,15 +153,11 @@ export function AboutPage() {
           </div>
 
           <nav className={styles.nav}>
-            <button
-              onClick={() => setIsDark(!isDark)}
+            <ThemeToggle
+              isDark={isDark}
+              onToggle={() => setIsDark(!isDark)}
               className={styles.themeToggle}
-              aria-label={
-                isDark ? 'Switch to light mode' : 'Switch to dark mode'
-              }
-            >
-              {isDark ? <SunIcon /> : <MoonIcon />}
-            </button>
+            />
             {x && (
               <a
                 href={`https://x.com/${x}`}
@@ -246,22 +244,19 @@ export function AboutPage() {
         </section>
 
         <section className={styles.projects}>
-          <Link href='/projects' className={styles.sectionHeader}>
-            <h2>Projects</h2>
+          <div className={styles.sectionHeader}>
+            <Link href='/projects' className={styles.sectionTitleLink}>
+              <h2>Projects</h2>
+            </Link>
             <div className={styles.sectionLinks}>
               <Tooltip label='Check out my playground of lil tech demos'>
-                <span
-                  onClick={() => (window.location.href = '/playground')}
-                  className={styles.sectionLink}
-                >
-                  <LabIcon />
-                </span>
+                <LabsButton className={styles.sectionLink} />
               </Tooltip>
-              <span className={styles.chevron}>
+              <Link href='/projects' className={styles.chevron} aria-label='View all projects'>
                 <ChevronIcon />
-              </span>
+              </Link>
             </div>
-          </Link>
+          </div>
           <div className={styles.projectGrid}>
             <Tooltip label='Behind the scenes of building and designing dashboards'>
               <a
@@ -525,38 +520,6 @@ function ChevronIcon() {
   return (
     <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
       <path d='M9 18l6-6-6-6' />
-    </svg>
-  )
-}
-
-function LabIcon() {
-  return (
-    <svg viewBox='0 0 16 16' fill='currentColor' className={styles.labIcon}>
-      <path d='M14.942 12.57l-4.942-8.235v-3.335h0.5c0.275 0 0.5-0.225 0.5-0.5s-0.225-0.5-0.5-0.5h-5c-0.275 0-0.5 0.225-0.5 0.5s0.225 0.5 0.5 0.5h0.5v3.335l-4.942 8.235c-1.132 1.886-0.258 3.43 1.942 3.43h10c2.2 0 3.074-1.543 1.942-3.43zM3.766 10l3.234-5.39v-3.61h2v3.61l3.234 5.39h-8.468z' />
-    </svg>
-  )
-}
-
-function SunIcon() {
-  return (
-    <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-      <circle cx='12' cy='12' r='5' />
-      <line x1='12' y1='1' x2='12' y2='3' />
-      <line x1='12' y1='21' x2='12' y2='23' />
-      <line x1='4.22' y1='4.22' x2='5.64' y2='5.64' />
-      <line x1='18.36' y1='18.36' x2='19.78' y2='19.78' />
-      <line x1='1' y1='12' x2='3' y2='12' />
-      <line x1='21' y1='12' x2='23' y2='12' />
-      <line x1='4.22' y1='19.78' x2='5.64' y2='18.36' />
-      <line x1='18.36' y1='5.64' x2='19.78' y2='4.22' />
-    </svg>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-      <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
     </svg>
   )
 }

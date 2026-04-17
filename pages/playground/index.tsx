@@ -37,7 +37,7 @@ export default function PlaygroundPage() {
                   src={project.image}
                   alt={`${project.title} cover`}
                   loading='lazy'
-                  className='h-full w-full object-cover transition-transform duration-500'
+                  className='h-full w-full object-cover transition-transform duration-[250ms] ease-out'
                 />
               ) : (
                 <div

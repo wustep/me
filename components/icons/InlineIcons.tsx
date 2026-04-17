@@ -82,6 +82,65 @@ export function ImLab(props: IconProps) {
   )
 }
 
+/**
+ * House icon. Stroked outline at rest, fills with `currentColor` on hover
+ * via the `.house-body` class (wired up in wustep.css).
+ */
+export function HouseFillIcon(props: IconProps) {
+  return (
+    <IconBase
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      {...props}
+    >
+      <path
+        className='house-body'
+        d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'
+      />
+    </IconBase>
+  )
+}
+
+/**
+ * Flask icon with an animated liquid fill.
+ * Hovering or keyboard-focusing an ancestor link/button raises the liquid
+ * from empty up to the flask's shoulder. See `.lab-fill-liquid` in wustep.css.
+ */
+export function LabFillIcon(props: IconProps) {
+  const reactId = React.useId()
+  const cavityId = `lab-cavity-${reactId.replace(/:/g, '')}`
+
+  return (
+    <IconBase viewBox='0 0 16 16' {...props}>
+      <defs>
+        <clipPath id={cavityId}>
+          {/* Inner cavity: thin neck + triangular body */}
+          <path d='M3.85 10 L7 4.6 V1.3 H9 V4.6 L12.15 10 Z' />
+        </clipPath>
+      </defs>
+
+      {/* Liquid fill (clipped to cavity). Hidden at rest, rises on hover. */}
+      <g clipPath={`url(#${cavityId})`}>
+        <rect
+          className='lab-fill-liquid'
+          x='0'
+          y='0'
+          width='16'
+          height='16'
+          fill='currentColor'
+        />
+      </g>
+
+      {/* Flask outline (sits on top of the liquid) */}
+      <path d='M14.942 12.57l-4.942-8.235v-3.335h0.5c0.275 0 0.5-0.225 0.5-0.5s-0.225-0.5-0.5-0.5h-5c-0.275 0-0.5 0.225-0.5 0.5s0.225 0.5 0.5 0.5h0.5v3.335l-4.942 8.235c-1.132 1.886-0.258 3.43 1.942 3.43h10c2.2 0 3.074-1.543 1.942-3.43zM3.766 10l3.234-5.39v-3.61h2v3.61l3.234 5.39h-8.468z' />
+    </IconBase>
+  )
+}
+
 export function IoGridOutline(props: IconProps) {
   return (
     <IconBase viewBox='0 0 512 512' {...props}>

@@ -1,13 +1,10 @@
 'use client'
 
-import { Home } from 'lucide-react'
 import Link from 'next/link'
 import * as React from 'react'
 
-import {
-  IoMoonSharp,
-  IoSunnyOutline
-} from '@/components/icons/InlineIcons'
+import { HouseFillIcon } from '@/components/icons/InlineIcons'
+import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -141,27 +138,13 @@ function LayoutContent({
             className='playground-home-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
             aria-label='Go home'
           >
-            <Home className='playground-home-icon h-4 w-4' />
+            <HouseFillIcon className='playground-home-icon h-4 w-4' />
           </Link>
-          <button
-            onClick={toggleDarkMode}
-            className='playground-theme-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
-            title={
-              hasMounted
-                ? isDarkMode
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode'
-                : 'Toggle theme'
-            }
-          >
-            {hasMounted ? (
-              isDarkMode ? (
-                <IoMoonSharp className='playground-theme-icon playground-theme-icon--moon h-4 w-4' />
-              ) : (
-                <IoSunnyOutline className='playground-theme-icon playground-theme-icon--sun h-4 w-4' />
-              )
-            ) : null}
-          </button>
+          <ThemeToggle
+            isDark={hasMounted ? isDarkMode : false}
+            onToggle={toggleDarkMode}
+            className='playground-theme-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md'
+          />
         </div>
       </header>
       {fullFrame ? (

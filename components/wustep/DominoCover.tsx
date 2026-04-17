@@ -19,7 +19,7 @@ export function DominoCover() {
       >
         <span>DOM</span>
         <span
-          className='inline-flex rotate-[2deg] items-center justify-center rounded-[6px] bg-white text-[#0d0d0d] transition-transform duration-300 ease-[ease] group-hover:rotate-[-3deg] group-hover:-translate-y-0.5'
+          className='inline-flex rotate-[2deg] items-center justify-center rounded-[6px] bg-white text-[#0d0d0d] transition-transform duration-[250ms] ease-out group-hover:rotate-[-3deg] group-hover:-translate-y-0.5'
           style={{ padding: '4px 10px' }}
         >
           ino

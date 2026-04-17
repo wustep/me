@@ -5,11 +5,8 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 import { Breadcrumbs, Header, Search, useNotionContext } from 'react-notion-x'
 
-import {
-  ImLab,
-  IoMoonSharp,
-  IoSunnyOutline
-} from '@/components/icons/InlineIcons'
+import { LabsButton } from '@/components/wustep/LabsButton'
+import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import {
   isSearchEnabled,
   navigationLinks,
@@ -97,34 +94,17 @@ function ToggleThemeButton() {
     setHasMounted(true)
   }, [])
 
-  const onToggleTheme = React.useCallback(() => {
-    toggleDarkMode()
-  }, [toggleDarkMode])
-
   return (
-    <button
-      type='button'
+    <ThemeToggle
+      isDark={hasMounted ? isDarkMode : false}
+      onToggle={toggleDarkMode}
       className={cs(
         'breadcrumb',
         'button',
         styles.themeButton,
         !hasMounted && styles.hidden
       )}
-      onClick={onToggleTheme}
-      aria-label={hasMounted && isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-      aria-pressed={hasMounted ? isDarkMode : undefined}
-      title='Toggle theme'
-    >
-      {hasMounted && isDarkMode ? (
-        <IoMoonSharp
-          className={cs('w-4 h-4', styles.themeIcon, styles.moonIcon)}
-        />
-      ) : (
-        <IoSunnyOutline
-          className={cs('w-4 h-4', styles.themeIcon, styles.sunIcon)}
-        />
-      )}
-    </button>
+    />
   )
 }
 
@@ -136,18 +116,13 @@ function PlaygroundButton() {
   }, [])
 
   return (
-    <Link
-      href='/playground'
+    <LabsButton
       className={cs(
         'breadcrumb',
         'button',
         styles.playgroundButton,
         !hasMounted && styles.hidden
       )}
-      aria-label='Open playground'
-      title='Open playground'
-    >
-      <ImLab className={cs('w-4 h-4', styles.playgroundIcon)} />
-    </Link>
+    />
   )
 }

@@ -70,7 +70,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 56px;
-  animation: fadeSlideIn 600ms ease both;
+  animation: fadeSlideIn 300ms ease-out both;
 }
 
 .headerLeft {
@@ -99,33 +99,20 @@
   }
 }
 
+/* Container-level overrides; the shared ThemeToggle provides reset,
+ * rotation, and yellow/indigo hover colors. */
 .themeToggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 40px;
   height: 40px;
-  padding: 0;
-  border: none;
   border-radius: 12px;
-  background: transparent;
   color: var(--about-muted);
-  cursor: pointer;
   opacity: 0;
+  font-size: 18px;
   transition:
-    opacity 200ms ease,
-    color 200ms ease,
-    background-color 200ms ease,
-    transform 200ms ease;
-}
-
-.themeToggle svg {
-  width: 18px;
-  height: 18px;
-}
-
-.themeToggle:active {
-  transform: rotate(45deg) scale(0.95);
+    opacity 200ms ease-out,
+    color 200ms ease-out,
+    background-color 200ms ease-out,
+    transform 200ms ease-out;
 }
 
 .themeToggle:focus-visible {
@@ -133,18 +120,6 @@
 }
 
 @media (hover: hover) {
-  .themeToggle:hover {
-    transform: rotate(20deg);
-  }
-
-  .dark .themeToggle:hover {
-    color: #f5c542;
-  }
-
-  .light .themeToggle:hover {
-    color: #6366f1;
-  }
-
   .header:hover .themeToggle {
     opacity: 1;
   }
@@ -213,7 +188,7 @@
 
 .hero {
   margin-bottom: 48px;
-  animation: fadeSlideIn 600ms ease 100ms both;
+  animation: fadeSlideIn 300ms ease-out 60ms both;
 }
 
 .heroContent {
@@ -277,6 +252,13 @@
   .sectionHeader:hover h2 {
     color: var(--about-accent);
   }
+}
+
+.sectionTitleLink {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sectionLinks {
@@ -343,14 +325,13 @@
   }
 }
 
-.sectionLink svg {
-  width: 20px;
-  height: 20px;
+.sectionLink {
+  font-size: 16px;
 }
 
-.sectionLink .labIcon {
-  width: 14px;
-  height: 14px;
+.sectionLink svg {
+  width: 1em;
+  height: 1em;
 }
 
 .work {
@@ -370,7 +351,7 @@
   gap: 24px;
   padding: 16px 0;
   opacity: 0;
-  animation: fadeSlideIn 400ms ease forwards;
+  animation: fadeSlideIn 300ms ease-out forwards;
 }
 
 .workGroup + .workGroup {
@@ -433,7 +414,7 @@
 
 .projects {
   margin-bottom: 56px;
-  animation: fadeSlideIn 600ms ease 200ms both;
+  animation: fadeSlideIn 300ms ease-out 120ms both;
 }
 
 .projectGrid {
@@ -497,7 +478,7 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
-  transition: transform 500ms ease;
+  transition: transform 250ms ease-out;
 }
 
 @media (hover: hover) {
@@ -586,6 +567,7 @@
   color: var(--about-bg);
   border-radius: 6px;
   animation: dominoRock 3s ease-in-out infinite;
+  transition: transform 250ms ease-out;
 }
 
 @keyframes dominoRock {
@@ -606,7 +588,6 @@
   .domino:hover .dominoBlock {
     animation: none;
     transform: rotate(-3deg) translateY(-2px);
-    transition: transform 300ms ease;
   }
 }
 
@@ -813,7 +794,7 @@
 }
 
 .writing {
-  animation: fadeSlideIn 600ms ease 300ms both;
+  animation: fadeSlideIn 300ms ease-out 180ms both;
 }
 
 .writingColumns {
@@ -885,7 +866,7 @@
 .footer {
   margin-top: 48px;
   text-align: center;
-  animation: fadeSlideIn 600ms ease 400ms both;
+  animation: fadeSlideIn 300ms ease-out 240ms both;
 }
 
 .contactLink {
@@ -894,16 +875,14 @@
   font-size: 0.95rem;
   color: var(--about-muted);
   transition:
-    color 200ms ease,
-    transform 200ms ease,
-    letter-spacing 200ms ease;
+    color 200ms ease-out,
+    transform 200ms ease-out;
 }
 
 @media (hover: hover) {
   .contactLink:hover {
     color: var(--about-accent);
     transform: translateX(4px);
-    letter-spacing: 0.02em;
   }
 }
 
@@ -1089,27 +1068,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page,
-  .header,
-  .hero,
-  .projects,
-  .writing,
-  .workGroup,
-  .projectCard,
-  .writingLink,
-  .navIcon,
-  .spotItSymbol,
-  .spotItCard,
-  .book,
-  .bookshelfBooks,
-  .dominoBlock {
-    animation: none;
-    transition: none;
+  /* .workGroup has opacity: 0 as its base state and relies on fadeSlideIn
+     to reveal it — keep it visible when motion is reduced. */
+  .workGroup {
     opacity: 1;
-    transform: none;
-  }
-
-  .tooltip {
-    transition: none;
   }
 }

@@ -1,0 +1,158 @@
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0d0d0d;
+  container-type: size;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.token {
+  position: absolute;
+  font-family: var(
+    --font-geist,
+    'Geist',
+    'Inter',
+    ui-sans-serif,
+    system-ui,
+    sans-serif
+  );
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Rest state — mid-height, slight asymmetric tilts, gentle drift. */
+.word {
+  left: 24%;
+  top: 32%;
+  font-size: clamp(1.4rem, 11cqw, 2.2rem);
+  transform: rotate(-3deg);
+  animation: float-word 4.8s ease-in-out infinite;
+}
+
+.slashes {
+  right: 18%;
+  top: 44%;
+  font-size: clamp(1.4rem, 11cqw, 2.2rem);
+  color: rgba(255, 255, 255, 0.78);
+  transform: rotate(5deg);
+  animation: float-slashes 5.4s ease-in-out -1.4s infinite;
+}
+
+@keyframes float-word {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-3deg);
+  }
+  50% {
+    transform: translate(0, -3px) rotate(-2deg);
+  }
+}
+
+@keyframes float-slashes {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(5deg);
+  }
+  50% {
+    transform: translate(0, -3px) rotate(6deg);
+  }
+}
+
+@media (hover: hover) {
+  .cover:hover .word,
+  :global(.group):hover .word {
+    animation: fall-word 1000ms forwards;
+  }
+
+  .cover:hover .slashes,
+  :global(.group):hover .slashes {
+    animation: fall-slashes 920ms 60ms forwards;
+  }
+}
+
+/*
+ * Gravity drop with angular momentum.
+ * - translateY: cqh so fall distance is relative to the cover height.
+ * - translateX: small horizontal drift, as though the tumbling creates spin.
+ * - rotate: accumulates past the landing frame so the text overshoots and
+ *   counter-wobbles into its resting angle.
+ * - scaleY: impact compression, rebound stretch, small settle.
+ */
+@keyframes fall-word {
+  0% {
+    transform: translate(0, 0) rotate(-3deg) scaleY(1);
+    animation-timing-function: cubic-bezier(0.42, 0, 1, 0.55);
+  }
+  52% {
+    transform: translate(-2cqw, 38cqh) rotate(-120deg) scaleY(0.82);
+    animation-timing-function: cubic-bezier(0.32, 1.45, 0.64, 1);
+  }
+  68% {
+    transform: translate(-3cqw, 30cqh) rotate(-150deg) scaleY(1.08);
+    animation-timing-function: cubic-bezier(0.42, 0, 1, 0.55);
+  }
+  82% {
+    transform: translate(-3.5cqw, 37cqh) rotate(-162deg) scaleY(0.96);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  92% {
+    transform: translate(-3.5cqw, 38cqh) rotate(-156deg) scaleY(1);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    transform: translate(-3.5cqw, 38cqh) rotate(-158deg) scaleY(1);
+  }
+}
+
+@keyframes fall-slashes {
+  0% {
+    transform: translate(0, 0) rotate(5deg) scaleY(1);
+    animation-timing-function: cubic-bezier(0.42, 0, 1, 0.55);
+  }
+  52% {
+    transform: translate(1.5cqw, 32cqh) rotate(52deg) scaleY(0.85);
+    animation-timing-function: cubic-bezier(0.32, 1.45, 0.64, 1);
+  }
+  70% {
+    transform: translate(2cqw, 24cqh) rotate(72deg) scaleY(1.07);
+    animation-timing-function: cubic-bezier(0.42, 0, 1, 0.55);
+  }
+  85% {
+    transform: translate(2.5cqw, 31cqh) rotate(82deg) scaleY(0.97);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  94% {
+    transform: translate(2.5cqw, 32cqh) rotate(77deg) scaleY(1);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    transform: translate(2.5cqw, 32cqh) rotate(78deg) scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word,
+  .slashes {
+    animation: none;
+  }
+}

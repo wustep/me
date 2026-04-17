@@ -138,67 +138,95 @@ h6 {
   width: 1.1em;
 }
 
+/**
+ * Flask icon with animated liquid fill.
+ * Liquid is hidden at rest and rises to the flask's shoulder when an
+ * ancestor link/button is hovered or keyboard-focused.
+ *
+ * Uses the SVG `y` attribute (user-space units) rather than a CSS transform
+ * so the fill level matches the viewBox regardless of rendered icon size.
+ */
+.lab-fill-liquid {
+  y: 10;
+  transition: y 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  [data-lab-fill-trigger]:hover .lab-fill-liquid,
+  [data-lab-fill-trigger]:focus-visible .lab-fill-liquid {
+    y: 4.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-fill-liquid {
+    transition: none;
+  }
+}
+
 /* Colorful playground/home nav buttons */
 
+/**
+ * House gives a small hop on hover with a tiny squash on landing.
+ * The body fills in; the door stays hollow so it cuts through the fill.
+ */
+@keyframes playground-home-hop {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  40% {
+    transform: translateY(-1.5px) scaleY(1);
+  }
+  65% {
+    transform: translateY(0) scaleY(0.96);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+.playground-home-icon {
+  transform-origin: center bottom;
+  transition:
+    color 160ms ease-out,
+    fill 160ms ease-out;
+}
+
+.playground-home-icon .house-body {
+  fill: none;
+  transition: fill 160ms ease-out;
+}
+
+@media (hover: hover) {
+  .playground-home-button:hover .playground-home-icon {
+    color: #09c772;
+    animation: playground-home-hop 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .playground-home-button:hover .playground-home-icon .house-body {
+    fill: currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-home-button:hover .playground-home-icon {
+    animation: none;
+  }
+}
+
+/* Scale pulse used by the sidebar lab icon on hover/focus. */
 @keyframes playground-home-pulse {
   0% {
     transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.08);
-    opacity: 0.85;
+    transform: scale(1.18);
+    opacity: 0.75;
   }
   100% {
     transform: scale(1);
     opacity: 1;
-  }
-}
-
-.playground-home-icon {
-  transition:
-    color 160ms ease,
-    transform 220ms ease,
-    opacity 220ms ease;
-}
-
-@media (hover: hover) {
-  .playground-home-button:hover .playground-home-icon {
-    color: #09c772;
-    animation: playground-home-pulse 720ms ease-in-out infinite;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .playground-home-button:hover .playground-home-icon {
-    animation: none;
-  }
-}
-
-.playground-theme-icon {
-  transition:
-    color 160ms ease,
-    transform 220ms ease,
-    opacity 220ms ease;
-}
-
-@media (hover: hover) {
-  .playground-theme-button:hover .playground-theme-icon {
-    animation: playground-home-pulse 720ms ease-in-out infinite;
-  }
-
-  .playground-theme-button:hover .playground-theme-icon--sun {
-    color: #a855f7;
-  }
-
-  .playground-theme-button:hover .playground-theme-icon--moon {
-    color: #f97316;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .playground-theme-button:hover .playground-theme-icon {
-    animation: none;
   }
 }
 
