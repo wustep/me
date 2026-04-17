@@ -164,6 +164,18 @@ h6 {
   }
 }
 
+/* On touch/no-hover devices, render the flask as an outline (no hover reveal
+ * to animate, so the solid silhouette reads as a heavy always-filled icon). */
+@media (hover: none) {
+  .lab-fill-outline {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+}
+
 /* Colorful playground/home nav buttons */
 
 /**
