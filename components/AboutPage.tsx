@@ -7,7 +7,7 @@ import { github, linkedin, x } from '@/lib/config'
 
 import styles from './AboutPage.module.css'
 
-const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I care about craft, systems that age well, and the small design details that help tools disappear into the background. I write to think, reflect, and make ideas come to life — about software, systems, philosophy, and life.`
+export const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I care about craft, systems that age well, and the small design details that help tools disappear into the background. I write to think, reflect, and make ideas come to life — about software, systems, philosophy, and life.`
 
 const workHistory = [
   {
