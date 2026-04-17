@@ -16,6 +16,36 @@ import { getTweetsMap } from './get-tweets'
 import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
 
+const PAGE_CACHE_TTL_MS = 25 * 60 * 1000
+const SEARCH_CACHE_TTL_MS = 60 * 1000
+
+type CacheEntry<T> = { value: Promise<T>; expiresAt: number }
+
+function createTTLCache<T>(ttlMs: number) {
+  const store = new Map<string, CacheEntry<T>>()
+  return {
+    get(key: string): Promise<T> | undefined {
+      const entry = store.get(key)
+      if (!entry) return undefined
+      if (entry.expiresAt <= Date.now()) {
+        store.delete(key)
+        return undefined
+      }
+      return entry.value
+    },
+    set(key: string, value: Promise<T>) {
+      store.set(key, { value, expiresAt: Date.now() + ttlMs })
+      // evict on rejection so we don't cache errors
+      value.catch(() => {
+        if (store.get(key)?.value === value) store.delete(key)
+      })
+    }
+  }
+}
+
+const pageCache = createTTLCache<ExtendedRecordMap>(PAGE_CACHE_TTL_MS)
+const searchCache = createTTLCache<SearchResults>(SEARCH_CACHE_TTL_MS)
+
 const getNavigationLinkPages = pMemoize(
   async (): Promise<ExtendedRecordMap[]> => {
     const navigationLinkPageIds = (navigationLinks || [])
@@ -43,6 +73,15 @@ const getNavigationLinkPages = pMemoize(
 )
 
 export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
+  const cached = pageCache.get(pageId)
+  if (cached) return cached
+
+  const promise = getPageUncached(pageId)
+  pageCache.set(pageId, promise)
+  return promise
+}
+
+async function getPageUncached(pageId: string): Promise<ExtendedRecordMap> {
   let recordMap = await notion.getPage(pageId)
   /**
    * @wustep: fix for expiring images by removing signed AWS urls
@@ -86,5 +125,11 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
 }
 
 export async function search(params: SearchParams): Promise<SearchResults> {
-  return notion.search(params)
+  const key = JSON.stringify(params)
+  const cached = searchCache.get(key)
+  if (cached) return cached
+
+  const promise = notion.search(params)
+  searchCache.set(key, promise)
+  return promise
 }
