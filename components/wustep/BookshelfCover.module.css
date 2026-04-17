@@ -32,13 +32,15 @@
   50% { transform: translateY(-2px); }
 }
 
-.cover:hover .book:nth-child(1) { animation: none; transform: translateY(-3px) rotate(-2deg); }
-.cover:hover .book:nth-child(2) { animation: none; transform: translateY(-5px); }
-.cover:hover .book:nth-child(3) { animation: none; transform: translateY(-2px) rotate(1deg); }
-.cover:hover .book:nth-child(4) { animation: none; transform: translateY(-6px) rotate(-1deg); }
-.cover:hover .book:nth-child(5) { animation: none; transform: translateY(-4px) rotate(2deg); }
-.cover:hover .book:nth-child(6) { animation: none; transform: translateY(-3px) rotate(-1deg); }
-.cover:hover .book:nth-child(7) { animation: none; transform: translateY(-5px) rotate(1deg); }
+@media (hover: hover) {
+  .cover:hover .book:nth-child(1) { animation: none; transform: translateY(-3px) rotate(-2deg); }
+  .cover:hover .book:nth-child(2) { animation: none; transform: translateY(-5px); }
+  .cover:hover .book:nth-child(3) { animation: none; transform: translateY(-2px) rotate(1deg); }
+  .cover:hover .book:nth-child(4) { animation: none; transform: translateY(-6px) rotate(-1deg); }
+  .cover:hover .book:nth-child(5) { animation: none; transform: translateY(-4px) rotate(2deg); }
+  .cover:hover .book:nth-child(6) { animation: none; transform: translateY(-3px) rotate(-1deg); }
+  .cover:hover .book:nth-child(7) { animation: none; transform: translateY(-5px) rotate(1deg); }
+}
 
 .title {
   margin: 0;

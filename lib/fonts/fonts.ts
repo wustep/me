@@ -4,7 +4,7 @@ export const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-sans',
-  display: 'optional',
+  display: 'swap',
   preload: true,
   adjustFontFallback: true,
   fallback: [
@@ -22,7 +22,7 @@ export const crimsonPro = Crimson_Pro({
   weight: ['400', '600'],
   style: ['normal', 'italic'],
   variable: '--font-serif',
-  display: 'optional',
+  display: 'swap',
   preload: true,
   adjustFontFallback: true,
   fallback: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif']

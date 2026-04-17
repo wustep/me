@@ -102,7 +102,8 @@ function ToggleThemeButton() {
   }, [toggleDarkMode])
 
   return (
-    <div
+    <button
+      type='button'
       className={cs(
         'breadcrumb',
         'button',
@@ -110,7 +111,8 @@ function ToggleThemeButton() {
         !hasMounted && styles.hidden
       )}
       onClick={onToggleTheme}
-      role='button'
+      aria-label={hasMounted && isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-pressed={hasMounted ? isDarkMode : undefined}
       title='Toggle theme'
     >
       {hasMounted && isDarkMode ? (
@@ -122,7 +124,7 @@ function ToggleThemeButton() {
           className={cs('w-4 h-4', styles.themeIcon, styles.sunIcon)}
         />
       )}
-    </div>
+    </button>
   )
 }
 
@@ -134,21 +136,18 @@ function PlaygroundButton() {
   }, [])
 
   return (
-    <div
+    <Link
+      href='/playground'
       className={cs(
         'breadcrumb',
         'button',
         styles.playgroundButton,
         !hasMounted && styles.hidden
       )}
-      onClick={() => {
-        window.location.href = '/playground'
-      }}
       aria-label='Open playground'
       title='Open playground'
-      role='button'
     >
       <ImLab className={cs('w-4 h-4', styles.playgroundIcon)} />
-    </div>
+    </Link>
   )
 }

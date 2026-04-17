@@ -100,7 +100,11 @@
   cursor: pointer;
   font-size: 1.5em;
   display: inline-flex;
-  padding: 0.25em;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em;
+  min-width: 44px;
+  min-height: 44px;
   transition: color 250ms ease-out;
 }
 
@@ -327,6 +331,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
+  text-decoration: none;
 }
 
 .playgroundIcon {
@@ -351,6 +357,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: inherit;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
 .themeIcon {
