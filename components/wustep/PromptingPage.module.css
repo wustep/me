@@ -1,3 +1,20 @@
+/*
+ * Shared focus ring — everything keyboard-interactive on this page picks
+ * this up via `:focus-visible`. Two layers: a subtle inset bg shift + a
+ * clear gradient outline ring. Plays nicely with both light and dark mode.
+ */
+.frame button:focus-visible,
+.frame a:focus-visible {
+  outline: 2px solid rgba(180, 57, 223, 0.65);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+:global(.dark-mode) .frame button:focus-visible,
+:global(.dark-mode) .frame a:focus-visible {
+  outline-color: rgba(213, 109, 240, 0.75);
+}
+
 /* ===== Frame & layout ===== */
 
 .frame {

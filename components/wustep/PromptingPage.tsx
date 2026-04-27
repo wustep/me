@@ -268,6 +268,19 @@ const ERROR_MESSAGES = [
   'Quota exhausted for this model. Try again later or switch models.'
 ]
 
+/* ─────────────────────────────────────────────────────────
+ * PROMPT INPUT STORYBOARD
+ *
+ *    0ms   waits for parent to flip `start` (after title reveals)
+ * 1400ms   begins typing "Make me a sandwich" (70ms/char ≈ 1.2s)
+ * 2700ms   pause on the completed sentence
+ * 3300ms   auto-fires Send → error appears, card shakes
+ *           Send button swaps in to the Replay button (cross-fade)
+ *
+ *  user types again        →  error clears, Send returns
+ *  user clicks Replay      →  re-runs the whole sequence
+ *  prefers-reduced-motion  →  fills value instantly, sends after 250ms
+ * ───────────────────────────────────────────────────────── */
 const AUTO_PROMPT = 'Make me a sandwich'
 const AUTO_TYPE_INITIAL_DELAY_MS = 1400
 const AUTO_TYPE_CHAR_MS = 70
@@ -1555,6 +1568,21 @@ const LEVER_DETAILS: Record<
   }
 }
 
+/* ─────────────────────────────────────────────────────────
+ * EQUATION DEMO STORYBOARD
+ *
+ *    0ms   waits for IntersectionObserver (threshold 0.4)
+ *  750ms   triggers expansion → simple line shrinks + slides up,
+ *          arrow drops down, expanded line fades + scales in
+ *  ~2.0s   `fullyExpanded` flips → overflow released so lever
+ *          tooltips can escape the clipped row
+ *
+ *  click Replay  →  fast collapse (~500ms transitions on base
+ *                    classes), then 750ms pause, then the slow
+ *                    expansion plays again
+ *  prefers-reduced-motion  →  expansion fires instantly
+ * ───────────────────────────────────────────────────────── */
+
 function EquationDemo() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.4 })
   const [expanded, setExpanded] = React.useState(false)
@@ -1991,6 +2019,19 @@ const TOUR: Array<{ area: Area; depth: Depth; action: Action }> = [
   { area: 'arch', depth: 'high', action: 'plan' }
 ]
 
+/* ─────────────────────────────────────────────────────────
+ * TREE DEMO INTERACTION
+ *
+ *    Coordinate state lives at the parent: { area, depth, action }
+ *    Hover a cell  →  preview-update area + depth (no lock)
+ *    Click a cell  →  same as hover but stops the running tour
+ *    Action chip   →  swaps the verb on the generated prompt
+ *
+ *    Tour mode: when started, advances through TOUR every 1700ms,
+ *    cycling through area/depth/action triples. Any user
+ *    interaction (chip click, cell click, button click) stops it.
+ * ───────────────────────────────────────────────────────── */
+
 function TreeDemo() {
   const [area, setArea] = React.useState<Area>('ux')
   const [depth, setDepth] = React.useState<Depth>('mid')
@@ -2170,6 +2211,20 @@ const COLLEAGUE_SEGMENTS: Record<ShareKey, string> = {
   history:
     'Last quarter, PR #1842 quietly removed the previous virtualization. Restoring that pattern + memoizing the callback should bring perf back to where it was.'
 }
+
+/* ─────────────────────────────────────────────────────────
+ * COLLEAGUE DEMO INTERACTION
+ *
+ *    Static "you ask" question at the top.
+ *    Four toggleable share-chips (file, screenshot, rules, history).
+ *
+ *    Response panel:
+ *      no chips on   →  generic guess (italic, dimmed)
+ *      any chip on   →  segments concatenate in chip-order
+ *
+ *    Each toggle re-keys the response so it remounts and re-fires
+ *    the colleagueFade keyframe (320ms blur-up).
+ * ───────────────────────────────────────────────────────── */
 
 function ColleagueDemo() {
   const [shared, setShared] = React.useState<Record<ShareKey, boolean>>({
