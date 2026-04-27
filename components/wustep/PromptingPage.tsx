@@ -281,7 +281,7 @@ const ERROR_MESSAGES = [
  *  user clicks Replay      →  re-runs the whole sequence
  *  prefers-reduced-motion  →  fills value instantly, sends after 250ms
  * ───────────────────────────────────────────────────────── */
-const AUTO_PROMPT = 'Make me a sandwich'
+const AUTO_PROMPT = 'Center this div'
 const AUTO_TYPE_INITIAL_DELAY_MS = 1400
 const AUTO_TYPE_CHAR_MS = 70
 const AUTO_TYPE_SEND_DELAY_MS = 700
@@ -1048,9 +1048,10 @@ export function TechniquesContent() {
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three
-        years of chess gets you to maybe 1200 ELO &mdash; a strong club
-        player at best, basically a novice in the long arc. We&apos;re all
-        about that good at this skill.
+        years of chess might get you to 1200 ELO &mdash; past most casual
+        players, but a long way short of anyone you&apos;d call expert. The
+        frontier of the curve is somewhere out around 2800.
+        That&apos;s where we all are with this skill.
       </p>
 
       <p>
@@ -1238,9 +1239,7 @@ export function RecapContent() {
       </p>
 
       <RecapItem index={1} title='The equation' href='/prompting/equation'>
-        <p className={styles.recapEquation}>
-          (TOOL + MODEL) × (PROMPT + CONTEXT) → OUTPUT
-        </p>
+        <RecapEquationViz />
         <p>
           When the output disappoints, walk the four levers. Better tool.
           Better model. Better prompt. Better context. The biggest unlock
@@ -1249,6 +1248,7 @@ export function RecapContent() {
       </RecapItem>
 
       <RecapItem index={2} title='The tree' href='/prompting/tree'>
+        <RecapTreeViz />
         <p>
           Every change lives somewhere on a 2D map: <em>breadth</em> (which
           area of code) × <em>depth</em> (how zoomed in). At any node,
@@ -1263,11 +1263,12 @@ export function RecapContent() {
         title='The colleague'
         href='/prompting/colleague'
       >
+        <RecapColleagueViz />
         <p>
           Treat the agent as a colleague &mdash; a fast, knowledgeable
-          junior who only sees what you&apos;ve shown them. Onboard,
-          brief, review. The discipline gets <em>more</em> important, not
-          less, as the models get smarter.
+          junior who only sees what you&apos;ve shown them. The discipline
+          gets <em>more</em> important, not less, as the models get
+          smarter.
         </p>
       </RecapItem>
 
@@ -1276,7 +1277,9 @@ export function RecapContent() {
         title='Techniques'
         href='/prompting/techniques'
       >
-        <p>Eight moves worth practicing:</p>
+        <p className={styles.recapTechniquesIntro}>
+          Eight moves worth practicing &mdash;
+        </p>
         <ul className={styles.recapList}>
           <li>What questions should you ask me before starting?</li>
           <li>What&apos;s the smallest version of this that ships?</li>
@@ -1341,6 +1344,85 @@ function RecapItem({
   )
 }
 
+function RecapEquationViz() {
+  return (
+    <div className={styles.recapEquationViz} aria-hidden='true'>
+      <Group>
+        <Bracket>(</Bracket>
+        <span className={`${styles.recapToken} ${styles.recapTokenLever}`}>
+          TOOL
+        </span>
+        <Op subtle>+</Op>
+        <span className={`${styles.recapToken} ${styles.recapTokenLever}`}>
+          MODEL
+        </span>
+        <Bracket>)</Bracket>
+      </Group>
+      <Op>×</Op>
+      <Group>
+        <Bracket>(</Bracket>
+        <span className={`${styles.recapToken} ${styles.recapTokenLever}`}>
+          PROMPT
+        </span>
+        <Op subtle>+</Op>
+        <span className={`${styles.recapToken} ${styles.recapTokenLever}`}>
+          CONTEXT
+        </span>
+        <Bracket>)</Bracket>
+      </Group>
+      <Op>→</Op>
+      <span className={`${styles.recapToken} ${styles.recapTokenOutput}`}>
+        OUTPUT
+      </span>
+    </div>
+  )
+}
+
+function RecapTreeViz() {
+  // 4 columns × 3 rows. The (mid · UX) cell is "active"; cells on either
+  // axis get a faint tint to evoke the crosshair from the tree demo.
+  const ROWS = 3
+  const COLS = 4
+  const ACTIVE = { row: 1, col: 0 }
+
+  return (
+    <div className={styles.recapTreeViz} aria-hidden='true'>
+      <div className={styles.recapTreeGrid}>
+        {Array.from({ length: ROWS }).map((_, r) =>
+          Array.from({ length: COLS }).map((__, c) => {
+            const isActive = r === ACTIVE.row && c === ACTIVE.col
+            const onAxis =
+              !isActive && (r === ACTIVE.row || c === ACTIVE.col)
+            return (
+              <span
+                key={`${r}-${c}`}
+                className={`${styles.recapTreeCell} ${isActive ? styles.recapTreeCellActive : ''} ${onAxis ? styles.recapTreeCellOnAxis : ''}`}
+              />
+            )
+          })
+        )}
+      </div>
+      <div className={styles.recapTreeMoves}>
+        <span>ask</span>
+        <span className={styles.recapTreeMovesActive}>plan</span>
+        <span>delegate</span>
+      </div>
+    </div>
+  )
+}
+
+function RecapColleagueViz() {
+  return (
+    <div className={styles.recapColleagueViz} aria-hidden='true'>
+      <span className={styles.recapColleagueStep}>Onboard</span>
+      <span className={styles.recapColleagueArrow}>→</span>
+      <span className={styles.recapColleagueStep}>Brief</span>
+      <span className={styles.recapColleagueArrow}>→</span>
+      <span className={styles.recapColleagueStep}>Review</span>
+    </div>
+  )
+}
+
 /* ─────────────────────────────────────────────────────────
  * ELO CHART STORYBOARD
  *
@@ -1380,16 +1462,23 @@ function EloChart() {
           </linearGradient>
         </defs>
 
-        {/* Density curve (filled area) */}
+        {/*
+          Density curve — right-skewed, mode around ELO 800 (x=83).
+          Reflects how most chess players (especially online) cluster
+          in the 600–1000 range with a long tail through 2000+.
+
+          Key x positions: 40 = ELO 600, 83 = 800, 170 = 1200 (you),
+          300 = 1800, 525 = 2839 (Magnus). Mapping is x = 40 + (ELO-600)/4.62.
+        */}
         <path
-          d='M 40,108 C 80,108 100,80 125,55 C 145,40 160,33 170,33 L 210,33 C 230,33 240,55 255,55 C 285,75 300,90 320,98 C 350,110 370,118 385,122 C 430,127 450,129 475,130 L 560,130 L 40,130 Z'
+          d='M 40,80 C 52,72 64,50 83,30 C 102,38 118,49 130,58 C 148,69 162,75 170,77 C 190,87 208,95 225,101 C 252,111 280,118 305,123 C 340,127 380,129 420,130 L 560,130 L 40,130 Z'
           fill='url(#eloFill)'
           className={styles.eloChartCurveFill}
         />
 
-        {/* Density curve (stroke that draws in) */}
+        {/* Density curve (stroke that draws in left → right) */}
         <path
-          d='M 40,108 C 80,108 100,80 125,55 C 145,40 160,33 170,33 L 210,33 C 230,33 240,55 255,55 C 285,75 300,90 320,98 C 350,110 370,118 385,122 C 430,127 450,129 475,130 L 560,130'
+          d='M 40,80 C 52,72 64,50 83,30 C 102,38 118,49 130,58 C 148,69 162,75 170,77 C 190,87 208,95 225,101 C 252,111 280,118 305,123 C 340,127 380,129 420,130 L 560,130'
           fill='none'
           stroke='url(#eloStroke)'
           strokeWidth='1.75'
@@ -1432,44 +1521,45 @@ function EloChart() {
         {/* Gap arrow between markers */}
         <g className={styles.eloChartGap}>
           <line
-            x1='178'
-            y1='28'
-            x2='517'
-            y2='95'
+            x1='180'
+            y1='72'
+            x2='515'
+            y2='100'
             strokeDasharray='2 4'
           />
-          <text x='347' y='52' textAnchor='middle'>
+          <text x='347' y='80' textAnchor='middle'>
             a long way to go
           </text>
         </g>
 
-        {/* You marker — ELO ~1200 (x=170) */}
+        {/* You marker — ELO ~1200 (x=170, curve at y≈77) */}
         <g
           className={`${styles.eloChartMarker} ${styles.eloChartMarkerYou}`}
         >
-          <line x1='170' y1='30' x2='170' y2='130' />
-          <circle cx='170' cy='33' r='5.5' />
-          <text x='170' y='20' textAnchor='middle'>
+          <line x1='170' y1='77' x2='170' y2='130' />
+          <circle cx='170' cy='77' r='5.5' />
+          <text x='170' y='65' textAnchor='middle'>
             You · 1200
           </text>
         </g>
 
-        {/* Magnus marker — ELO 2839 (x=525) */}
+        {/* Magnus marker — ELO 2839 (x=525, baseline) */}
         <g
           className={`${styles.eloChartMarker} ${styles.eloChartMarkerMagnus}`}
         >
-          <line x1='525' y1='95' x2='525' y2='130' />
+          <line x1='525' y1='100' x2='525' y2='130' />
           <circle cx='525' cy='130' r='5.5' />
-          <text x='525' y='86' textAnchor='middle'>
+          <text x='525' y='91' textAnchor='middle'>
             Magnus · 2839
           </text>
         </g>
       </svg>
 
       <figcaption className={styles.eloChartCaption}>
-        Where chess players sit on the skill curve. Three years of practice
-        gets you to the front of the bell. The frontier sits way out in the
-        tail, and even Magnus is still finding new things every year.
+        Most chess players sit in the 600&ndash;1000 range. Three years of
+        practice gets you to about 1200 &mdash; past most players, but
+        nowhere near the frontier. Magnus is still finding new things every
+        year.
       </figcaption>
     </figure>
   )

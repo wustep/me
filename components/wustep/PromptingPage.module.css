@@ -1391,23 +1391,236 @@
   margin-bottom: 0;
 }
 
-.recapEquation {
-  margin: 0 0 0.8em !important;
-  padding: 10px 14px;
-  border-radius: 9px;
-  background: var(--fg-color-0, rgba(55, 53, 47, 0.04));
-  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.08));
+/* Equation viz — colored chips, echoes the equation chapter */
+.recapEquationViz {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 14px;
+  margin: 0 0 1em;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.04)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
   font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
-  font-size: 0.94rem;
+  font-size: 0.85rem;
   letter-spacing: 0.02em;
-  text-align: center;
-  color: var(--fg-color, rgb(55, 53, 47));
 }
 
-:global(.dark-mode) .recapEquation {
-  background: rgba(255, 255, 255, 0.04);
+:global(.dark-mode) .recapEquationViz {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
   border-color: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.96);
+}
+
+.recapToken {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.recapTokenLever {
+  background: linear-gradient(
+    135deg,
+    rgba(180, 57, 223, 0.1) 0%,
+    rgba(229, 51, 126, 0.1) 100%
+  );
+  border: 1px solid rgba(180, 57, 223, 0.22);
+  color: #b439df;
+}
+
+:global(.dark-mode) .recapTokenLever {
+  color: #d56df0;
+  background: linear-gradient(
+    135deg,
+    rgba(180, 57, 223, 0.18) 0%,
+    rgba(229, 51, 126, 0.14) 100%
+  );
+  border-color: rgba(180, 57, 223, 0.28);
+}
+
+.recapTokenOutput {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.12) 0%,
+    rgba(6, 182, 212, 0.12) 100%
+  );
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #15803d;
+}
+
+:global(.dark-mode) .recapTokenOutput {
+  color: #4ade80;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.18) 0%,
+    rgba(6, 182, 212, 0.14) 100%
+  );
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Tree viz — small grid with one active + crosshair */
+.recapTreeViz {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 14px 16px;
+  margin: 0 0 1em;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.04)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+:global(.dark-mode) .recapTreeViz {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.recapTreeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 18px);
+  grid-auto-rows: 18px;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.recapTreeCell {
+  display: block;
+  border-radius: 4px;
+  background: var(--fg-color-1, rgba(55, 53, 47, 0.12));
+  transition: background 200ms ease;
+}
+
+:global(.dark-mode) .recapTreeCell {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.recapTreeCellOnAxis {
+  background: rgba(180, 57, 223, 0.18);
+}
+
+.recapTreeCellActive {
+  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  box-shadow: 0 0 0 3px rgba(228, 51, 126, 0.18);
+}
+
+.recapTreeMoves {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+}
+
+:global(.dark-mode) .recapTreeMoves {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.recapTreeMovesActive {
+  font-weight: 600;
+  color: #b439df;
+}
+
+:global(.dark-mode) .recapTreeMovesActive {
+  color: #d56df0;
+}
+
+/* Colleague viz — three steps in a row */
+.recapColleagueViz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 14px;
+  margin: 0 0 1em;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.04)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+:global(.dark-mode) .recapColleagueViz {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.recapColleagueStep {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 7px;
+  background: linear-gradient(
+    135deg,
+    rgba(180, 57, 223, 0.1) 0%,
+    rgba(229, 51, 126, 0.1) 100%
+  );
+  border: 1px solid rgba(180, 57, 223, 0.22);
+  color: #b439df;
+}
+
+:global(.dark-mode) .recapColleagueStep {
+  color: #d56df0;
+  background: linear-gradient(
+    135deg,
+    rgba(180, 57, 223, 0.18) 0%,
+    rgba(229, 51, 126, 0.14) 100%
+  );
+  border-color: rgba(180, 57, 223, 0.28);
+}
+
+.recapColleagueArrow {
+  font-size: 1.05rem;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.4));
+}
+
+:global(.dark-mode) .recapColleagueArrow {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.recapTechniquesIntro {
+  margin: 0 0 0.4em !important;
+  font-style: italic;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+}
+
+:global(.dark-mode) .recapTechniquesIntro {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .recapList {
