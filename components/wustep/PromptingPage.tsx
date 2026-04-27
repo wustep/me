@@ -39,10 +39,10 @@ const FAKE_MODELS = [
 // Layout — chrome that wraps every chapter page
 // ============================================================================
 
-const TOTAL_CHAPTERS = 3
+const TOTAL_CHAPTERS = 4
 
 export type ChapterMeta = {
-  index: 1 | 2 | 3
+  index: 1 | 2 | 3 | 4
   title: string
   prevHref?: string
   prevLabel?: string
@@ -233,7 +233,8 @@ export function IntroContent() {
         </p>
 
         <p className={styles.bodyItem} style={bodyDelay(4)}>
-          Here are three mental models I keep coming back to.
+          Here are three mental models I keep coming back to, plus a small
+          repertoire of techniques worth practicing.
         </p>
 
         <div className={styles.bodyItem} style={bodyDelay(5)}>
@@ -1019,6 +1020,180 @@ export function ColleagueContent() {
         </p>
       </div>
     </ChapterBody>
+  )
+}
+
+export function TechniquesContent() {
+  return (
+    <ChapterBody>
+      <p>
+        If you&apos;ve been writing software with agents for a while, you
+        might be starting to feel competent. Don&apos;t trust the feeling.
+      </p>
+
+      <p>
+        AI coding as a discipline is roughly three years old. Chess is five
+        hundred. Three years of chess gets you to maybe 1200 ELO &mdash; a
+        strong club player at best, basically a novice in the long arc.
+        We&apos;re all about that good at this.
+      </p>
+
+      <p>
+        The dangerous thing about calling yourself an expert too early is
+        that you stop being curious. Your flows feel good enough. You skip
+        the tutorials, skip the bootcamp, ignore the patterns the model just
+        enabled last week. And once that happens, your curve flattens.
+      </p>
+
+      <p>
+        Look at where your workflow was twelve months ago, then project that
+        forward. Most of the meta hasn&apos;t been uncovered yet.
+      </p>
+
+      <hr className={styles.techniqueDivider} />
+
+      <p>
+        Chess players don&apos;t just play games &mdash; they build a
+        repertoire. Openings, tactical patterns (forks, pins, skewers,
+        discovered attacks), endgame studies. None of it magic. All of it
+        learnable, mostly from other players.
+      </p>
+
+      <p>
+        The same vocabulary is forming for prompting. Here are some moves
+        worth adding to yours.
+      </p>
+
+      <Technique
+        index={1}
+        prompt='Give me 5 options, rank them, and name the trade-offs.'
+      >
+        <p>
+          Forces breadth before depth. The model defaults to committing to
+          whatever it proposed first; this resets the floor. Useful for any
+          decision where you don&apos;t already know the right answer
+          &mdash; algorithm choice, library choice, schema design.
+        </p>
+      </Technique>
+
+      <Technique
+        index={2}
+        prompt='What questions should you ask me before starting?'
+      >
+        <p>
+          Surfaces ambiguity instead of guessing. The model returns a list
+          of things it&apos;s uncertain about; you answer them, then it
+          goes. Saves a lot of clarifying turns later. Especially good with
+          smaller, faster models.
+        </p>
+      </Technique>
+
+      <Technique
+        index={3}
+        prompt={`What's the smallest version of this that ships?`}
+      >
+        <p>
+          Scopes down before delegating. Ten lines instead of a thousand.
+          The model is happy to grow scope; you have to ask it to shrink.
+        </p>
+      </Technique>
+
+      <Technique
+        index={4}
+        prompt='Match the style of components/PostCard.tsx.'
+      >
+        <p>
+          Anchor on something concrete &mdash; a path, a screenshot, a doc,
+          a working example. &quot;Match this&quot; beats &quot;make it look
+          nice&quot; by a wide margin. Models are imitators first; give them
+          something to imitate.
+        </p>
+      </Technique>
+
+      <Technique index={5} prompt='What did you skip?'>
+        <p>
+          After a delegated task, ask what was glossed over. The model often
+          owns things you&apos;d have missed &mdash; tests, error handling,
+          edge cases, the &quot;TODO: revisit&quot; it left in line 47.
+          Cheap, two-second move. High hit rate.
+        </p>
+      </Technique>
+
+      <Technique index={6} prompt='Argue against your last suggestion.'>
+        <p>
+          Surfaces hidden assumptions. Especially powerful right after a
+          plan &mdash; much cheaper to discover the plan&apos;s weaknesses
+          now than after you&apos;ve implemented it.
+        </p>
+      </Technique>
+
+      <Technique index={7} prompt='Start a new chat.'>
+        <p>
+          When a thread is going sideways, stop fighting it. Open a fresh
+          context. Carry over the original task and what you learned from
+          the failed turns. It&apos;s almost always faster than threading
+          through accumulated bad context.
+        </p>
+      </Technique>
+
+      <Technique index={8} prompt='How would a senior engineer review this?'>
+        <p>
+          Triggers review-mode output. Different vibe than
+          implementation-mode &mdash; more critical, more &quot;but
+          consider&quot; tradeoffs, more willing to call out things its
+          implementation-self would have left in.
+        </p>
+      </Technique>
+
+      <div className={styles.synthesis}>
+        <h3 className={styles.synthesisHeading}>
+          <span className={styles.synthesisSymbol} aria-hidden='true'>
+            ✦
+          </span>
+          Keep climbing
+        </h3>
+        <p>
+          None of these are hard. All of them compound. The point isn&apos;t
+          to memorize a checklist &mdash; it&apos;s to recognize that there
+          is a craft here, and the craft has shape, and the shape is still
+          being mapped.
+        </p>
+        <p>
+          We&apos;re all about 1200 ELO at this. The good news is that the
+          next 1200 points is wide open.
+        </p>
+      </div>
+    </ChapterBody>
+  )
+}
+
+function Technique({
+  index,
+  prompt,
+  children
+}: {
+  index: number
+  prompt: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={styles.technique}>
+      <div className={styles.techniqueHeader}>
+        <span className={styles.techniqueIndex} aria-hidden='true'>
+          {String(index).padStart(2, '0')}
+        </span>
+        <p className={styles.techniquePrompt}>
+          <span className={styles.techniqueQuoteMark} aria-hidden='true'>
+            “
+          </span>
+          {prompt}
+          <span className={styles.techniqueQuoteMark} aria-hidden='true'>
+            ”
+          </span>
+        </p>
+      </div>
+      <div className={styles.techniqueBody}>{children}</div>
+    </div>
   )
 }
 

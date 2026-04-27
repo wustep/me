@@ -986,6 +986,103 @@
   }
 }
 
+/* ===== Techniques chapter ===== */
+
+.techniqueDivider {
+  border: none;
+  border-top: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  margin: 2em 0;
+}
+
+:global(.dark-mode) .techniqueDivider {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.technique {
+  margin: 2em 0;
+  padding: 1.4em 0 0;
+  border-top: 1px dashed var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+.technique:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+:global(.dark-mode) .technique {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+.techniqueHeader {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 14px;
+  margin-bottom: 0.7em;
+}
+
+.techniqueIndex {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.45));
+  align-self: center;
+}
+
+:global(.dark-mode) .techniqueIndex {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.techniquePrompt {
+  margin: 0;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .techniquePrompt {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.techniqueQuoteMark {
+  display: inline-block;
+  margin: 0 0.05em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.4));
+  font-style: normal;
+}
+
+:global(.dark-mode) .techniqueQuoteMark {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.techniqueBody {
+  padding-left: calc(1.6em + 14px);
+}
+
+.techniqueBody p {
+  margin: 0 0 0.8em;
+  color: var(--fg-color-6, rgba(55, 53, 47, 0.85));
+}
+
+.techniqueBody > :last-child {
+  margin-bottom: 0;
+}
+
+:global(.dark-mode) .techniqueBody p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+@media (max-width: 600px) {
+  .techniqueBody {
+    padding-left: 0;
+  }
+}
+
 /* Example prompt — "from the wild" snippet inside a Lever */
 
 .examplePrompt {
