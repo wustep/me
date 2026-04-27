@@ -1031,10 +1031,13 @@ export function TechniquesContent() {
         might be starting to feel competent. Don&apos;t trust the feeling.
       </p>
 
+      <EloChart />
+
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three
         years of chess gets you to maybe 1200 ELO &mdash; a strong club
-        player at best. That&apos;s where we all are with this skill.
+        player at best, basically a novice in the long arc. We&apos;re all
+        about that good at this skill.
       </p>
 
       <p>
@@ -1322,6 +1325,140 @@ function RecapItem({
       </header>
       <div className={styles.recapBody}>{children}</div>
     </section>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────
+ * ELO CHART STORYBOARD
+ *
+ *    0ms   waiting for IntersectionObserver (threshold 0.4)
+ *  200ms   density curve fill fades in
+ *  300ms   density curve stroke draws left → right (1400ms)
+ * 1400ms   axis ticks + tier labels fade in
+ * 1600ms   "You · 1200" marker fades in (line + dot + label)
+ * 1900ms   gap arrow draws between the two markers
+ * 2200ms   "Magnus · 2839" marker fades in
+ * 2600ms   caption fades in below
+ * ───────────────────────────────────────────────────────── */
+
+function EloChart() {
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.35 })
+
+  return (
+    <figure
+      ref={ref}
+      className={`${styles.eloChart} ${inView ? styles.eloChartVisible : ''}`}
+    >
+      <svg
+        viewBox='0 0 600 180'
+        className={styles.eloChartSvg}
+        role='img'
+        aria-label="Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2839 ELO, far out in the right tail."
+        preserveAspectRatio='xMidYMid meet'
+      >
+        <defs>
+          <linearGradient id='eloFill' x1='0' x2='0' y1='0' y2='1'>
+            <stop offset='0%' stopColor='#b439df' stopOpacity='0.35' />
+            <stop offset='100%' stopColor='#e5337e' stopOpacity='0.04' />
+          </linearGradient>
+          <linearGradient id='eloStroke' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#b439df' />
+            <stop offset='100%' stopColor='#e5337e' />
+          </linearGradient>
+        </defs>
+
+        {/* Density curve (filled area) */}
+        <path
+          d='M 40,108 C 80,108 100,80 125,55 C 145,40 160,33 170,33 L 210,33 C 230,33 240,55 255,55 C 285,75 300,90 320,98 C 350,110 370,118 385,122 C 430,127 450,129 475,130 L 560,130 L 40,130 Z'
+          fill='url(#eloFill)'
+          className={styles.eloChartCurveFill}
+        />
+
+        {/* Density curve (stroke that draws in) */}
+        <path
+          d='M 40,108 C 80,108 100,80 125,55 C 145,40 160,33 170,33 L 210,33 C 230,33 240,55 255,55 C 285,75 300,90 320,98 C 350,110 370,118 385,122 C 430,127 450,129 475,130 L 560,130'
+          fill='none'
+          stroke='url(#eloStroke)'
+          strokeWidth='1.75'
+          strokeLinecap='round'
+          pathLength={100}
+          className={styles.eloChartCurveStroke}
+        />
+
+        {/* Axis line */}
+        <line
+          x1='40'
+          y1='130'
+          x2='560'
+          y2='130'
+          className={styles.eloChartAxis}
+        />
+
+        {/* Tier ticks */}
+        <g className={styles.eloChartTicks}>
+          <line x1='40' y1='130' x2='40' y2='135' />
+          <line x1='170' y1='130' x2='170' y2='135' />
+          <line x1='300' y1='130' x2='300' y2='135' />
+          <line x1='430' y1='130' x2='430' y2='135' />
+          <line x1='560' y1='130' x2='560' y2='135' />
+        </g>
+
+        {/* Tier labels */}
+        <g className={styles.eloChartTierLabels}>
+          <text x='40' y='150' textAnchor='start'>
+            600
+          </text>
+          <text x='300' y='150' textAnchor='middle'>
+            1800
+          </text>
+          <text x='560' y='150' textAnchor='end'>
+            3000
+          </text>
+        </g>
+
+        {/* Gap arrow between markers */}
+        <g className={styles.eloChartGap}>
+          <line
+            x1='178'
+            y1='28'
+            x2='517'
+            y2='95'
+            strokeDasharray='2 4'
+          />
+          <text x='347' y='52' textAnchor='middle'>
+            a long way to go
+          </text>
+        </g>
+
+        {/* You marker — ELO ~1200 (x=170) */}
+        <g
+          className={`${styles.eloChartMarker} ${styles.eloChartMarkerYou}`}
+        >
+          <line x1='170' y1='30' x2='170' y2='130' />
+          <circle cx='170' cy='33' r='5.5' />
+          <text x='170' y='20' textAnchor='middle'>
+            You · 1200
+          </text>
+        </g>
+
+        {/* Magnus marker — ELO 2839 (x=525) */}
+        <g
+          className={`${styles.eloChartMarker} ${styles.eloChartMarkerMagnus}`}
+        >
+          <line x1='525' y1='95' x2='525' y2='130' />
+          <circle cx='525' cy='130' r='5.5' />
+          <text x='525' y='86' textAnchor='middle'>
+            Magnus · 2839
+          </text>
+        </g>
+      </svg>
+
+      <figcaption className={styles.eloChartCaption}>
+        Where chess players sit on the skill curve. Three years of practice
+        gets you to the front of the bell. The frontier sits way out in the
+        tail, and even Magnus is still finding new things every year.
+      </figcaption>
+    </figure>
   )
 }
 
