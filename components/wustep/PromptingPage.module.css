@@ -988,59 +988,55 @@
 
 /* ===== Techniques chapter ===== */
 
-.techniqueDivider {
-  border: none;
-  border-top: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
-  margin: 2em 0;
+.techniqueGroup {
+  margin: 2.6em 0 0;
 }
 
-:global(.dark-mode) .techniqueDivider {
-  border-top-color: rgba(255, 255, 255, 0.08);
+.techniqueGroupHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 1.3em;
+  padding-bottom: 0.5em;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  border-bottom: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+:global(.dark-mode) .techniqueGroupHeading {
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.techniqueGroupHeadingMark {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #b439df 0%, #e5337e 100%);
+}
+
+.techniqueGroupBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6em;
 }
 
 .technique {
-  margin: 2em 0;
-  padding: 1.4em 0 0;
-  border-top: 1px dashed var(--fg-color-1, rgba(55, 53, 47, 0.1));
-}
-
-.technique:first-of-type {
-  border-top: none;
-  padding-top: 0;
-}
-
-:global(.dark-mode) .technique {
-  border-top-color: rgba(255, 255, 255, 0.07);
-}
-
-.techniqueHeader {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
-  column-gap: 14px;
-  margin-bottom: 0.7em;
-}
-
-.techniqueIndex {
-  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--fg-color-3, rgba(55, 53, 47, 0.45));
-  align-self: center;
-}
-
-:global(.dark-mode) .techniqueIndex {
-  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
 }
 
 .techniquePrompt {
-  margin: 0;
+  margin: 0 0 0.5em;
   font-family: var(--font-serif, var(--font-sans));
-  font-size: 1.25rem;
+  font-size: 1.22rem;
   font-weight: 500;
   font-style: italic;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: -0.005em;
   color: var(--fg-color, rgb(55, 53, 47));
 }
@@ -1060,12 +1056,8 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-.techniqueBody {
-  padding-left: calc(1.6em + 14px);
-}
-
 .techniqueBody p {
-  margin: 0 0 0.8em;
+  margin: 0 0 0.7em;
   color: var(--fg-color-6, rgba(55, 53, 47, 0.85));
 }
 
@@ -1077,10 +1069,243 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-@media (max-width: 600px) {
-  .techniqueBody {
-    padding-left: 0;
-  }
+/* ===== Recap chapter ===== */
+
+.recapItem {
+  margin: 2.4em 0;
+  padding-top: 1.6em;
+  border-top: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+.recapItem:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 1.5em;
+}
+
+:global(.dark-mode) .recapItem {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.recapHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 0.7em;
+}
+
+.recapIndex {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.45));
+  align-self: center;
+}
+
+:global(.dark-mode) .recapIndex {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.recapTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg-color, rgb(55, 53, 47)) !important;
+  text-decoration: none !important;
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  transition: color 200ms ease;
+}
+
+:global(.dark-mode) .recapTitle {
+  color: rgba(255, 255, 255, 0.96) !important;
+}
+
+.recapTitleArrow {
+  font-size: 0.85em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.4));
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.recapTitle:hover .recapTitleArrow {
+  transform: translateX(4px);
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .recapTitle:hover .recapTitleArrow {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.recapBody p {
+  margin: 0 0 0.7em;
+}
+
+.recapBody > :last-child {
+  margin-bottom: 0;
+}
+
+.recapEquation {
+  margin: 0 0 0.8em !important;
+  padding: 10px 14px;
+  border-radius: 9px;
+  background: var(--fg-color-0, rgba(55, 53, 47, 0.04));
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.08));
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.94rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .recapEquation {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.recapList {
+  margin: 0.4em 0 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.recapList li {
+  list-style: '— ';
+  padding-left: 0.3em;
+  font-family: var(--font-serif, var(--font-sans));
+  font-style: italic;
+  color: var(--fg-color-6, rgba(55, 53, 47, 0.85));
+}
+
+.recapList li::marker {
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.4));
+  font-style: normal;
+}
+
+:global(.dark-mode) .recapList li {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.recapList code {
+  font-style: normal;
+}
+
+/* "Lift them into skills" closing block */
+
+.skillsBlock {
+  margin: 3em 0 0;
+  padding: 1.5em 1.6em;
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.04)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+:global(.dark-mode) .skillsBlock {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.skillsHeading {
+  margin: 0 0 0.6em;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .skillsHeading {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.skillsBlock p {
+  margin: 0 0 0.9em;
+}
+
+.skillsLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0.6em 0 1em;
+}
+
+.skillsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.16)) !important;
+  border-radius: 999px;
+  background: var(--bg-color, #fff) !important;
+  background-image: none !important;
+  color: var(--fg-color, rgb(55, 53, 47)) !important;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition:
+    border-color 160ms ease,
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.skillsLink:hover {
+  border-color: rgba(180, 57, 223, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+:global(.dark-mode) .skillsLink {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+:global(.dark-mode) .skillsLink:hover {
+  border-color: rgba(180, 57, 223, 0.5) !important;
+}
+
+.skillsLinkArrow {
+  font-size: 0.85em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+  transition: transform 200ms ease;
+}
+
+.skillsLink:hover .skillsLinkArrow {
+  transform: translate(2px, -2px);
+}
+
+.skillsExample {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--fg-color-0, rgba(55, 53, 47, 0.05));
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.08));
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--fg-color-6, rgba(55, 53, 47, 0.85));
+  white-space: pre-wrap;
+}
+
+:global(.dark-mode) .skillsExample {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Example prompt — "from the wild" snippet inside a Lever */

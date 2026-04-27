@@ -39,10 +39,10 @@ const FAKE_MODELS = [
 // Layout — chrome that wraps every chapter page
 // ============================================================================
 
-const TOTAL_CHAPTERS = 4
+const TOTAL_CHAPTERS = 5
 
 export type ChapterMeta = {
-  index: 1 | 2 | 3 | 4
+  index: 1 | 2 | 3 | 4 | 5
   title: string
   prevHref?: string
   prevLabel?: string
@@ -1032,118 +1032,164 @@ export function TechniquesContent() {
       </p>
 
       <p>
-        AI coding as a discipline is roughly three years old. Chess is five
-        hundred. Three years of chess gets you to maybe 1200 ELO &mdash; a
-        strong club player at best, basically a novice in the long arc.
-        We&apos;re all about that good at this.
+        AI coding is roughly three years old. Chess is five hundred. Three
+        years of chess gets you to maybe 1200 ELO &mdash; a strong club
+        player at best. That&apos;s where we all are with this skill.
       </p>
 
       <p>
-        The dangerous thing about calling yourself an expert too early is
-        that you stop being curious. Your flows feel good enough. You skip
-        the tutorials, skip the bootcamp, ignore the patterns the model just
-        enabled last week. And once that happens, your curve flattens.
+        The danger of feeling expert too early is that your curve flattens.
+        You stop reading tutorials, skip the bootcamp, ignore the patterns
+        the model just enabled last week. Look at where your workflow was
+        twelve months ago, then project that forward &mdash; most of the
+        meta hasn&apos;t been uncovered yet.
       </p>
-
-      <p>
-        Look at where your workflow was twelve months ago, then project that
-        forward. Most of the meta hasn&apos;t been uncovered yet.
-      </p>
-
-      <hr className={styles.techniqueDivider} />
 
       <p>
         Chess players don&apos;t just play games &mdash; they build a
         repertoire. Openings, tactical patterns (forks, pins, skewers,
-        discovered attacks), endgame studies. None of it magic. All of it
-        learnable, mostly from other players.
+        discovered attacks), endgame studies. None of it magic; all of it
+        learnable, mostly from other players. The same vocabulary is forming
+        for prompting. Here are some moves worth adding to yours.
       </p>
 
-      <p>
-        The same vocabulary is forming for prompting. Here are some moves
-        worth adding to yours.
-      </p>
+      <TechniqueGroup heading='Before you start'>
+        <Technique prompt='What questions should you ask me before starting?'>
+          <p>
+            Surfaces ambiguity instead of guessing. The model returns a list
+            of things it&apos;s uncertain about; you answer them, then it
+            goes. Saves a lot of clarifying turns later. Especially good
+            with smaller, faster models.
+          </p>
+        </Technique>
 
-      <Technique
-        index={1}
-        prompt='Give me 5 options, rank them, and name the trade-offs.'
-      >
-        <p>
-          Forces breadth before depth. The model defaults to committing to
-          whatever it proposed first; this resets the floor. Useful for any
-          decision where you don&apos;t already know the right answer
-          &mdash; algorithm choice, library choice, schema design.
-        </p>
-      </Technique>
+        <Technique
+          prompt={`What's the smallest version of this that ships?`}
+        >
+          <p>
+            Scopes down before delegating. Ten lines instead of a thousand.
+            The model is happy to grow scope; you have to ask it to shrink.
+          </p>
+        </Technique>
+      </TechniqueGroup>
 
-      <Technique
-        index={2}
-        prompt='What questions should you ask me before starting?'
-      >
-        <p>
-          Surfaces ambiguity instead of guessing. The model returns a list
-          of things it&apos;s uncertain about; you answer them, then it
-          goes. Saves a lot of clarifying turns later. Especially good with
-          smaller, faster models.
-        </p>
-      </Technique>
+      <TechniqueGroup heading='Open the options'>
+        <Technique prompt='Give me 3 options, rank them, name the trade-offs.'>
+          <p>
+            Forces breadth before depth. The model defaults to its first
+            plausible idea; this resets the floor. Useful for any decision
+            where you don&apos;t already know the right answer &mdash;
+            algorithm choice, library choice, schema design.
+          </p>
+        </Technique>
 
-      <Technique
-        index={3}
-        prompt={`What's the smallest version of this that ships?`}
-      >
-        <p>
-          Scopes down before delegating. Ten lines instead of a thousand.
-          The model is happy to grow scope; you have to ask it to shrink.
-        </p>
-      </Technique>
+        <Technique prompt='Argue against your last suggestion.'>
+          <p>
+            Surfaces hidden assumptions. Especially useful right after a
+            plan &mdash; much cheaper to discover the plan&apos;s weaknesses
+            now than after you&apos;ve implemented it.
+          </p>
+        </Technique>
+      </TechniqueGroup>
 
-      <Technique
-        index={4}
-        prompt='Match the style of components/PostCard.tsx.'
-      >
-        <p>
-          Anchor on something concrete &mdash; a path, a screenshot, a doc,
-          a working example. &quot;Match this&quot; beats &quot;make it look
-          nice&quot; by a wide margin. Models are imitators first; give them
-          something to imitate.
-        </p>
-      </Technique>
+      <TechniqueGroup heading='Pressure-test it'>
+        <Technique prompt='What did you skip?'>
+          <p>
+            After a delegated task, ask what was glossed over. The model
+            often owns things you&apos;d have missed &mdash; tests, error
+            handling, the &quot;TODO: revisit&quot; it left in line 47.
+            Cheap two-second move, high hit rate.
+          </p>
+        </Technique>
 
-      <Technique index={5} prompt='What did you skip?'>
-        <p>
-          After a delegated task, ask what was glossed over. The model often
-          owns things you&apos;d have missed &mdash; tests, error handling,
-          edge cases, the &quot;TODO: revisit&quot; it left in line 47.
-          Cheap, two-second move. High hit rate.
-        </p>
-      </Technique>
+        <Technique prompt='How would a senior engineer review this?'>
+          <p>
+            Triggers review-mode output. Different vibe than
+            implementation-mode &mdash; more critical, more &quot;but
+            consider&quot; tradeoffs, more willing to call out things its
+            implementation-self would have left in.
+          </p>
+        </Technique>
+      </TechniqueGroup>
 
-      <Technique index={6} prompt='Argue against your last suggestion.'>
-        <p>
-          Surfaces hidden assumptions. Especially powerful right after a
-          plan &mdash; much cheaper to discover the plan&apos;s weaknesses
-          now than after you&apos;ve implemented it.
-        </p>
-      </Technique>
+      <TechniqueGroup heading='Pay it forward'>
+        <Technique prompt='Match the style of components/PostCard.tsx.'>
+          <p>
+            Anchor on something concrete &mdash; a path, a screenshot, a
+            doc, a working example. &quot;Match this&quot; beats &quot;make
+            it look nice&quot; by a wide margin. Models are imitators
+            first; give them something to imitate.
+          </p>
+        </Technique>
 
-      <Technique index={7} prompt='Start a new chat.'>
-        <p>
-          When a thread is going sideways, stop fighting it. Open a fresh
-          context. Carry over the original task and what you learned from
-          the failed turns. It&apos;s almost always faster than threading
-          through accumulated bad context.
-        </p>
-      </Technique>
+        <Technique prompt='Update CLAUDE.md with what you just learned.'>
+          <p>
+            Capture the lesson in the project rules so the next agent (or
+            future-you) doesn&apos;t have to relearn it. Five minutes of
+            investment that pays back forever.
+          </p>
+        </Technique>
+      </TechniqueGroup>
 
-      <Technique index={8} prompt='How would a senior engineer review this?'>
+      <div className={styles.skillsBlock}>
+        <h3 className={styles.skillsHeading}>Lift them into skills</h3>
         <p>
-          Triggers review-mode output. Different vibe than
-          implementation-mode &mdash; more critical, more &quot;but
-          consider&quot; tradeoffs, more willing to call out things its
-          implementation-self would have left in.
+          Once you find a move that works, stop typing it manually. Every
+          serious agent tool lets you write project-level instructions that
+          the agent reads on every task &mdash; you write the lesson once,
+          the agent has it forever.
         </p>
-      </Technique>
+        <div className={styles.skillsLinks}>
+          <a
+            href='https://docs.claude.com/en/docs/claude-code/skills'
+            className={styles.skillsLink}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Claude Code · Skills
+            <span className={styles.skillsLinkArrow} aria-hidden='true'>
+              ↗
+            </span>
+          </a>
+          <a
+            href='https://docs.cursor.com/en/context/rules'
+            className={styles.skillsLink}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Cursor · Rules
+            <span className={styles.skillsLinkArrow} aria-hidden='true'>
+              ↗
+            </span>
+          </a>
+          <a
+            href='https://github.com/openai/codex#agentsmd'
+            className={styles.skillsLink}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Codex · AGENTS.md
+            <span className={styles.skillsLinkArrow} aria-hidden='true'>
+              ↗
+            </span>
+          </a>
+        </div>
+        <p>
+          The techniques above turn into one-liners in that file. A useful
+          rules file looks something like:
+        </p>
+        <pre className={styles.skillsExample}>
+{`- Before any non-trivial task, ask what's unclear before writing code.
+- When asked to plan, propose 3 options ranked by trade-off.
+- After delegating, list what was skipped or glossed over.
+- Match the patterns in components/PostCard.tsx for new card UIs.`}
+        </pre>
+        <p>
+          Now those moves are the agent&apos;s defaults instead of yours.
+          You stop carrying the techniques in your head and start
+          accumulating an edge that compounds with every task.
+        </p>
+      </div>
 
       <div className={styles.synthesis}>
         <h3 className={styles.synthesisHeading}>
@@ -1153,45 +1199,168 @@ export function TechniquesContent() {
           Keep climbing
         </h3>
         <p>
-          None of these are hard. All of them compound. The point isn&apos;t
-          to memorize a checklist &mdash; it&apos;s to recognize that there
-          is a craft here, and the craft has shape, and the shape is still
-          being mapped.
+          None of these are hard. All of them compound. The point
+          isn&apos;t to memorize a checklist &mdash; it&apos;s to recognize
+          there&apos;s a craft here, the craft has shape, and the shape is
+          still being mapped.
         </p>
         <p>
-          We&apos;re all about 1200 ELO at this. The good news is that the
-          next 1200 points is wide open.
+          We&apos;re all about 1200 ELO at this. The next 1200 points is
+          wide open.
         </p>
       </div>
     </ChapterBody>
   )
 }
 
-function Technique({
+export function RecapContent() {
+  return (
+    <ChapterBody>
+      <p>
+        Five reminders before you go. Skim this on the way out, or save it
+        for later when something feels off.
+      </p>
+
+      <RecapItem index={1} title='The equation' href='/prompting/equation'>
+        <p className={styles.recapEquation}>
+          (TOOL + MODEL) × (PROMPT + CONTEXT) → OUTPUT
+        </p>
+        <p>
+          When the output disappoints, walk the four levers. Better tool.
+          Better model. Better prompt. Better context. The biggest unlock
+          is almost always context.
+        </p>
+      </RecapItem>
+
+      <RecapItem index={2} title='The tree' href='/prompting/tree'>
+        <p>
+          Every change lives somewhere on a 2D map: <em>breadth</em> (which
+          area of code) × <em>depth</em> (how zoomed in). At any node,
+          three moves: <strong>ask</strong>, <strong>plan</strong>,{' '}
+          <strong>delegate</strong>. Most non-trivial work moves through
+          all three.
+        </p>
+      </RecapItem>
+
+      <RecapItem
+        index={3}
+        title='The colleague'
+        href='/prompting/colleague'
+      >
+        <p>
+          Treat the agent as a colleague &mdash; a fast, knowledgeable
+          junior who only sees what you&apos;ve shown them. Onboard,
+          brief, review. The discipline gets <em>more</em> important, not
+          less, as the models get smarter.
+        </p>
+      </RecapItem>
+
+      <RecapItem
+        index={4}
+        title='Techniques'
+        href='/prompting/techniques'
+      >
+        <p>Eight moves worth practicing:</p>
+        <ul className={styles.recapList}>
+          <li>What questions should you ask me before starting?</li>
+          <li>What&apos;s the smallest version of this that ships?</li>
+          <li>Give me 3 options, rank them, name the trade-offs.</li>
+          <li>Argue against your last suggestion.</li>
+          <li>What did you skip?</li>
+          <li>How would a senior engineer review this?</li>
+          <li>
+            Match the style of <code>components/PostCard.tsx</code>.
+          </li>
+          <li>Update CLAUDE.md with what you just learned.</li>
+        </ul>
+      </RecapItem>
+
+      <div className={styles.synthesis}>
+        <h3 className={styles.synthesisHeading}>
+          <span className={styles.synthesisSymbol} aria-hidden='true'>
+            ✦
+          </span>
+          One more thing
+        </h3>
+        <p>
+          We&apos;re all early in this. Three years in. Maybe 1200 ELO. The
+          next 1200 is wide open &mdash; and the most useful thing you can
+          do is keep paying attention while everyone else assumes
+          they&apos;ve figured it out.
+        </p>
+        <p>
+          Thanks for reading. Go talk to a machine.
+        </p>
+      </div>
+    </ChapterBody>
+  )
+}
+
+function RecapItem({
   index,
-  prompt,
+  title,
+  href,
   children
 }: {
   index: number
+  title: string
+  href: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className={styles.recapItem}>
+      <header className={styles.recapHeader}>
+        <span className={styles.recapIndex} aria-hidden='true'>
+          {String(index).padStart(2, '0')}
+        </span>
+        <Link href={href} className={styles.recapTitle}>
+          {title}
+          <span className={styles.recapTitleArrow} aria-hidden='true'>
+            →
+          </span>
+        </Link>
+      </header>
+      <div className={styles.recapBody}>{children}</div>
+    </section>
+  )
+}
+
+function TechniqueGroup({
+  heading,
+  children
+}: {
+  heading: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className={styles.techniqueGroup}>
+      <h3 className={styles.techniqueGroupHeading}>
+        <span className={styles.techniqueGroupHeadingMark} aria-hidden='true' />
+        {heading}
+      </h3>
+      <div className={styles.techniqueGroupBody}>{children}</div>
+    </section>
+  )
+}
+
+function Technique({
+  prompt,
+  children
+}: {
   prompt: string
   children: React.ReactNode
 }) {
   return (
     <div className={styles.technique}>
-      <div className={styles.techniqueHeader}>
-        <span className={styles.techniqueIndex} aria-hidden='true'>
-          {String(index).padStart(2, '0')}
+      <p className={styles.techniquePrompt}>
+        <span className={styles.techniqueQuoteMark} aria-hidden='true'>
+          “
         </span>
-        <p className={styles.techniquePrompt}>
-          <span className={styles.techniqueQuoteMark} aria-hidden='true'>
-            “
-          </span>
-          {prompt}
-          <span className={styles.techniqueQuoteMark} aria-hidden='true'>
-            ”
-          </span>
-        </p>
-      </div>
+        {prompt}
+        <span className={styles.techniqueQuoteMark} aria-hidden='true'>
+          ”
+        </span>
+      </p>
       <div className={styles.techniqueBody}>{children}</div>
     </div>
   )
