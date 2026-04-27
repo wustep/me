@@ -247,6 +247,259 @@
   filter: blur(0);
 }
 
+/* ===== Begin CTA on intro page ===== */
+
+.beginCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0.6em;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: var(--fg-color, rgb(55, 53, 47));
+  color: var(--bg-color, #fff);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none !important;
+  border: none !important;
+  background-image: none !important;
+  transition:
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 220ms ease;
+}
+
+.beginCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px -10px rgba(15, 15, 15, 0.4);
+}
+
+:global(.dark-mode) .beginCta {
+  background: rgba(255, 255, 255, 0.95);
+  color: rgb(30, 32, 35);
+}
+
+:global(.dark-mode) .beginCta:hover {
+  box-shadow: 0 8px 22px -10px rgba(0, 0, 0, 0.6);
+}
+
+.beginCtaArrow {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.beginCta:hover .beginCtaArrow {
+  transform: translateX(3px);
+}
+
+/* ===== Chapter header (top of every chapter page) ===== */
+
+.chapterHeader {
+  margin-bottom: 1.5em;
+}
+
+.chapterParentTitle {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  text-decoration: none !important;
+  border: none !important;
+  background: none !important;
+  background-image: none !important;
+  transition: color 200ms ease;
+}
+
+.chapterParentTitle:hover {
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .chapterParentTitle {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+:global(.dark-mode) .chapterParentTitle:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.chapterMeta {
+  margin-top: 1.6em;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+}
+
+.chapterMetaIndex {
+  font-weight: 600;
+}
+
+.chapterMetaSep {
+  opacity: 0.5;
+}
+
+.chapterMetaTotal {
+  font-weight: 500;
+}
+
+.chapterTitle {
+  margin: 0.25em 0 0;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .chapterTitle {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+/* ===== Chapter body (mounts faded, fades in once mounted) ===== */
+
+.chapterBody {
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(4px);
+  transition:
+    opacity 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    filter 700ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.chapterBodyVisible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* ===== Chapter nav (prev/next at bottom of every chapter page) ===== */
+
+.chapterNav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 4em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+}
+
+:global(.dark-mode) .chapterNav {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.chapterNavSlot {
+  display: flex;
+}
+
+.chapterNavSlot:last-child {
+  justify-content: flex-end;
+}
+
+.chapterNavLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: inherit;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chapterNavLink:hover {
+  background: var(--fg-color-0, rgba(55, 53, 47, 0.05)) !important;
+  border-color: var(--fg-color-1, rgba(55, 53, 47, 0.12)) !important;
+}
+
+:global(.dark-mode) .chapterNavLink:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.chapterNavLinkNext {
+  text-align: right;
+}
+
+.chapterNavBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.chapterNavDirection {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+}
+
+.chapterNavLabel {
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:global(.dark-mode) .chapterNavLabel {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.chapterNavArrow {
+  font-size: 1.2rem;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chapterNavLink:hover .chapterNavArrow {
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .chapterNavLink:hover .chapterNavArrow {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.chapterNavLink:hover :first-child:is(.chapterNavArrow) {
+  transform: translateX(-3px);
+}
+
+.chapterNavLinkNext:hover .chapterNavArrow {
+  transform: translateX(3px);
+}
+
+/* prefers-reduced-motion override */
+@media (prefers-reduced-motion: reduce) {
+  .chapterBody {
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .beginCta,
+  .beginCtaArrow,
+  .chapterNavArrow,
+  .chapterNavLink {
+    transition: none;
+  }
+}
+
 .prose strong {
   font-weight: 600;
   color: var(--fg-color, rgb(55, 53, 47));

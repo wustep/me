@@ -35,24 +35,34 @@ const FAKE_MODELS = [
   { name: 'DeepSeek V9', tag: 'probably AGI' }
 ]
 
-export function PromptingPage() {
+// ============================================================================
+// Layout — chrome that wraps every chapter page
+// ============================================================================
+
+const TOTAL_CHAPTERS = 3
+
+export type ChapterMeta = {
+  index: 1 | 2 | 3
+  title: string
+  prevHref?: string
+  prevLabel?: string
+  nextHref?: string
+  nextLabel?: string
+}
+
+export function PromptingLayout({
+  chapter,
+  children
+}: {
+  chapter?: ChapterMeta
+  children: React.ReactNode
+}) {
   const { isDarkMode, toggleDarkMode } = useDarkMode()
   const [hasMounted, setHasMounted] = React.useState(false)
-  const [revealed, setRevealed] = React.useState(false)
-  const prefersReducedMotion = usePrefersReducedMotion()
 
   React.useEffect(() => {
     setHasMounted(true)
   }, [])
-
-  React.useEffect(() => {
-    if (prefersReducedMotion) {
-      setRevealed(true)
-      return
-    }
-    const id = window.setTimeout(() => setRevealed(true), THINKING_DURATION_MS)
-    return () => window.clearTimeout(id)
-  }, [prefersReducedMotion])
 
   return (
     <>
@@ -81,65 +91,159 @@ export function PromptingPage() {
         </header>
 
         <main className={styles.page}>
-          <h1 className={styles.titleSlot} aria-label={TITLE}>
-            <span
-              className={`${styles.thinking} ${revealed ? styles.thinkingHidden : ''}`}
-              aria-hidden={revealed}
-            >
-              <SparkleIcon />
-              <span className={styles.thinkingText}>Thinking</span>
-            </span>
-
-            <span
-              className={`${styles.title} ${revealed ? styles.titleVisible : ''}`}
-              aria-hidden={!revealed}
-            >
-              {TITLE_WORDS.map((word, i) => (
-                <React.Fragment key={`${word}-${i}`}>
-                  <span
-                    className={styles.titleWord}
-                    style={{
-                      transitionDelay: revealed
-                        ? `${i * PER_WORD_STAGGER_MS}ms`
-                        : '0ms'
-                    }}
-                  >
-                    {word}
-                  </span>
-                  {i < TITLE_WORDS.length - 1 ? ' ' : null}
-                </React.Fragment>
-              ))}
-            </span>
-          </h1>
-
-          <div
-            className={`${styles.prose} ${revealed ? styles.bodyVisible : ''}`}
-          >
-            <p className={styles.bodyItem} style={bodyDelay(0)}>
-              It's 2026, and more and more of coding looks like this:
-            </p>
-
-            <div className={styles.bodyItem} style={bodyDelay(1)}>
-              <PromptInputDemo start={revealed} />
-            </div>
-
-            <p className={styles.bodyItem} style={bodyDelay(2)}>
-              You don't write code so much as describe what you want and watch
-              it appear. Less typing semicolons; more describing intent.
-              Engineering, increasingly, is the act of talking to machines.
-            </p>
-
-            <p className={styles.bodyItem} style={bodyDelay(3)}>
-             So here's the question: what does it mean to be good at talking to Claude, Codex, or whatever model comes next?
-            </p>
-
-            <p className={styles.bodyItem} style={bodyDelay(4)}>
-              Here are three mental models I keep coming back to.
-            </p>
-          </div>
-
-          <MentalModels />
+          {chapter && <ChapterHeader chapter={chapter} />}
+          {children}
+          {chapter && <ChapterNav chapter={chapter} />}
         </main>
+      </div>
+    </>
+  )
+}
+
+function ChapterHeader({ chapter }: { chapter: ChapterMeta }) {
+  return (
+    <header className={styles.chapterHeader}>
+      <Link href='/prompting' className={styles.chapterParentTitle}>
+        How to talk to coding agents
+      </Link>
+      <div className={styles.chapterMeta}>
+        <span className={styles.chapterMetaIndex}>
+          Chapter {String(chapter.index).padStart(2, '0')}
+        </span>
+        <span className={styles.chapterMetaSep}>of</span>
+        <span className={styles.chapterMetaTotal}>
+          {String(TOTAL_CHAPTERS).padStart(2, '0')}
+        </span>
+      </div>
+      <h1 className={styles.chapterTitle}>{chapter.title}</h1>
+    </header>
+  )
+}
+
+function ChapterNav({ chapter }: { chapter: ChapterMeta }) {
+  return (
+    <nav className={styles.chapterNav} aria-label='Chapter navigation'>
+      <div className={styles.chapterNavSlot}>
+        {chapter.prevHref && chapter.prevLabel && (
+          <Link href={chapter.prevHref} className={styles.chapterNavLink}>
+            <span className={styles.chapterNavArrow} aria-hidden='true'>
+              ←
+            </span>
+            <span className={styles.chapterNavBody}>
+              <span className={styles.chapterNavDirection}>Previous</span>
+              <span className={styles.chapterNavLabel}>
+                {chapter.prevLabel}
+              </span>
+            </span>
+          </Link>
+        )}
+      </div>
+      <div className={styles.chapterNavSlot}>
+        {chapter.nextHref && chapter.nextLabel && (
+          <Link
+            href={chapter.nextHref}
+            className={`${styles.chapterNavLink} ${styles.chapterNavLinkNext}`}
+          >
+            <span className={styles.chapterNavBody}>
+              <span className={styles.chapterNavDirection}>Next</span>
+              <span className={styles.chapterNavLabel}>
+                {chapter.nextLabel}
+              </span>
+            </span>
+            <span className={styles.chapterNavArrow} aria-hidden='true'>
+              →
+            </span>
+          </Link>
+        )}
+      </div>
+    </nav>
+  )
+}
+
+// ============================================================================
+// Intro page content — animated title + body intro + Begin CTA
+// ============================================================================
+
+export function IntroContent() {
+  const [revealed, setRevealed] = React.useState(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  React.useEffect(() => {
+    if (prefersReducedMotion) {
+      setRevealed(true)
+      return
+    }
+    const id = window.setTimeout(() => setRevealed(true), THINKING_DURATION_MS)
+    return () => window.clearTimeout(id)
+  }, [prefersReducedMotion])
+
+  return (
+    <>
+      <h1 className={styles.titleSlot} aria-label={TITLE}>
+        <span
+          className={`${styles.thinking} ${revealed ? styles.thinkingHidden : ''}`}
+          aria-hidden={revealed}
+        >
+          <SparkleIcon />
+          <span className={styles.thinkingText}>Thinking</span>
+        </span>
+
+        <span
+          className={`${styles.title} ${revealed ? styles.titleVisible : ''}`}
+          aria-hidden={!revealed}
+        >
+          {TITLE_WORDS.map((word, i) => (
+            <React.Fragment key={`${word}-${i}`}>
+              <span
+                className={styles.titleWord}
+                style={{
+                  transitionDelay: revealed
+                    ? `${i * PER_WORD_STAGGER_MS}ms`
+                    : '0ms'
+                }}
+              >
+                {word}
+              </span>
+              {i < TITLE_WORDS.length - 1 ? ' ' : null}
+            </React.Fragment>
+          ))}
+        </span>
+      </h1>
+
+      <div
+        className={`${styles.prose} ${revealed ? styles.bodyVisible : ''}`}
+      >
+        <p className={styles.bodyItem} style={bodyDelay(0)}>
+          It&apos;s 2026, and more and more of coding looks like this:
+        </p>
+
+        <div className={styles.bodyItem} style={bodyDelay(1)}>
+          <PromptInputDemo start={revealed} />
+        </div>
+
+        <p className={styles.bodyItem} style={bodyDelay(2)}>
+          You don&apos;t write code so much as describe what you want and watch
+          it appear. Less typing semicolons; more describing intent.
+          Engineering, increasingly, is the act of talking to machines.
+        </p>
+
+        <p className={styles.bodyItem} style={bodyDelay(3)}>
+          So here&apos;s the question: what does it mean to be good at talking
+          to Claude, Codex, or whatever model comes next?
+        </p>
+
+        <p className={styles.bodyItem} style={bodyDelay(4)}>
+          Here are three mental models I keep coming back to.
+        </p>
+
+        <div className={styles.bodyItem} style={bodyDelay(5)}>
+          <Link href='/prompting/equation' className={styles.beginCta}>
+            <span>Begin: The equation</span>
+            <span className={styles.beginCtaArrow} aria-hidden='true'>
+              →
+            </span>
+          </Link>
+        </div>
       </div>
     </>
   )
@@ -444,575 +548,508 @@ function ArrowUpIcon() {
 }
 
 // ============================================================================
-// Sections — animate in on scroll
+// Chapter content — one per page (composed inside PromptingLayout)
 // ============================================================================
 
-// Sections cascade — each one's reveal opens the gate for the next after a
-// short settle delay, so they don't all pop in together on tall viewports.
-const SECTION_CASCADE_DELAY_MS = 800
+function ChapterBody({ children }: { children: React.ReactNode }) {
+  const [visible, setVisible] = React.useState(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
-function MentalModels() {
-  const [readyForSection, setReadyForSection] = React.useState(1)
-
-  const handleSectionRevealed = React.useCallback((index: number) => {
-    window.setTimeout(() => {
-      setReadyForSection((prev) => Math.max(prev, index + 1))
-    }, SECTION_CASCADE_DELAY_MS)
-  }, [])
+  React.useEffect(() => {
+    if (prefersReducedMotion) {
+      setVisible(true)
+      return
+    }
+    const id = window.setTimeout(() => setVisible(true), 200)
+    return () => window.clearTimeout(id)
+  }, [prefersReducedMotion])
 
   return (
-    <div className={styles.models}>
-      <Section
-        index={1}
-        title='The equation'
-        anchor='equation'
-        gateOpen={readyForSection >= 1}
-        onRevealed={() => handleSectionRevealed(1)}
-      >
-        <p>
-          The simplest frame is an equation. Whatever a coding agent gives you
-          falls out of two things multiplied together: the agent itself, and
-          what you hand it.
-        </p>
-
-        <EquationDemo />
-
-        <p>
-          That gives you four levers. The point of view this frame nudges you
-          toward is that{' '}
-          <em>there exist inputs that produce really good outputs</em> — the
-          job is finding them. So how do you actually pull each lever?
-        </p>
-
-        <Lever
-          name='TOOL'
-          tagline='Use a tool that was built for this.'
-        >
-          <p>
-            Most people are still defaulting to whatever editor they had before
-            agents were a thing, and bolting AI on. That's leaving the biggest,
-            easiest win on the table.
-          </p>
-          <p>
-            The frontier here isn't subtle: <strong>Cursor</strong>,{' '}
-            <strong>Claude Code</strong>, and <strong>Codex</strong> are
-            meaningfully better at this than VSCode (with stock Copilot) or
-            Antigravity. They're not magic — they're just designed for the
-            shape of agent work. They slice files into context smarter, manage
-            long-running tasks, persist conversation state, and inject
-            project-aware system prompts. Same model, different tool, different
-            ceiling.
-          </p>
-          <p>
-            You don't have to commit to one forever. Try an agent-native tool
-            for a week. If your day-to-day doesn't get noticeably easier, go
-            back. It probably will.
-          </p>
-        </Lever>
-
-        <Lever
-          name='MODEL'
-          tagline='Pick the smartest model the work warrants.'
-        >
-          <p>
-            Calibrate to the stakes of the task, not your defaults. A rough
-            guide:
-          </p>
-
-          <div className={styles.modelGuide}>
-            <div className={styles.modelGuideRow}>
-              <span className={styles.modelGuideWhen}>
-                Boilerplate, well-trodden patterns
-              </span>
-              <span className={styles.modelGuidePick}>Sonnet · Haiku</span>
-            </div>
-            <div className={styles.modelGuideRow}>
-              <span className={styles.modelGuideWhen}>
-                Real engineering: design decisions, debugging, architecture
-              </span>
-              <span className={styles.modelGuidePick}>Opus · GPT-7</span>
-            </div>
-            <div className={styles.modelGuideRow}>
-              <span className={styles.modelGuideWhen}>
-                Anything tricky, ambiguous, or multi-step
-              </span>
-              <span className={styles.modelGuidePick}>+ Thinking on</span>
-            </div>
-          </div>
-
-          <p>
-            The biggest trap is <strong>"Auto"</strong> mode. Tools love
-            offering it because it sounds helpful. In practice, "Auto" is
-            usually optimized for the platform's margin, not your output — it
-            quietly picks a cheaper model when it thinks it can get away with
-            it. Override it whenever the work matters.
-          </p>
-          <p>
-            Thinking effort is the cheap dial. When you're stuck, crank it.
-            When you're iterating fast on something obvious, drop it. There's
-            no purity to it; tune to the task in front of you.
-          </p>
-        </Lever>
-
-        <Lever
-          name='HUMAN_PROMPT'
-          tagline='Be specific. Show the model what good looks like.'
-        >
-          <p>
-            The prompt is the smallest of the four levers, but it's the one
-            people obsess over. The patterns that consistently move the needle
-            are unsexy:
-          </p>
-          <ul className={styles.axisList}>
-            <li>
-              <strong>Concrete over abstract.</strong> "Make this faster" gives
-              the model nothing. "First paint is 2.4s, target under 1s, profile
-              and start with the biggest wins" gives it a job.
-            </li>
-            <li>
-              <strong>Anchor on examples.</strong> "Match the style of{' '}
-              <code>components/PostCard.tsx</code>" beats "make it look nice."
-              Models are great at imitation, mediocre at taste.
-            </li>
-            <li>
-              <strong>Say what good looks like.</strong> Constraints, success
-              criteria, what to avoid. The agent will gravitate toward whatever
-              you tell it to.
-            </li>
-          </ul>
-          <p>What consistently doesn't:</p>
-          <ul className={styles.axisList}>
-            <li>
-              <strong>"Be careful."</strong> It's not careful. Constraints
-              work; vibes don't.
-            </li>
-            <li>
-              <strong>"Think step by step."</strong> The model already does,
-              and modern thinking modes do it better than any prompt
-              incantation.
-            </li>
-            <li>
-              <strong>Politeness padding.</strong> Doesn't hurt, doesn't help.
-              Save the keystrokes.
-            </li>
-          </ul>
-          <p>
-            If you find yourself rewriting the same prompt for the fifth time,
-            stop. The lever you actually need is the next one.
-          </p>
-        </Lever>
-
-        <Lever
-          name='CONTEXT'
-          tagline='The biggest unlock. Load what the agent needs to see.'
-        >
-          <p>
-            Most "the model is dumb today" moments are actually "the model
-            can't see the thing it needs." The prompt is the verb; context is
-            the noun. Get the noun right and the verb almost takes care of
-            itself.
-          </p>
-          <p>Things to load:</p>
-          <ul className={styles.axisList}>
-            <li>
-              <strong>Skills and project rules.</strong> A{' '}
-              <code>CLAUDE.md</code> or <code>.cursorrules</code> that captures
-              your project's patterns, conventions, and the things you're tired
-              of correcting.
-            </li>
-            <li>
-              <strong>Reference material.</strong> The design doc, the API
-              spec, the related PR. Drop them into the chat. Don't make the
-              agent guess at what's already written down.
-            </li>
-            <li>
-              <strong>Screenshots.</strong> For UI work, an image of the
-              current state plus a sketch of the target is worth ten
-              paragraphs.
-            </li>
-            <li>
-              <strong>MCPs.</strong> Wire the agent into your actual systems —
-              repo, dashboards, design tokens, internal docs. Same as giving a
-              junior engineer access to the stack instead of describing it from
-              memory.
-            </li>
-          </ul>
-          <p>
-            Time spent loading the right context is the highest-leverage move
-            you can make. It's also the most boring one, which is why it's
-            underused.
-          </p>
-        </Lever>
-
-        <div className={styles.synthesis}>
-          <h3 className={styles.synthesisHeading}>
-            <span className={styles.synthesisSymbol} aria-hidden='true'>
-              ✦
-            </span>
-            Putting it all together
-          </h3>
-          <p>
-            Treat the output as something you partially authored. Whatever
-            came back, you were part of why it came back that way. When
-            something feels off, walk through the levers and find the one you
-            didn't pull.
-          </p>
-
-          <DebugChecklist />
-
-          <p>
-            Prompting and context management aren't gimmicks. They're real
-            skills with as much depth as anything else in the craft — closer
-            to chess than to magic words.
-          </p>
-        </div>
-      </Section>
-
-      <Section
-        index={2}
-        title='The tree'
-        anchor='tree'
-        gateOpen={readyForSection >= 2}
-        onRevealed={() => handleSectionRevealed(2)}
-      >
-        <p>
-          Coding work isn't flat. Every change lives somewhere on a 2D map —
-          across the surface area of your codebase (<em>breadth</em>), and at
-          some level of abstraction (<em>depth</em>). At any point on that
-          map, you have three moves you can make: <strong>ask</strong>,{' '}
-          <strong>plan</strong>, or <strong>delegate</strong>.
-        </p>
-
-        <TreeDemo />
-
-        <p>
-          Prompting, at its simplest, is navigating this tree. The axes are
-          mostly given by the task — the interesting choice is which of the
-          three moves you make.
-        </p>
-
-        <Lever name='ASK' tagline="When you don't know yet.">
-          <p>
-            Use <strong>Ask</strong> when you need to understand something
-            before you act. It's the cheapest move — a few seconds and a few
-            tokens to widen what you know.
-          </p>
-          <ExamplePrompt
-            note='From a real session. The repro and the trace did most of the work.'
-            text={`The middleware in apps/api/src/auth/check.ts is intermittently returning 401 in staging — about 1 in 30 requests. Trace attached. I see the call to verifyToken returns null but the function looks idempotent to me. What am I missing?`}
-          />
-          <p>
-            The classic failure is asking too narrowly. You phrase the
-            question around what you <em>think</em> the issue is; the model
-            answers that question, confidently; you walk away with a clean,
-            wrong answer. The fix is to include what's actually happening, not
-            what you've decided is the problem. Paste the error. Show the
-            file. Describe the symptom before you propose the cause.
-          </p>
-        </Lever>
-
-        <Lever name='PLAN' tagline='When you know roughly what, but not how.'>
-          <p>
-            <strong>Plan</strong> pays for itself the most often. The model
-            proposes an approach; you push back on bad assumptions; you
-            converge; <em>then</em> code gets written. Much cheaper to revise
-            a paragraph than a refactor.
-          </p>
-          <ExamplePrompt
-            note='Cross-cutting change with multiple plausible approaches. Plan first, code later.'
-            text={`I want to migrate our notification logic out of the request handlers into a queue. Don't write code yet — propose 2–3 approaches, then pick one and explain the trade-offs. Constraints: must keep delivery semantics at-least-once, must not block API responses, can use the existing Redis instance.`}
-          />
-          <p>
-            The trap is treating the first plan as binding. The model will
-            commit to whatever it proposed first unless you push back. Treat
-            the first plan as a draft and make it argue for the choices you're
-            skeptical of.
-          </p>
-        </Lever>
-
-        <Lever
-          name='DELEGATE'
-          tagline='When the path is clear and you can verify the result.'
-        >
-          <p>
-            <strong>Delegate</strong> works for bug fixes with a clear repro,
-            mechanical refactors, boilerplate, tests for known behavior —
-            anything well-scoped and easy to grade.
-          </p>
-          <ExamplePrompt
-            note='Narrow scope, obvious success criteria. Easy to verify.'
-            text={`In components/ui/Button.tsx, add a 'loading' boolean prop. When true, disable the button and show a small spinner to the left of the children. Use the existing Spinner component from components/ui/Spinner. Don't change the public API otherwise. Update the stories in Button.stories.tsx to cover the new state.`}
-          />
-          <p>
-            It works badly the moment any of that breaks: the task touches
-            taste (UX, copy, naming), the change is cross-cutting, or you
-            can't easily tell whether the result is right. Don't delegate what
-            you can't grade. The discipline is bounding the blast radius
-            first — smaller diffs, narrower scope, clearer success criteria.
-          </p>
-        </Lever>
-
-        <div className={styles.synthesis}>
-          <h3 className={styles.synthesisHeading}>
-            <span className={styles.synthesisSymbol} aria-hidden='true'>
-              ✦
-            </span>
-            Choosing your move
-          </h3>
-          <p>A few heuristics for picking the right square:</p>
-          <ul className={styles.axisList}>
-            <li>
-              <strong>Start broad, end specific.</strong> Most non-trivial
-              work moves through all three: ask to understand the shape, plan
-              to commit to an approach, delegate to land the change. Skipping
-              a step shows up as rework two prompts later.
-            </li>
-            <li>
-              <strong>If you're burning loops, zoom out.</strong>{' '}
-              Delegate-reject-reprompt cycles are almost always a context
-              problem, not a model problem. The cell you're in is wrong — move
-              up the tree.
-            </li>
-            <li>
-              <strong>
-                The most expensive prompts are the ones in the wrong cell.
-              </strong>{' '}
-              Delegating something that needed a plan. Asking about something
-              you should have just done. Calibration is most of the skill.
-            </li>
-          </ul>
-        </div>
-      </Section>
-
-      <Section
-        index={3}
-        title='The colleague'
-        anchor='colleague'
-        gateOpen={readyForSection >= 3}
-        onRevealed={() => handleSectionRevealed(3)}
-      >
-        <p>
-          The most useful mental shift I've found is treating the agent as a
-          <em> colleague</em> — specifically, a fast, knowledgeable,
-          infinitely patient junior who has only seen what you've shown them
-          and forgets between sessions.
-        </p>
-
-        <p>
-          Once you internalize that, a lot of what looks like prompt
-          engineering starts looking like the things you'd already do for a
-          teammate: onboard them with the right docs, brief them before each
-          task, pair through ambiguity, review their work before merging.
-        </p>
-
-        <ColleagueDemo />
-
-        <p>
-          Same task, same model — what changes is how much the colleague was
-          set up to succeed. The asymmetry between what <em>you</em> can see
-          and what <em>they</em> can see is where most of the leverage lives.
-        </p>
-
-        <Lever
-          name='ONBOARDING'
-          tagline='Set them up before the work starts.'
-        >
-          <p>
-            Skills, project rules, conventions, examples — the same materials
-            a new hire gets. What to use, what not to, where things live, what
-            good looks like in this codebase.
-          </p>
-          <p>
-            Most of this lives in a <code>CLAUDE.md</code> or{' '}
-            <code>.cursorrules</code> at the project root. It's the
-            longest-leverage thing you can write, because the agent reads it
-            on every task. A useful rules file says things like:
-          </p>
-          <ul className={styles.axisList}>
-            <li>Use Tailwind classes; don't inline styles.</li>
-            <li>
-              Tests go next to source files, not in a{' '}
-              <code>__tests__/</code> folder.
-            </li>
-            <li>
-              No <code>any</code>. Use the narrow types from{' '}
-              <code>lib/types.ts</code>.
-            </li>
-            <li>
-              When unsure about UI, link to a similar component in{' '}
-              <code>components/</code>.
-            </li>
-          </ul>
-          <p>
-            The same paragraph that gets a new hire from "lost" to "useful"
-            in a week does the same for the agent.
-          </p>
-        </Lever>
-
-        <Lever name='BRIEFING' tagline='Every task starts with context.'>
-          <p>
-            Onboarding is general. Briefing is per-task — what this specific
-            piece of work is, which files matter, what good looks like, what
-            to avoid.
-          </p>
-          <p>
-            The mistake is starting cold every time: "fix the auth bug." A
-            colleague would ask "which auth bug? where? what changed
-            recently?" and you'd answer. Just include the answers up front.
-          </p>
-          <p>
-            The longer the task, the more the briefing pays back. Five extra
-            minutes of setup saves 30 minutes of clarifying turns later.
-          </p>
-        </Lever>
-
-        <Lever
-          name='REVIEWING'
-          tagline='The diff is a proposal, not an answer.'
-        >
-          <p>
-            The output is a proposal. Same as a colleague's PR — not the
-            final answer, your job to evaluate. Read the diff. Run the code.
-            Check the cases you'd check on a junior's PR.
-          </p>
-          <p>
-            Don't accept what you can't verify. If you can't tell whether the
-            result is right, that's a signal that the task needed to be
-            smaller, or that the agent needed more context.
-          </p>
-          <p>
-            The "rubber-stamp" failure mode — clicking accept on long
-            diffs — is where mistakes compound. Treat agent output the way
-            you'd treat a teammate's: assume something subtle is probably
-            wrong, and look for it before merging.
-          </p>
-        </Lever>
-
-        <div className={styles.synthesis}>
-          <h3 className={styles.synthesisHeading}>
-            <span className={styles.synthesisSymbol} aria-hidden='true'>
-              ✦
-            </span>
-            Working <em>with</em> vs. working <em>through</em>
-          </h3>
-          <p>
-            There's a difference between treating the agent as a tool you
-            operate (input, output, hope) and a colleague you work with (set
-            up, brief, pair, review). The first scales until it doesn't. The
-            second compounds.
-          </p>
-          <p>
-            The first frame asks <em>"what should I prompt?"</em> The second
-            asks <em>"what does this person need to be successful?"</em> Most
-            of the time, that second question is the better one to be asking.
-          </p>
-          <p>
-            The discipline gets <em>more</em> important, not less, as the
-            models get smarter. As the agent's ceiling rises, the gap between
-            people who treat it as a colleague and people who treat it as a
-            tool widens. Better to start practicing now.
-          </p>
-        </div>
-      </Section>
+    <div
+      className={`${styles.chapterBody} ${visible ? styles.chapterBodyVisible : ''}`}
+    >
+      {children}
     </div>
   )
 }
 
-function Section({
-  index,
-  title,
-  anchor,
-  gateOpen = true,
-  onRevealed,
-  children
-}: {
-  index: number
-  title: string
-  anchor: string
-  gateOpen?: boolean
-  onRevealed?: () => void
-  children: React.ReactNode
-}) {
-  const [ref, inView] = useInView<HTMLElement>({ threshold: 0.12 })
-  const visible = gateOpen && inView
-  const announcedRef = React.useRef(false)
-
-  React.useEffect(() => {
-    if (!visible || announcedRef.current) return
-    announcedRef.current = true
-    onRevealed?.()
-  }, [visible, onRevealed])
-
+export function EquationContent() {
   return (
-    <section
-      ref={ref}
-      id={anchor}
-      className={`${styles.section} ${visible ? styles.sectionVisible : ''}`}
-    >
-      <hr className={styles.sectionDivider} />
-      <h2 className={styles.sectionHeading}>
-        <span className={styles.sectionIndex} aria-hidden='true'>
-          {String(index).padStart(2, '0')}
-        </span>
-        <a href={`#${anchor}`} className={styles.sectionTitle}>
-          {title}
-        </a>
-      </h2>
-      <div className={styles.sectionBody}>{children}</div>
-    </section>
+    <ChapterBody>
+      <p>
+        The simplest frame is an equation. Whatever a coding agent gives you
+        falls out of two things multiplied together: the agent itself, and
+        what you hand it.
+      </p>
+
+      <EquationDemo />
+
+      <p>
+        That gives you four levers. The point of view this frame nudges you
+        toward is that{' '}
+        <em>there exist inputs that produce really good outputs</em> &mdash;
+        the job is finding them. So how do you actually pull each lever?
+      </p>
+
+      <Lever name='TOOL' tagline='Use a tool that was built for this.'>
+        <p>
+          Most people are still defaulting to whatever editor they had before
+          agents were a thing, and bolting AI on. That&apos;s leaving the
+          biggest, easiest win on the table.
+        </p>
+        <p>
+          The frontier here isn&apos;t subtle: <strong>Cursor</strong>,{' '}
+          <strong>Claude Code</strong>, and <strong>Codex</strong> are
+          meaningfully better at this than VSCode (with stock Copilot) or
+          Antigravity. They&apos;re not magic &mdash; they&apos;re just
+          designed for the shape of agent work. They slice files into context
+          smarter, manage long-running tasks, persist conversation state, and
+          inject project-aware system prompts. Same model, different tool,
+          different ceiling.
+        </p>
+        <p>
+          You don&apos;t have to commit to one forever. Try an agent-native
+          tool for a week. If your day-to-day doesn&apos;t get noticeably
+          easier, go back. It probably will.
+        </p>
+      </Lever>
+
+      <Lever name='MODEL' tagline='Pick the smartest model the work warrants.'>
+        <p>
+          Calibrate to the stakes of the task, not your defaults. A rough
+          guide:
+        </p>
+
+        <div className={styles.modelGuide}>
+          <div className={styles.modelGuideRow}>
+            <span className={styles.modelGuideWhen}>
+              Boilerplate, well-trodden patterns
+            </span>
+            <span className={styles.modelGuidePick}>Sonnet · Haiku</span>
+          </div>
+          <div className={styles.modelGuideRow}>
+            <span className={styles.modelGuideWhen}>
+              Real engineering: design decisions, debugging, architecture
+            </span>
+            <span className={styles.modelGuidePick}>Opus · GPT-7</span>
+          </div>
+          <div className={styles.modelGuideRow}>
+            <span className={styles.modelGuideWhen}>
+              Anything tricky, ambiguous, or multi-step
+            </span>
+            <span className={styles.modelGuidePick}>+ Thinking on</span>
+          </div>
+        </div>
+
+        <p>
+          The biggest trap is <strong>&quot;Auto&quot;</strong> mode. Tools
+          love offering it because it sounds helpful. In practice,
+          &quot;Auto&quot; is usually optimized for the platform&apos;s
+          margin, not your output &mdash; it quietly picks a cheaper model
+          when it thinks it can get away with it. Override it whenever the
+          work matters.
+        </p>
+        <p>
+          Thinking effort is the cheap dial. When you&apos;re stuck, crank
+          it. When you&apos;re iterating fast on something obvious, drop it.
+          There&apos;s no purity to it; tune to the task in front of you.
+        </p>
+      </Lever>
+
+      <Lever
+        name='HUMAN_PROMPT'
+        tagline='Be specific. Show the model what good looks like.'
+      >
+        <p>
+          The prompt is the smallest of the four levers, but it&apos;s the
+          one people obsess over. The patterns that consistently move the
+          needle are unsexy:
+        </p>
+        <ul className={styles.axisList}>
+          <li>
+            <strong>Concrete over abstract.</strong> &quot;Make this
+            faster&quot; gives the model nothing. &quot;First paint is 2.4s,
+            target under 1s, profile and start with the biggest wins&quot;
+            gives it a job.
+          </li>
+          <li>
+            <strong>Anchor on examples.</strong> &quot;Match the style of{' '}
+            <code>components/PostCard.tsx</code>&quot; beats &quot;make it
+            look nice.&quot; Models are great at imitation, mediocre at
+            taste.
+          </li>
+          <li>
+            <strong>Say what good looks like.</strong> Constraints, success
+            criteria, what to avoid. The agent will gravitate toward whatever
+            you tell it to.
+          </li>
+        </ul>
+        <p>What consistently doesn&apos;t:</p>
+        <ul className={styles.axisList}>
+          <li>
+            <strong>&quot;Be careful.&quot;</strong> It&apos;s not careful.
+            Constraints work; vibes don&apos;t.
+          </li>
+          <li>
+            <strong>&quot;Think step by step.&quot;</strong> The model
+            already does, and modern thinking modes do it better than any
+            prompt incantation.
+          </li>
+          <li>
+            <strong>Politeness padding.</strong> Doesn&apos;t hurt,
+            doesn&apos;t help. Save the keystrokes.
+          </li>
+        </ul>
+        <p>
+          If you find yourself rewriting the same prompt for the fifth time,
+          stop. The lever you actually need is the next one.
+        </p>
+      </Lever>
+
+      <Lever
+        name='CONTEXT'
+        tagline='The biggest unlock. Load what the agent needs to see.'
+      >
+        <p>
+          Most &quot;the model is dumb today&quot; moments are actually
+          &quot;the model can&apos;t see the thing it needs.&quot; The prompt
+          is the verb; context is the noun. Get the noun right and the verb
+          almost takes care of itself.
+        </p>
+        <p>Things to load:</p>
+        <ul className={styles.axisList}>
+          <li>
+            <strong>Skills and project rules.</strong> A{' '}
+            <code>CLAUDE.md</code> or <code>.cursorrules</code> that captures
+            your project&apos;s patterns, conventions, and the things
+            you&apos;re tired of correcting.
+          </li>
+          <li>
+            <strong>Reference material.</strong> The design doc, the API
+            spec, the related PR. Drop them into the chat. Don&apos;t make
+            the agent guess at what&apos;s already written down.
+          </li>
+          <li>
+            <strong>Screenshots.</strong> For UI work, an image of the
+            current state plus a sketch of the target is worth ten
+            paragraphs.
+          </li>
+          <li>
+            <strong>MCPs.</strong> Wire the agent into your actual systems
+            &mdash; repo, dashboards, design tokens, internal docs. Same as
+            giving a junior engineer access to the stack instead of
+            describing it from memory.
+          </li>
+        </ul>
+        <p>
+          Time spent loading the right context is the highest-leverage move
+          you can make. It&apos;s also the most boring one, which is why
+          it&apos;s underused.
+        </p>
+      </Lever>
+
+      <div className={styles.synthesis}>
+        <h3 className={styles.synthesisHeading}>
+          <span className={styles.synthesisSymbol} aria-hidden='true'>
+            ✦
+          </span>
+          Putting it all together
+        </h3>
+        <p>
+          Treat the output as something you partially authored. Whatever came
+          back, you were part of why it came back that way. When something
+          feels off, walk through the levers and find the one you didn&apos;t
+          pull.
+        </p>
+
+        <DebugChecklist />
+
+        <p>
+          Prompting and context management aren&apos;t gimmicks. They&apos;re
+          real skills with as much depth as anything else in the craft
+          &mdash; closer to chess than to magic words.
+        </p>
+      </div>
+    </ChapterBody>
   )
 }
 
-// Page-wide mount timestamp — used so sections that happen to be in view at
-// page load still wait for the title + body intro to settle before fading in,
-// instead of all popping at once on a tall viewport.
-const MIN_REVEAL_DELAY_MS = 2400
+export function TreeContent() {
+  return (
+    <ChapterBody>
+      <p>
+        Coding work isn&apos;t flat. Every change lives somewhere on a 2D map
+        &mdash; across the surface area of your codebase (<em>breadth</em>),
+        and at some level of abstraction (<em>depth</em>). At any point on
+        that map, you have three moves you can make: <strong>ask</strong>,{' '}
+        <strong>plan</strong>, or <strong>delegate</strong>.
+      </p>
+
+      <TreeDemo />
+
+      <p>
+        Prompting, at its simplest, is navigating this tree. The axes are
+        mostly given by the task &mdash; the interesting choice is which of
+        the three moves you make.
+      </p>
+
+      <Lever name='ASK' tagline="When you don't know yet.">
+        <p>
+          Use <strong>Ask</strong> when you need to understand something
+          before you act. It&apos;s the cheapest move &mdash; a few seconds
+          and a few tokens to widen what you know.
+        </p>
+        <ExamplePrompt
+          note='From a real session. The repro and the trace did most of the work.'
+          text={`The middleware in apps/api/src/auth/check.ts is intermittently returning 401 in staging — about 1 in 30 requests. Trace attached. I see the call to verifyToken returns null but the function looks idempotent to me. What am I missing?`}
+        />
+        <p>
+          The classic failure is asking too narrowly. You phrase the question
+          around what you <em>think</em> the issue is; the model answers that
+          question, confidently; you walk away with a clean, wrong answer.
+          The fix is to include what&apos;s actually happening, not what
+          you&apos;ve decided is the problem. Paste the error. Show the file.
+          Describe the symptom before you propose the cause.
+        </p>
+      </Lever>
+
+      <Lever name='PLAN' tagline='When you know roughly what, but not how.'>
+        <p>
+          <strong>Plan</strong> pays for itself the most often. The model
+          proposes an approach; you push back on bad assumptions; you
+          converge; <em>then</em> code gets written. Much cheaper to revise a
+          paragraph than a refactor.
+        </p>
+        <ExamplePrompt
+          note='Cross-cutting change with multiple plausible approaches. Plan first, code later.'
+          text={`I want to migrate our notification logic out of the request handlers into a queue. Don't write code yet — propose 2–3 approaches, then pick one and explain the trade-offs. Constraints: must keep delivery semantics at-least-once, must not block API responses, can use the existing Redis instance.`}
+        />
+        <p>
+          The trap is treating the first plan as binding. The model will
+          commit to whatever it proposed first unless you push back. Treat
+          the first plan as a draft and make it argue for the choices
+          you&apos;re skeptical of.
+        </p>
+      </Lever>
+
+      <Lever
+        name='DELEGATE'
+        tagline='When the path is clear and you can verify the result.'
+      >
+        <p>
+          <strong>Delegate</strong> works for bug fixes with a clear repro,
+          mechanical refactors, boilerplate, tests for known behavior &mdash;
+          anything well-scoped and easy to grade.
+        </p>
+        <ExamplePrompt
+          note='Narrow scope, obvious success criteria. Easy to verify.'
+          text={`In components/ui/Button.tsx, add a 'loading' boolean prop. When true, disable the button and show a small spinner to the left of the children. Use the existing Spinner component from components/ui/Spinner. Don't change the public API otherwise. Update the stories in Button.stories.tsx to cover the new state.`}
+        />
+        <p>
+          It works badly the moment any of that breaks: the task touches
+          taste (UX, copy, naming), the change is cross-cutting, or you
+          can&apos;t easily tell whether the result is right. Don&apos;t
+          delegate what you can&apos;t grade. The discipline is bounding the
+          blast radius first &mdash; smaller diffs, narrower scope, clearer
+          success criteria.
+        </p>
+      </Lever>
+
+      <div className={styles.synthesis}>
+        <h3 className={styles.synthesisHeading}>
+          <span className={styles.synthesisSymbol} aria-hidden='true'>
+            ✦
+          </span>
+          Choosing your move
+        </h3>
+        <p>A few heuristics for picking the right square:</p>
+        <ul className={styles.axisList}>
+          <li>
+            <strong>Start broad, end specific.</strong> Most non-trivial work
+            moves through all three: ask to understand the shape, plan to
+            commit to an approach, delegate to land the change. Skipping a
+            step shows up as rework two prompts later.
+          </li>
+          <li>
+            <strong>If you&apos;re burning loops, zoom out.</strong>{' '}
+            Delegate-reject-reprompt cycles are almost always a context
+            problem, not a model problem. The cell you&apos;re in is wrong
+            &mdash; move up the tree.
+          </li>
+          <li>
+            <strong>
+              The most expensive prompts are the ones in the wrong cell.
+            </strong>{' '}
+            Delegating something that needed a plan. Asking about something
+            you should have just done. Calibration is most of the skill.
+          </li>
+        </ul>
+      </div>
+    </ChapterBody>
+  )
+}
+
+export function ColleagueContent() {
+  return (
+    <ChapterBody>
+      <p>
+        The most useful mental shift I&apos;ve found is treating the agent as
+        a <em>colleague</em> &mdash; specifically, a fast, knowledgeable,
+        infinitely patient junior who has only seen what you&apos;ve shown
+        them and forgets between sessions.
+      </p>
+
+      <p>
+        Once you internalize that, a lot of what looks like prompt
+        engineering starts looking like the things you&apos;d already do for
+        a teammate: onboard them with the right docs, brief them before each
+        task, pair through ambiguity, review their work before merging.
+      </p>
+
+      <ColleagueDemo />
+
+      <p>
+        Same task, same model &mdash; what changes is how much the colleague
+        was set up to succeed. The asymmetry between what <em>you</em> can
+        see and what <em>they</em> can see is where most of the leverage
+        lives.
+      </p>
+
+      <Lever
+        name='ONBOARDING'
+        tagline='Set them up before the work starts.'
+      >
+        <p>
+          Skills, project rules, conventions, examples &mdash; the same
+          materials a new hire gets. What to use, what not to, where things
+          live, what good looks like in this codebase.
+        </p>
+        <p>
+          Most of this lives in a <code>CLAUDE.md</code> or{' '}
+          <code>.cursorrules</code> at the project root. It&apos;s the
+          longest-leverage thing you can write, because the agent reads it on
+          every task. A useful rules file says things like:
+        </p>
+        <ul className={styles.axisList}>
+          <li>Use Tailwind classes; don&apos;t inline styles.</li>
+          <li>
+            Tests go next to source files, not in a{' '}
+            <code>__tests__/</code> folder.
+          </li>
+          <li>
+            No <code>any</code>. Use the narrow types from{' '}
+            <code>lib/types.ts</code>.
+          </li>
+          <li>
+            When unsure about UI, link to a similar component in{' '}
+            <code>components/</code>.
+          </li>
+        </ul>
+        <p>
+          The same paragraph that gets a new hire from &quot;lost&quot; to
+          &quot;useful&quot; in a week does the same for the agent.
+        </p>
+      </Lever>
+
+      <Lever name='BRIEFING' tagline='Every task starts with context.'>
+        <p>
+          Onboarding is general. Briefing is per-task &mdash; what this
+          specific piece of work is, which files matter, what good looks
+          like, what to avoid.
+        </p>
+        <p>
+          The mistake is starting cold every time: &quot;fix the auth
+          bug.&quot; A colleague would ask &quot;which auth bug? where? what
+          changed recently?&quot; and you&apos;d answer. Just include the
+          answers up front.
+        </p>
+        <p>
+          The longer the task, the more the briefing pays back. Five extra
+          minutes of setup saves 30 minutes of clarifying turns later.
+        </p>
+      </Lever>
+
+      <Lever
+        name='REVIEWING'
+        tagline='The diff is a proposal, not an answer.'
+      >
+        <p>
+          The output is a proposal. Same as a colleague&apos;s PR &mdash; not
+          the final answer, your job to evaluate. Read the diff. Run the
+          code. Check the cases you&apos;d check on a junior&apos;s PR.
+        </p>
+        <p>
+          Don&apos;t accept what you can&apos;t verify. If you can&apos;t
+          tell whether the result is right, that&apos;s a signal that the
+          task needed to be smaller, or that the agent needed more context.
+        </p>
+        <p>
+          The &quot;rubber-stamp&quot; failure mode &mdash; clicking accept
+          on long diffs &mdash; is where mistakes compound. Treat agent
+          output the way you&apos;d treat a teammate&apos;s: assume something
+          subtle is probably wrong, and look for it before merging.
+        </p>
+      </Lever>
+
+      <div className={styles.synthesis}>
+        <h3 className={styles.synthesisHeading}>
+          <span className={styles.synthesisSymbol} aria-hidden='true'>
+            ✦
+          </span>
+          Working <em>with</em> vs. working <em>through</em>
+        </h3>
+        <p>
+          There&apos;s a difference between treating the agent as a tool you
+          operate (input, output, hope) and a colleague you work with (set
+          up, brief, pair, review). The first scales until it doesn&apos;t.
+          The second compounds.
+        </p>
+        <p>
+          The first frame asks <em>&quot;what should I prompt?&quot;</em> The
+          second asks{' '}
+          <em>&quot;what does this person need to be successful?&quot;</em>{' '}
+          Most of the time, that second question is the better one to be
+          asking.
+        </p>
+        <p>
+          The discipline gets <em>more</em> important, not less, as the
+          models get smarter. As the agent&apos;s ceiling rises, the gap
+          between people who treat it as a colleague and people who treat it
+          as a tool widens. Better to start practicing now.
+        </p>
+      </div>
+    </ChapterBody>
+  )
+}
+
+// ============================================================================
+// useInView — IntersectionObserver hook used by EquationDemo
+// ============================================================================
 
 function useInView<T extends HTMLElement>(opts?: IntersectionObserverInit) {
   const ref = React.useRef<T>(null)
   const [inView, setInView] = React.useState(false)
-  // Stabilize opts so a fresh inline object on each render doesn't churn
-  // the effect — observer would otherwise reattach every render.
   const optsRef = React.useRef(opts)
   optsRef.current = opts
-  const mountAtRef = React.useRef(0)
 
   React.useEffect(() => {
-    mountAtRef.current = Date.now()
     const node = ref.current
     if (!node) return
-    let pendingTimer: number | null = null
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return
-        const elapsed = Date.now() - mountAtRef.current
-        const wait = Math.max(0, MIN_REVEAL_DELAY_MS - elapsed)
-        pendingTimer = window.setTimeout(() => setInView(true), wait)
-        observer.disconnect()
+        if (entry?.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
       },
-      {
-        // Conservative trigger band so tall viewports don't count every
-        // section as in-view at page load. Top must be past 12% from the
-        // top, bottom must be past 32% from the bottom — i.e. the element
-        // has to land in the upper-middle of the viewport.
-        threshold: 0.1,
-        rootMargin: '-12% 0px -32% 0px',
-        ...optsRef.current
-      }
+      { threshold: 0.3, ...optsRef.current }
     )
     observer.observe(node)
-    return () => {
-      observer.disconnect()
-      if (pendingTimer != null) window.clearTimeout(pendingTimer)
-    }
+    return () => observer.disconnect()
   }, [])
 
   return [ref, inView] as const
 }
-
-// ============================================================================
-// Mental Model 1 — equation
-// ============================================================================
 
 const LEVER_DETAILS: Record<
   string,

@@ -1,6 +1,9 @@
 import Head from 'next/head'
 
-import { PromptingPage } from '@/components/wustep/PromptingPage'
+import {
+  IntroContent,
+  PromptingLayout
+} from '@/components/wustep/PromptingPage'
 import { domain, host, name, x } from '@/lib/config'
 
 const title = 'How to talk to coding agents'
@@ -9,7 +12,7 @@ const description =
 const previewImage = `${host}/favicon-512x512.png`
 const canonicalUrl = `${host}/prompting`
 
-export default function PromptingRoute() {
+export default function PromptingIntroPage() {
   return (
     <>
       <Head>
@@ -29,7 +32,9 @@ export default function PromptingRoute() {
         <meta name='twitter:description' content={description} />
         <meta name='twitter:image' content={previewImage} />
       </Head>
-      <PromptingPage />
+      <PromptingLayout>
+        <IntroContent />
+      </PromptingLayout>
     </>
   )
 }
