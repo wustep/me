@@ -120,7 +120,7 @@ export function PromptingPage() {
             </p>
 
             <div className={styles.bodyItem} style={bodyDelay(1)}>
-              <PromptInputDemo />
+              <PromptInputDemo start={revealed} />
             </div>
 
             <p className={styles.bodyItem} style={bodyDelay(2)}>
@@ -132,7 +132,13 @@ export function PromptingPage() {
             <p className={styles.bodyItem} style={bodyDelay(3)}>
              So here's the question: what does it mean to be good at talking to Claude, Codex, or whatever model comes next?
             </p>
+
+            <p className={styles.bodyItem} style={bodyDelay(4)}>
+              Here are three mental models I keep coming back to.
+            </p>
           </div>
+
+          <MentalModels />
         </main>
       </div>
     </>
@@ -157,34 +163,110 @@ const ERROR_MESSAGES = [
   'Quota exhausted for this model. Try again later or switch models.'
 ]
 
-function PromptInputDemo() {
+const AUTO_PROMPT = 'Make me a sandwich'
+const AUTO_TYPE_INITIAL_DELAY_MS = 1400
+const AUTO_TYPE_CHAR_MS = 70
+const AUTO_TYPE_SEND_DELAY_MS = 700
+
+function PromptInputDemo({ start }: { start: boolean }) {
   const [value, setValue] = React.useState('')
   const [model, setModel] = React.useState(FAKE_MODELS[0]!)
   const [open, setOpen] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [shakeKey, setShakeKey] = React.useState(0)
+  const [autoTyping, setAutoTyping] = React.useState(false)
+  const [sent, setSent] = React.useState(false)
   const menuRef = React.useRef<HTMLDivElement>(null)
   const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const timersRef = React.useRef<number[]>([])
+  const hasRunRef = React.useRef(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
-  const handleSend = () => {
-    if (value.trim().length === 0) return
+  const clearTimers = () => {
+    for (const id of timersRef.current) window.clearTimeout(id)
+    timersRef.current = []
+  }
+
+  const triggerSend = React.useCallback((text: string) => {
+    if (text.trim().length === 0) return
     const next =
       ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)]!
     setError(next)
     setShakeKey((k) => k + 1)
+    setAutoTyping(false)
+    setSent(true)
+  }, [])
+
+  const runAutoType = React.useCallback(() => {
+    clearTimers()
+    setError(null)
+    setSent(false)
+    setValue('')
+
+    if (prefersReducedMotion) {
+      setValue(AUTO_PROMPT)
+      timersRef.current.push(
+        window.setTimeout(() => triggerSend(AUTO_PROMPT), 250)
+      )
+      return
+    }
+
+    setAutoTyping(true)
+    let i = 0
+    const typeStep = () => {
+      i += 1
+      setValue(AUTO_PROMPT.slice(0, i))
+      if (i < AUTO_PROMPT.length) {
+        timersRef.current.push(window.setTimeout(typeStep, AUTO_TYPE_CHAR_MS))
+      } else {
+        timersRef.current.push(
+          window.setTimeout(
+            () => triggerSend(AUTO_PROMPT),
+            AUTO_TYPE_SEND_DELAY_MS
+          )
+        )
+      }
+    }
+    timersRef.current.push(window.setTimeout(typeStep, 100))
+  }, [prefersReducedMotion, triggerSend])
+
+  React.useEffect(() => {
+    if (!start || hasRunRef.current) return
+    hasRunRef.current = true
+    const id = window.setTimeout(runAutoType, AUTO_TYPE_INITIAL_DELAY_MS)
+    timersRef.current.push(id)
+  }, [start, runAutoType])
+
+  React.useEffect(() => () => clearTimers(), [])
+
+  const handleSend = () => {
+    if (autoTyping) return
+    triggerSend(value)
+  }
+
+  const handleReplay = () => {
+    runAutoType()
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (autoTyping) return
     setValue(e.target.value)
     if (error) setError(null)
+    if (sent) setSent(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (autoTyping) {
+      e.preventDefault()
+      return
+    }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
   }
+
+  const showReplay = sent
 
   React.useEffect(() => {
     if (!open) return
@@ -215,17 +297,26 @@ function PromptInputDemo() {
       key={shakeKey}
       className={`${styles.promptCard} ${error ? styles.promptCardError : ''}`}
     >
-      <textarea
-        className={styles.promptInput}
-        placeholder='What would you like to build today?'
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        rows={2}
-        spellCheck={false}
-        aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={error ? 'prompt-error' : undefined}
-      />
+      <div className={styles.promptInputWrap}>
+        <textarea
+          className={`${styles.promptInput} ${autoTyping ? styles.promptInputTyping : ''}`}
+          placeholder='What would you like to build today?'
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          rows={2}
+          spellCheck={false}
+          readOnly={autoTyping}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-describedby={error ? 'prompt-error' : undefined}
+        />
+        {autoTyping && (
+          <div className={styles.promptInputGhost} aria-hidden='true'>
+            <span>{value}</span>
+            <span className={styles.promptInputGhostCursor} />
+          </div>
+        )}
+      </div>
 
       {error && (
         <div id='prompt-error' className={styles.promptError} role='alert'>
@@ -277,12 +368,23 @@ function PromptInputDemo() {
 
         <button
           type='button'
-          className={styles.submitButton}
-          aria-label='Send'
-          onClick={handleSend}
-          disabled={value.trim().length === 0 || !!error}
+          className={`${styles.submitButton} ${showReplay ? styles.submitButtonReplay : ''}`}
+          aria-label={showReplay ? 'Replay' : 'Send'}
+          onClick={showReplay ? handleReplay : handleSend}
+          disabled={!showReplay && (autoTyping || value.trim().length === 0)}
         >
-          <ArrowUpIcon />
+          <span className={styles.submitIconStack} aria-hidden='true'>
+            <span
+              className={`${styles.submitIcon} ${showReplay ? styles.submitIconHidden : ''}`}
+            >
+              <ArrowUpIcon />
+            </span>
+            <span
+              className={`${styles.submitIcon} ${showReplay ? '' : styles.submitIconHidden}`}
+            >
+              <ReplayIcon />
+            </span>
+          </span>
         </button>
       </div>
     </div>
@@ -340,6 +442,1353 @@ function ArrowUpIcon() {
     </svg>
   )
 }
+
+// ============================================================================
+// Sections — animate in on scroll
+// ============================================================================
+
+// Sections cascade — each one's reveal opens the gate for the next after a
+// short settle delay, so they don't all pop in together on tall viewports.
+const SECTION_CASCADE_DELAY_MS = 800
+
+function MentalModels() {
+  const [readyForSection, setReadyForSection] = React.useState(1)
+
+  const handleSectionRevealed = React.useCallback((index: number) => {
+    window.setTimeout(() => {
+      setReadyForSection((prev) => Math.max(prev, index + 1))
+    }, SECTION_CASCADE_DELAY_MS)
+  }, [])
+
+  return (
+    <div className={styles.models}>
+      <Section
+        index={1}
+        title='The equation'
+        anchor='equation'
+        gateOpen={readyForSection >= 1}
+        onRevealed={() => handleSectionRevealed(1)}
+      >
+        <p>
+          The simplest frame is an equation. Whatever a coding agent gives you
+          falls out of two things multiplied together: the agent itself, and
+          what you hand it.
+        </p>
+
+        <EquationDemo />
+
+        <p>
+          That gives you four levers. The point of view this frame nudges you
+          toward is that{' '}
+          <em>there exist inputs that produce really good outputs</em> — the
+          job is finding them. So how do you actually pull each lever?
+        </p>
+
+        <Lever
+          name='TOOL'
+          tagline='Use a tool that was built for this.'
+        >
+          <p>
+            Most people are still defaulting to whatever editor they had before
+            agents were a thing, and bolting AI on. That's leaving the biggest,
+            easiest win on the table.
+          </p>
+          <p>
+            The frontier here isn't subtle: <strong>Cursor</strong>,{' '}
+            <strong>Claude Code</strong>, and <strong>Codex</strong> are
+            meaningfully better at this than VSCode (with stock Copilot) or
+            Antigravity. They're not magic — they're just designed for the
+            shape of agent work. They slice files into context smarter, manage
+            long-running tasks, persist conversation state, and inject
+            project-aware system prompts. Same model, different tool, different
+            ceiling.
+          </p>
+          <p>
+            You don't have to commit to one forever. Try an agent-native tool
+            for a week. If your day-to-day doesn't get noticeably easier, go
+            back. It probably will.
+          </p>
+        </Lever>
+
+        <Lever
+          name='MODEL'
+          tagline='Pick the smartest model the work warrants.'
+        >
+          <p>
+            Calibrate to the stakes of the task, not your defaults. A rough
+            guide:
+          </p>
+
+          <div className={styles.modelGuide}>
+            <div className={styles.modelGuideRow}>
+              <span className={styles.modelGuideWhen}>
+                Boilerplate, well-trodden patterns
+              </span>
+              <span className={styles.modelGuidePick}>Sonnet · Haiku</span>
+            </div>
+            <div className={styles.modelGuideRow}>
+              <span className={styles.modelGuideWhen}>
+                Real engineering: design decisions, debugging, architecture
+              </span>
+              <span className={styles.modelGuidePick}>Opus · GPT-7</span>
+            </div>
+            <div className={styles.modelGuideRow}>
+              <span className={styles.modelGuideWhen}>
+                Anything tricky, ambiguous, or multi-step
+              </span>
+              <span className={styles.modelGuidePick}>+ Thinking on</span>
+            </div>
+          </div>
+
+          <p>
+            The biggest trap is <strong>"Auto"</strong> mode. Tools love
+            offering it because it sounds helpful. In practice, "Auto" is
+            usually optimized for the platform's margin, not your output — it
+            quietly picks a cheaper model when it thinks it can get away with
+            it. Override it whenever the work matters.
+          </p>
+          <p>
+            Thinking effort is the cheap dial. When you're stuck, crank it.
+            When you're iterating fast on something obvious, drop it. There's
+            no purity to it; tune to the task in front of you.
+          </p>
+        </Lever>
+
+        <Lever
+          name='HUMAN_PROMPT'
+          tagline='Be specific. Show the model what good looks like.'
+        >
+          <p>
+            The prompt is the smallest of the four levers, but it's the one
+            people obsess over. The patterns that consistently move the needle
+            are unsexy:
+          </p>
+          <ul className={styles.axisList}>
+            <li>
+              <strong>Concrete over abstract.</strong> "Make this faster" gives
+              the model nothing. "First paint is 2.4s, target under 1s, profile
+              and start with the biggest wins" gives it a job.
+            </li>
+            <li>
+              <strong>Anchor on examples.</strong> "Match the style of{' '}
+              <code>components/PostCard.tsx</code>" beats "make it look nice."
+              Models are great at imitation, mediocre at taste.
+            </li>
+            <li>
+              <strong>Say what good looks like.</strong> Constraints, success
+              criteria, what to avoid. The agent will gravitate toward whatever
+              you tell it to.
+            </li>
+          </ul>
+          <p>What consistently doesn't:</p>
+          <ul className={styles.axisList}>
+            <li>
+              <strong>"Be careful."</strong> It's not careful. Constraints
+              work; vibes don't.
+            </li>
+            <li>
+              <strong>"Think step by step."</strong> The model already does,
+              and modern thinking modes do it better than any prompt
+              incantation.
+            </li>
+            <li>
+              <strong>Politeness padding.</strong> Doesn't hurt, doesn't help.
+              Save the keystrokes.
+            </li>
+          </ul>
+          <p>
+            If you find yourself rewriting the same prompt for the fifth time,
+            stop. The lever you actually need is the next one.
+          </p>
+        </Lever>
+
+        <Lever
+          name='CONTEXT'
+          tagline='The biggest unlock. Load what the agent needs to see.'
+        >
+          <p>
+            Most "the model is dumb today" moments are actually "the model
+            can't see the thing it needs." The prompt is the verb; context is
+            the noun. Get the noun right and the verb almost takes care of
+            itself.
+          </p>
+          <p>Things to load:</p>
+          <ul className={styles.axisList}>
+            <li>
+              <strong>Skills and project rules.</strong> A{' '}
+              <code>CLAUDE.md</code> or <code>.cursorrules</code> that captures
+              your project's patterns, conventions, and the things you're tired
+              of correcting.
+            </li>
+            <li>
+              <strong>Reference material.</strong> The design doc, the API
+              spec, the related PR. Drop them into the chat. Don't make the
+              agent guess at what's already written down.
+            </li>
+            <li>
+              <strong>Screenshots.</strong> For UI work, an image of the
+              current state plus a sketch of the target is worth ten
+              paragraphs.
+            </li>
+            <li>
+              <strong>MCPs.</strong> Wire the agent into your actual systems —
+              repo, dashboards, design tokens, internal docs. Same as giving a
+              junior engineer access to the stack instead of describing it from
+              memory.
+            </li>
+          </ul>
+          <p>
+            Time spent loading the right context is the highest-leverage move
+            you can make. It's also the most boring one, which is why it's
+            underused.
+          </p>
+        </Lever>
+
+        <div className={styles.synthesis}>
+          <h3 className={styles.synthesisHeading}>
+            <span className={styles.synthesisSymbol} aria-hidden='true'>
+              ✦
+            </span>
+            Putting it all together
+          </h3>
+          <p>
+            Treat the output as something you partially authored. Whatever
+            came back, you were part of why it came back that way. When
+            something feels off, walk through the levers and find the one you
+            didn't pull.
+          </p>
+
+          <DebugChecklist />
+
+          <p>
+            Prompting and context management aren't gimmicks. They're real
+            skills with as much depth as anything else in the craft — closer
+            to chess than to magic words.
+          </p>
+        </div>
+      </Section>
+
+      <Section
+        index={2}
+        title='The tree'
+        anchor='tree'
+        gateOpen={readyForSection >= 2}
+        onRevealed={() => handleSectionRevealed(2)}
+      >
+        <p>
+          Coding work isn't flat. Every change lives somewhere on a 2D map —
+          across the surface area of your codebase (<em>breadth</em>), and at
+          some level of abstraction (<em>depth</em>). At any point on that
+          map, you have three moves you can make: <strong>ask</strong>,{' '}
+          <strong>plan</strong>, or <strong>delegate</strong>.
+        </p>
+
+        <TreeDemo />
+
+        <p>
+          Prompting, at its simplest, is navigating this tree. The axes are
+          mostly given by the task — the interesting choice is which of the
+          three moves you make.
+        </p>
+
+        <Lever name='ASK' tagline="When you don't know yet.">
+          <p>
+            Use <strong>Ask</strong> when you need to understand something
+            before you act. It's the cheapest move — a few seconds and a few
+            tokens to widen what you know.
+          </p>
+          <ExamplePrompt
+            note='From a real session. The repro and the trace did most of the work.'
+            text={`The middleware in apps/api/src/auth/check.ts is intermittently returning 401 in staging — about 1 in 30 requests. Trace attached. I see the call to verifyToken returns null but the function looks idempotent to me. What am I missing?`}
+          />
+          <p>
+            The classic failure is asking too narrowly. You phrase the
+            question around what you <em>think</em> the issue is; the model
+            answers that question, confidently; you walk away with a clean,
+            wrong answer. The fix is to include what's actually happening, not
+            what you've decided is the problem. Paste the error. Show the
+            file. Describe the symptom before you propose the cause.
+          </p>
+        </Lever>
+
+        <Lever name='PLAN' tagline='When you know roughly what, but not how.'>
+          <p>
+            <strong>Plan</strong> pays for itself the most often. The model
+            proposes an approach; you push back on bad assumptions; you
+            converge; <em>then</em> code gets written. Much cheaper to revise
+            a paragraph than a refactor.
+          </p>
+          <ExamplePrompt
+            note='Cross-cutting change with multiple plausible approaches. Plan first, code later.'
+            text={`I want to migrate our notification logic out of the request handlers into a queue. Don't write code yet — propose 2–3 approaches, then pick one and explain the trade-offs. Constraints: must keep delivery semantics at-least-once, must not block API responses, can use the existing Redis instance.`}
+          />
+          <p>
+            The trap is treating the first plan as binding. The model will
+            commit to whatever it proposed first unless you push back. Treat
+            the first plan as a draft and make it argue for the choices you're
+            skeptical of.
+          </p>
+        </Lever>
+
+        <Lever
+          name='DELEGATE'
+          tagline='When the path is clear and you can verify the result.'
+        >
+          <p>
+            <strong>Delegate</strong> works for bug fixes with a clear repro,
+            mechanical refactors, boilerplate, tests for known behavior —
+            anything well-scoped and easy to grade.
+          </p>
+          <ExamplePrompt
+            note='Narrow scope, obvious success criteria. Easy to verify.'
+            text={`In components/ui/Button.tsx, add a 'loading' boolean prop. When true, disable the button and show a small spinner to the left of the children. Use the existing Spinner component from components/ui/Spinner. Don't change the public API otherwise. Update the stories in Button.stories.tsx to cover the new state.`}
+          />
+          <p>
+            It works badly the moment any of that breaks: the task touches
+            taste (UX, copy, naming), the change is cross-cutting, or you
+            can't easily tell whether the result is right. Don't delegate what
+            you can't grade. The discipline is bounding the blast radius
+            first — smaller diffs, narrower scope, clearer success criteria.
+          </p>
+        </Lever>
+
+        <div className={styles.synthesis}>
+          <h3 className={styles.synthesisHeading}>
+            <span className={styles.synthesisSymbol} aria-hidden='true'>
+              ✦
+            </span>
+            Choosing your move
+          </h3>
+          <p>A few heuristics for picking the right square:</p>
+          <ul className={styles.axisList}>
+            <li>
+              <strong>Start broad, end specific.</strong> Most non-trivial
+              work moves through all three: ask to understand the shape, plan
+              to commit to an approach, delegate to land the change. Skipping
+              a step shows up as rework two prompts later.
+            </li>
+            <li>
+              <strong>If you're burning loops, zoom out.</strong>{' '}
+              Delegate-reject-reprompt cycles are almost always a context
+              problem, not a model problem. The cell you're in is wrong — move
+              up the tree.
+            </li>
+            <li>
+              <strong>
+                The most expensive prompts are the ones in the wrong cell.
+              </strong>{' '}
+              Delegating something that needed a plan. Asking about something
+              you should have just done. Calibration is most of the skill.
+            </li>
+          </ul>
+        </div>
+      </Section>
+
+      <Section
+        index={3}
+        title='The colleague'
+        anchor='colleague'
+        gateOpen={readyForSection >= 3}
+        onRevealed={() => handleSectionRevealed(3)}
+      >
+        <p>
+          The most useful mental shift I've found is treating the agent as a
+          <em> colleague</em> — specifically, a fast, knowledgeable,
+          infinitely patient junior who has only seen what you've shown them
+          and forgets between sessions.
+        </p>
+
+        <p>
+          Once you internalize that, a lot of what looks like prompt
+          engineering starts looking like the things you'd already do for a
+          teammate: onboard them with the right docs, brief them before each
+          task, pair through ambiguity, review their work before merging.
+        </p>
+
+        <ColleagueDemo />
+
+        <p>
+          Same task, same model — what changes is how much the colleague was
+          set up to succeed. The asymmetry between what <em>you</em> can see
+          and what <em>they</em> can see is where most of the leverage lives.
+        </p>
+
+        <Lever
+          name='ONBOARDING'
+          tagline='Set them up before the work starts.'
+        >
+          <p>
+            Skills, project rules, conventions, examples — the same materials
+            a new hire gets. What to use, what not to, where things live, what
+            good looks like in this codebase.
+          </p>
+          <p>
+            Most of this lives in a <code>CLAUDE.md</code> or{' '}
+            <code>.cursorrules</code> at the project root. It's the
+            longest-leverage thing you can write, because the agent reads it
+            on every task. A useful rules file says things like:
+          </p>
+          <ul className={styles.axisList}>
+            <li>Use Tailwind classes; don't inline styles.</li>
+            <li>
+              Tests go next to source files, not in a{' '}
+              <code>__tests__/</code> folder.
+            </li>
+            <li>
+              No <code>any</code>. Use the narrow types from{' '}
+              <code>lib/types.ts</code>.
+            </li>
+            <li>
+              When unsure about UI, link to a similar component in{' '}
+              <code>components/</code>.
+            </li>
+          </ul>
+          <p>
+            The same paragraph that gets a new hire from "lost" to "useful"
+            in a week does the same for the agent.
+          </p>
+        </Lever>
+
+        <Lever name='BRIEFING' tagline='Every task starts with context.'>
+          <p>
+            Onboarding is general. Briefing is per-task — what this specific
+            piece of work is, which files matter, what good looks like, what
+            to avoid.
+          </p>
+          <p>
+            The mistake is starting cold every time: "fix the auth bug." A
+            colleague would ask "which auth bug? where? what changed
+            recently?" and you'd answer. Just include the answers up front.
+          </p>
+          <p>
+            The longer the task, the more the briefing pays back. Five extra
+            minutes of setup saves 30 minutes of clarifying turns later.
+          </p>
+        </Lever>
+
+        <Lever
+          name='REVIEWING'
+          tagline='The diff is a proposal, not an answer.'
+        >
+          <p>
+            The output is a proposal. Same as a colleague's PR — not the
+            final answer, your job to evaluate. Read the diff. Run the code.
+            Check the cases you'd check on a junior's PR.
+          </p>
+          <p>
+            Don't accept what you can't verify. If you can't tell whether the
+            result is right, that's a signal that the task needed to be
+            smaller, or that the agent needed more context.
+          </p>
+          <p>
+            The "rubber-stamp" failure mode — clicking accept on long
+            diffs — is where mistakes compound. Treat agent output the way
+            you'd treat a teammate's: assume something subtle is probably
+            wrong, and look for it before merging.
+          </p>
+        </Lever>
+
+        <div className={styles.synthesis}>
+          <h3 className={styles.synthesisHeading}>
+            <span className={styles.synthesisSymbol} aria-hidden='true'>
+              ✦
+            </span>
+            Working <em>with</em> vs. working <em>through</em>
+          </h3>
+          <p>
+            There's a difference between treating the agent as a tool you
+            operate (input, output, hope) and a colleague you work with (set
+            up, brief, pair, review). The first scales until it doesn't. The
+            second compounds.
+          </p>
+          <p>
+            The first frame asks <em>"what should I prompt?"</em> The second
+            asks <em>"what does this person need to be successful?"</em> Most
+            of the time, that second question is the better one to be asking.
+          </p>
+          <p>
+            The discipline gets <em>more</em> important, not less, as the
+            models get smarter. As the agent's ceiling rises, the gap between
+            people who treat it as a colleague and people who treat it as a
+            tool widens. Better to start practicing now.
+          </p>
+        </div>
+      </Section>
+    </div>
+  )
+}
+
+function Section({
+  index,
+  title,
+  anchor,
+  gateOpen = true,
+  onRevealed,
+  children
+}: {
+  index: number
+  title: string
+  anchor: string
+  gateOpen?: boolean
+  onRevealed?: () => void
+  children: React.ReactNode
+}) {
+  const [ref, inView] = useInView<HTMLElement>({ threshold: 0.12 })
+  const visible = gateOpen && inView
+  const announcedRef = React.useRef(false)
+
+  React.useEffect(() => {
+    if (!visible || announcedRef.current) return
+    announcedRef.current = true
+    onRevealed?.()
+  }, [visible, onRevealed])
+
+  return (
+    <section
+      ref={ref}
+      id={anchor}
+      className={`${styles.section} ${visible ? styles.sectionVisible : ''}`}
+    >
+      <hr className={styles.sectionDivider} />
+      <h2 className={styles.sectionHeading}>
+        <span className={styles.sectionIndex} aria-hidden='true'>
+          {String(index).padStart(2, '0')}
+        </span>
+        <a href={`#${anchor}`} className={styles.sectionTitle}>
+          {title}
+        </a>
+      </h2>
+      <div className={styles.sectionBody}>{children}</div>
+    </section>
+  )
+}
+
+// Page-wide mount timestamp — used so sections that happen to be in view at
+// page load still wait for the title + body intro to settle before fading in,
+// instead of all popping at once on a tall viewport.
+const MIN_REVEAL_DELAY_MS = 2400
+
+function useInView<T extends HTMLElement>(opts?: IntersectionObserverInit) {
+  const ref = React.useRef<T>(null)
+  const [inView, setInView] = React.useState(false)
+  // Stabilize opts so a fresh inline object on each render doesn't churn
+  // the effect — observer would otherwise reattach every render.
+  const optsRef = React.useRef(opts)
+  optsRef.current = opts
+  const mountAtRef = React.useRef(0)
+
+  React.useEffect(() => {
+    mountAtRef.current = Date.now()
+    const node = ref.current
+    if (!node) return
+    let pendingTimer: number | null = null
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return
+        const elapsed = Date.now() - mountAtRef.current
+        const wait = Math.max(0, MIN_REVEAL_DELAY_MS - elapsed)
+        pendingTimer = window.setTimeout(() => setInView(true), wait)
+        observer.disconnect()
+      },
+      {
+        // Conservative trigger band so tall viewports don't count every
+        // section as in-view at page load. Top must be past 12% from the
+        // top, bottom must be past 32% from the bottom — i.e. the element
+        // has to land in the upper-middle of the viewport.
+        threshold: 0.1,
+        rootMargin: '-12% 0px -32% 0px',
+        ...optsRef.current
+      }
+    )
+    observer.observe(node)
+    return () => {
+      observer.disconnect()
+      if (pendingTimer != null) window.clearTimeout(pendingTimer)
+    }
+  }, [])
+
+  return [ref, inView] as const
+}
+
+// ============================================================================
+// Mental Model 1 — equation
+// ============================================================================
+
+const LEVER_DETAILS: Record<
+  string,
+  { label: string; examples: string }
+> = {
+  TOOL: {
+    label: 'Tool',
+    examples: 'Cursor, Codex, Claude Code, your editor, the terminal.'
+  },
+  MODEL: {
+    label: 'Model',
+    examples: 'Opus 4.7 Thinking, Sonnet 12, GPT-7o, Gemini 5.'
+  },
+  HUMAN_PROMPT: {
+    label: 'Prompt',
+    examples: 'The literal words you type into the box.'
+  },
+  CONTEXT: {
+    label: 'Context',
+    examples:
+      'Open files, repo index, screenshots, prior turns, pinned docs, project rules.'
+  }
+}
+
+function EquationDemo() {
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.4 })
+  const [expanded, setExpanded] = React.useState(false)
+  // Once the max-height transition finishes we let the expanded line overflow
+  // visibly so the lever tooltips can escape upward without being clipped.
+  const [fullyExpanded, setFullyExpanded] = React.useState(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  React.useEffect(() => {
+    if (!inView) return
+    if (prefersReducedMotion) {
+      setExpanded(true)
+      return
+    }
+    const id = window.setTimeout(() => setExpanded(true), 750)
+    return () => window.clearTimeout(id)
+  }, [inView, prefersReducedMotion])
+
+  React.useEffect(() => {
+    if (!expanded) {
+      setFullyExpanded(false)
+      return
+    }
+    const id = window.setTimeout(
+      () => setFullyExpanded(true),
+      prefersReducedMotion ? 0 : 2000
+    )
+    return () => window.clearTimeout(id)
+  }, [expanded, prefersReducedMotion])
+
+  const replay = () => {
+    setExpanded(false)
+    setFullyExpanded(false)
+    // Collapse runs fast (~500ms) — small pause on the centered simple
+    // equation before the slow re-expansion plays.
+    window.setTimeout(() => setExpanded(true), 750)
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={`${styles.equationCard} ${expanded ? styles.equationCardExpanded : ''}`}
+    >
+      <div className={styles.equationStage}>
+        <div
+          className={`${styles.equationLine} ${styles.equationSimple} ${
+            expanded ? styles.equationSimpleSettled : ''
+          }`}
+        >
+          <Token kind='agent'>AGENT</Token>
+          <Op>×</Op>
+          <Token kind='input'>INPUT</Token>
+          <Op>→</Op>
+          <Token kind='output'>OUTPUT</Token>
+        </div>
+
+        <span
+          className={`${styles.equationArrow} ${expanded ? styles.equationArrowVisible : ''}`}
+          aria-hidden='true'
+        >
+          ↓
+        </span>
+
+        <div
+          className={`${styles.equationLine} ${styles.equationExpanded} ${
+            expanded ? styles.equationLineVisible : ''
+          } ${fullyExpanded ? styles.equationLineFullyVisible : ''}`}
+        >
+          <Group>
+            <Bracket>(</Bracket>
+            <LeverChip name='TOOL' />
+            <Op subtle>+</Op>
+            <LeverChip name='MODEL' />
+            <Bracket>)</Bracket>
+          </Group>
+          <Op>×</Op>
+          <Group>
+            <Bracket>(</Bracket>
+            <LeverChip name='HUMAN_PROMPT' />
+            <Op subtle>+</Op>
+            <LeverChip name='CONTEXT' />
+            <Bracket>)</Bracket>
+          </Group>
+          <Op>→</Op>
+          <Token kind='output'>OUTPUT</Token>
+        </div>
+      </div>
+
+      <div className={styles.equationFooter}>
+        <span
+          className={`${styles.equationHint} ${fullyExpanded ? styles.equationHintVisible : ''}`}
+          aria-hidden={!fullyExpanded}
+        >
+          Hover any lever to learn more.
+        </span>
+        <button
+          type='button'
+          className={styles.equationReplay}
+          onClick={replay}
+          aria-label='Replay animation'
+        >
+          <ReplayIcon /> Replay
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function Token({
+  children,
+  kind
+}: {
+  children: React.ReactNode
+  kind?: 'agent' | 'input' | 'output'
+}) {
+  return <span className={`${styles.token} ${styles[`token_${kind}`] ?? ''}`}>{children}</span>
+}
+
+function Op({ children, subtle }: { children?: React.ReactNode; subtle?: boolean }) {
+  return (
+    <span className={`${styles.op} ${subtle ? styles.opSubtle : ''}`} aria-hidden='true'>
+      {children ?? ''}
+    </span>
+  )
+}
+
+function Bracket({ children }: { children: React.ReactNode }) {
+  return <span className={styles.bracket}>{children}</span>
+}
+
+function Group({ children }: { children: React.ReactNode }) {
+  return <span className={styles.group}>{children}</span>
+}
+
+function LeverChip({ name }: { name: keyof typeof LEVER_DETAILS }) {
+  const detail = LEVER_DETAILS[name]!
+  return (
+    <button
+      type='button'
+      className={styles.lever}
+      aria-label={`${detail.label}: ${detail.examples}`}
+    >
+      <span className={styles.leverName}>{name}</span>
+      <span className={styles.leverPopover} role='tooltip'>
+        <span className={styles.leverPopoverLabel}>{detail.label}</span>
+        <span className={styles.leverPopoverText}>{detail.examples}</span>
+      </span>
+    </button>
+  )
+}
+
+function ExamplePrompt({ note, text }: { note: string; text: string }) {
+  return (
+    <figure className={styles.examplePrompt}>
+      <div className={styles.examplePromptCard}>
+        <span className={styles.examplePromptLabel}>From the wild</span>
+        <p className={styles.examplePromptText}>{text}</p>
+      </div>
+      <figcaption className={styles.examplePromptNote}>{note}</figcaption>
+    </figure>
+  )
+}
+
+function Lever({
+  name,
+  tagline,
+  children
+}: {
+  name: string
+  tagline: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={styles.leverSection}>
+      <div className={styles.leverHeading}>
+        <span className={styles.leverHeadingName}>{name}</span>
+        <span className={styles.leverHeadingDivider} aria-hidden='true' />
+        <span className={styles.leverHeadingTagline}>{tagline}</span>
+      </div>
+      <div className={styles.leverBody}>{children}</div>
+    </div>
+  )
+}
+
+function AskIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M7.9 20A9 9 0 1 0 4 16.1L2 22z' />
+      <path d='M9.1 9a3 3 0 1 1 5.4 1.8c-.6.8-1.5 1.2-1.5 2.2' />
+      <path d='M12 17h.01' />
+    </svg>
+  )
+}
+
+function PlanIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M8 6h13' />
+      <path d='M8 12h13' />
+      <path d='M8 18h13' />
+      <circle cx='4' cy='6' r='1' />
+      <circle cx='4' cy='12' r='1' />
+      <circle cx='4' cy='18' r='1' />
+    </svg>
+  )
+}
+
+function DelegateIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M5 12h14' />
+      <path d='m13 6 6 6-6 6' />
+      <path d='M3 6v12' />
+    </svg>
+  )
+}
+
+function ReplayIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M3 12a9 9 0 1 0 3-6.7' />
+      <path d='M3 4v5h5' />
+    </svg>
+  )
+}
+
+const DEBUG_QUESTIONS: Array<{
+  q: string
+  lever: string
+  fix: string
+}> = [
+  {
+    q: 'Did I communicate clearly?',
+    lever: 'PROMPT',
+    fix: "Rewrite with concrete details. Paste the error. Name the file. Say what good looks like and what to avoid. If you've rewritten the same prompt five times, the lever you actually need is context."
+  },
+  {
+    q: 'What did the agent get to see?',
+    lever: 'CONTEXT',
+    fix: "Load the relevant files, screenshots, design docs, and project rules. The model can't reason about what it can't read. 'The model is dumb today' is almost always 'the model can't see the thing it needs.'"
+  },
+  {
+    q: 'Was this the right model?',
+    lever: 'MODEL',
+    fix: 'Upgrade to a more capable model for tricky work. If the tool offered "Auto," override it — that mode optimizes for cost, not for you.'
+  },
+  {
+    q: 'Was thinking on?',
+    lever: 'MODEL',
+    fix: 'For ambiguous, multi-step, or stuck moments, turn thinking up. The cheap dial pays the most often. Drop it back when the work is mechanical.'
+  }
+]
+
+function DebugChecklist() {
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null)
+
+  return (
+    <div className={styles.debug} role='list'>
+      {DEBUG_QUESTIONS.map((item, i) => {
+        const open = openIndex === i
+        return (
+          <div
+            key={item.q}
+            className={`${styles.debugItem} ${open ? styles.debugItemOpen : ''}`}
+            role='listitem'
+          >
+            <button
+              type='button'
+              className={styles.debugQuestion}
+              onClick={() => setOpenIndex(open ? null : i)}
+              aria-expanded={open}
+            >
+              <span className={styles.debugIndex} aria-hidden='true'>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className={styles.debugQuestionText}>{item.q}</span>
+              <span className={styles.debugLever} aria-hidden='true'>
+                {item.lever}
+              </span>
+              <span className={styles.debugChevron} aria-hidden='true'>
+                <ChevronIcon />
+              </span>
+            </button>
+            <div className={styles.debugAnswer}>
+              <div className={styles.debugAnswerInner}>{item.fix}</div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ============================================================================
+// Mental Model 2 — tree
+// ============================================================================
+
+type Area = 'ux' | 'perf' | 'debug' | 'arch'
+type Depth = 'high' | 'mid' | 'low'
+type Action = 'ask' | 'plan' | 'delegate'
+
+const AREAS: Array<{ id: Area; label: string }> = [
+  { id: 'ux', label: 'UX' },
+  { id: 'perf', label: 'Performance' },
+  { id: 'debug', label: 'Debugging' },
+  { id: 'arch', label: 'Architecture' }
+]
+
+const DEPTHS: Array<{ id: Depth; label: string; hint: string }> = [
+  { id: 'high', label: 'High', hint: 'the overall feel' },
+  { id: 'mid', label: 'Mid', hint: 'a component or flow' },
+  { id: 'low', label: 'Low', hint: 'one specific line' }
+]
+
+const ACTIONS: Array<{
+  id: Action
+  label: string
+  verb: string
+  Icon: React.FC
+}> = [
+  { id: 'ask', label: 'Ask', verb: 'pull info back', Icon: AskIcon },
+  { id: 'plan', label: 'Plan', verb: 'get a strategy', Icon: PlanIcon },
+  { id: 'delegate', label: 'Delegate', verb: 'hand it off', Icon: DelegateIcon }
+]
+
+const PROMPTS: Record<Area, Record<Depth, Record<Action, string>>> = {
+  ux: {
+    high: {
+      ask: 'What feels off about this whole page?',
+      plan: 'How would you make this flow feel more polished — what should I do first?',
+      delegate: 'Make this page prettier.'
+    },
+    mid: {
+      ask: 'Why does the card hierarchy feel cluttered?',
+      plan: 'Plan a redesign of the card component for better scannability.',
+      delegate: 'Tighten the card spacing and visual weight.'
+    },
+    low: {
+      ask: 'Why does the radius on these buttons look off?',
+      plan: 'Walk me through a sensible radius and shadow for these buttons.',
+      delegate: 'Set the buttons to border-radius 16px.'
+    }
+  },
+  perf: {
+    high: {
+      ask: 'Where is time being spent on first paint?',
+      plan: 'Plan an attack on first-paint, biggest wins first.',
+      delegate: 'Cut first-paint time. Start with the heaviest hitters.'
+    },
+    mid: {
+      ask: 'Why is this list re-rendering on every keystroke?',
+      plan: 'Plan how to memoize this list without breaking selection.',
+      delegate: 'Memoize this list. Verify selection still works.'
+    },
+    low: {
+      ask: 'Why is this useEffect firing twice?',
+      plan: 'How should I fix this useEffect double-fire safely?',
+      delegate: 'Fix the dependency array on this useEffect.'
+    }
+  },
+  debug: {
+    high: {
+      ask: 'What is most likely breaking in this checkout flow?',
+      plan: 'Plan a triage approach for the failing checkout flow.',
+      delegate: 'Get checkout green again.'
+    },
+    mid: {
+      ask: 'Why is this auth middleware sometimes returning 401?',
+      plan: 'Plan how to reproduce this auth flake locally.',
+      delegate: 'Find and fix the intermittent 401 in auth.'
+    },
+    low: {
+      ask: 'Why is this regex not matching trailing newlines?',
+      plan: 'How should I update this regex to match trailing newlines safely?',
+      delegate: 'Fix this regex to match trailing newlines.'
+    }
+  },
+  arch: {
+    high: {
+      ask: "Where is this codebase heading that it isn't yet?",
+      plan: 'Plan how to split this into clear modules.',
+      delegate: 'Restructure this into clear modules. Propose, then do.'
+    },
+    mid: {
+      ask: 'Should this state live in context or be lifted?',
+      plan: 'Plan the migration of this slice from local state to a store.',
+      delegate: 'Move this state into the store and update consumers.'
+    },
+    low: {
+      ask: "Why does this file import three things from utils.ts that aren't used?",
+      plan: 'Plan the cleanup of unused imports across this file.',
+      delegate: 'Remove unused imports in this file.'
+    }
+  }
+}
+
+const TOUR: Array<{ area: Area; depth: Depth; action: Action }> = [
+  { area: 'ux', depth: 'high', action: 'delegate' },
+  { area: 'ux', depth: 'low', action: 'delegate' },
+  { area: 'perf', depth: 'mid', action: 'plan' },
+  { area: 'debug', depth: 'low', action: 'ask' },
+  { area: 'arch', depth: 'high', action: 'plan' }
+]
+
+function TreeDemo() {
+  const [area, setArea] = React.useState<Area>('ux')
+  const [depth, setDepth] = React.useState<Depth>('mid')
+  const [action, setAction] = React.useState<Action>('ask')
+  const [touring, setTouring] = React.useState(false)
+  const tourRef = React.useRef<number | null>(null)
+
+  const stopTour = React.useCallback(() => {
+    if (tourRef.current != null) {
+      window.clearTimeout(tourRef.current)
+      tourRef.current = null
+    }
+    setTouring(false)
+  }, [])
+
+  React.useEffect(() => stopTour, [stopTour])
+
+  const startTour = () => {
+    if (touring) {
+      stopTour()
+      return
+    }
+    setTouring(true)
+    let i = 0
+    const step = () => {
+      const next = TOUR[i % TOUR.length]!
+      setArea(next.area)
+      setDepth(next.depth)
+      setAction(next.action)
+      i += 1
+      tourRef.current = window.setTimeout(step, 1700)
+    }
+    step()
+  }
+
+  const prompt = PROMPTS[area][depth][action]
+  const promptKey = `${area}-${depth}-${action}`
+
+  return (
+    <div className={styles.tree}>
+      <div className={styles.treeActions} role='tablist' aria-label='Action'>
+        {ACTIONS.map((a) => {
+          const active = action === a.id
+          const Icon = a.Icon
+          return (
+            <button
+              key={a.id}
+              type='button'
+              role='tab'
+              aria-selected={active}
+              className={`${styles.treeActionButton} ${active ? styles.treeActionActive : ''}`}
+              onClick={() => {
+                if (touring) stopTour()
+                setAction(a.id)
+              }}
+            >
+              <span className={styles.treeActionIcon} aria-hidden='true'>
+                <Icon />
+              </span>
+              <span className={styles.treeActionText}>
+                <span className={styles.treeActionLabel}>{a.label}</span>
+                <span className={styles.treeActionVerb}>{a.verb}</span>
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      <div className={styles.treeGridWrap}>
+        <div className={styles.treeGrid} role='grid'>
+          <div />
+          {AREAS.map((a) => (
+            <div
+              key={a.id}
+              className={`${styles.treeColLabel} ${a.id === area ? styles.treeAxisActive : ''}`}
+            >
+              {a.label}
+            </div>
+          ))}
+          {DEPTHS.map((d) => (
+            <React.Fragment key={d.id}>
+              <div
+                className={`${styles.treeRowLabel} ${d.id === depth ? styles.treeAxisActive : ''}`}
+              >
+                <span className={styles.treeRowLabelText}>{d.label}</span>
+                <span className={styles.treeRowLabelHint}>{d.hint}</span>
+              </div>
+              {AREAS.map((a) => {
+                const active = area === a.id && depth === d.id
+                const onAxis = area === a.id || depth === d.id
+                return (
+                  <button
+                    key={`${a.id}-${d.id}`}
+                    type='button'
+                    role='gridcell'
+                    aria-selected={active}
+                    className={`${styles.treeCell} ${active ? styles.treeCellActive : ''} ${
+                      !active && onAxis ? styles.treeCellOnAxis : ''
+                    }`}
+                    onClick={() => {
+                      if (touring) stopTour()
+                      setArea(a.id)
+                      setDepth(d.id)
+                    }}
+                    onMouseEnter={() => {
+                      if (touring) return
+                      setArea(a.id)
+                      setDepth(d.id)
+                    }}
+                    aria-label={`${a.label} · ${d.label}`}
+                  >
+                    <span className={styles.treeCellDot} aria-hidden='true' />
+                  </button>
+                )
+              })}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.treeOutputCard}>
+        <div className={styles.treeOutputHeader}>
+          <span className={styles.treeOutputLabel}>Generated prompt</span>
+          <span className={styles.treeOutputCoord}>
+            {AREAS.find((a) => a.id === area)?.label} ·{' '}
+            {DEPTHS.find((d) => d.id === depth)?.label} ·{' '}
+            {ACTIONS.find((a) => a.id === action)?.label}
+          </span>
+        </div>
+        <div className={styles.treeOutputBody}>
+          <p key={promptKey} className={styles.treeOutputText}>
+            {prompt}
+          </p>
+        </div>
+      </div>
+
+      <button
+        type='button'
+        className={`${styles.treeTour} ${touring ? styles.treeTourActive : ''}`}
+        onClick={startTour}
+      >
+        {touring ? 'Stop tour' : 'Take a tour'}{' '}
+        <span aria-hidden='true'>{touring ? '■' : '→'}</span>
+      </button>
+    </div>
+  )
+}
+
+// ============================================================================
+// Mental Model 3 — colleague
+// ============================================================================
+
+const SHARE_OPTIONS: Array<{
+  id: 'file' | 'screenshot' | 'rules' | 'history'
+  label: string
+  Icon: React.FC
+}> = [
+  { id: 'file', label: 'The relevant file', Icon: ShareFileIcon },
+  { id: 'screenshot', label: 'A screenshot', Icon: ShareImageIcon },
+  { id: 'rules', label: 'Project rules', Icon: ShareRulesIcon },
+  { id: 'history', label: 'Recent PRs', Icon: ShareHistoryIcon }
+]
+
+type ShareKey = (typeof SHARE_OPTIONS)[number]['id']
+
+const COLLEAGUE_TASK = 'Why is this list slow when typing?'
+
+const COLLEAGUE_BASE =
+  "I'd need more to go on. Slow lists during typing usually trace back to re-renders, large unfiltered datasets, or per-render allocations — but without seeing the code, I'd just be guessing."
+
+const COLLEAGUE_SEGMENTS: Record<ShareKey, string> = {
+  file: 'Looking at the file: <List> creates a fresh callback inside .map() on every render, which breaks child memoization on every keystroke.',
+  screenshot:
+    'The screenshot shows roughly 12k rows on screen at once — combined with the callback churn, that explains the typing stutter.',
+  rules:
+    'Your project rules call for react-window on lists over 200 items. The cleanest fix is wrapping this list in <FixedSizeList>.',
+  history:
+    'Last quarter, PR #1842 quietly removed the previous virtualization. Restoring that pattern + memoizing the callback should bring perf back to where it was.'
+}
+
+function ColleagueDemo() {
+  const [shared, setShared] = React.useState<Record<ShareKey, boolean>>({
+    file: false,
+    screenshot: false,
+    rules: false,
+    history: false
+  })
+
+  const sharedKeys = SHARE_OPTIONS.filter((o) => shared[o.id]).map((o) => o.id)
+  const segments = sharedKeys.map((k) => COLLEAGUE_SEGMENTS[k])
+  const responseKey = sharedKeys.length === 0 ? 'base' : sharedKeys.join('+')
+
+  return (
+    <div className={styles.colleague}>
+      <div className={styles.colleagueTask}>
+        <span className={styles.colleagueTaskLabel}>You ask</span>
+        <p className={styles.colleagueTaskText}>{COLLEAGUE_TASK}</p>
+      </div>
+
+      <div className={styles.colleagueShare}>
+        <span className={styles.colleagueShareLabel}>Share with them</span>
+        <div className={styles.colleagueShareChips}>
+          {SHARE_OPTIONS.map((opt) => {
+            const on = shared[opt.id]
+            const Icon = opt.Icon
+            return (
+              <button
+                key={opt.id}
+                type='button'
+                className={`${styles.colleagueChip} ${on ? styles.colleagueChipOn : ''}`}
+                onClick={() =>
+                  setShared((prev) => ({ ...prev, [opt.id]: !prev[opt.id] }))
+                }
+                aria-pressed={on}
+              >
+                <span className={styles.colleagueChipIcon} aria-hidden='true'>
+                  <Icon />
+                </span>
+                <span>{opt.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className={styles.colleagueResponse}>
+        <span className={styles.colleagueResponseLabel}>They reply</span>
+        <div key={responseKey} className={styles.colleagueResponseBody}>
+          {segments.length === 0 ? (
+            <p className={styles.colleagueResponseDim}>{COLLEAGUE_BASE}</p>
+          ) : (
+            segments.map((seg, i) => (
+              <p key={i} className={styles.colleagueResponseText}>
+                {seg}
+              </p>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ShareFileIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' />
+      <path d='M14 2v6h6' />
+    </svg>
+  )
+}
+
+function ShareImageIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <rect x='3' y='3' width='18' height='18' rx='2' ry='2' />
+      <circle cx='9' cy='9' r='2' />
+      <path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21' />
+    </svg>
+  )
+}
+
+function ShareRulesIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M9 11l3 3 8-8' />
+      <path d='M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9' />
+    </svg>
+  )
+}
+
+function ShareHistoryIcon() {
+  return (
+    <svg
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M3 12a9 9 0 1 0 3-6.7' />
+      <path d='M3 4v5h5' />
+      <path d='M12 7v5l3 2' />
+    </svg>
+  )
+}
+
+// ============================================================================
+// Misc icons
+// ============================================================================
 
 function SparkleIcon() {
   return (
