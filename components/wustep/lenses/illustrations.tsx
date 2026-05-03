@@ -810,15 +810,14 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
  *   from the deck's palette (warm amber, cool teal, magenta-rose).
  *   Where they overlap the colors mix toward white, exactly as
  *   refracted light does, making the central trefoil feel like a
- *   focal point. A thin ring on each disc reinforces "lens" rather
- *   than "blob," and a single bright pinprick at the meeting point
- *   says: this is where the deck converges.
+ *   focal point. A subtle alignment grid behind reinforces "optical
+ *   instrument," and a bright pinprick at the meeting point says:
+ *   this is where the deck converges.
  *
  *   On hover the three discs slowly drift around the centroid in a
  *   gentle gyre, like aligning lenses snapping into focus.
  */
 function ArtLensesDeck({
-  fg,
   accent,
   bg
 }: {
@@ -839,46 +838,84 @@ function ArtLensesDeck({
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='lenses-deck'>
-      <g fill={fg} opacity='0.18'>
-        <circle cx='14' cy='18' r='1.2' />
-        <circle cx='86' cy='18' r='1.2' />
-        <circle cx='10' cy='84' r='1.2' />
-        <circle cx='90' cy='84' r='1.2' />
-        <circle cx='50' cy='10' r='1.2' />
-        <circle cx='50' cy='90' r='1.2' />
+      {/* Alignment cross — quietly evokes the reticle of an optical
+          instrument without overwhelming the discs. */}
+      <g stroke='currentColor' strokeWidth='0.4' opacity='0.32'>
+        <line x1='10' y1='50' x2='28' y2='50' />
+        <line x1='72' y1='50' x2='90' y2='50' />
+        <line x1='50' y1='10' x2='50' y2='22' />
+        <line x1='50' y1='78' x2='50' y2='90' />
       </g>
 
-      {/* Each disc lives in its own <g> so we can drift them independently. */}
+      {/* Outer reticle ring — extra-thin, just enough to read as "tool". */}
+      <circle
+        cx='50'
+        cy='50'
+        r='40'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='0.3'
+        opacity='0.28'
+        strokeDasharray='1 3'
+      />
+
+      {/* Tick marks on the outer ring — the four cardinal axes only. */}
+      <g stroke='currentColor' strokeWidth='0.6' opacity='0.45'>
+        <line x1='50' y1='8' x2='50' y2='12' />
+        <line x1='50' y1='88' x2='50' y2='92' />
+        <line x1='8' y1='50' x2='12' y2='50' />
+        <line x1='88' y1='50' x2='92' y2='50' />
+      </g>
+
+      {/* Each disc lives in its own <g> so we can drift them
+          independently. The crisp outline ring on each disc reads as
+          "lens" rather than "blob"; the stroke is matched to the fill
+          so it feels like a single object even at small sizes. */}
       {discs.map((d) => (
         <g
           key={`fill-${d.target}`}
           style={{ transformOrigin: '50px 52px' }}
           data-anim-target={d.target}
         >
-          <circle cx={d.cx} cy={d.cy} r={r} fill={d.fill} opacity='0.78' />
+          <circle cx={d.cx} cy={d.cy} r={r} fill={d.fill} opacity='0.82' />
           <circle
             cx={d.cx}
             cy={d.cy}
             r={r}
             fill='none'
             stroke={d.fill}
-            strokeWidth='0.8'
+            strokeWidth='1'
             opacity='1'
+          />
+          {/* Inner glint — a tiny offset highlight that gives each disc
+              the luster of polished glass. */}
+          <ellipse
+            cx={d.cx - 7}
+            cy={d.cy - 9}
+            rx='5'
+            ry='3'
+            fill='#FFFFFF'
+            opacity='0.22'
           />
         </g>
       ))}
 
-      <circle cx='50' cy='52' r='1.6' fill={fg} />
+      {/* Focal point: the convergence pinprick where all three lenses
+          meet. The double-circle reads as "this is the focus." */}
+      <circle cx='50' cy='52' r='1.8' fill='currentColor' />
       <circle
         cx='50'
         cy='52'
-        r='4.5'
+        r='5'
         fill='none'
-        stroke={fg}
+        stroke='currentColor'
         strokeWidth='0.5'
-        opacity='0.45'
+        opacity='0.6'
       />
 
+      {/* Suppress 'unused' warnings from the background props — we
+          deliberately don't render bg/accent here, but the prop
+          contract is shared with the regular cards. */}
       <rect x='0' y='0' width='0' height='0' fill={bg} />
       <rect x='0' y='0' width='0' height='0' fill={accent} />
     </svg>

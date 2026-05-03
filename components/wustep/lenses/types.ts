@@ -41,15 +41,18 @@ export const DURATION = {
 } as const
 
 /** Spatial constants that the canvas uses to stagger cards by row+col.
- *  Cards' `y` values come from a 4-row grid at 8/36/64/92, and `x` from
- *  a 6-column grid at 3/30/41/59/70/97 (the inner two columns are pulled
- *  in close to the center "Lenses" card so it sits inside a tighter
- *  huddle of neighbors rather than floating in a moat). We compute
- *  row/col indices from these so a designer can tweak positions without
- *  rewriting math. */
+ *  Cards' `y` values come from a 4-row grid at 12/38/62/88, and `x`
+ *  from a 6-column grid at 7/28/44/56/72/93. The outer ring of rows
+ *  and columns is pulled slightly off the canvas edge so that corner
+ *  cards peek from the viewport border (~15-20% clipped) — enough to
+ *  feel like the canvas extends beyond the screen, but not so much
+ *  that titles get cut. The two "above/below center" columns
+ *  (44, 56) sit just outside the center card's silhouette so cards on
+ *  the top and bottom rows visually flank, not overlap with, the
+ *  center "Lenses" card. */
 export const GRID = {
-  rowAnchors: [8, 36, 64, 92],
-  colAnchors: [3, 30, 41, 59, 70, 97]
+  rowAnchors: [12, 38, 62, 88],
+  colAnchors: [7, 28, 44, 56, 72, 93]
 } as const
 
 export type IllustrationId =

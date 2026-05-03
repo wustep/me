@@ -68,7 +68,21 @@
   min-height: 100vh;
   height: 100vh;
   overflow: hidden;
-  background: #f1ecdf;
+  /* Layered background: a soft warm-grey base, plus a vertical
+     gradient that lifts the top edge slightly. This adds depth
+     without ever competing with the cards. */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0) 28%
+    ),
+    radial-gradient(
+      ellipse at 50% 110%,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0) 60%
+    ),
+    #ece6d6;
   color: #1a1a1a;
   font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
   display: flex;
@@ -79,7 +93,18 @@
 }
 
 :global(.dark-mode) .frame {
-  background: #18181b;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0) 32%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(0, 0, 0, 0) 55%
+    ),
+    #16161a;
   color: #f5f1e8;
 }
 
@@ -242,24 +267,28 @@
 .bgGrid {
   position: absolute;
   inset: 0;
+  /* Subtle dot grid — denser than before so it reads at all once
+     the gradient lifts the bg, but still quiet enough to step out
+     of the way of the cards. */
   background-image: radial-gradient(
     circle,
-    rgba(0, 0, 0, 0.07) 1px,
-    transparent 1.5px
+    rgba(0, 0, 0, 0.09) 1px,
+    transparent 1.4px
   );
-  background-size: 32px 32px;
+  background-size: 28px 28px;
   background-position: 0 0;
-  /* Fade toward the corners using a mask (more flexible than a
-     gradient and works against varying dark-mode bg). */
+  /* Fade toward the corners using a mask. The center is brightest;
+     the edges go to nothing so the cards on the perimeter aren't
+     fighting noise. */
   mask-image: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0) 80%
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0) 70%
   );
   -webkit-mask-image: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0) 80%
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0) 70%
   );
 }
 
@@ -311,17 +340,29 @@
   position: absolute;
   /* Anchor center of card to (left%, top%) of `.cards`. */
   transform: translate(-50%, -50%) scale(0.92);
-  width: clamp(132px, 13vw, 168px);
-  aspect-ratio: 5 / 7;
-  padding: 13px 14px 16px;
+  width: clamp(132px, 12.5vw, 160px);
+  /* 4:5 keeps the cards card-shaped without making them so tall
+     that four rows overlap on a typical 810px viewport. Combined
+     with the peek-from-top/bottom rows it leaves clean gaps
+     between rows in both directions. */
+  aspect-ratio: 4 / 5;
+  padding: 13px 14px 14px;
   background: var(--card-bg);
   color: var(--card-fg);
   border: none;
   border-radius: 14px;
+  /* Layered shadow for cardstock feel:
+       • inset hairline edge (helps the card pop on cream bg)
+       • inset top highlight (faint specular, 3D feel)
+       • close contact shadow (sits on the surface)
+       • mid ambient
+       • far ambient (warm-tinted to match the cream backdrop) */
   box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.06),
-    0 8px 22px -8px rgba(0, 0, 0, 0.24),
-    0 24px 48px -20px rgba(0, 0, 0, 0.35);
+    0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 1px 1px rgba(0, 0, 0, 0.08),
+    0 6px 14px -6px rgba(20, 14, 8, 0.22),
+    0 20px 40px -18px rgba(20, 14, 8, 0.32);
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -344,11 +385,12 @@
   .card:hover {
     transform: translate(-50%, calc(-50% - 14px)) scale(1.13);
     box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
       0 1px 2px rgba(0, 0, 0, 0.08),
-      0 18px 36px -10px rgba(0, 0, 0, 0.34),
-      0 44px 90px -18px rgba(0, 0, 0, 0.52),
+      0 16px 32px -10px rgba(20, 14, 8, 0.32),
+      0 36px 72px -18px rgba(20, 14, 8, 0.5),
       0 0 0 3px var(--card-accent),
-      0 0 36px -4px var(--card-accent);
+      0 0 32px -4px var(--card-accent);
     z-index: 5;
   }
 
@@ -397,17 +439,24 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-  width: clamp(180px, 17vw, 220px);
-  aspect-ratio: 5 / 7;
-  padding: 16px 18px 20px;
+  width: clamp(196px, 18vw, 240px);
+  aspect-ratio: 4 / 5;
+  padding: 18px 20px 22px;
   background: #0e0e10;
   color: #f5f1e8;
   border: none;
-  border-radius: 18px;
+  border-radius: 20px;
+  /* The center card sits highest in the visual stack — give it a
+     deeper, warmer shadow than the regular cards so it reads as a
+     featured card, not just another tile. The inset top highlight
+     adds a faint specular along its top edge, like a polished
+     deck-card sitting on a leather table. */
   box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.1),
-    0 18px 36px -10px rgba(0, 0, 0, 0.45),
-    0 50px 100px -20px rgba(0, 0, 0, 0.6);
+    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 14px 28px -10px rgba(20, 14, 8, 0.42),
+    0 40px 80px -22px rgba(20, 14, 8, 0.55);
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -426,9 +475,10 @@
   background: #f5f1e8;
   color: #0e0e10;
   box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.4),
-    0 18px 36px -10px rgba(0, 0, 0, 0.6),
-    0 50px 100px -20px rgba(0, 0, 0, 0.75);
+    0 0 0 0.5px rgba(0, 0, 0, 0.5) inset,
+    0 1px 2px rgba(0, 0, 0, 0.42),
+    0 14px 28px -10px rgba(0, 0, 0, 0.55),
+    0 40px 80px -22px rgba(0, 0, 0, 0.7);
 }
 
 .centerCardVisible {
