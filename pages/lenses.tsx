@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-import { LensesPage } from '@/components/wustep/LensesPage'
+import { LensesPage } from '@/components/wustep/lenses'
 import { domain, host, name, x } from '@/lib/config'
 
 const title = 'Lenses'
