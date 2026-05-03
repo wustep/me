@@ -52,7 +52,12 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
     // CSS grid is 1-indexed for grid-column/grid-row.
     gridColumn: `${colIndex + 1} / span 1`,
     gridRow: `${rowIndex + 1} / span 1`,
-    transitionDelay: visible ? `${delay}ms` : '0ms',
+    // Per-card entrance stagger expressed as a CSS variable so it
+    // ONLY applies to the entrance transition (see `.card` rule),
+    // not to every subsequent hover/select transition. Inline
+    // `transition-delay` would win specificity and add 100s of ms
+    // of delay to hover-in on every card past the first row.
+    ['--card-enter-delay' as string]: `${delay}ms`,
     ['--card-bg' as string]: lens.bg,
     ['--card-fg' as string]: lens.fg,
     ['--card-accent' as string]: lens.accent ?? lens.fg

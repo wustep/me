@@ -343,10 +343,22 @@
 }
 
 /* ===== Lens card =====
-   Each card occupies a single grid cell. The card's own width is
-   driven by the grid column (1fr); the 4:5 aspect-ratio gives it
-   its height. Hover scales the card *in place* — no more
-   translate(-50%, -50%) since the grid does the placement now. */
+ *   Each card occupies a single grid cell. The card's own width is
+ *   driven by the grid column (1fr); the 4:5 aspect-ratio gives its
+ *   height. Cards are placed by the `.cards` grid; transforms only
+ *   lift them in place.
+ *
+ *   Interaction model — deliberately simple:
+ *     States:    rest → lifted (hover OR selected) → press
+ *     Transform: rest = scale(1); lifted = translateY(-5px) scale(1.025);
+ *                press dampens the lift.
+ *     Shadow:    cheap inset rest shadow on the card itself; the
+ *                heavy ambient cast shadow lives on `::before` and
+ *                fades in with opacity (GPU-only) when lifted.
+ *     Selection: layers a quiet accent ring on top of the lift. No
+ *                outer halo — the lift + ring is enough signal.
+ *     Timing:    one duration (160ms) for everything except press
+ *                (80ms). Entrance uses a bouncier spring (360ms). */
 
 .card {
   --card-bg: #1f2a5c;
@@ -354,32 +366,13 @@
   --card-accent: #f2c04a;
 
   position: relative;
-  /* Every card gets a real stacking layer so :hover can reliably
-     promote a card above its neighbors. Without this baseline the
-     later-DOM cards paint over earlier-DOM cards on hover and
-     their long ambient shadows bleed onto the hovered surface. */
   z-index: 1;
-  /* Pre-promote to a compositor layer so the very first hover
-     doesn't pay layer-creation cost. Combined with the static
-     `transform` declaration below (no per-state translateZ
-     additions needed), the GPU can interpolate transforms with
-     no main-thread work. We deliberately do NOT add `will-change`
-     on :hover — it would trigger a layer re-evaluation event on
-     hover-in, which is exactly the hitch we're trying to avoid. */
+  /* Pre-promote to its own compositor layer so the first hover
+     doesn't pay layer-creation cost. Never toggled on :hover. */
   will-change: transform;
   width: 100%;
-  /* 4:5 keeps the cards card-shaped without making them so tall
-     that four rows feel cramped at narrow viewports. */
   aspect-ratio: 4 / 5;
   padding: 13px 14px 14px;
-  /* Layered background: a faint top-light → bottom-shadow gradient
-     sits above the solid card color, giving the surface dimension
-     the way printed cardstock catches light. Without this, the
-     card surface reads as paint, not paper. The white at top is
-     pulled to ~6% so it doesn't wash out the saturated card colors;
-     the black at bottom is also subtle (~10%) — together they cue
-     the eye to "this surface has a top and bottom" without ever
-     becoming an obvious gradient. */
   background:
     linear-gradient(
       180deg,
@@ -391,20 +384,10 @@
     var(--card-bg);
   color: var(--card-fg);
   border: none;
-  /* Generous radius reads as a real Pip/tarot-style card at this
-     scale; 14px was on the small side for ~140px wide cards. */
   border-radius: 18px;
-  /* REST shadow — only the *cheap* parts live here:
-       • inset hairline edge
-       • inset top highlight (specular catch)
-       • inset bottom shadow (underside)
-       • close contact shadow (1px, near-zero paint cost)
-     The expensive ambient cast shadow lives on `.cardElevation`
-     pseudo-element below, so we can fade it in with opacity
-     instead of repainting the whole shadow stack on hover. This
-     is the difference between hover-in feeling instant vs.
-     stalled — animating box-shadow forces a paint on every
-     frame, animating opacity is GPU-only. */
+  /* Rest shadow — cheap inset layers only. Cast shadow lives on
+     `::before` so hover/selected can fade it in via opacity
+     (GPU-only) instead of repainting the whole shadow stack. */
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.22) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
@@ -416,199 +399,95 @@
   cursor: pointer;
   font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
   opacity: 0;
-  /* Pure scale at rest — translateZ(0) is no longer needed since
-     `will-change: transform` above already promotes the layer.
-     Keeping the transform chain simple (one component) lets the
-     compositor interpolate it as quickly as possible. */
   transform: scale(0.96);
-  /* Specific properties only — `transition: all` would catch
-     auto-changing properties (z-index, etc.) we don't want
-     animated. These durations are the *default* (hover-out,
-     deselect, etc.) — hover-in overrides with shorter durations
-     below for that classic "snappy in, settled out" feel.
-
-     Notice: NO box-shadow transition here. The cast shadow is
-     animated via the `.card::before` pseudo's opacity, which is
-     GPU-accelerated and doesn't trigger paint. Only `transform`
-     animates on the card itself. */
+  /* Default = hover-OUT timing. Hover-in overrides below with a
+     much shorter duration so the card lifts under the cursor
+     immediately, then settles back calmly when you leave. */
   transition:
     opacity 600ms var(--ease-out-quint),
-    transform 200ms var(--ease-out-snap);
+    transform 180ms var(--ease-out-snap),
+    box-shadow 180ms var(--ease-out-snap);
 }
 
-/* Cast-shadow layer — heavy ambient + lifted contact shadow live
-   here, faded in with opacity (GPU-only) instead of animating
-   box-shadow on the card itself (paint-heavy). Sits at opacity 0
-   at rest; .card:hover bumps it to 1.
-
-   Architecture note: this is the standard "shadow-on-pseudo"
-   trick used by Material, Tailwind UI, Linear etc. for
-   high-frequency hover surfaces. The visual result is identical
-   to animating box-shadow directly, but the compositor cost
-   drops from ~3-6ms paint per frame to <0.1ms. */
+/* Cast-shadow layer. Opacity 0 at rest, 1 when lifted. */
 .card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  /* Hover-state cast shadows. Opacity 0 at rest = invisible. */
   box-shadow:
     0 2px 3px rgba(0, 0, 0, 0.1),
     0 14px 28px -10px rgba(20, 14, 8, 0.34),
     0 32px 60px -22px rgba(20, 14, 8, 0.42);
   opacity: 0;
-  /* Slightly slower than transform on hover-in so the shadow
-     trails *just barely* — reads as the cast catching up to
-     the lifted card. Symmetric for now; hover-out below uses
-     a longer settle. */
-  transition: opacity 140ms var(--ease-out-snap);
+  transition: opacity 180ms var(--ease-out-snap);
 }
 
 .cardVisible {
   opacity: 1;
   transform: scale(1);
-  /* Use the bouncy spring just for the entrance — afterwards we
-     fall back to the calmer ease-out defined on `.card`. */
+  /* Bouncy spring for the entrance only; the base transition
+     takes over for hover/select once the entrance settles.
+     `--card-enter-delay` is set per-card from JS for the row+col
+     stagger. We apply it ONLY here (not in the base `.card` rule)
+     so subsequent hover/select transitions fire instantly. */
   transition:
-    opacity 600ms var(--ease-out-quint),
-    transform 360ms var(--ease-spring-soft);
+    opacity 600ms var(--ease-out-quint) var(--card-enter-delay, 0ms),
+    transform 360ms var(--ease-spring-soft) var(--card-enter-delay, 0ms);
 }
 
-/*
- * .cardSelected — applied to the lens card whose side panel is
- * currently open. This is a persistent state (not gated on hover)
- * so a user can find their place in the deck while reading the
- * panel content. It deliberately mirrors the visual language of
- * :hover (accent ring, lift) but lays a softer outer halo behind
- * the ring so a hovered card and a selected card remain
- * distinguishable when the cursor is somewhere else.
- *
- * On hover-capable devices, hovering a selected card layers the
- * normal :hover treatment on top (see further down) — ring stays,
- * the card just lifts a little more.
- */
+/* Selected = the card whose side panel is open. Persistent state
+   that sits at the same lift as :hover (so re-entering the card
+   isn't disorienting) plus a quiet accent ring as the unique
+   signal. */
 .cardSelected {
-  /* Commit to a real lift — the previous -2px / 1.012 was almost
-     invisible at typical viewing distance, making selected and
-     resting near-identical. We sit just below the hover lift
-     (-6px / 1.025) so hovering a selected card still reads as a
-     clear *additional* response. */
-  transform: translateY(-4px) scale(1.02);
-  /* Layered: same baseline shadows as rest, plus the accent ring
-     (selection's primary signal) plus a soft outer halo so the
-     selected card glows quietly out from the grid. */
+  transform: translateY(-5px) scale(1.025);
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.22) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
     0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
-    0 1px 1px rgba(0, 0, 0, 0.08),
-    0 12px 26px -12px rgba(20, 14, 8, 0.36),
-    0 0 0 2px var(--card-accent),
-    0 0 0 10px color-mix(in oklab, var(--card-accent) 20%, transparent);
-  /* Sits above resting cards but under whichever card is being
-     actively hovered, so :hover always wins focus visually. */
+    0 0 0 2px var(--card-accent);
   z-index: 3;
+}
+
+.cardSelected::before {
+  opacity: 1;
 }
 
 /* The selected card's SVG runs its animation while idle — a
    quiet "alive" signal that confirms which card is paired with
-   the open panel. Reduced motion still kills this via the global
-   block at the bottom of this file. */
+   the open panel. */
 .cardSelected .cardArt :global(svg[data-anim] [data-anim-target]) {
   animation-play-state: running;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    /* A bit higher lift than before (-6px vs -4px) — without
-       the accent ring carrying the "you're on me" signal, the
-       lift + shadow have to do that work themselves. Real cards
-       don't get outlined when you pick them up; they just lift.
-       Pure 2-component transform: translate + scale. No
-       translateZ — the card is already promoted to its own
-       layer via `will-change: transform` on the rest rule. */
-    transform: translateY(-6px) scale(1.025);
-    /* Hover-in motion design:
-         • 120ms with a sharp ease-out — the curve rises
-           immediately (no slow ramp like overshoot) and lands
-           cleanly. 120ms feels FASTER than the old 80ms because
-           the old version stalled 16-32ms on the first frame
-           waiting for the box-shadow paint; with that gone, the
-           full 120ms is *visible motion* from frame 1.
-         • The ::before pseudo's opacity transition (140ms,
-           defined above) handles the cast-shadow fade — GPU
-           only, no paint cost.
-       Hover-out rides the default 200ms snap transition on
-       `.card` for a clean settle. */
-    transition: transform 120ms var(--ease-out-snap);
-    /* Hover sits high above every other card-state layer so
-       that the selected card's outer halo, neighboring cards'
-       ambient shadows, and the center card's resting paint
-       can never bleed on top of the surface the user is
-       actively pointing at. Big numerical gap from the rest
-       (1) / selected (3) tier so future per-state additions
-       still slot below. */
+    transform: translateY(-5px) scale(1.025);
+    /* Snap up under the cursor — short enough that the lift
+       feels caused by the pointer, not chased by it. */
+    transition: transform 90ms var(--ease-out-snap);
     z-index: 20;
-    /* No `will-change` here — adding it on :hover triggers a
-       layer re-evaluation event, which is exactly the hitch
-       we're trying to avoid. The base `.card` rule already
-       sets `will-change: transform` so the layer is hot. */
   }
 
-  /* Fade in the cast-shadow pseudo on hover. GPU-accelerated
-     (opacity only), so this costs effectively zero paint per
-     frame compared to animating box-shadow. */
   .card:hover::before {
     opacity: 1;
-  }
-
-  .card:hover .cardArt :global(svg) {
-    /* Subtle inner pulse — the card already scales 1.025, so
-       1.02 here gives ~4.5% combined scale on the artwork.
-       Matches the card's hover-in timing (120ms snap) so the
-       art and card arrive together as one beat. */
-    transform: scale(1.02);
-    transition: transform 120ms var(--ease-out-snap);
+    transition: opacity 90ms var(--ease-out-snap);
   }
 }
 
-.card:active {
-  /* Tactile press: 0.97 reads at typical viewing distance where
-     0.985 was invisible. Very short 70ms with the snap curve so
-     the press *clicks* in. Release rides the default 200ms
-     snap transition above for a clean rebound. */
-  transform: scale(0.97);
-  transition: transform 70ms var(--ease-out-snap);
+.card:active,
+.card.cardSelected:active {
+  transform: scale(0.98);
+  transition: transform 80ms var(--ease-out-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  /* When the card is both hovered and pressed, keep some lift
-     but add the press scale on top so the press still reads. */
-  .card:hover:active {
-    transform: translateY(-3px) scale(1.005);
+  .card:hover:active,
+  .card.cardSelected:hover:active {
+    transform: translateY(-2px) scale(1.01);
   }
-
-  /* Hovering the currently-selected card layers the hover lift
-     on top of the selection treatment. The accent ring + halo
-     (persistent selection signal) stays via the .cardSelected
-     box-shadow on the card itself; the cast shadow comes from
-     the .card::before pseudo (already faded in by .card:hover).
-     We just need to override the transform to match hover. */
-  .card.cardSelected:hover {
-    transform: translateY(-6px) scale(1.025);
-    /* Match the unselected hover layer (see `.card:hover`).
-       The hovered card always wins the stack regardless of
-       whether it's also the currently-selected card. */
-    z-index: 20;
-  }
-}
-
-/* When the user presses a selected card, keep the selection
-   shadow but apply the standard press scale so the click still
-   feels responsive. */
-.card.cardSelected:active {
-  transform: scale(0.97);
 }
 
 .cardArt {
@@ -624,11 +503,6 @@
   width: 92%;
   height: 92%;
   max-height: 100%;
-  /* Default = hover-out: a longer settle (180ms) on the snap
-     curve so the artwork releases gently when the cursor leaves,
-     but still lands cleanly instead of drifting. Hover-in
-     overrides this in the .card:hover .cardArt rule above. */
-  transition: transform 180ms var(--ease-out-snap);
 }
 
 .cardTitle {
@@ -732,11 +606,9 @@
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
   opacity: 0;
   transform: scale(0.94);
-  /* Transform-only transition — cast shadow is animated via
-     pseudo opacity, no box-shadow paint cost on hover. */
   transition:
     opacity 700ms var(--ease-out-quint),
-    transform 200ms var(--ease-out-snap);
+    transform 160ms var(--ease-out-snap);
 }
 
 /* Center card cast-shadow layer. Sits at opacity 0 at rest;
@@ -795,34 +667,25 @@
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover {
-    /* Slightly stronger lift than regular cards — it's the
-       focal card. Cast shadow comes from the ::before pseudo
-       fading in; we only animate transform here. */
-    transform: translateY(-7px) scale(1.022);
-    /* 120ms snap matches lens cards. The ::before opacity
-       transition (160ms) handles the cast-shadow fade-in,
-       which is GPU-only and doesn't trigger paint. */
-    transition: transform 120ms var(--ease-out-snap);
-    /* One step above regular card hover (20) so when both
-       could theoretically overlap, the focal card wins the
-       stack. */
+    transform: translateY(-6px) scale(1.02);
+    transition: transform 90ms var(--ease-out-snap);
     z-index: 25;
   }
 
-  /* Fade in the deeper cast shadow on hover. GPU-only, no paint. */
   .centerCard:hover::before {
     opacity: 1;
+    transition: opacity 90ms var(--ease-out-snap);
   }
 }
 
 .centerCard:active {
-  transform: scale(0.975);
-  transition: transform 70ms var(--ease-out-snap);
+  transform: scale(0.98);
+  transition: transform 80ms var(--ease-out-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover:active {
-    transform: translateY(-3px) scale(1.005);
+    transform: translateY(-2px) scale(1.005);
   }
 }
 
@@ -1840,20 +1703,20 @@
   }
 }
 
-/* Legibility — the accent label "writes itself in" from the left. */
+/* Legibility — an underline draws itself beneath the name. */
 :global(svg[data-anim='legibility'] [data-anim-target]) {
-  animation: lensLabelWrite 2.4s ease-in-out infinite;
+  animation: lensLegibilityUnderline 2.6s ease-in-out infinite;
 }
-@keyframes lensLabelWrite {
-  0%,
-  100% {
-    transform: scaleX(0.2);
-    opacity: 0.2;
+@keyframes lensLegibilityUnderline {
+  0% {
+    stroke-dashoffset: 56;
   }
-  40%,
-  70% {
-    transform: scaleX(1);
-    opacity: 1;
+  45%,
+  85% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 56;
   }
 }
 
@@ -2408,10 +2271,6 @@
     .card:hover:active,
     .centerCard:hover,
     .centerCard:hover:active {
-      transform: scale(1) !important;
-    }
-
-    .card:hover .cardArt :global(svg) {
       transform: scale(1) !important;
     }
   }

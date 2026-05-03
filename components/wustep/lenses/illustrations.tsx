@@ -436,101 +436,38 @@ function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Legibility — fog on the left becomes a labeled tag on the right.
- *  An amorphous cloud (the unnamed thing) connects via a quiet line
- *  to a crisp rectangular tag with an accent label-bar inside. The
- *  visual contrast — organic blob vs. rectilinear tag — does the
- *  storytelling: naming converts fog into handles.
+/** Legibility — a name and its underline.
  *
- *  Animation (card hover): the accent bar inside the tag scales in
- *  from its left edge, like a name being written. The fog and tag
- *  frame stay still so the eye lands on the act of naming.
+ *  One headline bar (the name) sitting on a thin underline that draws
+ *  itself in beneath it. That's the whole image: a word, underlined.
+ *  The underline is the gesture of naming — a stroke of attention
+ *  that says "this one, this is what we'll call it."
+ *
+ *  Animation (card hover): the underline draws in from left to right,
+ *  rests, then resets. The headline stays still so the eye lands on
+ *  the act of underlining.
  */
 function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
+  const X = 22 // shared left edge — anchors name and underline
+  const W = 56 // shared width
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='legibility'>
-      {/* Soft fog cloud on the left — an amoeba-like organic shape
-          built from cubic Béziers. Filled at low opacity so it
-          reads as "fuzzy / undefined." */}
-      <path
-        d='M 16 50
-           C 12 42, 18 34, 26 34
-           C 30 28, 40 30, 42 38
-           C 48 38, 50 46, 46 52
-           C 48 60, 40 66, 32 64
-           C 24 68, 14 62, 16 50 Z'
-        fill={fg}
-        opacity='0.22'
-      />
-      {/* A second, smaller blob outline gives the cloud a bit of
-          depth — like haze with a subtle inner contour. */}
-      <path
-        d='M 22 48
-           C 20 42, 26 38, 32 40
-           C 36 36, 42 40, 40 46
-           C 42 52, 36 56, 30 54
-           C 24 56, 20 52, 22 48 Z'
-        fill='none'
-        stroke={fg}
-        strokeWidth='1'
-        opacity='0.35'
-      />
+      {/* The name. */}
+      <rect x={X} y={46} width={W} height={6} rx={1} fill={fg} opacity={0.9} />
 
-      {/* Connector — fog gets translated to a name. A short dashed
-          line ending in a small dot, like an arrow's quiet ghost. */}
+      {/* The underline. Animates via stroke-dashoffset so it draws
+          in beneath the name like a pen-stroke of attention. */}
       <line
-        x1='50'
-        y1='50'
-        x2='56'
-        y2='50'
-        stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.45'
-        strokeDasharray='2 2'
+        data-anim-target='1'
+        x1={X}
+        y1={60}
+        x2={X + W}
+        y2={60}
+        stroke={accent}
+        strokeWidth={2}
         strokeLinecap='round'
-      />
-
-      {/* The label tag — a clean rectangle on the right. Crisp
-          right-angle geometry contrasts with the blob to read as
-          "structured / named." */}
-      <rect
-        x='58'
-        y='32'
-        width='30'
-        height='36'
-        rx='2'
-        ry='2'
-        fill='none'
-        stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.75'
-      />
-
-      {/* The accent label-bar inside the tag. This is the "name."
-          The animation grows it in from the left edge on hover. */}
-      <g style={{ transformOrigin: '62px 44px' }} data-anim-target='1'>
-        <rect x='62' y='42' width='22' height='4.5' rx='0.8' fill={accent} />
-      </g>
-
-      {/* A second, shorter line below — like a tagline / subtitle.
-          Static; uses fg at low opacity to recede. */}
-      <rect
-        x='62'
-        y='52'
-        width='14'
-        height='2.4'
-        rx='0.6'
-        fill={fg}
-        opacity='0.5'
-      />
-      <rect
-        x='62'
-        y='58'
-        width='10'
-        height='2.4'
-        rx='0.6'
-        fill={fg}
-        opacity='0.35'
+        strokeDasharray={W}
+        strokeDashoffset={W}
       />
     </svg>
   )
