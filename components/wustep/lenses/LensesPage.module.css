@@ -342,6 +342,26 @@
   margin: 0 auto;
 }
 
+/* In the 8-col composition (container ≥ 900px), vertically center
+   the deck inside `.canvas` when the viewport is taller than the
+   deck. We promote `.canvas` to a flex column *only* in this band so
+   that `margin-block: auto` on the deck has free vertical space to
+   absorb. Below 900px we leave `.canvas` as block — flex-item sizing
+   on a grid with `auto-fit` columns inside a flex column can fight
+   the cross-axis stretch and push the grid off-screen horizontally.
+   On viewports shorter than the deck, the auto margins collapse to 0
+   and the deck pins to the top + scrolls naturally. */
+@container deck (min-width: 900px) {
+  .canvas {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cards {
+    margin-block: auto;
+  }
+}
+
 /* ===== Lens card =====
  *   Each card occupies a single grid cell. The card's own width is
  *   driven by the grid column (1fr); the 4:5 aspect-ratio gives its
