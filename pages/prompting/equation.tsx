@@ -3,7 +3,7 @@ import Head from 'next/head'
 import {
   EquationContent,
   PromptingLayout
-} from '@/components/wustep/PromptingPage'
+} from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
 
 const parentTitle = 'How to talk to coding agents'
