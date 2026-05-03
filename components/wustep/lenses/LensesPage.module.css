@@ -1956,11 +1956,14 @@
    Two upper trunks (left and right) draw simultaneously between
    generation-1 and generation-2 pulses. The center trunk draws
    between generation-2 and generation-3. */
+/* Trunks are always visible at rest (the tree structure is part of
+   the resting illustration, not just an animation artefact). When
+   the animation runs, each trunk briefly *brightens* as the signal
+   passes through it, then fades back to its base opacity — like
+   the inheritance highlighting the path it just travelled. */
 :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
 :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-r']),
 :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-c']) {
-  stroke-dasharray: 200;
-  stroke-dashoffset: 200;
   animation: lensEvoTrunk 3.6s ease-in-out infinite;
 }
 :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
@@ -1972,24 +1975,24 @@
 }
 
 @keyframes lensEvoTrunk {
-  0% {
-    stroke-dashoffset: 200;
-  }
-  /* Draw on quickly so the signal reads as moving, not painting. */
-  18% {
-    stroke-dashoffset: 0;
-  }
-  /* Hold the drawn line for a beat so the next-generation pulse
-     can fire while the connector is fully visible. */
-  60% {
-    stroke-dashoffset: 0;
-  }
-  /* Fade back out before the next cycle by undrawing from the
-     near end (dashoffset increases). The eye reads this as the
-     signal moving on. */
-  85%,
+  /* Resting brightness — matches the inline `opacity` set on each
+     trunk path in the SVG, so the cycle's start/end matches the
+     static state. */
+  0%,
   100% {
-    stroke-dashoffset: 200;
+    opacity: 0.55;
+    stroke-width: 1.4;
+  }
+  /* Signal passes through — trunk brightens and thickens slightly. */
+  18%,
+  45% {
+    opacity: 1;
+    stroke-width: 2;
+  }
+  /* Fades back to rest. */
+  85% {
+    opacity: 0.55;
+    stroke-width: 1.4;
   }
 }
 
@@ -2008,19 +2011,27 @@
   }
 }
 
-/* Utility — the winning dot bounces, like the optimum is celebrating. */
-:global(svg[data-anim='utility'] [data-anim-target]) {
-  transform-origin: 75px 18px;
-  animation: lensBounce 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+/* Utility — the balance beam tilts back and forth (the agent
+   weighing the options), then settles toward the heavier side
+   (the accent-coloured option, on the right). Slight rest tilt
+   is preserved at the loop's endpoints so the scale never reads
+   as perfectly even — one option is always the chosen one. */
+:global(svg[data-anim='utility'] [data-anim-target='1']) {
+  animation: lensUtilityTip 3s ease-in-out infinite;
 }
-@keyframes lensBounce {
+@keyframes lensUtilityTip {
+  /* Resting bias — heavier pan (right) sits a touch lower. */
   0%,
-  60%,
   100% {
-    transform: translateY(0);
+    transform: rotate(6deg);
   }
-  30% {
-    transform: translateY(-4px);
+  /* Swing across, weighing the lighter option for a moment. */
+  35% {
+    transform: rotate(-5deg);
+  }
+  /* Settle back toward the heavier option, the chosen one. */
+  70% {
+    transform: rotate(8deg);
   }
 }
 
@@ -2051,19 +2062,93 @@
   }
 }
 
-/* Game theory — only the accent cell breathes; grey dots stay put. */
+/* Game theory — two players' moves walk through the 2×2 matrix.
+   The four outcome cells share one keyframe (`lensGameCell`) but
+   stagger across the cycle so exactly one cell is "realised" at a
+   time, walking clockwise TL → TR → BR → BL. The row + column
+   markers step in their own one-second-per-side cadence so their
+   intersection always points at the lit cell. */
+:global(svg[data-anim='game-theory'] [data-anim-target='1']),
+:global(svg[data-anim='game-theory'] [data-anim-target='2']),
+:global(svg[data-anim='game-theory'] [data-anim-target='3']),
 :global(svg[data-anim='game-theory'] [data-anim-target='4']) {
-  animation: lensGameDominant 2.4s ease-in-out infinite;
+  animation: lensGameCell 4s ease-in-out infinite;
+  opacity: 0;
 }
-@keyframes lensGameDominant {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
+:global(svg[data-anim='game-theory'] [data-anim-target='1']) {
+  animation-delay: 0s;
+}
+:global(svg[data-anim='game-theory'] [data-anim-target='2']) {
+  animation-delay: -3s;
+}
+:global(svg[data-anim='game-theory'] [data-anim-target='3']) {
+  animation-delay: -2s;
+}
+:global(svg[data-anim='game-theory'] [data-anim-target='4']) {
+  animation-delay: -1s;
+}
+@keyframes lensGameCell {
+  /* Each cell is "lit" for ~25% of the cycle, then fades out. */
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
   }
+  6% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  28%,
+  100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* Row marker (Player 1) — walks between the two rows. The marker
+   sits at y=37 for the first half of the cycle (top row lit) and
+   drops to y=63 for the second half (bottom row lit). */
+:global(svg[data-anim='game-theory'] [data-anim-target='row']) {
+  animation: lensGameRow 4s steps(1, end) infinite;
+}
+@keyframes lensGameRow {
+  0%,
   50% {
-    transform: scale(1.12);
-    opacity: 0.8;
+    transform: translateY(0);
+  }
+  /* Drop to the bottom row at the midpoint (when cells 3 + 4 light). */
+  50.01%,
+  100% {
+    transform: translateY(26px);
+  }
+}
+
+/* Column marker (Player 2) — walks between the two columns. Phase
+   shifted relative to the row so the (row, col) pair always picks
+   out the currently-lit cell:
+     0   – 25%  : top-left  (row=top, col=left)
+     25  – 50%  : top-right (row=top, col=right)
+     50  – 75%  : bot-right (row=bot, col=right)
+     75  – 100% : bot-left  (row=bot, col=left)
+*/
+:global(svg[data-anim='game-theory'] [data-anim-target='col']) {
+  animation: lensGameCol 4s steps(1, end) infinite;
+}
+@keyframes lensGameCol {
+  0%,
+  25% {
+    transform: translateX(0);
+  }
+  25.01%,
+  75% {
+    transform: translateX(26px);
+  }
+  75.01%,
+  100% {
+    transform: translateX(0);
   }
 }
 
@@ -2164,19 +2249,98 @@
   }
 }
 
-/* Narrative — a beat travels along the arc. */
-:global(svg[data-anim='narrative'] [data-anim-target]) {
-  animation: lensStoryBeat 3.2s ease-in-out infinite;
+/* Narrative — the arc draws on left-to-right each loop, and each
+   beat-dot pulses in sequence as the line reaches it. The whole
+   story unfolds in 4s; beats are staggered 0/0.5/1.0/1.5/2.0s so
+   the climax (beat 3) lands at the curve's peak. */
+:global(svg[data-anim='narrative'] [data-anim-target='line']) {
+  /* Path is roughly 110 SVG units long; dasharray is generous so
+     the same offset trick works regardless of the measured length. */
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: lensNarrativeArc 4s ease-in-out infinite;
 }
-@keyframes lensStoryBeat {
+@keyframes lensNarrativeArc {
   0% {
-    transform: translate(-38px, 44px);
+    stroke-dashoffset: 240;
   }
-  50% {
-    transform: translate(0, 0);
+  /* Draw on through the first 60% of the cycle. */
+  60% {
+    stroke-dashoffset: 0;
   }
+  /* Hold for a beat so the eye registers the complete arc. */
+  82% {
+    stroke-dashoffset: 0;
+  }
+  /* Fade back so the next pass reads as "the story restarts." */
   100% {
-    transform: translate(38px, 44px);
+    stroke-dashoffset: 240;
+  }
+}
+
+:global(svg[data-anim='narrative'] [data-anim-target='1']),
+:global(svg[data-anim='narrative'] [data-anim-target='2']),
+:global(svg[data-anim='narrative'] [data-anim-target='3']),
+:global(svg[data-anim='narrative'] [data-anim-target='4']),
+:global(svg[data-anim='narrative'] [data-anim-target='5']) {
+  animation: lensNarrativeBeat 4s ease-in-out infinite;
+}
+:global(svg[data-anim='narrative'] [data-anim-target='1']) {
+  animation-delay: 0s;
+}
+:global(svg[data-anim='narrative'] [data-anim-target='2']) {
+  animation-delay: 0.5s;
+}
+:global(svg[data-anim='narrative'] [data-anim-target='3']) {
+  animation-delay: 1.1s;
+}
+:global(svg[data-anim='narrative'] [data-anim-target='4']) {
+  animation-delay: 1.7s;
+}
+:global(svg[data-anim='narrative'] [data-anim-target='5']) {
+  animation-delay: 2.2s;
+}
+@keyframes lensNarrativeBeat {
+  0%,
+  10% {
+    transform: scale(1);
+  }
+  /* Quick rise as the line "arrives" at this beat. */
+  14% {
+    transform: scale(1.5);
+  }
+  /* Settle, then hold for the rest of the cycle. */
+  22%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Climax halo — bloom out softly when the arc reaches the peak,
+   then fade back. Aligned to the climax beat's delay (1.1s) so
+   the bloom and the climax pulse coincide. */
+:global(svg[data-anim='narrative'] [data-anim-target='halo']) {
+  animation: lensNarrativeHalo 4s ease-in-out infinite;
+  animation-delay: 1.05s;
+}
+@keyframes lensNarrativeHalo {
+  0%,
+  6% {
+    transform: scale(0.6);
+    opacity: 0.18;
+  }
+  18% {
+    transform: scale(1.25);
+    opacity: 0.55;
+  }
+  35% {
+    transform: scale(1);
+    opacity: 0.32;
+  }
+  60%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.18;
   }
 }
 
@@ -2387,7 +2551,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.08);
+    transform: scale(1.04);
   }
 }
 @keyframes lensCrackFlicker {
@@ -2483,17 +2647,23 @@
   }
 }
 
-/* Projection — the cast shadow sways slightly. */
+/* Projection — the projected world (semicircle) grows outward from
+   the figure's base, then settles. The story: what the speaker
+   carries inside expands to color everything around them. */
 :global(svg[data-anim='projection'] [data-anim-target='1']) {
-  animation: lensProjectSway 3.4s ease-in-out infinite;
+  animation: lensProjectExpand 3s ease-in-out infinite;
 }
-@keyframes lensProjectSway {
+@keyframes lensProjectExpand {
+  /* Compressed — the projection at rest. */
   0%,
   100% {
-    transform: scaleX(1) translateX(0);
+    transform: scale(0.7);
+    opacity: 0.55;
   }
+  /* Bloom outward to its largest extent. */
   50% {
-    transform: scaleX(1.08) translateX(2px);
+    transform: scale(1.1);
+    opacity: 1;
   }
 }
 
@@ -2578,22 +2748,77 @@
   }
 }
 
-/* Expertise — the marker climbs the staircase one step at a time. */
+/* Expertise — the resting state is the complete pyramid (all
+   three bricks visible and assembled). On hover, each brick
+   lifts off in sequence — foundation first, then middle, then
+   capstone — and snaps back into place before the next one
+   lifts. The eye reads bottom-to-top, layer by layer, like
+   walking up through stages of mastery. The whole loop is one
+   continuous wave traveling up the pyramid.
+
+   All three keyframes share the same 3s cycle but stagger
+   their lift moments so the pulse climbs the stack:
+     foundation lifts at 0–25%
+     middle      lifts at 25–55%
+     capstone    lifts at 55–85%
+     full rest   85–100%
+*/
+
+/* Foundation — first to lift. Heaviest piece, smallest hop, like
+   the base shifting under its own weight before settling. */
 :global(svg[data-anim='expertise'] [data-anim-target='1']) {
-  animation: lensExpertiseClimb 3.2s steps(1, end) infinite;
+  animation: lensExpertiseBase 3s cubic-bezier(0.34, 1.5, 0.4, 1)
+    infinite;
 }
-@keyframes lensExpertiseClimb {
-  0% {
-    transform: translate(-40px, 32px);
-  }
-  25% {
-    transform: translate(-20px, 20px);
-  }
-  50% {
-    transform: translate(0, 0);
-  }
+@keyframes lensExpertiseBase {
+  /* Resting — the assembled pyramid. */
+  0%,
+  25%,
   100% {
-    transform: translate(0, 0);
+    transform: translateY(0);
+  }
+  /* Brief lift early in the cycle. */
+  10% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Middle brick — lifts after the foundation has resettled. A
+   slightly bigger hop than the foundation; the eye is now
+   tracking upward. */
+:global(svg[data-anim='expertise'] [data-anim-target='2']) {
+  animation: lensExpertiseMid 3s cubic-bezier(0.34, 1.5, 0.4, 1) infinite;
+}
+@keyframes lensExpertiseMid {
+  0%,
+  25%,
+  55%,
+  100% {
+    transform: translateY(0);
+  }
+  /* Lifts mid-cycle. */
+  38% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Capstone — last to lift, biggest jump, with a slight scale-up.
+   The expert's precise move gets the showcase moment at the top
+   of the wave. */
+:global(svg[data-anim='expertise'] [data-anim-target='3']) {
+  animation: lensExpertiseCap 3s cubic-bezier(0.34, 1.6, 0.4, 1)
+    infinite;
+}
+@keyframes lensExpertiseCap {
+  0%,
+  55%,
+  85%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  /* Lifts highest of the three, with a slight scale bloom. */
+  68% {
+    transform: translateY(-7px) scale(1.1);
   }
 }
 

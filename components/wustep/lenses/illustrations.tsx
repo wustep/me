@@ -204,7 +204,7 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
         stroke={fg}
         strokeWidth='1.4'
         strokeLinecap='round'
-        opacity='0.7'
+        opacity='0.55'
         data-anim-target='trunk-c'
       />
 
@@ -277,15 +277,157 @@ function ArtMinimalism({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Utility — the winning bar's accent dot bounces (got the highest payoff). */
+/** Utility — a balance scale weighing two options. One pan dips
+ *  heavier than the other; that pan's option is the one with the
+ *  greater utility, the choice the agent will take. The story:
+ *  every choice is a private weighing of payoffs.
+ *
+ *  The silhouette is the classic "scales of justice" shape: a
+ *  weighted base supports a vertical post, the post tapers up to
+ *  a knife-edge pivot, the beam crosses through the pivot, and
+ *  triangular pans hang from the beam's ends via V-shaped struts.
+ *  The accent pan rides heavier so its side always finishes lower
+ *  — utility expressed as the side that gets chosen.
+ *
+ *    data-anim-target='1' = the beam + pans group (rotates around
+ *      the pivot at the top of the post).
+ */
 function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
+  // The pivot — top of the post, where the beam balances. The
+  // beam group rotates around this point.
+  const PIVOT = { x: 50, y: 38 }
+
+  // Pan tip x-positions (where the V struts meet at the bowl).
+  const LEFT_X = 22
+  const RIGHT_X = 78
+  // Pan width (outer rim) — half-spread either side of the tip.
+  const PAN_HALF = 11
+  // Vertical drop from the beam to the bowl rim.
+  const PAN_DROP = 18
+  // Beam y at the pivot (the pan struts rise from the beam ends
+  // up to here too — same axis since pans hang from the beam).
+  const BEAM_Y = PIVOT.y
+
+  // Pan rim Y (where the bowl curve sits).
+  const RIM_Y = BEAM_Y + PAN_DROP
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='utility'>
-      <rect x='14' y='66' width='14' height='18' fill={fg} opacity='0.42' />
-      <rect x='32' y='54' width='14' height='30' fill={fg} opacity='0.58' />
-      <rect x='50' y='40' width='14' height='44' fill={fg} opacity='0.76' />
-      <rect x='68' y='22' width='14' height='62' fill={accent} />
-      <circle cx='75' cy='18' r='4.5' fill={accent} data-anim-target='1' />
+      {/* ── Static stand: base, post, pivot peak. These don't
+          rotate — only the beam + pans tilt above. */}
+
+      {/* Flared base — wider at the bottom for visual weight, like
+          a real scale's plinth. */}
+      <path
+        d='M 30 86 Q 30 80 38 80 L 62 80 Q 70 80 70 86 Z'
+        fill={fg}
+        opacity='0.7'
+      />
+      {/* Thin shadow line under the base so it reads as resting on
+          a surface. */}
+      <line
+        x1='26'
+        y1='87'
+        x2='74'
+        y2='87'
+        stroke={fg}
+        strokeWidth='0.8'
+        opacity='0.35'
+        strokeLinecap='round'
+      />
+
+      {/* Central post — runs from the top of the base up to the
+          pivot peak. Thicker than before so it reads as the solid
+          stand of the instrument. */}
+      <rect
+        x='47.4'
+        y={PIVOT.y}
+        width='5.2'
+        height={80 - PIVOT.y}
+        fill={fg}
+        opacity='0.7'
+      />
+
+      {/* Pivot peak — a small triangle at the very top of the post,
+          giving the beam a knife-edge to balance on. Sits at the
+          pivot point (50, 38). */}
+      <polygon
+        points={`${PIVOT.x - 4},${PIVOT.y + 1} ${PIVOT.x + 4},${PIVOT.y + 1} ${PIVOT.x},${PIVOT.y - 5}`}
+        fill={fg}
+        opacity='0.85'
+      />
+
+      {/* ── Tilting group: beam, pan struts, pans, weights. All
+          children rotate together around the pivot. */}
+      <g
+        style={{ transformOrigin: `${PIVOT.x}px ${PIVOT.y}px` }}
+        data-anim-target='1'
+      >
+        {/* The beam — a long, thin horizontal bar passing through
+            the pivot. Slightly tapered toward each end via stroke
+            geometry; we draw it as a thick line with rounded caps
+            so it reads as a forged metal arm. */}
+        <line
+          x1={LEFT_X}
+          y1={BEAM_Y}
+          x2={RIGHT_X}
+          y2={BEAM_Y}
+          stroke={fg}
+          strokeWidth='3'
+          strokeLinecap='round'
+          opacity='0.85'
+        />
+
+        {/* Beam-end caps — small dots at each end of the beam where
+            the pan struts attach. Subtle visual grace note that
+            tells the eye "this is where the pan hangs from." */}
+        <circle cx={LEFT_X} cy={BEAM_Y} r='1.4' fill={fg} opacity='0.85' />
+        <circle cx={RIGHT_X} cy={BEAM_Y} r='1.4' fill={fg} opacity='0.85' />
+
+        {/* ── Left pan: V-strut + bowl + weight. */}
+        {/* Strut: two thin lines V-ing from the beam end down to
+            the bowl rim's left and right corners. Reads as the
+            chains/wires holding the pan. */}
+        <g
+          stroke={fg}
+          strokeWidth='1'
+          strokeLinecap='round'
+          opacity='0.6'
+          fill='none'
+        >
+          <line x1={LEFT_X} y1={BEAM_Y} x2={LEFT_X - PAN_HALF} y2={RIM_Y} />
+          <line x1={LEFT_X} y1={BEAM_Y} x2={LEFT_X + PAN_HALF} y2={RIM_Y} />
+        </g>
+        {/* Bowl — flat top rim plus a curved bottom, like the dish
+            in the reference. Drawn as a single closed path. */}
+        <path
+          d={`M ${LEFT_X - PAN_HALF} ${RIM_Y} L ${LEFT_X + PAN_HALF} ${RIM_Y} Q ${LEFT_X} ${RIM_Y + 6} ${LEFT_X - PAN_HALF} ${RIM_Y} Z`}
+          fill={fg}
+          opacity='0.65'
+        />
+        {/* Lighter option — small weight in the bowl. */}
+        <circle cx={LEFT_X} cy={RIM_Y - 1.2} r='2.2' fill={fg} opacity='0.85' />
+
+        {/* ── Right pan: V-strut + bowl + heavier (accent) weight. */}
+        <g
+          stroke={fg}
+          strokeWidth='1'
+          strokeLinecap='round'
+          opacity='0.6'
+          fill='none'
+        >
+          <line x1={RIGHT_X} y1={BEAM_Y} x2={RIGHT_X - PAN_HALF} y2={RIM_Y} />
+          <line x1={RIGHT_X} y1={BEAM_Y} x2={RIGHT_X + PAN_HALF} y2={RIM_Y} />
+        </g>
+        <path
+          d={`M ${RIGHT_X - PAN_HALF} ${RIM_Y} L ${RIGHT_X + PAN_HALF} ${RIM_Y} Q ${RIGHT_X} ${RIM_Y + 6} ${RIGHT_X - PAN_HALF} ${RIM_Y} Z`}
+          fill={fg}
+          opacity='0.65'
+        />
+        {/* The chosen option — bigger, accent-coloured weight. The
+            heavier this pan is, the more the beam tilts toward it. */}
+        <circle cx={RIGHT_X} cy={RIM_Y - 2} r='4' fill={accent} />
+      </g>
     </svg>
   )
 }
@@ -331,50 +473,142 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Incentives — the arrow slides toward the target. */
-function ArtIncentives({ fg, accent }: { fg: string; accent: string }) {
+/** Incentives — the arrow slides toward the target.
+ *
+ *  The arrow uses a distinct hot-crimson rather than the lens's
+ *  accent so it pops off the bullseye instead of melting into it.
+ *  The bullseye rings + center are the lens's `fg`, so the arrow is
+ *  the one foreign object in the composition — visually answering
+ *  "show me the incentive."
+ */
+function ArtIncentives({ fg }: { fg: string; accent: string }) {
+  // A vivid arrow color picked to stand out against both the gold
+  // card background and the navy bullseye. Hard-coded because the
+  // lens's `accent` would render the arrow invisible on the target.
+  const ARROW = '#E04A3C'
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='incentives'>
       <circle cx='58' cy='50' r='30' fill={fg} opacity='0.16' />
       <circle cx='58' cy='50' r='20' fill={fg} opacity='0.3' />
       <circle cx='58' cy='50' r='10' fill={fg} opacity='0.55' />
-      <circle cx='58' cy='50' r='4' fill={accent} />
+      <circle cx='58' cy='50' r='4' fill={fg} />
       <g data-anim-target='1'>
         <line
-          x1='12'
+          x1='6'
           y1='50'
-          x2='52'
+          x2='46'
           y2='50'
-          stroke={accent}
-          strokeWidth='3'
+          stroke={ARROW}
+          strokeWidth='3.4'
           strokeLinecap='round'
         />
-        <polygon points='48,44 58,50 48,56' fill={accent} />
+        <polygon points='42,43 54,50 42,57' fill={ARROW} />
       </g>
     </svg>
   )
 }
 
-/** Game theory — each cell takes its turn pulsing (round-robin). */
+/** Game theory — a 2×2 payoff matrix with two players' moves walking
+ *  through the cells. Each player picks a row/column; their
+ *  intersection is the outcome. The story: every move you make has
+ *  to anticipate the other player's response.
+ *
+ *  Composition:
+ *    • Outer 2×2 grid = the payoff matrix.
+ *    • A row-marker (left of the matrix) walks up/down — Player 1's
+ *      choice between two rows.
+ *    • A column-marker (above the matrix) walks left/right — Player
+ *      2's choice between two columns.
+ *    • The cell at the intersection of their two choices lights up
+ *      with the accent — the realised outcome.
+ *
+ *  Animation timing is set in CSS so all four "outcome" cells share
+ *  one keyframe with staggered delays. The row + column markers each
+ *  step once per cycle; their combined position points at whichever
+ *  cell is currently lit.
+ *
+ *    data-anim-target='1' = top-left cell.
+ *    data-anim-target='2' = top-right cell.
+ *    data-anim-target='3' = bottom-right cell.
+ *    data-anim-target='4' = bottom-left cell. (Order = clockwise so
+ *      the highlight walks the matrix instead of jumping randomly.)
+ *    data-anim-target='row' = Player 1's row marker (vertical walk).
+ *    data-anim-target='col' = Player 2's column marker (horizontal).
+ */
 function ArtGameTheory({ fg, accent }: { fg: string; accent: string }) {
+  // Cell centers — a 2×2 grid inside x:24..76, y:24..76. Each cell is
+  // 26px wide. Centers sit at 37 (top/left) and 63 (bottom/right).
+  const TL = { x: 37, y: 37 }
+  const TR = { x: 63, y: 37 }
+  const BR = { x: 63, y: 63 }
+  const BL = { x: 37, y: 63 }
+  const CELL = 18 // size of each highlighted cell square
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='game-theory'>
+      {/* The payoff matrix grid. */}
       <g stroke={fg} strokeWidth='1.4' fill='none' opacity='0.5'>
-        <rect x='20' y='20' width='60' height='60' />
-        <line x1='50' y1='20' x2='50' y2='80' />
-        <line x1='20' y1='50' x2='80' y2='50' />
+        <rect x='24' y='24' width='52' height='52' />
+        <line x1='50' y1='24' x2='50' y2='76' />
+        <line x1='24' y1='50' x2='76' y2='50' />
       </g>
-      <g style={{ transformOrigin: '35px 35px' }} data-anim-target='1'>
-        <circle cx='35' cy='35' r='5' fill={fg} opacity='0.55' />
+
+      {/* The four cell highlights — at rest each is a faint dot.
+          When its turn comes the cell fills with the accent. Ordered
+          clockwise (TL → TR → BR → BL) so the highlight walks the
+          matrix in a clear cycle. */}
+      <rect
+        x={TL.x - CELL / 2}
+        y={TL.y - CELL / 2}
+        width={CELL}
+        height={CELL}
+        rx='1.5'
+        fill={accent}
+        data-anim-target='1'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+      <rect
+        x={TR.x - CELL / 2}
+        y={TR.y - CELL / 2}
+        width={CELL}
+        height={CELL}
+        rx='1.5'
+        fill={accent}
+        data-anim-target='2'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+      <rect
+        x={BR.x - CELL / 2}
+        y={BR.y - CELL / 2}
+        width={CELL}
+        height={CELL}
+        rx='1.5'
+        fill={accent}
+        data-anim-target='3'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+      <rect
+        x={BL.x - CELL / 2}
+        y={BL.y - CELL / 2}
+        width={CELL}
+        height={CELL}
+        rx='1.5'
+        fill={accent}
+        data-anim-target='4'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+
+      {/* Player 1 (rows) — a small triangle marker outside the left
+          edge. Walks vertically between row 1 and row 2. */}
+      <g data-anim-target='row'>
+        <polygon points='18,33 14,37 18,41' fill={fg} opacity='0.75' />
       </g>
-      <g style={{ transformOrigin: '65px 35px' }} data-anim-target='2'>
-        <circle cx='65' cy='35' r='5' fill={fg} opacity='0.4' />
-      </g>
-      <g style={{ transformOrigin: '35px 65px' }} data-anim-target='3'>
-        <circle cx='35' cy='65' r='5' fill={fg} opacity='0.4' />
-      </g>
-      <g style={{ transformOrigin: '65px 65px' }} data-anim-target='4'>
-        <rect x='59' y='59' width='12' height='12' fill={accent} />
+
+      {/* Player 2 (columns) — small triangle marker above the top
+          edge. Walks horizontally between column 1 and column 2. */}
+      <g data-anim-target='col'>
+        <polygon points='33,18 37,14 41,18' fill={fg} opacity='0.75' />
       </g>
     </svg>
   )
@@ -397,11 +631,26 @@ function ArtGameTheory({ fg, accent }: { fg: string; accent: string }) {
  *  of flow reads at a glance. */
 function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
   // Vertex positions (radius 28 around 50,50, starting at the top
-  // and going clockwise: top → bottom-right → bottom-left).
-  const NODE_R = 7
-  const A = { x: 50, y: 22 } // top
-  const B = { x: 74.25, y: 64 } // bottom-right
-  const C = { x: 25.75, y: 64 } // bottom-left
+  // and going clockwise: top → bottom-right → bottom-left). Each
+  // node renders as a different shape — circle, square, triangle —
+  // so the three feel like distinct *kinds* of components in a
+  // system, not three copies of the same actor. The signal that
+  // walks the loop carries between them anyway, which is the
+  // point: a system is heterogeneous parts coupled together.
+  const A = { x: 50, y: 22 } // top — circle
+  const B = { x: 74.25, y: 64 } // bottom-right — square
+  const C = { x: 25.75, y: 64 } // bottom-left — triangle
+  const NODE_HALF = 7 // half-width of the square / radius of the circle
+
+  // Inline style shared across the three nodes so the keyframe can
+  // interpolate `fill` between the lens's foreground and accent
+  // colors without baking specific values into the shared rule.
+  const nodeVars: React.CSSProperties = {
+    ['--node-fg' as string]: fg,
+    ['--node-accent' as string]: accent,
+    transformBox: 'fill-box',
+    transformOrigin: '50% 50%'
+  }
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='systems'>
@@ -418,42 +667,43 @@ function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
         <path d={`M ${C.x} ${C.y} C 16 50, 22 28, ${A.x} ${A.y}`} />
       </g>
 
-      {/* The three nodes. CSS gives each `data-anim-target` the
-          same pulse keyframe but with staggered delays, so the
-          accent fill walks around the cycle. */}
+      {/* Node A — circle (top). */}
       <circle
         cx={A.x}
         cy={A.y}
-        r={NODE_R}
+        r={NODE_HALF}
         fill={fg}
         data-anim-target='1'
-        style={{
-          ['--node-fg' as string]: fg,
-          ['--node-accent' as string]: accent
-        }}
+        style={nodeVars}
       />
-      <circle
-        cx={B.x}
-        cy={B.y}
-        r={NODE_R}
+
+      {/* Node B — square (bottom-right). Drawn from corner so the
+          bounding box matches the circle's footprint exactly. */}
+      <rect
+        x={B.x - NODE_HALF}
+        y={B.y - NODE_HALF}
+        width={NODE_HALF * 2}
+        height={NODE_HALF * 2}
         fill={fg}
         data-anim-target='2'
-        style={{
-          ['--node-fg' as string]: fg,
-          ['--node-accent' as string]: accent
-        }}
+        style={nodeVars}
       />
-      <circle
-        cx={C.x}
-        cy={C.y}
-        r={NODE_R}
-        fill={fg}
-        data-anim-target='3'
-        style={{
-          ['--node-fg' as string]: fg,
-          ['--node-accent' as string]: accent
-        }}
-      />
+
+      {/* Node C — triangle (bottom-left). Triangles read visually
+          smaller than circles/squares of the same bounding-box
+          radius (negative space at the corners), so we scale the
+          triangle up by ~1.4× to match perceived weight. */}
+      {(() => {
+        const T = NODE_HALF * 1.4
+        return (
+          <polygon
+            points={`${C.x},${C.y - T} ${C.x + T * 0.866},${C.y + T * 0.5} ${C.x - T * 0.866},${C.y + T * 0.5}`}
+            fill={fg}
+            data-anim-target='3'
+            style={nodeVars}
+          />
+        )
+      })()}
     </svg>
   )
 }
@@ -611,23 +861,126 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Narrative — a beat travels along the arc, like a story moving. */
+/** Narrative — a five-beat story arc on a baseline. The beats sit
+ *  at the classic Freytag pyramid (setup, rising, climax, falling,
+ *  resolution); each beat's height above the baseline is its
+ *  emotional altitude, and a faint vertical drop-line ties each
+ *  beat to the ground so the rise/fall reads at a glance.
+ *
+ *  Composition rationale
+ *  ─────────────────────
+ *  • The baseline is the world the story happens to. Beats above
+ *    it are charged moments; the higher, the more charged.
+ *  • The connecting curve is the story itself — drawn on
+ *    left-to-right each loop via stroke-dashoffset, threading the
+ *    beats into a single arc.
+ *  • The climax (beat 3, highest) is the accent and carries a soft
+ *    halo behind it, so the eye lands on the peak even before the
+ *    line reaches it. The other four beats are quieter dots.
+ *  • Each beat pulses in sequence as the line arrives, so the
+ *    story unfolds in time as well as space.
+ *
+ *    data-anim-target='line' = the arc (stroke-dashoffset reveal).
+ *    data-anim-target='1'..'5' = the five beat dots, staggered.
+ *    data-anim-target='halo' = the climax halo, pulses on the
+ *      beat the line crosses the peak.
+ */
 function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
+  // Baseline at y=78 — the floor the story rises from. Beats are
+  // placed at increasing then decreasing heights above it.
+  const BASE_Y = 78
+  const beats = [
+    { x: 14, y: 70, r: 3 }, // setup — barely above baseline
+    { x: 32, y: 54, r: 3.2 }, // rising — moderate altitude
+    { x: 50, y: 22, r: 4.6 }, // climax (accent) — peak
+    { x: 68, y: 54, r: 3.2 }, // falling
+    { x: 86, y: 70, r: 3 } // resolution — back near the ground
+  ] as const
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='narrative'>
-      <path
-        d='M 12 72 Q 50 12 88 72'
+      {/* Ground baseline — the world the story happens to. Sits
+          quietly at the bottom of the composition so the rise/fall
+          of the curve has something to read against. */}
+      <line
+        x1='10'
+        y1={BASE_Y}
+        x2='90'
+        y2={BASE_Y}
         stroke={fg}
-        strokeWidth='2'
-        fill='none'
-        opacity='0.55'
-        strokeLinecap='round'
+        strokeWidth='0.8'
+        opacity='0.32'
       />
-      <circle cx='12' cy='72' r='5' fill={fg} opacity='0.65' />
-      <circle cx='88' cy='72' r='5' fill={fg} opacity='0.65' />
-      {/* The bright story-beat dot. We translate it via offset-path
-          along the same arc so it tracks the curve. */}
-      <circle cx='50' cy='28' r='6' fill={accent} data-anim-target='1' />
+
+      {/* Drop-lines from each beat to the baseline — the "altitude"
+          of each story moment. Faint dashed strokes so they sit
+          quietly behind the main arc but still anchor the beats
+          spatially. */}
+      <g stroke={fg} strokeWidth='0.8' opacity='0.28' strokeDasharray='1 2'>
+        {beats.map((b) => (
+          <line key={`drop-${b.x}`} x1={b.x} y1={b.y} x2={b.x} y2={BASE_Y} />
+        ))}
+      </g>
+
+      {/* Climax halo — a soft circle behind the peak beat, larger
+          than the beat itself, so the eye lands on the climax even
+          at rest. Pulses gently as the line arrives. */}
+      <circle
+        cx='50'
+        cy='22'
+        r='10'
+        fill={accent}
+        opacity='0.22'
+        data-anim-target='halo'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+
+      {/* The story arc — a single path with quadratic curves that
+          thread cleanly through every beat. The stroke draws on
+          left-to-right each loop, like the story unfolding from
+          the page. */}
+      <path
+        d='M 14 70 Q 22 62 32 54 Q 41 42 50 22 Q 59 42 68 54 Q 78 62 86 70'
+        stroke={fg}
+        strokeWidth='1.8'
+        fill='none'
+        opacity='0.7'
+        strokeLinecap='round'
+        data-anim-target='line'
+      />
+
+      {/* The five beats. Drawn after the arc so the dots sit on top
+          of the line. Each fires its pulse keyframe at a staggered
+          delay so the eye sees the story arrive beat by beat. The
+          climax (index 2) carries a thin ring around it for extra
+          weight at the peak. */}
+      {beats.map((b, i) => {
+        const isClimax = i === 2
+        return (
+          <g key={`beat-${i}`}>
+            {isClimax && (
+              <circle
+                cx={b.x}
+                cy={b.y}
+                r={b.r + 2.4}
+                fill='none'
+                stroke={accent}
+                strokeWidth='1.2'
+                opacity='0.6'
+              />
+            )}
+            <circle
+              cx={b.x}
+              cy={b.y}
+              r={b.r}
+              fill={isClimax ? accent : fg}
+              opacity={isClimax ? 1 : 0.8}
+              data-anim-target={String(i + 1)}
+              style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+            />
+          </g>
+        )
+      })}
     </svg>
   )
 }
@@ -998,9 +1351,9 @@ function ArtCommunication({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.55'
       />
       <g style={{ transformOrigin: '50px 28px' }} data-anim-target='1'>
-        <ellipse cx='50' cy='28' rx='18' ry='10' fill={accent} />
-        <polygon points='44,38 50,32 47,42' fill={accent} />
-        <polygon points='56,38 50,32 53,42' fill={accent} />
+        <ellipse cx='50' cy='28' rx='13' ry='7.5' fill={accent} />
+        <polygon points='46,36 50,31 48,40' fill={accent} />
+        <polygon points='54,36 50,31 52,40' fill={accent} />
       </g>
     </svg>
   )
@@ -1246,44 +1599,71 @@ function ArtLensesDeck({
   )
 }
 
-/** Projection — a figure casts a long shadow that doesn't quite match
- *  it. The shadow is the projection: what gets seen is the speaker,
- *  refracted onto the world.
+/** Projection — a figure stands in front of a large semicircle that
+ *  emanates from them. The semicircle is the "projected world": the
+ *  view of reality the speaker is casting outward. On hover the
+ *  semicircle grows, suggesting the projection expanding — the
+ *  speaker's interior radiating outward to color everything they
+ *  see.
  *
- *    data-anim-target='1' = the cast shadow (subtle sway, suggesting
- *      it isn't a faithful copy of the figure above it).
+ *    data-anim-target='1' = the projected semicircle (scales up from
+ *      the base of the figure outward).
  */
 function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
+  // The figure stands centered horizontally, anchored at y=70 (the
+  // ground line). The projection radiates out from that anchor.
+  const ANCHOR_X = 50
+  const ANCHOR_Y = 70
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='projection'>
-      {/* Ground plane. */}
-      <line
-        x1='14'
-        y1='72'
-        x2='86'
-        y2='72'
-        stroke={fg}
-        strokeWidth='1'
-        opacity='0.3'
-      />
-
-      {/* The figure (head + torso). */}
-      <circle cx='50' cy='34' r='8' fill={fg} opacity='0.6' />
-      <path d='M 38 70 Q 38 50 50 50 Q 62 50 62 70 Z' fill={fg} opacity='0.6' />
-
-      {/* The cast shadow — accent color, longer and slightly distorted
-          relative to the figure, so it reads as a *projection* rather
-          than a literal shadow. */}
-      <g style={{ transformOrigin: '50px 72px' }} data-anim-target='1'>
-        <ellipse
-          cx='50'
-          cy='73'
-          rx='22'
-          ry='2.4'
+      {/* The projected world — a large semicircle behind the figure,
+          centered at the figure's base and extending upward into the
+          card. Filled with accent at low alpha so it reads as a
+          coloured aura, not a hard shape. Sits BELOW the figure in
+          z-order so the person stays the foreground. */}
+      <g
+        data-anim-target='1'
+        style={{ transformOrigin: `${ANCHOR_X}px ${ANCHOR_Y}px` }}
+      >
+        {/* Use a path for a half-disc rather than clipping a circle —
+            cleaner SVG and animates evenly. The path traces the top
+            half of a circle of radius 32 centred at the anchor. */}
+        <path
+          d={`M ${ANCHOR_X - 32} ${ANCHOR_Y} A 32 32 0 0 1 ${ANCHOR_X + 32} ${ANCHOR_Y} Z`}
           fill={accent}
-          opacity='0.85'
+          opacity='0.55'
+        />
+        {/* A second concentric arc adds depth — slightly smaller, a
+            touch more saturated, so the projection reads as
+            volumetric instead of flat. */}
+        <path
+          d={`M ${ANCHOR_X - 22} ${ANCHOR_Y} A 22 22 0 0 1 ${ANCHOR_X + 22} ${ANCHOR_Y} Z`}
+          fill={accent}
+          opacity='0.45'
         />
       </g>
+
+      {/* Ground line — sits on top of the projection so the half-disc
+          appears to rest on it. */}
+      <line
+        x1='14'
+        y1={ANCHOR_Y}
+        x2='86'
+        y2={ANCHOR_Y}
+        stroke={fg}
+        strokeWidth='1'
+        opacity='0.45'
+      />
+
+      {/* The figure (head + torso) — drawn last so it sits in front
+          of the projection. */}
+      <circle cx={ANCHOR_X} cy='42' r='6.5' fill={fg} opacity='0.85' />
+      <path
+        d={`M ${ANCHOR_X - 9} ${ANCHOR_Y} Q ${ANCHOR_X - 9} 54 ${ANCHOR_X} 54 Q ${ANCHOR_X + 9} 54 ${ANCHOR_X + 9} ${ANCHOR_Y} Z`}
+        fill={fg}
+        opacity='0.85'
+      />
     </svg>
   )
 }
@@ -1426,11 +1806,18 @@ function ArtTaste({ fg, accent }: { fg: string; accent: string }) {
  *    data-anim-target='1' = the breakout arrow head + shaft (slides
  *      further outside the frame on hover, like an action being
  *      taken).
+ *
+ *  The origin dot sits at the geometric center of the frame so the
+ *  composition reads as "from the middle of the world, an action
+ *  pierces the wall." The shaft is shortened to compensate for the
+ *  dot's recentering — the arrow head still clears the right wall,
+ *  but the visual weight stays balanced inside the box.
  */
 function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='agency'>
-      {/* The frame (the default world). */}
+      {/* The frame (the default world). x=20..72, y=26..78 → center
+          at (46, 52). */}
       <rect
         x='20'
         y='26'
@@ -1442,15 +1829,13 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.55'
       />
 
-      {/* The breakout arrow — its tail starts inside the frame, its
-          head pierces the right wall. The whole group translates a few
-          px on hover so the head drives further out. */}
-      {/* Shaft stops short of the tip so the triangular head sits
-          flush at the arrow's point — together they read as one
-          continuous arrow rather than a line with a notch. */}
+      {/* The breakout arrow — tail starts at the frame's center, head
+          pierces the right wall and continues a few px beyond. The
+          whole group translates a few px on hover so the head drives
+          further out. */}
       <g data-anim-target='1' style={{ transformOrigin: '50px 52px' }}>
         <line
-          x1='32'
+          x1='46'
           y1='52'
           x2='78'
           y2='52'
@@ -1461,44 +1846,90 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
         <polygon points='86,52 74,45 74,59' fill={accent} />
       </g>
 
-      {/* A small origin dot inside the frame (the seat of choice). */}
-      <circle cx='32' cy='52' r='3' fill={fg} opacity='0.7' />
+      {/* The seat of choice — sits at the geometric center of the
+          frame. */}
+      <circle cx='46' cy='52' r='3.4' fill={fg} opacity='0.7' />
     </svg>
   )
 }
 
-/** Expertise — a staircase of skill, each step taller than the last.
- *  A small marker rests on the top step. Hover steps the marker up
- *  and down the stair like progress accumulating.
+/** Expertise — three bricks assemble into a pyramid. Each brick
+ *  represents a stage of skill: the broad foundation (fundamentals
+ *  you stop noticing), the narrower middle (intermediate fluency),
+ *  and the small accent capstone (the rare tip-of-the-spear move
+ *  only experts have). Together they read as a composed mastery
+ *  rather than a single skill point.
  *
- *    data-anim-target='1' = the climbing marker.
+ *  Animation
+ *  ─────────
+ *  On each loop, the three bricks fly in from three different
+ *  directions — foundation slides up from below, middle slides in
+ *  from the right, capstone drops in from above — and click into
+ *  place to assemble the pyramid. The composition is the resting
+ *  state; the animation is *the act of composing it*. Reads as
+ *  "expertise is many separate competencies snapping together."
+ *
+ *    data-anim-target='1' = foundation brick (slides up from below).
+ *    data-anim-target='2' = middle brick (slides in from the right).
+ *    data-anim-target='3' = capstone brick (drops in from above,
+ *      accent-coloured, the smallest and most precise piece).
  */
 function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='expertise'>
-      {/* Three ascending steps, drawn as filled rects sharing a
-          baseline. Heights climb so the silhouette reads as a stair. */}
-      <g fill={fg} opacity='0.5'>
-        <rect x='18' y='62' width='18' height='18' />
-        <rect x='38' y='50' width='18' height='30' />
-        <rect x='58' y='34' width='18' height='46' />
-      </g>
-
-      {/* The climbing marker — sits atop the tallest step at rest. */}
-      <g data-anim-target='1' style={{ transformOrigin: '67px 30px' }}>
-        <circle cx='67' cy='30' r='4.5' fill={accent} />
-      </g>
-
-      {/* Baseline. */}
+      {/* Baseline — the ground the pyramid rests on. */}
       <line
         x1='14'
-        y1='80'
+        y1='78'
         x2='86'
-        y2='80'
+        y2='78'
         stroke={fg}
         strokeWidth='0.8'
         opacity='0.4'
       />
+
+      {/* Foundation brick — the broad base. Centered horizontally
+          and resting on the baseline. */}
+      <g data-anim-target='1'>
+        <rect
+          x='18'
+          y='62'
+          width='64'
+          height='14'
+          rx='2'
+          fill={fg}
+          opacity='0.45'
+        />
+      </g>
+
+      {/* Middle brick — narrower, sits cleanly atop the foundation. */}
+      <g data-anim-target='2'>
+        <rect
+          x='28'
+          y='44'
+          width='44'
+          height='14'
+          rx='2'
+          fill={fg}
+          opacity='0.7'
+        />
+      </g>
+
+      {/* Capstone — small accent block on top. The smallest, most
+          precise piece; reads as "the move only the expert can
+          make." Transform origin set to the brick's center so the
+          drop's scale reads as a clean snap-into-place. */}
+      <g data-anim-target='3' style={{ transformOrigin: '50px 33px' }}>
+        <rect
+          x='40'
+          y='26'
+          width='20'
+          height='14'
+          rx='2'
+          fill={accent}
+          opacity='0.95'
+        />
+      </g>
     </svg>
   )
 }
