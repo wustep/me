@@ -1555,19 +1555,6 @@
   margin-bottom: 2px;
 }
 
-/* Pre-title intro: primes the metaphor before the title lands.
-   Slightly smaller and quieter than the lede below the title. */
-.dialogIntro {
-  font-family: var(--design-serif, var(--font-serif, Georgia, serif));
-  font-size: calc(0.95rem * var(--design-body-scale, 1));
-  line-height: 1.5;
-  font-style: italic;
-  text-wrap: pretty;
-  max-width: var(--design-body-measure, 56ch);
-  margin: 0;
-  opacity: 0.7;
-}
-
 .dialogTitle {
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
   font-size: clamp(1.55rem, 2.8vw, 1.95rem);
@@ -3516,7 +3503,6 @@
     padding: 22px 22px 14px;
   }
 
-  .dialogIntro,
   .dialogLede {
     font-size: 0.9rem;
   }

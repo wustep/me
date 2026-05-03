@@ -71,19 +71,14 @@ export function CenterDialog({
               <span className={styles.dialogEyebrow}>
                 The deck · {LENSES.length} lenses
               </span>
-              <p className={styles.dialogIntro}>
-                A lens is a way of looking. Each one foregrounds something
-                real and quietly hides everything else.
-              </p>
               <DialogPrimitive.Title className={styles.dialogTitle}>
-                Hold many. Lightly.
+                A lens is a way of looking.
               </DialogPrimitive.Title>
               <p className={styles.dialogLede}>
-                No single frame explains the world. The trick isn&rsquo;t
-                picking the right lens — it&rsquo;s learning to swap between
-                three or four, noticing what each one reveals and what it
-                quietly leaves out. Pull a card. Try it on the situation in
-                front of you. Set it down.
+                Hold many, lightly. No single frame explains the world. Any one
+                lens reveals something and quietly hides the rest, so keep a few
+                in rotation. Pull a card. Try it on the situation in front of
+                you. Set it down.
               </p>
             </div>
             <DialogPrimitive.Close
@@ -125,9 +120,7 @@ export function CenterDialog({
                     <span className={styles.dialogJumpCategory}>
                       {lens.category}
                     </span>
-                    <span className={styles.dialogJumpTitle}>
-                      {lens.title}
-                    </span>
+                    <span className={styles.dialogJumpTitle}>{lens.title}</span>
                     <span className={styles.dialogJumpTagline}>
                       {lens.tagline}
                     </span>
