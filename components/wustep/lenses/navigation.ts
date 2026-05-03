@@ -4,22 +4,25 @@ import { GRID } from './types'
 /* ────────────────────────────────────────────────────────────────
  * Arrow-key navigation across the canvas of lenses.
  *
- *   Two different traversal models:
+ *   Two different traversal models, both with wrap-around so a
+ *   key press never feels like a dead end:
  *
  *   ← / →  Reading order. Cards are sorted into rows (by quantizing
  *          y to the nearest row anchor) and then by x within a row.
  *          The arrow steps to the next card in that flat sequence
- *          and *wraps* across row ends — like a book. This matches
- *          how people scan a deck and avoids the dead-end feeling
- *          of "← from the leftmost card does nothing."
+ *          and *wraps* across row ends — like a book.
  *
- *   ↑ / ↓  Spatial neighbor. We pick the closest card in the
- *          half-plane above/below, weighting horizontal distance
- *          2× harder than vertical so the result feels like "the
- *          card directly above/below," not a diagonal jump.
+ *   ↑ / ↓  Spatial neighbor in the half-plane above/below the
+ *          current card, weighting horizontal distance 2× harder
+ *          than vertical so the result feels like "the card
+ *          directly above/below," not a diagonal jump. When there
+ *          is no card in the requested half-plane (you're at the
+ *          top row pressing ↑, or the bottom row pressing ↓), we
+ *          *wrap*: jump to the column-nearest card on the opposite
+ *          end of the deck.
  *
- *   Used by both the canvas (focus the next card button) and the
- *   side panel (swap to the next lens).
+ *   Used by both the canvas (move the keyboard cursor / focus the
+ *   next card button) and the side panel (swap to the next lens).
  * ──────────────────────────────────────────────────────────────── */
 
 export type Direction = 'left' | 'right' | 'up' | 'down'
@@ -125,7 +128,41 @@ export function neighborInDirection(
     }
   }
 
-  return best?.id ?? null
+  if (best) return best.id
+
+  // Wrap. No card exists in the half-plane the user wanted, so
+  // jump to the row at the opposite end of the deck. ↑ from the
+  // top row wraps to the bottom row (largest y); ↓ from the bottom
+  // wraps to the top (smallest y). Within that target row we pick
+  // the column-nearest card so the wrap preserves the user's
+  // horizontal position, the way a book wraps line breaks.
+  const wantMaxY = direction === 'up'
+  let extremeY: number | null = null
+  for (const lens of LENSES) {
+    if (lens.id === fromId) continue
+    if (extremeY == null) {
+      extremeY = lens.y
+      continue
+    }
+    if (wantMaxY ? lens.y > extremeY : lens.y < extremeY) {
+      extremeY = lens.y
+    }
+  }
+  if (extremeY == null) return null
+
+  let wrapBest: { id: string; perp: number } | null = null
+  for (const lens of LENSES) {
+    if (lens.id === fromId) continue
+    // Only consider cards on the extreme row (allow a small
+    // tolerance because y values come from a discrete grid anchor
+    // set, but might wiggle a touch in registry data).
+    if (Math.abs(lens.y - extremeY) > 0.5) continue
+    const perp = Math.abs(lens.x - from.x)
+    if (wrapBest == null || perp < wrapBest.perp) {
+      wrapBest = { id: lens.id, perp }
+    }
+  }
+  return wrapBest?.id ?? null
 }
 
 const KEY_TO_DIRECTION: Record<string, Direction> = {

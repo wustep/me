@@ -33,7 +33,7 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Lenses',
         url: '/playground/lenses',
         description:
-          'A canvas of lenses for seeing the world. Each card is a different frame — Great Man theory, evolutionary psychology, minimalism, utility functions, status — and no single one sees everything.',
+          'A canvas of lenses for seeing the world. Each card is a different frame — Great Man, evolutionary psychology, minimalism, utility, status — and no single one sees everything.',
         summary: 'A canvas of frames for seeing the world',
         date: 'May 2026',
         year: '2026',

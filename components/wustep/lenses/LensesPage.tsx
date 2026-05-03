@@ -69,6 +69,17 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   const [openLensId, setOpenLensId] = React.useState<string | null>(null)
   const [centerOpen, setCenterOpen] = React.useState(false)
 
+  /* Keyboard cursor across the canvas. The cursor is the lens that
+     currently shows the "selected" treatment when no panel is open —
+     a way to steer with arrow keys without committing to opening a
+     panel. Pressing Enter promotes the cursor to an open panel.
+
+     When a panel is open, the cursor is conceptually pinned to
+     `openLensId` (the open lens is what's "selected"). Rather than
+     try to keep two state slots aligned, we derive the canvas
+     selection from `openLensId ?? cursorLensId` at render time. */
+  const [cursorLensId, setCursorLensId] = React.useState<string | null>(null)
+
   React.useEffect(() => {
     setHasMounted(true)
   }, [])
@@ -84,7 +95,10 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
       typeof router.query.lens === 'string' ? router.query.lens : null
     const indexRaw =
       typeof router.query.index === 'string' ? router.query.index : null
-    if (lensRaw && LENS_BY_ID[lensRaw]) setOpenLensId(lensRaw)
+    if (lensRaw && LENS_BY_ID[lensRaw]) {
+      setOpenLensId(lensRaw)
+      setCursorLensId(lensRaw)
+    }
     if (indexRaw === 'open') setCenterOpen(true)
     setHydratedFromUrl(true)
   }, [router.isReady, router.query.lens, router.query.index, hydratedFromUrl])
@@ -127,33 +141,96 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   const openLens = React.useCallback((id: string) => {
     setCenterOpen(false)
     setOpenLensId(id)
+    setCursorLensId(id)
   }, [])
 
-  const closeLens = React.useCallback(() => setOpenLensId(null), [])
+  const closeLens = React.useCallback(() => {
+    /* Park the cursor on the lens that was open so the next arrow
+       press picks up where the user left off, instead of resetting
+       to "no cursor" and re-seeding from the canvas center. */
+    setOpenLensId((prev) => {
+      if (prev) setCursorLensId(prev)
+      return null
+    })
+  }, [])
 
-  /* Arrow-key nav when a side panel is open: jump to the spatial
-     neighbor in the pressed direction. We don't intercept arrows when
-     the dialog is open (it has its own focus + scroll behavior). */
+  /* Single keyboard handler for the whole Lenses experience. Three
+     distinct modes, in priority order:
+
+       1. Center dialog open → ignore arrows entirely; the dialog has
+          its own focus + scroll behavior.
+       2. Side panel open → arrows swap the open lens to its
+          spatial / reading-order neighbor.
+       3. Otherwise → arrows move the canvas cursor (selection
+          treatment without opening the panel). Enter / Space on
+          the cursor lens opens its panel. If a card button currently
+          has DOM focus, we move focus along with the cursor so the
+          two stay aligned for screen reader / keyboard users.
+
+     We always skip arrows when the user is typing somewhere
+     (input, textarea, contentEditable). */
   React.useEffect(() => {
-    if (!openLensId || centerOpen) return
+    if (centerOpen) return
     const onKey = (event: KeyboardEvent) => {
-      const dir = keyToDirection(event.key)
-      if (!dir) return
       const target = event.target as HTMLElement | null
       const tag = target?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) {
         return
       }
-      const next = neighborInDirection(openLensId, dir)
-      if (!next) return
-      event.preventDefault()
-      setOpenLensId(next)
+      // Don't steal modifiers; let browser keybindings work.
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+
+      const dir = keyToDirection(event.key)
+
+      if (openLensId) {
+        if (!dir) return
+        const next = neighborInDirection(openLensId, dir)
+        if (!next) return
+        event.preventDefault()
+        setOpenLensId(next)
+        setCursorLensId(next)
+        return
+      }
+
+      if (dir) {
+        const next = neighborInDirection(cursorLensId, dir)
+        if (!next) return
+        event.preventDefault()
+        setCursorLensId(next)
+
+        /* If a card button currently has focus, follow the cursor
+           with focus too — otherwise leave focus where it was, so
+           we don't yank focus into the canvas just because the user
+           moved their mouse off-page and tapped an arrow. */
+        const active = document.activeElement as HTMLElement | null
+        if (active && active.dataset && active.dataset.lensId) {
+          const nextEl = document.querySelector<HTMLElement>(
+            `[data-lens-id="${next}"]`
+          )
+          nextEl?.focus()
+        }
+        return
+      }
+
+      if (event.key === 'Enter' || event.key === ' ') {
+        /* Buttons handle their own Enter/Space when focused, so we
+           only act when focus is *not* on a card button. */
+        const active = document.activeElement as HTMLElement | null
+        if (active && active.dataset && active.dataset.lensId) return
+        if (!cursorLensId) return
+        event.preventDefault()
+        openLens(cursorLensId)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [openLensId, centerOpen])
+  }, [centerOpen, openLensId, cursorLensId, openLens])
 
   const activeLens = openLensId ? (LENS_BY_ID[openLensId] ?? null) : null
+
+  /* Selection treatment on the canvas reflects the open panel when
+     one is open, otherwise the keyboard cursor. */
+  const selectedLensId = openLensId ?? cursorLensId
 
   const frameClass = embedded
     ? `${styles.frame} ${styles.frameEmbedded}`
@@ -196,6 +273,7 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
         <Canvas
           stage={stage}
           prefersReducedMotion={prefersReducedMotion}
+          activeLensId={selectedLensId}
           onOpenCenter={() => setCenterOpen(true)}
           onOpenLens={openLens}
         />

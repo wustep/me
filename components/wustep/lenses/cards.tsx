@@ -2,21 +2,23 @@ import * as React from 'react'
 
 import { Illustration } from './illustrations'
 import styles from './LensesPage.module.css'
-import { GRID, type Lens, STAGE, type Stage,TIMING } from './types'
+import { GRID, type Lens, STAGE, type Stage, TIMING } from './types'
 
 /* ─────────────────────────────────────────────────────────
- * Cards — staggered entrance after the center card lands.
+ * Cards — placed by row/col in the .cards CSS grid.
  *
- *   Each lens card snaps to a (rowIndex, colIndex) on a 4×6 grid
- *   inferred from its (x, y) position via GRID.rowAnchors /
- *   GRID.colAnchors. We then apply a transition-delay sized like:
+ *   Each lens has an (x, y) anchor in viewport-percent. We translate
+ *   that to a (rowIndex, colIndex) pair via the GRID anchors, then
+ *   place the card into the corresponding grid cell. The same
+ *   indices drive the entrance stagger:
  *
- *     delay = TIMING.cardsInBase
- *           + rowIndex * TIMING.rowStaggerMs
+ *     delay = rowIndex * TIMING.rowStaggerMs
  *           + colIndex * TIMING.colStaggerMs
  *
- *   This gives a soft top-to-bottom, left-to-right reveal that
- *   completes in ~640ms after the center card finishes.
+ *   On narrow viewports the parent grid switches to auto-fit and
+ *   our explicit row/col is ignored — the cards just flow in
+ *   document order, which is fine because the registry already
+ *   reads roughly left-to-right, top-to-bottom.
  * ───────────────────────────────────────────────────────── */
 
 function indexOfClosest(value: number, anchors: readonly number[]) {
@@ -35,10 +37,11 @@ function indexOfClosest(value: number, anchors: readonly number[]) {
 type LensCardProps = {
   lens: Lens
   stage: Stage
+  selected: boolean
   onOpen: () => void
 }
 
-export function LensCard({ lens, stage, onOpen }: LensCardProps) {
+export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
   const visible = stage >= STAGE.cards
   const rowIndex = indexOfClosest(lens.y, GRID.rowAnchors)
   const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
@@ -46,22 +49,33 @@ export function LensCard({ lens, stage, onOpen }: LensCardProps) {
     rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
 
   const style: React.CSSProperties = {
-    left: `${lens.x}%`,
-    top: `${lens.y}%`,
+    // CSS grid is 1-indexed for grid-column/grid-row.
+    gridColumn: `${colIndex + 1} / span 1`,
+    gridRow: `${rowIndex + 1} / span 1`,
     transitionDelay: visible ? `${delay}ms` : '0ms',
     ['--card-bg' as string]: lens.bg,
     ['--card-fg' as string]: lens.fg,
     ['--card-accent' as string]: lens.accent ?? lens.fg
   }
 
+  const className = [
+    styles.card,
+    visible && styles.cardVisible,
+    selected && styles.cardSelected
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <button
       type='button'
-      className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
+      className={className}
       style={style}
       onClick={onOpen}
       aria-label={`Open lens: ${lens.title}`}
+      aria-pressed={selected}
       data-lens-id={lens.id}
+      data-lens-selected={selected ? 'true' : undefined}
     >
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
@@ -83,6 +97,13 @@ type CenterCardProps = {
 
 /**
  * CenterCard — the larger "Lenses" card that opens the index dialog.
+ *
+ *   At 1200px+ this is a 2×2 spanning card centered in the grid:
+ *   illustration above, title below. At narrower widths (where it
+ *   can't span 2×2) it becomes a full-width hero pinned to the top
+ *   of the grid: illustration on the left, title + tagline on the
+ *   right. The tagline is hidden in 2×2 mode via CSS so the
+ *   markup is the same in both states.
  */
 export function CenterCard({ stage, onOpen }: CenterCardProps) {
   const visible = stage >= STAGE.center
@@ -103,7 +124,12 @@ export function CenterCard({ stage, onOpen }: CenterCardProps) {
           accent='#F2C04A'
         />
       </span>
-      <span className={styles.centerCardTitle}>Lenses</span>
+      <span className={styles.centerCardTextWrap}>
+        <span className={styles.centerCardTitle}>Lenses</span>
+        <span className={styles.centerCardTagline}>
+          A way of looking. Pick one. Try it on.
+        </span>
+      </span>
     </button>
   )
 }

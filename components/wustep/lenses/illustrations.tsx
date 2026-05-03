@@ -73,16 +73,16 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
       return <ArtAttention fg={fg} accent={accent} />
     case 'dopamine':
       return <ArtDopamine fg={fg} accent={accent} />
-    case 'reps':
-      return <ArtReps fg={fg} accent={accent} />
+    case 'taste':
+      return <ArtTaste fg={fg} accent={accent} />
     case 'agency':
       return <ArtAgency fg={fg} accent={accent} />
     case 'expertise':
       return <ArtExpertise fg={fg} accent={accent} />
     case 'tempo':
       return <ArtTempo fg={fg} accent={accent} />
-    case 'surface-area':
-      return <ArtSurfaceArea fg={fg} accent={accent} />
+    case 'identity':
+      return <ArtIdentity fg={fg} accent={accent} />
     case 'lenses-deck':
       return <ArtLensesDeck fg={fg} accent={accent} bg={bg} />
   }
@@ -114,35 +114,87 @@ function ArtGreatMan({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Evo psych — concentric rings ripple outward like inherited circuitry firing. */
+/** Evo psych — a stylized double helix. Two strands cross at four
+ *  evenly-spaced bond points; bonds pulse in sequence from bottom
+ *  to top on hover, like an old signal climbing inherited
+ *  circuitry. The strands meet cleanly at the bonds so the figure
+ *  reads as a helix rather than two squiggles next to four lines.
+ *
+ *    data-anim-target='1..4' = each bond dot, animated in sequence.
+ */
 function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
+  // Bond y-positions, evenly spaced from top to bottom. The strands
+  // weave through these four x-mirror points, swapping sides at each
+  // one so the silhouette reads as a helix.
+  const bondYs = [22, 44, 66, 88]
+  const innerX = 42
+  const outerX = 58
+  const railsLeft =
+    `M ${innerX} ${bondYs[0]} ` +
+    `C ${innerX - 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
+    `${outerX + 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
+    `${outerX} ${bondYs[1]} ` +
+    `C ${outerX + 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
+    `${innerX - 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
+    `${innerX} ${bondYs[2]} ` +
+    `C ${innerX - 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
+    `${outerX + 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
+    `${outerX} ${bondYs[3]}`
+  const railsRight =
+    `M ${outerX} ${bondYs[0]} ` +
+    `C ${outerX + 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
+    `${innerX - 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
+    `${innerX} ${bondYs[1]} ` +
+    `C ${innerX - 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
+    `${outerX + 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
+    `${outerX} ${bondYs[2]} ` +
+    `C ${outerX + 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
+    `${innerX - 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
+    `${innerX} ${bondYs[3]}`
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='evo-psych'>
+      {/* Two strands that swap sides at each bond. The 'back'
+          strand is drawn first at lower opacity so the 'front'
+          strand reads in front; each pair of curves looks like a
+          twist when overlaid. */}
+      <path
+        d={railsRight}
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.6'
+        strokeLinecap='round'
+        opacity='0.32'
+      />
+      <path
+        d={railsLeft}
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.8'
+        strokeLinecap='round'
+        opacity='0.7'
+      />
+
+      {/* Four bond dots — anchor the helix and serve as the
+          animation actors. Bottom-most fires first (`target='4'`),
+          climbing upward, so the cycle reads as a signal travelling
+          up the inherited code. */}
       <circle
-        cx='50'
-        cy='50'
-        r='38'
-        fill={fg}
-        opacity='0.16'
-        data-anim-target='3'
+        cx='50' cy={bondYs[0]} r='3' fill={fg} opacity='0.85'
+        data-anim-target='1'
       />
       <circle
-        cx='50'
-        cy='50'
-        r='28'
-        fill={fg}
-        opacity='0.3'
+        cx='50' cy={bondYs[1]} r='3' fill={fg} opacity='0.85'
         data-anim-target='2'
       />
       <circle
-        cx='50'
-        cy='50'
-        r='18'
-        fill={fg}
-        opacity='0.55'
-        data-anim-target='1'
+        cx='50' cy={bondYs[2]} r='3' fill={fg} opacity='0.85'
+        data-anim-target='3'
       />
-      <circle cx='50' cy='50' r='8' fill={accent} />
+      <circle
+        cx='50' cy={bondYs[3]} r='3.6' fill={accent}
+        data-anim-target='4'
+      />
     </svg>
   )
 }
@@ -284,28 +336,71 @@ function ArtGameTheory({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Systems — the whole feedback loop slowly rotates (cycles cycling). */
+/** Systems — three nodes in a directed cycle. The signal propagates
+ *  around the loop: each node takes on the accent fill in sequence,
+ *  so the eye reads the loop as flowing rather than as a static
+ *  diagram or a meaningless rigid spin.
+ *
+ *  data-anim-target='1' / '2' / '3' — the three nodes, ordered
+ *    A → B → C → A. CSS staggers the same pulse keyframe across
+ *    them by ⅓ of the cycle so exactly one is "lit" at a time.
+ *
+ *  Geometry: equilateral triangle of nodes at the vertices of a
+ *  ~28-radius circle around (50, 50). The connecting arcs are
+ *  drawn with cubic Béziers so each edge bows gently outward,
+ *  giving the loop a clear circular feel without a literal ring.
+ *  Arrowheads sit just before each terminal node so the direction
+ *  of flow reads at a glance. */
 function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
+  // Vertex positions (radius 28 around 50,50, starting at the top
+  // and going clockwise: top → bottom-right → bottom-left).
+  const NODE_R = 7
+  const A = { x: 50, y: 22 } // top
+  const B = { x: 74.25, y: 64 } // bottom-right
+  const C = { x: 25.75, y: 64 } // bottom-left
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='systems'>
-      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
-        <circle
-          cx='50'
-          cy='50'
-          r='28'
-          fill='none'
-          stroke={fg}
-          strokeWidth='2'
-          opacity='0.55'
-          strokeDasharray='66 8'
-        />
-        <circle cx='50' cy='22' r='6' fill={fg} opacity='0.7' />
-        <circle cx='75' cy='62' r='6' fill={fg} opacity='0.7' />
-        <circle cx='25' cy='62' r='6' fill={accent} />
-        <polygon points='73,28 80,35 70,38' fill={fg} opacity='0.7' />
-        <polygon points='52,77 60,80 56,72' fill={fg} opacity='0.7' />
-        <polygon points='27,38 20,35 30,28' fill={accent} />
+      {/* Soft halo behind the loop — gives the composition some
+          weight on light card backgrounds without hard chrome. */}
+      <circle cx='50' cy='50' r='34' fill={fg} opacity='0.05' />
+
+      {/* Three directed arcs, each from one node to the next. The
+          control points pull each arc outward so the three together
+          read as a closed circular flow, not a triangle. */}
+      <g stroke={fg} strokeWidth='1.6' fill='none' opacity='0.55'>
+        <path d={`M ${A.x} ${A.y} C 78 28, 84 50, ${B.x} ${B.y}`} />
+        <path d={`M ${B.x} ${B.y} C 60 80, 40 80, ${C.x} ${C.y}`} />
+        <path d={`M ${C.x} ${C.y} C 16 50, 22 28, ${A.x} ${A.y}`} />
       </g>
+
+      {/* The three nodes. CSS gives each `data-anim-target` the
+          same pulse keyframe but with staggered delays, so the
+          accent fill walks around the cycle. */}
+      <circle
+        cx={A.x}
+        cy={A.y}
+        r={NODE_R}
+        fill={fg}
+        data-anim-target='1'
+        style={{ ['--node-fg' as string]: fg, ['--node-accent' as string]: accent }}
+      />
+      <circle
+        cx={B.x}
+        cy={B.y}
+        r={NODE_R}
+        fill={fg}
+        data-anim-target='2'
+        style={{ ['--node-fg' as string]: fg, ['--node-accent' as string]: accent }}
+      />
+      <circle
+        cx={C.x}
+        cy={C.y}
+        r={NODE_R}
+        fill={fg}
+        data-anim-target='3'
+        style={{ ['--node-fg' as string]: fg, ['--node-accent' as string]: accent }}
+      />
     </svg>
   )
 }
@@ -335,52 +430,102 @@ function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Legibility — the accent label-bar grows out of the fog (named into being). */
+/** Legibility — fog on the left becomes a labeled tag on the right.
+ *  An amorphous cloud (the unnamed thing) connects via a quiet line
+ *  to a crisp rectangular tag with an accent label-bar inside. The
+ *  visual contrast — organic blob vs. rectilinear tag — does the
+ *  storytelling: naming converts fog into handles.
+ *
+ *  Animation (card hover): the accent bar inside the tag scales in
+ *  from its left edge, like a name being written. The fog and tag
+ *  frame stay still so the eye lands on the act of naming.
+ */
 function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='legibility'>
+      {/* Soft fog cloud on the left — an amoeba-like organic shape
+          built from cubic Béziers. Filled at low opacity so it
+          reads as "fuzzy / undefined." */}
       <path
-        d='M 12 28 Q 22 22 32 28 T 52 28'
-        stroke={fg}
-        strokeWidth='1.5'
+        d='M 16 50
+           C 12 42, 18 34, 26 34
+           C 30 28, 40 30, 42 38
+           C 48 38, 50 46, 46 52
+           C 48 60, 40 66, 32 64
+           C 24 68, 14 62, 16 50 Z'
+        fill={fg}
+        opacity='0.22'
+      />
+      {/* A second, smaller blob outline gives the cloud a bit of
+          depth — like haze with a subtle inner contour. */}
+      <path
+        d='M 22 48
+           C 20 42, 26 38, 32 40
+           C 36 36, 42 40, 40 46
+           C 42 52, 36 56, 30 54
+           C 24 56, 20 52, 22 48 Z'
         fill='none'
+        stroke={fg}
+        strokeWidth='1'
         opacity='0.35'
+      />
+
+      {/* Connector — fog gets translated to a name. A short dashed
+          line ending in a small dot, like an arrow's quiet ghost. */}
+      <line
+        x1='50'
+        y1='50'
+        x2='56'
+        y2='50'
+        stroke={fg}
+        strokeWidth='1.2'
+        opacity='0.45'
+        strokeDasharray='2 2'
         strokeLinecap='round'
       />
-      <path
-        d='M 12 42 Q 22 36 32 42 T 52 42'
-        stroke={fg}
-        strokeWidth='1.5'
-        fill='none'
-        opacity='0.35'
-        strokeLinecap='round'
-      />
-      <path
-        d='M 12 56 Q 22 50 32 56 T 52 56'
-        stroke={fg}
-        strokeWidth='1.5'
-        fill='none'
-        opacity='0.35'
-        strokeLinecap='round'
-      />
+
+      {/* The label tag — a clean rectangle on the right. Crisp
+          right-angle geometry contrasts with the blob to read as
+          "structured / named." */}
       <rect
-        x='56'
-        y='30'
-        width='32'
-        height='32'
+        x='58'
+        y='32'
+        width='30'
+        height='36'
+        rx='2'
+        ry='2'
         fill='none'
         stroke={fg}
         strokeWidth='1.6'
-        opacity='0.7'
+        opacity='0.75'
       />
-      {/* The accent label "draws in" from the left on hover. */}
-      <g
-        style={{ transformOrigin: '62px 42px' }}
-        data-anim-target='1'
-      >
-        <rect x='62' y='40' width='20' height='4' fill={accent} />
+
+      {/* The accent label-bar inside the tag. This is the "name."
+          The animation grows it in from the left edge on hover. */}
+      <g style={{ transformOrigin: '62px 44px' }} data-anim-target='1'>
+        <rect x='62' y='42' width='22' height='4.5' rx='0.8' fill={accent} />
       </g>
-      <rect x='62' y='48' width='14' height='3' fill={fg} opacity='0.55' />
+
+      {/* A second, shorter line below — like a tagline / subtitle.
+          Static; uses fg at low opacity to recede. */}
+      <rect
+        x='62'
+        y='52'
+        width='14'
+        height='2.4'
+        rx='0.6'
+        fill={fg}
+        opacity='0.5'
+      />
+      <rect
+        x='62'
+        y='58'
+        width='10'
+        height='2.4'
+        rx='0.6'
+        fill={fg}
+        opacity='0.35'
+      />
     </svg>
   )
 }
@@ -595,10 +740,20 @@ function ArtEpistemic({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Osmosis — the crossing dots drift gently to the absorbed side. */
+/** Osmosis — two clusters of fixed dots flank a permeable
+ *  midline. Two accent dots sit just inside the line, one on
+ *  each side; on hover each drifts outward into the cluster on
+ *  its own side, fading as it joins. The story: absorb from
+ *  whichever environment surrounds you.
+ *
+ *    data-anim-target='1' = the dot on the left half (drifts left).
+ *    data-anim-target='2' = the dot on the right half (drifts right).
+ */
 function ArtOsmosis({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='osmosis'>
+      {/* The permeable midline. Dashed so it reads as a soft
+          boundary rather than a wall. */}
       <line
         x1='50'
         y1='14'
@@ -609,27 +764,34 @@ function ArtOsmosis({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.4'
         strokeDasharray='3 4'
       />
-      <circle cx='72' cy='28' r='3' fill={fg} opacity='0.45' />
-      <circle cx='80' cy='44' r='3' fill={fg} opacity='0.45' />
-      <circle cx='70' cy='62' r='3' fill={fg} opacity='0.45' />
-      <circle cx='80' cy='76' r='3' fill={fg} opacity='0.45' />
+
+      {/* Left cluster — three fixed dots sitting at the left edge. */}
+      <circle cx='22' cy='30' r='3' fill={fg} opacity='0.55' />
+      <circle cx='16' cy='50' r='3' fill={fg} opacity='0.55' />
+      <circle cx='24' cy='70' r='3' fill={fg} opacity='0.55' />
+
+      {/* Right cluster — three fixed dots sitting at the right edge. */}
+      <circle cx='78' cy='30' r='3' fill={fg} opacity='0.55' />
+      <circle cx='84' cy='50' r='3' fill={fg} opacity='0.55' />
+      <circle cx='76' cy='70' r='3' fill={fg} opacity='0.55' />
+
+      {/* The two travellers — accent dots sitting just inside the
+          midline on opposite halves. Each drifts outward into the
+          cluster on its own side. */}
       <circle
-        cx='56'
+        cx='40'
         cy='38'
-        r='3'
+        r='3.2'
         fill={accent}
         data-anim-target='1'
       />
       <circle
-        cx='44'
-        cy='54'
-        r='3'
+        cx='60'
+        cy='62'
+        r='3.2'
         fill={accent}
         data-anim-target='2'
       />
-      <circle cx='28' cy='30' r='3' fill={fg} opacity='0.7' />
-      <circle cx='22' cy='50' r='3' fill={fg} opacity='0.7' />
-      <circle cx='30' cy='70' r='3' fill={fg} opacity='0.7' />
     </svg>
   )
 }
@@ -1062,34 +1224,40 @@ function ArtDopamine({ fg, accent }: { fg: string; accent: string }) {
  *    data-anim-target='1' = the diagonal stroke (animates draw-on
  *      via stroke-dashoffset, completing then resetting).
  */
-function ArtReps({ fg, accent }: { fg: string; accent: string }) {
+/** Taste — five small swatches in a row. One is the accent (the
+ *  "chosen" one). On hover the choice walks across the row before
+ *  settling on its true favorite — discrimination, comparison,
+ *  picking. The story: taste is a filter you apply across options.
+ *
+ *    data-anim-target='1' = the chosen-marker (the accent dot above
+ *      a swatch; slides between swatches and settles).
+ */
+function ArtTaste({ fg, accent }: { fg: string; accent: string }) {
   return (
-    <svg {...SVG_BASE} aria-hidden='true' data-anim='reps'>
-      {/* Baseline. */}
-      <line x1='18' y1='80' x2='82' y2='80' stroke={fg} strokeWidth='0.8' opacity='0.4' />
-
-      {/* The four upright tally marks. */}
-      <g stroke={fg} strokeWidth='3' strokeLinecap='round' opacity='0.65'>
-        <line x1='30' y1='34' x2='30' y2='74' />
-        <line x1='42' y1='34' x2='42' y2='74' />
-        <line x1='54' y1='34' x2='54' y2='74' />
-        <line x1='66' y1='34' x2='66' y2='74' />
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='taste'>
+      {/* Five swatch tiles in a row. Slightly varied opacity reads
+          as a curated palette rather than a gradient. */}
+      <g fill={fg}>
+        <rect x='14' y='44' width='12' height='16' opacity='0.5'  rx='1.6' />
+        <rect x='30' y='44' width='12' height='16' opacity='0.65' rx='1.6' />
+        <rect x='46' y='44' width='12' height='16' opacity='0.45' rx='1.6' />
+        <rect x='62' y='44' width='12' height='16' opacity='0.55' rx='1.6' />
+        <rect x='78' y='44' width='12' height='16' opacity='0.4'  rx='1.6' />
       </g>
 
-      {/* The diagonal closing stroke, in accent. dasharray ≈ stroke
-          length so the keyframe can animate dashoffset to redraw it. */}
+      {/* A baseline — the ground of comparison. Subtle, just enough
+          to anchor the row visually. */}
       <line
-        x1='24'
-        y1='72'
-        x2='72'
-        y2='34'
-        stroke={accent}
-        strokeWidth='3.4'
-        strokeLinecap='round'
-        strokeDasharray='62'
-        strokeDashoffset='0'
-        data-anim-target='1'
+        x1='10' y1='66' x2='94' y2='66'
+        stroke={fg} strokeWidth='0.8' opacity='0.32'
       />
+
+      {/* The chosen-marker. Sits above the second swatch at rest;
+          on hover it walks the row and lands on its real pick. */}
+      <g data-anim-target='1'>
+        <polygon points='36,32 30,38 42,38' fill={accent} />
+        <circle cx='36' cy='28' r='3.2' fill={accent} />
+      </g>
     </svg>
   )
 }
@@ -1188,7 +1356,9 @@ function ArtTempo({ fg, accent }: { fg: string; accent: string }) {
       <circle cx='50' cy='80' r='2.6' fill={fg} opacity='0.7' />
 
       {/* The pendulum — arm + weight bob — anchored at the pivot so it
-          swings around it on hover. */}
+          swings around it on hover. The bob sits ~1/3 of the way down
+          from the top of the arm, like a real metronome weight at a
+          moderate-tempo setting. */}
       <g style={{ transformOrigin: '50px 80px' }} data-anim-target='1'>
         <line
           x1='50'
@@ -1199,54 +1369,58 @@ function ArtTempo({ fg, accent }: { fg: string; accent: string }) {
           strokeWidth='1.8'
           strokeLinecap='round'
         />
-        <circle cx='50' cy='32' r='4.6' fill={accent} />
+        <circle cx='50' cy='44' r='4.6' fill={accent} />
       </g>
     </svg>
   )
 }
 
-/** Surface area — a central self with short rays poking outward into
- *  the surrounding world. Hover lengthens the rays: more exposure,
- *  more chances for serendipity.
+/** Identity — a dashed outer ring (the loose, permeable "self")
+ *  containing an inner shape that morphs between configurations. The
+ *  story: identity is a construct, not a fact — the outer boundary
+ *  is soft, and what fills it can change.
  *
- *    data-anim-target='1' = the rays group (each ray scales out from
- *      the center on hover, reaches further into the world).
+ *    data-anim-target='1' = the morphing inner shape (rotates +
+ *      scales between two configurations on hover, suggesting a
+ *      self in flux).
+ *    data-anim-target='2' = the dashed boundary (slowly rotates,
+ *      reinforcing that the edge is not fixed).
  */
-function ArtSurfaceArea({ fg, accent }: { fg: string; accent: string }) {
-  // 8 rays at uniform angles. Pre-compute end coordinates so the path
-  // strings stay readable in the markup.
-  const rays = Array.from({ length: 8 }, (_, i) => {
-    const angle = (i * Math.PI) / 4
-    const r1 = 18
-    const r2 = 36
-    const x1 = 50 + r1 * Math.cos(angle)
-    const y1 = 50 + r1 * Math.sin(angle)
-    const x2 = 50 + r2 * Math.cos(angle)
-    const y2 = 50 + r2 * Math.sin(angle)
-    return { key: i, x1, y1, x2, y2 }
-  })
+function ArtIdentity({ fg, accent }: { fg: string; accent: string }) {
   return (
-    <svg {...SVG_BASE} aria-hidden='true' data-anim='surface-area'>
-      {/* The rays (exposure). Animated via scale around the center. */}
-      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
-        {rays.map((r) => (
-          <line
-            key={r.key}
-            x1={r.x1}
-            y1={r.y1}
-            x2={r.x2}
-            y2={r.y2}
-            stroke={accent}
-            strokeWidth='2.2'
-            strokeLinecap='round'
-            opacity='0.85'
-          />
-        ))}
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='identity'>
+      {/* The outer "self" — dashed because the boundary is permeable
+          and editable. Slowly rotates on hover. */}
+      <g data-anim-target='2' style={{ transformOrigin: '50px 50px' }}>
+        <circle
+          cx='50'
+          cy='50'
+          r='30'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.4'
+          strokeDasharray='3 4'
+          opacity='0.6'
+        />
       </g>
 
-      {/* The self at the center. */}
-      <circle cx='50' cy='50' r='12' fill={fg} opacity='0.6' />
-      <circle cx='50' cy='50' r='6' fill={accent} />
+      {/* The inner shape — what currently fills the self. A rotated
+          square that morphs into a different orientation on hover,
+          suggesting an updateable configuration. */}
+      <g data-anim-target='1' style={{ transformOrigin: '50px 50px' }}>
+        <rect
+          x='34'
+          y='34'
+          width='32'
+          height='32'
+          fill={accent}
+          opacity='0.85'
+          transform='rotate(45 50 50)'
+        />
+      </g>
+
+      {/* A small fixed core — the part that persists across edits. */}
+      <circle cx='50' cy='50' r='3' fill={fg} opacity='0.75' />
     </svg>
   )
 }

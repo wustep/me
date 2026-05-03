@@ -76,11 +76,11 @@ export type IllustrationId =
   | 'projection'
   | 'attention'
   | 'dopamine'
-  | 'reps'
+  | 'taste'
   | 'agency'
   | 'expertise'
   | 'tempo'
-  | 'surface-area'
+  | 'identity'
   | 'lenses-deck'
 
 export type Lens = {

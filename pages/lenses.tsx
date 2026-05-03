@@ -5,7 +5,7 @@ import { domain, host, name, x } from '@/lib/config'
 
 const title = 'Lenses'
 const description =
-  'A canvas of lenses for seeing the world — Great Man theory, evolutionary psychology, minimalism, utility functions, status, and more. No single lens sees everything.'
+  'A canvas of lenses for seeing the world — Great Man, evolutionary psychology, minimalism, utility, status, and more. No single lens sees everything.'
 const previewImage = `${host}/favicon-512x512.png`
 const canonicalUrl = `${host}/lenses`
 

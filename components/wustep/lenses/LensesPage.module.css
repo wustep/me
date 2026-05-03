@@ -20,18 +20,6 @@
  *     • prefers-reduced-motion disables all animation, no exceptions
  * ========================================================================== */
 
-@property --pan-x {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0px;
-}
-
-@property --pan-y {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0px;
-}
-
 /* Reusable easing — kept narrow so we can tune timing globally. */
 .frame {
   --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -66,11 +54,20 @@
 .frame {
   position: relative;
   min-height: 100vh;
-  height: 100vh;
-  overflow: hidden;
-  /* Layered background: a soft warm-grey base, plus a vertical
-     gradient that lifts the top edge slightly. This adds depth
-     without ever competing with the cards. */
+  /* Establish an inline-size container so the canvas responds to
+     the *frame's* width, not the viewport. This matters in
+     embedded mode (e.g. /playground/lenses) where the playground
+     sidebar shrinks the available width: a narrow frame inside a
+     wide viewport should still collapse to the small-screen
+     layout. The named container lets us write `@container deck (...)`
+     for clarity in the responsive blocks below. */
+  container-type: inline-size;
+  container-name: deck;
+  /* The deck is allowed to be taller than the viewport — the page
+     scrolls vertically when 4 rows + padding don't fit. We don't
+     want to *force* fit because that means inconsistent gaps on
+     short viewports; consistent rhythm matters more than
+     "everything visible at once." */
   background:
     linear-gradient(
       180deg,
@@ -109,13 +106,15 @@
 }
 
 /* When embedded inside another chrome (e.g. PlaygroundLayout) the parent
-   flex container already gives us the remaining viewport height. We
-   release the 100vh constraint and just fill the available box, so the
-   playground header and sidebar stay visible. */
+   flex container gives us the remaining viewport height. The deck
+   itself can be taller than that, so the embedded frame becomes its
+   own scroll container — the playground header/sidebar stay fixed
+   and the cards scroll inside. */
 .frameEmbedded {
   min-height: 0;
   height: 100%;
   flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 /* ===== Header — minimal, edges only ===== */
@@ -245,7 +244,11 @@
   position: relative;
   flex: 1 1 auto;
   width: 100%;
-  overflow: hidden;
+  /* No more overflow:hidden — the deck is allowed to extend past the
+     viewport vertically, and the frame scrolls naturally. Horizontal
+     overflow is suppressed though, since cards always fit width-wise
+     thanks to the responsive minmax in `.cards`. */
+  overflow-x: hidden;
   opacity: 0;
   transition: opacity 700ms var(--ease-out-quint);
 }
@@ -301,107 +304,223 @@
 }
 
 /* ===== Cards container =====
-   The `.cards` is a viewport-sized layer holding all cards positioned
-   by % (anchored at center). It receives the mouse-driven pan transform
-   so cards near the edges peek in/out as the user moves the cursor.
-   The translation is smoothed via a transition; we don't constantly
-   re-render — only when the React `pan` state changes.
+   A CSS grid with explicit row/col placement. Each lens card claims
+   a single cell, and the center "Lenses" card spans the middle 2×2.
+   Gap and padding are *fixed in pixels*, not percentages — so the
+   visual rhythm of the deck is identical at every viewport size,
+   and the page just scrolls vertically when the 4 rows don't fit.
 
-   `will-change: transform` only kicks in while the user is actively
-   panning (`.cardsPanning`). Leaving it on permanently bloats the
-   compositor on a static page. */
+   On viewports too narrow for 8 columns of legible cards, the grid
+   falls back to a responsive auto-fit (still grid, still even gaps
+   — just fewer columns). The center card stops trying to span 2×2
+   in that case so it doesn't break out of a narrow grid. */
 
 .cards {
-  --pan-x: 0px;
-  --pan-y: 0px;
-
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 2;
-  transform: translate3d(var(--pan-x), var(--pan-y), 0);
-  transition: transform 380ms var(--ease-out-quart);
-}
-
-.cardsPanning {
-  will-change: transform;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, auto);
+  /* Consistent padding around the deck. Top extra to clear the
+     header (which sits absolutely at the top with its own padding). */
+  padding: 88px 32px 56px;
+  gap: 28px;
+  /* Cap the grid width so cards don't stretch absurdly wide on huge
+     monitors — the deck stays card-sized and centers in the
+     viewport. */
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 /* ===== Lens card =====
-   All cards uniform — same size, no rotation, anchored to a virtual
-   grid via (left%, top%). The hover state is intentionally prominent:
-   ~13% scale-up, 14px lift, and a colored ring matching the card's
-   accent. */
+   Each card occupies a single grid cell. The card's own width is
+   driven by the grid column (1fr); the 4:5 aspect-ratio gives it
+   its height. Hover scales the card *in place* — no more
+   translate(-50%, -50%) since the grid does the placement now. */
 
 .card {
   --card-bg: #1f2a5c;
   --card-fg: #f5f1e8;
   --card-accent: #f2c04a;
 
-  position: absolute;
-  /* Anchor center of card to (left%, top%) of `.cards`. */
-  transform: translate(-50%, -50%) scale(0.92);
-  width: clamp(118px, 10.8vw, 144px);
+  position: relative;
+  /* Every card gets a real stacking layer so :hover can reliably
+     promote a card above its neighbors. Without this baseline the
+     later-DOM cards paint over earlier-DOM cards on hover and
+     their long ambient shadows bleed onto the hovered surface. */
+  z-index: 1;
+  width: 100%;
   /* 4:5 keeps the cards card-shaped without making them so tall
-     that four rows overlap on a typical 810px viewport. Combined
-     with the peek-from-top/bottom rows it leaves clean gaps
-     between rows in both directions. */
+     that four rows feel cramped at narrow viewports. */
   aspect-ratio: 4 / 5;
   padding: 13px 14px 14px;
   background: var(--card-bg);
   color: var(--card-fg);
   border: none;
   border-radius: 14px;
-  /* Layered shadow for cardstock feel:
-       • inset hairline edge (helps the card pop on cream bg)
+  /* Layered rest shadow — kept short so neighbors don't paint
+     long ambient tails over the hovered card. The ambient tier
+     stops at ~24px so two cards in adjacent grid cells (28px
+     gap) don't overlap shadow-wise.
+       • inset hairline edge (lets the card edge read on cream)
        • inset top highlight (faint specular, 3D feel)
        • close contact shadow (sits on the surface)
-       • mid ambient
-       • far ambient (warm-tinted to match the cream backdrop) */
+       • short ambient (no further than the gap) */
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
     0 1px 0 rgba(255, 255, 255, 0.12) inset,
     0 1px 1px rgba(0, 0, 0, 0.08),
-    0 6px 14px -6px rgba(20, 14, 8, 0.22),
-    0 20px 40px -18px rgba(20, 14, 8, 0.32);
+    0 8px 18px -10px rgba(20, 14, 8, 0.28);
   display: flex;
   flex-direction: column;
   text-align: left;
   cursor: pointer;
   font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
   opacity: 0;
+  transform: scale(0.96);
+  /* Specific properties only — `transition: all` would catch
+     auto-changing properties (z-index, etc.) we don't want
+     animated. Hover/click run on a non-overshoot ease so the
+     card lands cleanly; the bouncy entrance spring only applies
+     to the initial reveal (cardVisible) below. */
   transition:
     opacity 600ms var(--ease-out-quint),
-    transform 320ms var(--ease-spring-soft),
-    box-shadow 280ms ease;
-  will-change: transform, opacity;
+    transform 220ms var(--ease-out-quart),
+    box-shadow 220ms ease;
 }
 
 .cardVisible {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1);
+  /* Use the bouncy spring just for the entrance — afterwards we
+     fall back to the calmer ease-out defined on `.card`. */
+  transition:
+    opacity 600ms var(--ease-out-quint),
+    transform 360ms var(--ease-spring-soft),
+    box-shadow 220ms ease;
+}
+
+/*
+ * .cardSelected — applied to the lens card whose side panel is
+ * currently open. This is a persistent state (not gated on hover)
+ * so a user can find their place in the deck while reading the
+ * panel content. It deliberately mirrors the visual language of
+ * :hover (accent ring, lift) but lays a softer outer halo behind
+ * the ring so a hovered card and a selected card remain
+ * distinguishable when the cursor is somewhere else.
+ *
+ * On hover-capable devices, hovering a selected card layers the
+ * normal :hover treatment on top (see further down) — ring stays,
+ * the card just lifts a little more.
+ */
+.cardSelected {
+  /* The lift is real but gentler than :hover so the selection
+     reads as a steady marker rather than a transient interaction.
+     A second translateY arrives on top when the user actually
+     hovers this card. */
+  transform: translateY(-2px) scale(1.012);
+  /* Layered: same baseline shadows as rest, plus a 2px accent
+     ring, plus a soft outer halo at 8px alpha so the selected
+     card glows quietly out from the grid. */
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
+    0 1px 1px rgba(0, 0, 0, 0.08),
+    0 10px 22px -12px rgba(20, 14, 8, 0.34),
+    0 0 0 2px var(--card-accent),
+    0 0 0 8px color-mix(in oklab, var(--card-accent) 22%, transparent);
+  /* Sits above resting cards but under whichever card is being
+     actively hovered, so :hover always wins focus visually. */
+  z-index: 3;
+}
+
+/* The selected card's SVG runs its animation while idle — a
+   quiet "alive" signal that confirms which card is paired with
+   the open panel. Reduced motion still kills this via the global
+   block at the bottom of this file. */
+.cardSelected .cardArt :global(svg[data-anim] [data-anim-target]) {
+  animation-play-state: running;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: translate(-50%, calc(-50% - 14px)) scale(1.13);
+    /* Smaller lift than before. ~4px is enough to read as
+       elevated without looking like the card jumps. */
+    transform: translateY(-4px) scale(1.025);
+    /* Tighter shadow tier: the ambient grows but doesn't
+       balloon out 72px — that long tail was painting onto
+       neighboring cards. The 2px accent ring is the
+       primary "you're hovering me" signal. */
     box-shadow:
       0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
-      0 1px 2px rgba(0, 0, 0, 0.08),
-      0 16px 32px -10px rgba(20, 14, 8, 0.32),
-      0 36px 72px -18px rgba(20, 14, 8, 0.5),
-      0 0 0 3px var(--card-accent),
-      0 0 32px -4px var(--card-accent);
-    z-index: 5;
+      0 1px 1px rgba(0, 0, 0, 0.08),
+      0 12px 24px -12px rgba(20, 14, 8, 0.36),
+      0 22px 44px -20px rgba(20, 14, 8, 0.42),
+      0 0 0 2px var(--card-accent);
+    /* Hover sits high above every other card-state layer so
+       that the selected card's outer halo, neighboring cards'
+       ambient shadows, and the center card's resting paint
+       can never bleed on top of the surface the user is
+       actively pointing at. Big numerical gap from the rest
+       (1) / selected (3) tier so future per-state additions
+       still slot below. */
+    z-index: 20;
+    /* Promote to its own layer only while interacting; rest
+       state has no will-change, keeping the static page
+       cheap on the compositor. */
+    will-change: transform;
   }
 
   .card:hover .cardArt :global(svg) {
-    transform: scale(1.06);
+    /* Subtle inner pulse — the card already scales 1.025, so
+       1.02 here gives ~4.5% combined scale on the artwork
+       (vs the old 12%). */
+    transform: scale(1.02);
   }
 }
 
 .card:active {
-  transform: translate(-50%, -50%) scale(1.02);
+  /* Calm press feedback: a small inward scale, no translate.
+     The previous rule used `translate(-50%, -50%)` left over
+     from the absolute-position era, which yanked the card to
+     the top-left on click. */
+  transform: scale(0.985);
   transition-duration: 120ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* When the card is both hovered and pressed, keep the lift
+     but add the press scale on top so the press still reads. */
+  .card:hover:active {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  /* Hovering the currently-selected card stacks the hover lift
+     on top of the selected ring. We override transform back to
+     the standard hover lift (so it doesn't feel sluggish) but
+     keep the layered shadow that includes the soft accent halo,
+     so the card still reads as "selected and hovered" rather
+     than just "hovered". */
+  .card.cardSelected:hover {
+    transform: translateY(-4px) scale(1.025);
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
+      0 1px 1px rgba(0, 0, 0, 0.08),
+      0 12px 24px -12px rgba(20, 14, 8, 0.36),
+      0 22px 44px -20px rgba(20, 14, 8, 0.42),
+      0 0 0 2px var(--card-accent),
+      0 0 0 8px color-mix(in oklab, var(--card-accent) 22%, transparent);
+    /* Match the unselected hover layer (see `.card:hover`).
+       The hovered card always wins the stack regardless of
+       whether it's also the currently-selected card. */
+    z-index: 20;
+  }
+}
+
+/* When the user presses a selected card, keep the selection
+   shadow but apply the standard press scale so the click still
+   feels responsive. */
+.card.cardSelected:active {
+  transform: scale(0.985);
 }
 
 .cardArt {
@@ -422,53 +541,87 @@
 
 .cardTitle {
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: -0.012em;
-  line-height: 1.18;
+  /* Sized to fit the longest titles ("Evolutionary psychology",
+     "Probabilistic thinking") on two lines without crowding the
+     card edge. Sits a little smaller than the playground/hero
+     scale because the cards are dense and the illustration is
+     the primary read — the title is the label. */
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+  line-height: 1.25;
   /* Prevent awkward single-word last lines on long titles. */
   text-wrap: balance;
   color: var(--card-fg);
   flex: 0 0 auto;
+  /* Reserve space for two lines so cards with one-word titles
+     ("Status", "Energy") don't push their illustration lower
+     than cards with two-line titles. Cards stay visually uniform
+     across rows. The slight extra padding in the height calc
+     gives room for descenders ("y", "g") and the line-box
+     overhead some fonts add on top of `line-height`. */
+  min-height: 2.3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-/* ===== Center "Lenses" card — sized larger (~1.35×), focal point ===== */
+/* "Communication" is the longest single-word title in the deck
+   (13 characters with no wrap point), so at the base font-size
+   it sits hard against the card's left/right padding. Pull the
+   font and tracking in just for this card so the breathing room
+   matches its neighbors. Other long titles wrap onto two lines
+   and don't have this problem.
+   We mirror the breakpoint ladder used by `.cardTitle` so the
+   override scales down alongside it instead of growing larger
+   than the surrounding cards at narrow widths. */
+.card[data-lens-id='communication'] .cardTitle {
+  font-size: 0.74rem;
+  letter-spacing: -0.012em;
+}
+
+/* ===== Center "Lenses" card — spans the middle 2×2 of the grid =====
+   Lives in `grid-column: 4 / 6; grid-row: 2 / 4;` so it's
+   prominently centered without leaving a hole. Bigger radius and
+   deeper shadow than regular cards mark it as the featured card. */
 
 .centerCard {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: clamp(176px, 16.5vw, 220px);
-  aspect-ratio: 4 / 5;
-  padding: 18px 20px 22px;
+  position: relative;
+  /* Sits inside the middle 2×2 cells of the 8-col grid. */
+  grid-column: 4 / 6;
+  grid-row: 2 / 4;
+  /* Sits one stacking layer above regular cards by default so it
+     reads as the focal card of the deck. Hover bumps it higher
+     still. */
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  /* Allow the card to take its natural cell shape; no aspect-ratio
+     so it follows the grid (which is 2 cells wide × 2 cells tall). */
+  padding: 22px 24px 26px;
   background: #0e0e10;
   color: #f5f1e8;
   border: none;
   border-radius: 20px;
-  /* The center card sits highest in the visual stack — give it a
-     deeper, warmer shadow than the regular cards so it reads as a
-     featured card, not just another tile. The inset top highlight
-     adds a faint specular along its top edge, like a polished
-     deck-card sitting on a leather table. */
+  /* Featured-card shadow — deeper than a regular lens card, but
+     same restraint on the ambient tail length so it doesn't
+     bleed into the cards adjacent to it on hover. */
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
     0 1px 0 rgba(255, 255, 255, 0.08) inset,
     0 1px 2px rgba(0, 0, 0, 0.18),
-    0 14px 28px -10px rgba(20, 14, 8, 0.42),
-    0 40px 80px -22px rgba(20, 14, 8, 0.55);
+    0 14px 26px -14px rgba(20, 14, 8, 0.42);
   display: flex;
   flex-direction: column;
   text-align: left;
   cursor: pointer;
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
   opacity: 0;
-  z-index: 3;
+  transform: scale(0.94);
   transition:
     opacity 700ms var(--ease-out-quint),
-    transform 380ms var(--ease-spring-soft),
-    box-shadow 280ms ease;
-  will-change: transform, opacity;
+    transform 220ms var(--ease-out-quart),
+    box-shadow 220ms ease;
 }
 
 :global(.dark-mode) .centerCard {
@@ -477,40 +630,67 @@
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.5) inset,
     0 1px 2px rgba(0, 0, 0, 0.42),
-    0 14px 28px -10px rgba(0, 0, 0, 0.55),
-    0 40px 80px -22px rgba(0, 0, 0, 0.7);
+    0 14px 26px -14px rgba(0, 0, 0, 0.55);
 }
 
 .centerCardVisible {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1);
+  /* Bouncy entrance only; afterwards we use the calm ease-out
+     from the base rule. */
+  transition:
+    opacity 700ms var(--ease-out-quint),
+    transform 420ms var(--ease-spring-soft),
+    box-shadow 220ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover {
-    transform: translate(-50%, calc(-50% - 14px)) scale(1.06);
+    /* Slightly stronger lift than regular cards — it's the
+       focal card, after all — but well short of the previous
+       10px / 1.04. */
+    transform: translateY(-5px) scale(1.02);
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.12),
-      0 28px 56px -12px rgba(0, 0, 0, 0.5),
-      0 60px 120px -20px rgba(0, 0, 0, 0.7),
-      0 0 0 3px #f2c04a,
-      0 0 48px -4px rgba(242, 192, 74, 0.6);
-    z-index: 6;
+      0 18px 36px -16px rgba(0, 0, 0, 0.45),
+      0 30px 60px -24px rgba(0, 0, 0, 0.5),
+      0 0 0 2px #f2c04a;
+    /* One step above regular card hover (20) so when both
+       could theoretically overlap, the focal card wins the
+       stack. The center card has a noticeably larger drop
+       shadow than regular cards, so it deserves the top of
+       the deck while interacting. */
+    z-index: 25;
+    will-change: transform;
   }
 
   :global(.dark-mode) .centerCard:hover {
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.4),
-      0 28px 56px -12px rgba(0, 0, 0, 0.65),
-      0 60px 120px -20px rgba(0, 0, 0, 0.85),
-      0 0 0 3px #c8552b,
-      0 0 48px -4px rgba(200, 85, 43, 0.6);
+      0 18px 36px -16px rgba(0, 0, 0, 0.6),
+      0 30px 60px -24px rgba(0, 0, 0, 0.7),
+      0 0 0 2px #c8552b;
   }
 }
 
 .centerCard:active {
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: scale(0.99);
   transition-duration: 120ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .centerCard:hover:active {
+    transform: translateY(-2px) scale(1.005);
+  }
+}
+
+/* Wrapper around the center card's text block. In 2×2 mode the
+   wrapper is a no-op (its parent is already a column flex). In
+   the narrow-width hero mode the wrapper sits next to the
+   illustration in a row, with the title on top and the tagline
+   below. */
+.centerCardTextWrap {
+  display: contents;
 }
 
 .centerCardTitle {
@@ -521,6 +701,22 @@
   line-height: 1.12;
   text-wrap: balance;
   flex: 0 0 auto;
+}
+
+/* Tagline only renders inside the hero (narrow-width) layout —
+   on the 2×2 card we lean on the bigger illustration to do the
+   work, no need to crowd it with copy. The media query below
+   flips this to `display: block`. */
+.centerCardTagline {
+  display: none;
+  font-family: var(--font-serif, 'Crimson Pro', serif);
+  font-size: 0.94rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.32;
+  letter-spacing: 0.002em;
+  text-wrap: pretty;
+  opacity: 0.78;
 }
 
 /* ===== Side panel ===== */
@@ -994,6 +1190,13 @@
 
 .dialogListItem {
   margin: 0;
+  /* Make the <li> a flex container so the inner button can stretch
+     to fill its grid cell. Grid items default to `align-items:
+     stretch`, so a row with one wrapping tagline forces both cells
+     to the taller height — but only if the button inside actually
+     fills the cell. Without this, the button stays at its content
+     height and the cards in a row mismatch. */
+  display: flex;
 }
 
 .dialogJumpBtn {
@@ -1221,405 +1424,512 @@
 }
 
 /* =============================================================================
- * Lens illustrations — bespoke hover animations (one per lens)
+ * Lens illustrations — bespoke animations (one per lens)
  *
- *   Each canvas card SVG has data-anim="<id>" on the root. One or more
- *   inner elements carry data-anim-target="<n>" — those are the
- *   actors. Animations only run while the card is :hover'd on a
- *   pointer-capable device (no false-fires on touch). Each loop is
- *   short (1.5–3s) and only animates `transform`, `opacity`, or
- *   `stroke-dashoffset` so the GPU does the work.
+ *   Each lens SVG carries `data-anim="<id>"` on the root. One or more
+ *   inner elements carry `data-anim-target="<n>"` — those are the
+ *   actors. Each loop is short (1.5–4s) and only animates `transform`,
+ *   `opacity`, or (for one case) `stroke-dashoffset`, so the GPU does
+ *   the work.
  *
- *   Because data-anim-target lives on a <g> (or a <circle>/<rect>)
- *   inside an SVG, we set transform-origin via inline style on the
+ *   Because `data-anim-target` lives on a <g> (or a <circle>/<rect>)
+ *   inside an SVG, we set `transform-origin` via inline style on the
  *   element where it matters, so each animation rotates/scales around
  *   its own anchor instead of the SVG's top-left corner.
  *
- *   Discoverability rule: nothing animates by default. The card has to
- *   invite the motion. If a user never hovers, they pay zero CPU cost.
+ *   How they run: each animation is declared with
+ *   `animation-play-state: paused` by default, and a single rule
+ *   below toggles it to `running` in three contexts:
+ *
+ *     1. The side-panel hero — always running while the panel is open
+ *        (every device, every modality).
+ *     2. Hovering a canvas card — pointer-capable devices only.
+ *     3. Hovering a dialog index row — pointer-capable devices only.
+ *
+ *   Paused animations have effectively zero runtime cost, so this is
+ *   cheap on every other surface.
  * ========================================================================== */
 
+/*
+ * ── Animations are declared *unconditionally* on each SVG target,
+ *    but with `animation-play-state: paused` so they sit dormant
+ *    until something on the page invites them in. We then flip the
+ *    play-state to `running` in three contexts:
+ *
+ *      1. `.card:hover .cardArt`           — hovering a canvas card.
+ *      2. `.cardSelected .cardArt`         — the canvas card whose
+ *         side panel is currently open (selection treatment).
+ *      3. `.dialogJumpBtn:hover .dialogJumpArt`
+ *                                          — hovering an index row
+ *         in the central "Lenses" dialog.
+ *
+ *    The side panel hero deliberately does NOT animate. Reading
+ *    body copy is a calm, focused activity — a constantly looping
+ *    illustration in the same view competes with the text. We let
+ *    the canvas card behind the panel keep its selection animation
+ *    so the surface is never *entirely* still while the lens is
+ *    open, just not in the reading region itself.
+ *
+ *    Doing it this way means each animation is described once, and
+ *    every place a lens illustration appears benefits — without
+ *    selectors growing 3× in size.
+ *
+ *    Performance: paused animations have effectively zero runtime
+ *    cost; the animation timeline simply doesn't advance. We still
+ *    only animate `transform`, `opacity`, and (for one case) the
+ *    SVG `stroke-dashoffset` property, so the GPU does the work.
+ *
+ *    Reduced motion: the bottom of this file globally kills all
+ *    animations under `prefers-reduced-motion: reduce`.
+ */
+
+/* ── Per-lens animation declarations.
+      Each rule below uses the `animation` shorthand, which resets
+      `animation-play-state` to its default (`running`). We override
+      that to `paused` in a single global rule placed *after* all
+      per-lens declarations (see "Default state" further down) and
+      then flip it back to `running` in the three contexts at the
+      very bottom of this section. */
+
+/* Great Man — the leader's head bobs and the dot pulses. */
+:global(svg[data-anim='great-man'] [data-anim-target]) {
+  animation: lensGreatMan 1.8s ease-in-out infinite;
+  transform-origin: 52px 20px;
+}
+@keyframes lensGreatMan {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%      { transform: translateY(-3px); opacity: 0.78; }
+}
+
+/* Evo psych — four bond dots on a stylized helix light up in
+   sequence from bottom (`target='4'`, the accent dot) up to the
+   top, like a signal travelling up inherited code. The bottom
+   dot is the accent so the loop has a clear starting beat. */
+:global(svg[data-anim='evo-psych'] [data-anim-target]) {
+  animation: lensEvoBond 3.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='4']) { animation-delay: 0s; }
+:global(svg[data-anim='evo-psych'] [data-anim-target='3']) { animation-delay: 0.3s; }
+:global(svg[data-anim='evo-psych'] [data-anim-target='2']) { animation-delay: 0.6s; }
+:global(svg[data-anim='evo-psych'] [data-anim-target='1']) { animation-delay: 0.9s; }
+@keyframes lensEvoBond {
+  0%, 6%    { opacity: 0.85; transform: scale(1); }
+  14%       { opacity: 1;    transform: scale(1.45); }
+  26%       { opacity: 0.95; transform: scale(1.1); }
+  40%, 100% { opacity: 0.85; transform: scale(1); }
+}
+
+/* Minimalism — a slow, calm breath. Almost imperceptible — that's
+   the joke. The whole point of this lens is *less*. */
+:global(svg[data-anim='minimalism'] [data-anim-target]) {
+  animation: lensBreath 3s ease-in-out infinite;
+}
+@keyframes lensBreath {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+
+/* Utility — the winning dot bounces, like the optimum is celebrating. */
+:global(svg[data-anim='utility'] [data-anim-target]) {
+  transform-origin: 75px 18px;
+  animation: lensBounce 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes lensBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-4px); }
+}
+
+/* Status — the high-status dot orbits the rings. Slow, steady. */
+:global(svg[data-anim='status'] [data-anim-target]) {
+  animation: lensOrbit 5s linear infinite;
+}
+@keyframes lensOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Incentives — the arrow nudges toward the target. */
+:global(svg[data-anim='incentives'] [data-anim-target]) {
+  animation: lensIncentivesArrow 1.6s ease-in-out infinite;
+}
+@keyframes lensIncentivesArrow {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
+}
+
+/* Game theory — only the accent cell breathes; grey dots stay put. */
+:global(svg[data-anim='game-theory'] [data-anim-target='4']) {
+  animation: lensGameDominant 2.4s ease-in-out infinite;
+}
+@keyframes lensGameDominant {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.12); opacity: 0.8; }
+}
+
+/* Systems — a signal travels around the directed cycle. All three
+   nodes share one keyframe (`lensSystemsPulse`) but with staggered
+   `animation-delay`s of 0 / -⅓ / -⅔ of the cycle, so exactly one
+   node is "lit" (accent fill, slight scale) at any given time and
+   the eye reads the loop as flowing rather than as a static
+   diagram. We duplicate the duration on each delay rule so the
+   negative offset references the same 3.6s cycle.
+
+   `--node-fg` / `--node-accent` are CSS custom properties set
+   inline on each <circle> so the keyframe can interpolate `fill`
+   from the lens's foreground color to its accent without baking
+   colors into the shared keyframe. */
+:global(svg[data-anim='systems'] [data-anim-target]) {
+  animation: lensSystemsPulse 3.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+:global(svg[data-anim='systems'] [data-anim-target='1']) {
+  animation-delay: 0s;
+}
+:global(svg[data-anim='systems'] [data-anim-target='2']) {
+  animation-delay: -2.4s;
+}
+:global(svg[data-anim='systems'] [data-anim-target='3']) {
+  animation-delay: -1.2s;
+}
+@keyframes lensSystemsPulse {
+  0%, 70%, 100% {
+    fill: var(--node-fg);
+    transform: scale(1);
+  }
+  20% {
+    fill: var(--node-accent);
+    transform: scale(1.18);
+  }
+  35% {
+    fill: var(--node-accent);
+    transform: scale(1);
+  }
+}
+
+/* Headspace — the dot pulses, the aura around it breathes. */
+:global(svg[data-anim='headspace'] [data-anim-target='1']) {
+  animation: lensThoughtDot 1.8s ease-in-out infinite;
+}
+:global(svg[data-anim='headspace'] [data-anim-target='2']) {
+  animation: lensThoughtAura 1.8s ease-in-out infinite;
+  animation-delay: -0.6s;
+}
+@keyframes lensThoughtDot {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.35); opacity: 0.7; }
+}
+@keyframes lensThoughtAura {
+  0%, 100% { transform: scale(1);    opacity: 0.55; }
+  50%      { transform: scale(1.18); opacity: 0.78; }
+}
+
+/* Legibility — the accent label "writes itself in" from the left. */
+:global(svg[data-anim='legibility'] [data-anim-target]) {
+  animation: lensLabelWrite 2.4s ease-in-out infinite;
+}
+@keyframes lensLabelWrite {
+  0%, 100% { transform: scaleX(0.2); opacity: 0.2; }
+  40%, 70% { transform: scaleX(1);   opacity: 1; }
+}
+
+/* Narrative — a beat travels along the arc. */
+:global(svg[data-anim='narrative'] [data-anim-target]) {
+  animation: lensStoryBeat 3.2s ease-in-out infinite;
+}
+@keyframes lensStoryBeat {
+  0%   { transform: translate(-38px, 44px); }
+  50%  { transform: translate(0, 0); }
+  100% { transform: translate(38px, 44px); }
+}
+
+/* Constraint — energy under pressure. */
+:global(svg[data-anim='constraint'] [data-anim-target]) {
+  animation: lensTug 1.4s ease-in-out infinite;
+}
+@keyframes lensTug {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+
+/* Interface — cursor "clicks," button reacts. */
+:global(svg[data-anim='interface'] [data-anim-target='1']) {
+  animation: lensCursorClick 1.6s ease-in-out infinite;
+}
+:global(svg[data-anim='interface'] [data-anim-target='2']) {
+  animation: lensButtonPress 1.6s ease-in-out infinite;
+}
+@keyframes lensCursorClick {
+  0%, 60%, 100% { transform: translate(0, 0); }
+  30%           { transform: translate(-2px, -2px); }
+  40%           { transform: translate(0, 0); }
+}
+@keyframes lensButtonPress {
+  0%, 35%, 50%, 100% { transform: scale(1); }
+  40%                { transform: scale(0.95); }
+}
+
+/* Energy — the yellow charge bar rises and drains; the lightning
+   bolt does a softer ambient pulse on top. */
+:global(svg[data-anim='energy'] [data-anim-target='1']) {
+  animation: lensChargeBar 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+:global(svg[data-anim='energy'] [data-anim-target='2']) {
+  animation: lensBoltPulse 2.4s ease-in-out infinite;
+}
+@keyframes lensChargeBar {
+  0%   { transform: scaleX(0.18); }
+  45%  { transform: scaleX(1);    }
+  55%  { transform: scaleX(1);    }
+  100% { transform: scaleX(0.18); }
+}
+@keyframes lensBoltPulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1;    }
+}
+
+/* Epistemic pragmatism — dashed path flows forward (map → action). */
+:global(svg[data-anim='epistemic'] [data-anim-target]) {
+  stroke-dasharray: 3 3;
+  animation: lensFlowDashes 1.6s linear infinite;
+}
+@keyframes lensFlowDashes {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -12; }
+}
+
+/* Osmosis — the two travellers each drift outward into the
+   cluster on their own side of the permeable midline. The
+   left-side dot moves left, the right-side dot moves right;
+   both fade as they "join" their cluster. The two animations
+   are mirror images, slightly offset in timing so they don't
+   pulse in lockstep. */
+:global(svg[data-anim='osmosis'] [data-anim-target='1']) {
+  animation: lensOsmosisLeft 2.8s ease-in-out infinite;
+}
+:global(svg[data-anim='osmosis'] [data-anim-target='2']) {
+  animation: lensOsmosisRight 2.8s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+@keyframes lensOsmosisLeft {
+  0%        { transform: translateX(0);     opacity: 1;   }
+  70%       { transform: translateX(-18px); opacity: 0.6; }
+  100%      { transform: translateX(-18px); opacity: 0;   }
+}
+@keyframes lensOsmosisRight {
+  0%        { transform: translateX(0);     opacity: 1;   }
+  70%       { transform: translateX(18px);  opacity: 0.6; }
+  100%      { transform: translateX(18px);  opacity: 0;   }
+}
+
+/* Probabilistic — bell curve breathes. */
+:global(svg[data-anim='probabilistic'] [data-anim-target]) {
+  animation: lensBellBreath 2.8s ease-in-out infinite;
+}
+@keyframes lensBellBreath {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.1); }
+}
+
+/* Communication — speech pulses; misalignment crack flickers. */
+:global(svg[data-anim='communication'] [data-anim-target='1']) {
+  animation: lensSpeak 1.8s ease-in-out infinite;
+}
+:global(svg[data-anim='communication'] [data-anim-target='2']) {
+  animation: lensCrackFlicker 1.8s ease-in-out infinite;
+}
+@keyframes lensSpeak {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+@keyframes lensCrackFlicker {
+  0%, 50%, 100% { opacity: 0.45; }
+  20%, 70%      { opacity: 0.8; }
+}
+
+/* Mimetics — copies twinkle outward in waves. */
+:global(svg[data-anim='mimetics'] [data-anim-target='0']) {
+  transform-origin: 30px 50px;
+  animation: lensSourcePulse 2s ease-in-out infinite;
+}
+:global(svg[data-anim='mimetics'] [data-anim-target='1']) {
+  animation: lensTwinkle 2s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+:global(svg[data-anim='mimetics'] [data-anim-target='2']) {
+  animation: lensTwinkle 2s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+@keyframes lensSourcePulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+@keyframes lensTwinkle {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* Primitives — the three atoms below rotate in place. */
+:global(svg[data-anim='primitives'] [data-anim-target]) {
+  animation: lensOrbit 6s linear infinite;
+}
+:global(svg[data-anim='primitives'] [data-anim-target='2']) {
+  animation-direction: reverse;
+}
+
+/* Lenses deck — three discs drift a few pixels left/right with a
+   staggered offset, like an instrument settling into focus. */
+:global(svg[data-anim='lenses-deck'] [data-anim-target='1']) {
+  animation: lensSettle1 5.4s ease-in-out infinite;
+}
+:global(svg[data-anim='lenses-deck'] [data-anim-target='2']) {
+  animation: lensSettle2 5.4s ease-in-out infinite;
+  animation-delay: -1.6s;
+}
+:global(svg[data-anim='lenses-deck'] [data-anim-target='3']) {
+  animation: lensSettle3 5.4s ease-in-out infinite;
+  animation-delay: -3.2s;
+}
+@keyframes lensSettle1 {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(2.5px); }
+}
+@keyframes lensSettle2 {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-2.5px); }
+}
+@keyframes lensSettle3 {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(2px); }
+}
+
+/* Projection — the cast shadow sways slightly. */
+:global(svg[data-anim='projection'] [data-anim-target='1']) {
+  animation: lensProjectSway 3.4s ease-in-out infinite;
+}
+@keyframes lensProjectSway {
+  0%, 100% { transform: scaleX(1)    translateX(0); }
+  50%      { transform: scaleX(1.08) translateX(2px); }
+}
+
+/* Attention — the cone sweeps left and right. */
+:global(svg[data-anim='attention'] [data-anim-target='1']) {
+  animation: lensAttentionSweep 3.6s ease-in-out infinite;
+}
+@keyframes lensAttentionSweep {
+  0%, 100% { transform: rotate(0deg);   }
+  25%      { transform: rotate(-12deg); }
+  75%      { transform: rotate(12deg);  }
+}
+
+/* Dopamine — the chasing dot orbits; the attractor pulses. */
+:global(svg[data-anim='dopamine'] [data-anim-target='1']) {
+  animation: lensOrbit 3s linear infinite;
+}
+:global(svg[data-anim='dopamine'] [data-anim-target='2']) {
+  animation: lensDopaminePulse 1.5s ease-in-out infinite;
+}
+@keyframes lensDopaminePulse {
+  0%, 100% { transform: scale(1);    opacity: 1;   }
+  50%      { transform: scale(1.18); opacity: 0.8; }
+}
+
+/* Taste — chosen-marker walks across the row of swatches and
+   settles back on its real pick. */
+:global(svg[data-anim='taste'] [data-anim-target='1']) {
+  animation: lensTasteWalk 4s ease-in-out infinite;
+}
+@keyframes lensTasteWalk {
+  /* Each swatch is 16px apart in SVG units (14, 30, 46, 62, 78).
+     The marker starts above swatch #2 (x=30) at translateX(0),
+     walks the row, and returns to the start before looping. */
+  0%, 12%   { transform: translateX(0);    } /* over #2 */
+  22%, 32%  { transform: translateX(16px); } /* over #3 */
+  42%, 52%  { transform: translateX(32px); } /* over #4 */
+  62%, 72%  { transform: translateX(16px); } /* return to #3 */
+  85%, 100% { transform: translateX(0);    } /* settle on #2 */
+}
+
+/* Agency — the breakout arrow pushes a few pixels further out. */
+:global(svg[data-anim='agency'] [data-anim-target='1']) {
+  animation: lensAgencyBreakout 2.4s ease-in-out infinite;
+}
+@keyframes lensAgencyBreakout {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
+}
+
+/* Expertise — the marker climbs the staircase one step at a time. */
+:global(svg[data-anim='expertise'] [data-anim-target='1']) {
+  animation: lensExpertiseClimb 3.2s steps(1, end) infinite;
+}
+@keyframes lensExpertiseClimb {
+  0%   { transform: translate(-40px, 32px); }
+  25%  { transform: translate(-20px, 20px); }
+  50%  { transform: translate(0,     0);    }
+  100% { transform: translate(0,     0);    }
+}
+
+/* Tempo — the metronome arm swings. */
+:global(svg[data-anim='tempo'] [data-anim-target='1']) {
+  animation: lensTempoSwing 1.6s ease-in-out infinite;
+}
+@keyframes lensTempoSwing {
+  0%, 100% { transform: rotate(-14deg); }
+  50%      { transform: rotate(14deg);  }
+}
+
+/* Identity — inner shape morphs; outer dashed ring slowly drifts. */
+:global(svg[data-anim='identity'] [data-anim-target='1']) {
+  animation: lensIdentityMorph 3.6s ease-in-out infinite;
+}
+:global(svg[data-anim='identity'] [data-anim-target='2']) {
+  animation: lensIdentityDrift 6s linear infinite;
+}
+@keyframes lensIdentityMorph {
+  0%, 100% { transform: rotate(0deg)  scale(1);    }
+  50%      { transform: rotate(45deg) scale(0.78); }
+}
+@keyframes lensIdentityDrift {
+  0%   { transform: rotate(0deg);   }
+  100% { transform: rotate(360deg); }
+}
+
+/*
+ * ── Default state: pause everything. This rule comes *after* the
+ *    per-lens `animation` shorthand declarations so it wins the
+ *    cascade and overrides the implicit `animation-play-state:
+ *    running` that the shorthand sets.
+ */
+:global(svg[data-anim] [data-anim-target]) {
+  animation-play-state: paused;
+}
+
+/*
+ * ── Play-state toggles. A single rule lights up every paused
+ *    animation in the right context. We restrict animation to two
+ *    interactive contexts plus the persistent selection treatment:
+ *
+ *      • Card hover (canvas + center) — only on hover-capable
+ *        devices, so we don't fire on accidental touches and burn
+ *        battery on phones.
+ *      • Dialog index row hover — same constraint as card hover.
+ *      • `.cardSelected` — the canvas card whose side panel is
+ *        currently open. Always running (no `:hover` gate) so the
+ *        deck has a quiet visual anchor while the user reads.
+ *
+ *    The side panel hero deliberately stays still — see the
+ *    architecture note above.
+ */
+
 @media (hover: hover) and (pointer: fine) {
-  /* ── Great Man: the leader's head bobs and the dot pulses.
-        Vertical drift + opacity wobble suggests "the eye seeks the peak." */
-  .card:hover .cardArt :global(svg[data-anim='great-man'] [data-anim-target]) {
-    animation: lensGreatMan 1.8s ease-in-out infinite;
-    transform-origin: 52px 20px;
+  .card:hover .cardArt :global(svg[data-anim] [data-anim-target]),
+  .centerCard:hover .cardArt :global(svg[data-anim] [data-anim-target]),
+  .dialogJumpBtn:hover .dialogJumpArt :global(svg[data-anim] [data-anim-target]) {
+    animation-play-state: running;
   }
-  @keyframes lensGreatMan {
-    0%, 100% { transform: translateY(0); opacity: 1; }
-    50%      { transform: translateY(-3px); opacity: 0.78; }
-  }
-
-  /* ── Evo psych: rings ripple outward, staggered (firing circuitry). */
-  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target]) {
-    transform-origin: 50px 50px;
-    animation: lensEvoRipple 2.4s ease-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
-    animation-delay: 0.4s;
-  }
-  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
-    animation-delay: 0.8s;
-  }
-  @keyframes lensEvoRipple {
-    0%   { transform: scale(0.92); opacity: 0; }
-    20%  { opacity: 1; }
-    100% { transform: scale(1.08); opacity: 0; }
-  }
-
-  /* ── Minimalism: a slow, calm breath. Almost imperceptible — that's
-        the joke. The whole point of this lens is *less*. */
-  .card:hover .cardArt :global(svg[data-anim='minimalism'] [data-anim-target]) {
-    animation: lensBreath 3s ease-in-out infinite;
-  }
-  @keyframes lensBreath {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.18); }
-  }
-
-  /* ── Utility: the winning dot bounces, like the optimum is celebrating. */
-  .card:hover .cardArt :global(svg[data-anim='utility'] [data-anim-target]) {
-    transform-origin: 75px 18px;
-    animation: lensBounce 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-  }
-  @keyframes lensBounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30%           { transform: translateY(-4px); }
-  }
-
-  /* ── Status: the high-status dot orbits the rings. Slow, steady. */
-  .card:hover .cardArt :global(svg[data-anim='status'] [data-anim-target]) {
-    animation: lensOrbit 5s linear infinite;
-  }
-  @keyframes lensOrbit {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  /* ── Incentives: the arrow nudges toward the target. */
-  .card:hover .cardArt :global(svg[data-anim='incentives'] [data-anim-target]) {
-    animation: lensIncentivesArrow 1.6s ease-in-out infinite;
-  }
-  @keyframes lensIncentivesArrow {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(4px); }
-  }
-
-  /* ── Game theory: only the accent cell — the dominant strategy —
-        breathes. The grey dots stay put: every player is at the
-        table, but one cell quietly carries the payoff. */
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='4']) {
-    animation: lensGameDominant 2.4s ease-in-out infinite;
-  }
-  @keyframes lensGameDominant {
-    0%, 100% { transform: scale(1);    opacity: 1; }
-    50%      { transform: scale(1.12); opacity: 0.8; }
-  }
-
-  /* ── Systems: the loop slowly rotates (cycles cycling). */
-  .card:hover .cardArt :global(svg[data-anim='systems'] [data-anim-target]) {
-    animation: lensOrbit 8s linear infinite;
-  }
-
-  /* ── Headspace: the dot pulses, the aura around it breathes. Two
-        offset motions so the head reads as actively thinking, not
-        idle. Continuous (no long rest), so it's always in motion. */
-  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target='1']) {
-    animation: lensThoughtDot 1.8s ease-in-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target='2']) {
-    animation: lensThoughtAura 1.8s ease-in-out infinite;
-    animation-delay: -0.6s;
-  }
-  @keyframes lensThoughtDot {
-    0%, 100% { transform: scale(1);    opacity: 1; }
-    50%      { transform: scale(1.35); opacity: 0.7; }
-  }
-  @keyframes lensThoughtAura {
-    0%, 100% { transform: scale(1);    opacity: 0.55; }
-    50%      { transform: scale(1.18); opacity: 0.78; }
-  }
-
-  /* ── Legibility: the accent label "writes itself in" from the left. */
-  .card:hover .cardArt :global(svg[data-anim='legibility'] [data-anim-target]) {
-    animation: lensLabelWrite 2.4s ease-in-out infinite;
-  }
-  @keyframes lensLabelWrite {
-    0%, 100% { transform: scaleX(0.2); opacity: 0.2; }
-    40%, 70% { transform: scaleX(1);   opacity: 1; }
-  }
-
-  /* ── Narrative: a beat travels along the arc.
-        We approximate the arc with a translate path that mirrors the curve. */
-  .card:hover .cardArt :global(svg[data-anim='narrative'] [data-anim-target]) {
-    animation: lensStoryBeat 3.2s ease-in-out infinite;
-  }
-  @keyframes lensStoryBeat {
-    0%   { transform: translate(-38px, 44px); }
-    50%  { transform: translate(0, 0); }
-    100% { transform: translate(38px, 44px); }
-  }
-
-  /* ── Constraint: the diagonal line tugs against the brackets — energy
-        under pressure. Subtle scale around the midpoint. */
-  .card:hover .cardArt :global(svg[data-anim='constraint'] [data-anim-target]) {
-    animation: lensTug 1.4s ease-in-out infinite;
-  }
-  @keyframes lensTug {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.06); }
-  }
-
-  /* ── Interface: cursor "clicks," button reacts (depresses slightly). */
-  .card:hover .cardArt :global(svg[data-anim='interface'] [data-anim-target='1']) {
-    animation: lensCursorClick 1.6s ease-in-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='interface'] [data-anim-target='2']) {
-    animation: lensButtonPress 1.6s ease-in-out infinite;
-  }
-  @keyframes lensCursorClick {
-    0%, 60%, 100% { transform: translate(0, 0); }
-    30%           { transform: translate(-2px, -2px); }
-    40%           { transform: translate(0, 0); }
-  }
-  @keyframes lensButtonPress {
-    0%, 35%, 50%, 100% { transform: scale(1); }
-    40%                { transform: scale(0.95); }
-  }
-
-  /* ── Energy: the yellow charge bar rises and drains like a live
-        meter; the lightning bolt does a softer ambient pulse on
-        top, so motion reads as "current flowing" with the bolt as
-        the witness rather than the spectacle. */
-  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target='1']) {
-    animation: lensChargeBar 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target='2']) {
-    animation: lensBoltPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes lensChargeBar {
-    0%   { transform: scaleX(0.18); }
-    45%  { transform: scaleX(1);    }
-    55%  { transform: scaleX(1);    }
-    100% { transform: scaleX(0.18); }
-  }
-  @keyframes lensBoltPulse {
-    0%, 100% { opacity: 0.55; }
-    50%      { opacity: 1;    }
-  }
-
-  /* ── Epistemic pragmatism: the dashed path flows forward
-        (map → action). Animating stroke-dashoffset is an exception to
-        "transform/opacity only" but on a single small path it's cheap. */
-  .card:hover .cardArt :global(svg[data-anim='epistemic'] [data-anim-target]) {
-    stroke-dasharray: 3 3;
-    animation: lensFlowDashes 1.6s linear infinite;
-  }
-  @keyframes lensFlowDashes {
-    from { stroke-dashoffset: 0; }
-    to   { stroke-dashoffset: -12; }
-  }
-
-  /* ── Osmosis: the two crossing dots drift toward the absorbed side. */
-  .card:hover .cardArt :global(svg[data-anim='osmosis'] [data-anim-target='1']) {
-    animation: lensOsmosis1 2.6s ease-in-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='osmosis'] [data-anim-target='2']) {
-    animation: lensOsmosis2 2.6s ease-in-out infinite;
-    animation-delay: 0.6s;
-  }
-  @keyframes lensOsmosis1 {
-    0%   { transform: translateX(0);    opacity: 1; }
-    70%  { transform: translateX(-22px); opacity: 0.7; }
-    100% { transform: translateX(-22px); opacity: 0; }
-  }
-  @keyframes lensOsmosis2 {
-    0%   { transform: translateX(0);    opacity: 1; }
-    70%  { transform: translateX(-18px); opacity: 0.7; }
-    100% { transform: translateX(-18px); opacity: 0; }
-  }
-
-  /* ── Probabilistic: the bell curve breathes — the distribution
-        widens and narrows like a sample re-rolling. */
-  .card:hover .cardArt :global(svg[data-anim='probabilistic'] [data-anim-target]) {
-    animation: lensBellBreath 2.8s ease-in-out infinite;
-  }
-  @keyframes lensBellBreath {
-    0%, 100% { transform: scaleY(1); }
-    50%      { transform: scaleY(1.1); }
-  }
-
-  /* ── Communication: the speech bubble pulses (saying it again);
-        the misalignment crack flickers (the gap between us). */
-  .card:hover .cardArt :global(svg[data-anim='communication'] [data-anim-target='1']) {
-    animation: lensSpeak 1.8s ease-in-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='communication'] [data-anim-target='2']) {
-    animation: lensCrackFlicker 1.8s ease-in-out infinite;
-  }
-  @keyframes lensSpeak {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.08); }
-  }
-  @keyframes lensCrackFlicker {
-    0%, 50%, 100% { opacity: 0.45; }
-    20%, 70%      { opacity: 0.8; }
-  }
-
-  /* ── Mimetics: copies twinkle outward in waves (idea spreading).
-        Source pulses; first-gen flicker; second-gen flicker later. */
-  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='0']) {
-    transform-origin: 30px 50px;
-    animation: lensSourcePulse 2s ease-in-out infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='1']) {
-    animation: lensTwinkle 2s ease-in-out infinite;
-    animation-delay: 0.4s;
-  }
-  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='2']) {
-    animation: lensTwinkle 2s ease-in-out infinite;
-    animation-delay: 0.8s;
-  }
-  @keyframes lensSourcePulse {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.12); }
-  }
-  @keyframes lensTwinkle {
-    0%, 100% { opacity: 0.55; }
-    50%      { opacity: 1; }
-  }
-
-  /* ── Primitives: the three atoms below rotate in place — atomic units
-        spinning, ready to recombine. */
-  .card:hover .cardArt :global(svg[data-anim='primitives'] [data-anim-target]) {
-    animation: lensOrbit 6s linear infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='primitives'] [data-anim-target='2']) {
-    animation-direction: reverse;
-  }
-
-  /* ── Center "Lenses" deck: the three discs gyre slowly around the
-        centroid, like aligning lenses snapping into focus. */
-  /* Each of the three stacked lenses drifts a few pixels left/right
-        with a staggered offset, like an instrument settling into
-        focus. Slow and asymmetric — never quite repeats. */
-  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='1']) {
-    animation: lensSettle1 5.4s ease-in-out infinite;
-  }
-  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='2']) {
-    animation: lensSettle2 5.4s ease-in-out infinite;
-    animation-delay: -1.6s;
-  }
-  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='3']) {
-    animation: lensSettle3 5.4s ease-in-out infinite;
-    animation-delay: -3.2s;
-  }
-  @keyframes lensSettle1 {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(2.5px); }
-  }
-  @keyframes lensSettle2 {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(-2.5px); }
-  }
-  @keyframes lensSettle3 {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(2px); }
-  }
-
-  /* ── Projection: the cast shadow sways slightly — what gets seen
-        isn't a faithful copy of the speaker, it shifts under its
-        own influence. */
-  .card:hover .cardArt :global(svg[data-anim='projection'] [data-anim-target='1']) {
-    animation: lensProjectSway 3.4s ease-in-out infinite;
-  }
-  @keyframes lensProjectSway {
-    0%, 100% { transform: scaleX(1)    translateX(0); }
-    50%      { transform: scaleX(1.08) translateX(2px); }
-  }
-
-  /* ── Attention: the cone sweeps left and right, brushing past the
-        unattended dots, then settles back over the highlighted one. */
-  .card:hover .cardArt :global(svg[data-anim='attention'] [data-anim-target='1']) {
-    animation: lensAttentionSweep 3.6s ease-in-out infinite;
-  }
-  @keyframes lensAttentionSweep {
-    0%, 100% { transform: rotate(0deg);   }
-    25%      { transform: rotate(-12deg); }
-    75%      { transform: rotate(12deg);  }
-  }
-
-  /* ── Dopamine: the chasing dot orbits the attractor; the attractor
-        itself gives a soft pulse, like a reward signal flickering. */
-  .card:hover .cardArt :global(svg[data-anim='dopamine'] [data-anim-target='1']) {
-    animation: lensOrbit 3s linear infinite;
-  }
-  .card:hover .cardArt :global(svg[data-anim='dopamine'] [data-anim-target='2']) {
-    animation: lensDopaminePulse 1.5s ease-in-out infinite;
-  }
-  @keyframes lensDopaminePulse {
-    0%, 100% { transform: scale(1);    opacity: 1;   }
-    50%      { transform: scale(1.18); opacity: 0.8; }
-  }
-
-  /* ── Reps: the diagonal stroke draws on, holds, then resets — the
-        moment a five-count completes, over and over. */
-  .card:hover .cardArt :global(svg[data-anim='reps'] [data-anim-target='1']) {
-    animation: lensRepsDraw 2.4s ease-in-out infinite;
-  }
-  @keyframes lensRepsDraw {
-    0%       { stroke-dashoffset: 62; }
-    50%, 80% { stroke-dashoffset: 0;  }
-    100%     { stroke-dashoffset: 62; }
-  }
-
-  /* ── Agency: the breakout arrow pushes a few pixels further past
-        the frame, then resets — the visual of choice being taken. */
-  .card:hover .cardArt :global(svg[data-anim='agency'] [data-anim-target='1']) {
-    animation: lensAgencyBreakout 2.4s ease-in-out infinite;
-  }
-  @keyframes lensAgencyBreakout {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(4px); }
-  }
-
-  /* ── Expertise: the marker climbs the staircase one step at a time,
-        then resets — accumulation, not arrival. */
-  .card:hover .cardArt :global(svg[data-anim='expertise'] [data-anim-target='1']) {
-    animation: lensExpertiseClimb 3.2s steps(1, end) infinite;
-  }
-  @keyframes lensExpertiseClimb {
-    0%   { transform: translate(-40px, 32px); }
-    25%  { transform: translate(-20px, 20px); }
-    50%  { transform: translate(0,     0);    }
-    100% { transform: translate(0,     0);    }
-  }
-
-  /* ── Tempo: the metronome arm swings side to side at a steady,
-        unhurried cadence. The hinge is at the bottom of the arm. */
-  .card:hover .cardArt :global(svg[data-anim='tempo'] [data-anim-target='1']) {
-    animation: lensTempoSwing 1.6s ease-in-out infinite;
-  }
-  @keyframes lensTempoSwing {
-    0%, 100% { transform: rotate(-14deg); }
-    50%      { transform: rotate(14deg);  }
-  }
-
-  /* ── Surface area: the rays extend outward and pull back, the self
-        breathing into the world a little further with each cycle. */
-  .card:hover .cardArt :global(svg[data-anim='surface-area'] [data-anim-target='1']) {
-    animation: lensSurfaceReach 2.8s ease-in-out infinite;
-  }
-  @keyframes lensSurfaceReach {
-    0%, 100% { transform: scale(1);    }
-    50%      { transform: scale(1.18); }
-  }
-
-  /* The card's own scale-up shouldn't override the inner SVG's scale —
-     so we already animate inner <g> elements, not the SVG root, and
-     rely on `.card:hover .cardArt svg { transform: scale(1.06) }` from
-     the existing rule to lift the whole illustration. */
 }
 
 /* ===== Reduced motion =====
@@ -1633,6 +1943,8 @@
   .card,
   .cardArt :global(svg),
   .cardArt :global(svg [data-anim-target]),
+  .panelArt :global(svg [data-anim-target]),
+  .dialogJumpArt :global(svg [data-anim-target]),
   .centerCard,
   .panel,
   .panelHero,
@@ -1654,69 +1966,235 @@
     transition: none !important;
   }
 
-  /* Hover transforms also off — otherwise the page still moves on
-     pointer events even when the user asked for stillness. */
+  /* Hover and active transforms also off — otherwise the page
+     still moves on pointer events even when the user asked for
+     stillness. */
   @media (hover: hover) and (pointer: fine) {
     .card:hover,
+    .card:hover:active,
     .centerCard:hover,
-    .card:hover .cardArt :global(svg) {
-      transform: translate(-50%, -50%) scale(1) !important;
+    .centerCard:hover:active {
+      transform: scale(1) !important;
     }
+
+    .card:hover .cardArt :global(svg) {
+      transform: scale(1) !important;
+    }
+  }
+
+  .card:active,
+  .centerCard:active {
+    transform: scale(1) !important;
+  }
+
+  /* Persistent transforms (selection lift) also revert to identity
+     under reduced motion. The accent ring + halo still render so
+     the user can still see which card is paired with the panel,
+     they just don't see the card translate. */
+  .cardSelected,
+  .card.cardSelected:hover,
+  .card.cardSelected:active {
+    transform: scale(1) !important;
   }
 }
 
-/* ===== Mobile / small viewport adjustments =====
-   On phones the constellation gets cramped — drop the cards into a
-   simple scrollable column so everything stays tappable. */
+/* ===== Responsive grid step-down ====================================
+ *
+ *   We keep the designed 8-column composition (with the center
+ *   "Lenses" card spanning the middle 2×2) all the way down to
+ *   900px. As the viewport tightens we shave the outer padding
+ *   and gap so cards stay readable instead of dropping out of
+ *   the centered composition prematurely.
+ *
+ *   In the 900–1199px band the grid keeps its 8 columns but with
+ *   tighter padding and a smaller gap. Below 900px we finally
+ *   throw the explicit placement away: the grid auto-flows at
+ *   whatever column count fits, the center card promotes to a
+ *   full-width hero pinned to the top, and document order takes
+ *   over.
+ * ================================================================= */
 
-@media (max-width: 720px) {
+/* Tighten outer padding + gap to keep 8 columns viable at narrower
+   widths. The cards shrink, but the centered composition holds.
+   We measure the *frame*'s inline size so the playground-embedded
+   variant collapses correctly even when the viewport is wide. */
+@container deck (max-width: 1199px) {
   .cards {
-    position: static;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 76px 14px max(32px, env(safe-area-inset-bottom));
-    align-content: flex-start;
-    overflow-y: auto;
-    height: 100%;
+    padding: 80px 24px 48px;
+    gap: 22px;
   }
 
-  .canvas {
-    overflow-y: auto;
-  }
-
-  .bgWrap {
-    display: none;
-  }
-
-  .card,
-  .centerCard {
-    position: relative;
-    left: auto !important;
-    top: auto !important;
-    width: 100%;
-    transform: none !important;
-    aspect-ratio: 5 / 7;
-  }
-
-  .cardVisible,
-  .centerCardVisible {
-    transform: none !important;
-  }
-
-  .centerCard {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 9;
+  .card {
+    padding: 11px 12px 12px;
   }
 
   .cardTitle {
-    font-size: 0.86rem;
+    font-size: 0.8rem;
+  }
+
+  .card[data-lens-id='communication'] .cardTitle {
+    font-size: 0.7rem;
+  }
+
+  .centerCard {
+    padding: 18px 20px 22px;
+    border-radius: 18px;
   }
 
   .centerCardTitle {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
+  }
+}
+
+@container deck (max-width: 1019px) {
+  .cards {
+    padding: 76px 18px 44px;
+    gap: 18px;
   }
 
+  .cardTitle {
+    font-size: 0.76rem;
+    min-height: 2.2rem;
+  }
+
+  .card[data-lens-id='communication'] .cardTitle {
+    font-size: 0.66rem;
+  }
+}
+
+/* Below 900px container width: drop the 8-col centered
+   composition. Cards auto-flow at whatever column count fits, and
+   the center card promotes to a full-width hero pinned to the top
+   of the grid. */
+@container deck (max-width: 899px) {
+  .cards {
+    /* auto-fit: as many cards as fit at >=130px wide, equally
+       sized, with our fixed pixel gap. The grid grows tall to
+       hold them all and the page scrolls. */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    padding: 80px 28px 48px;
+    gap: 22px;
+  }
+
+  /* Restore card chrome to the regular size at this stage — the
+     compact tightening from the 1019px band assumed an 8-col
+     composition where every card had to fit; now that we're
+     auto-flowing, cards have more room. */
+  .card {
+    padding: 13px 14px 14px;
+  }
+
+  .cardTitle {
+    font-size: 0.84rem;
+    min-height: 2.3rem;
+  }
+
+  .card[data-lens-id='communication'] .cardTitle {
+    font-size: 0.74rem;
+  }
+
+  .card {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  /* When the center card can't span 2×2, promote it to a
+     full-width hero pinned to the top of the grid. It gets a
+     horizontal layout — illustration on the left, title + a
+     short tagline on the right — so it stays the focal point
+     even when the deck below it has many small cards. */
+  .centerCard {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    aspect-ratio: auto;
+    width: 100%;
+    height: auto;
+    min-height: 132px;
+    padding: 22px 28px;
+    border-radius: 22px;
+    /* Override the column flex layout — center card hero is a row. */
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* Show the tagline that stays hidden on the 2×2 card. */
+  .centerCardTagline {
+    display: block;
+  }
+
+  /* Stretch the title down so it sits next to the illustration. */
+  .centerCardTextWrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  /* The illustration block becomes a fixed-size square on the left.
+     Override the column-mode `flex: 1 1 auto` and `margin: 2px -2px 8px`
+     so the SVG sits as a tidy block beside the title. */
+  .centerCard .cardArt {
+    flex: 0 0 auto;
+    width: 96px;
+    height: 96px;
+    margin: 0;
+  }
+
+  .centerCard .cardArt :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .centerCardTitle {
+    font-size: 1.5rem;
+    letter-spacing: -0.024em;
+  }
+}
+
+/* Narrow container (≤599px): tighten the gap, outer padding, and
+   hero to match the smaller card scale. Same auto-fit grid as
+   the 899px block — no special "mobile mode," just denser
+   spacing. Container-scoped because this is canvas chrome. */
+@container deck (max-width: 599px) {
+  .cards {
+    gap: 16px;
+    padding: 72px 16px max(28px, env(safe-area-inset-bottom));
+  }
+
+  /* Tighten the hero on phones — the illustration shrinks and the
+     title scales back so the hero doesn't dominate the screen.
+     It still claims the full top row, but feels right-sized for
+     a 375px container. */
+  .centerCard {
+    min-height: 116px;
+    padding: 18px 20px;
+    gap: 18px;
+    border-radius: 18px;
+  }
+
+  .centerCard .cardArt {
+    width: 80px;
+    height: 80px;
+  }
+
+  .centerCardTitle {
+    font-size: 1.3rem;
+  }
+
+  .centerCardTagline {
+    font-size: 0.88rem;
+  }
+}
+
+/* Phones (panel + dialog only): the side panel and index dialog
+   render in a portal at the top of the document, so they're sized
+   by the *viewport*, not the frame. Keep these as viewport media
+   queries — converting them to container queries would never fire
+   in embedded mode (the panel isn't inside the frame container). */
+@media (max-width: 599px) {
   .panelArt {
     width: 92px;
     height: 92px;
