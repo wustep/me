@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
+import { LensesCover } from '@/components/wustep/LensesCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 
 export type PlaygroundEntry = {
@@ -30,13 +31,14 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Lenses',
-        url: '/lenses',
+        url: '/playground/lenses',
         description:
           'A canvas of lenses for seeing the world. Each card is a different frame — Great Man theory, evolutionary psychology, minimalism, utility functions, status — and no single one sees everything.',
         summary: 'A canvas of frames for seeing the world',
         date: 'May 2026',
         year: '2026',
-        gradient: 'from-purple-500 via-fuchsia-500 to-rose-500'
+        gradient: 'from-purple-500 via-fuchsia-500 to-rose-500',
+        CoverComponent: LensesCover
       },
       {
         title: 'DOM-ino',

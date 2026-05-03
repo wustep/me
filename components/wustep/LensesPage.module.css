@@ -64,6 +64,16 @@
   color: #F5F1E8;
 }
 
+/* When embedded inside another chrome (e.g. PlaygroundLayout) the parent
+   flex container already gives us the remaining viewport height. We
+   release the 100vh constraint and just fill the available box, so the
+   playground header and sidebar stay visible. */
+.frameEmbedded {
+  min-height: 0;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
 /* ===== Header — minimal, edges only ===== */
 
 .header {
@@ -570,14 +580,32 @@
   margin-bottom: 0;
 }
 
+/* Emphasis: keep it dark and bold so it always reads against the cream
+   panel body — using a per-lens tint here cost legibility on light card
+   colors (cream, mustard, sage). The lens's color still carries through
+   the hero header above. */
 .panelBody em {
   font-style: italic;
-  color: var(--panel-bg);
   font-weight: 600;
+  color: #0E0E10;
+  /* Subtle hairline underline in the lens accent — keeps personality
+     without sacrificing contrast. */
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(100% - 2px),
+    color-mix(in srgb, var(--panel-bg) 65%, transparent) calc(100% - 2px)
+  );
+  background-repeat: no-repeat;
+  padding-bottom: 1px;
 }
 
 :global(.dark-mode) .panelBody em {
-  color: var(--panel-accent);
+  color: #F8F4E8;
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(100% - 2px),
+    color-mix(in srgb, var(--panel-accent) 80%, transparent) calc(100% - 2px)
+  );
 }
 
 /* Related-lenses block at bottom of panel body. */

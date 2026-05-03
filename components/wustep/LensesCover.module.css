@@ -1,0 +1,147 @@
+/* LensesCover — fanned spread of mini lens cards.
+
+   Layout uses CSS custom properties to compute each card's angle and
+   horizontal offset relative to the center of the fan, so adding or
+   removing a card from CARDS just works. Hover gently expands the
+   spread and lifts the cards. */
+
+.cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #1A1814;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Subtle warm glow behind the fan to give depth on the dark background. */
+.glow {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 60%, rgba(242, 192, 74, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(200, 74, 44, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fan {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.card {
+  --i: var(--card-i, 0);
+  --n: var(--card-n, 5);
+  /* Center-out index: -2, -1, 0, 1, 2 for n=5 */
+  --center: calc((var(--n) - 1) / 2);
+  --offset: calc(var(--i) - var(--center));
+
+  /* Rotation and translation per card. Tweak --rot-step / --x-step to
+     control the tightness of the fan. */
+  --rot-step: 9deg;
+  --x-step: 18px;
+  --y-step: 5px;
+
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  width: 22%;
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 6px 16px rgba(0, 0, 0, 0.35);
+  /* Each card translates outward (x) and slightly down (|offset|*y),
+     and rotates outward. */
+  transform:
+    translate(
+      calc(-50% + var(--offset) * var(--x-step)),
+      calc(0% + (var(--offset) * var(--offset)) * var(--y-step) * 0.4)
+    )
+    rotate(calc(var(--offset) * var(--rot-step)));
+  transform-origin: 50% 110%;
+  transition:
+    transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  /* Stack so the leftmost card is behind, center on top */
+  z-index: calc(10 - var(--offset) * var(--offset));
+}
+
+.glyph {
+  width: 56%;
+  height: 56%;
+  display: block;
+}
+
+/* Hover/focus: spread the fan a bit wider and lift. */
+@media (hover: hover) {
+  .cover:hover .card,
+  :global(.group):hover .card {
+    --rot-step: 13deg;
+    --x-step: 26px;
+    --y-step: 8px;
+  }
+  .cover:hover .card,
+  :global(.group):hover .card {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.1) inset,
+      0 10px 22px rgba(0, 0, 0, 0.42),
+      0 0 0 1px var(--accent, transparent);
+  }
+}
+
+/* Slight bobbing animation in idle state to give the fan life — pauses
+   on hover to give the spread its full attention. */
+.card {
+  animation: cardBob 5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 120ms);
+}
+
+@keyframes cardBob {
+  0%, 100% {
+    transform:
+      translate(
+        calc(-50% + var(--offset) * var(--x-step)),
+        calc(0% + (var(--offset) * var(--offset)) * var(--y-step) * 0.4)
+      )
+      rotate(calc(var(--offset) * var(--rot-step)));
+  }
+  50% {
+    transform:
+      translate(
+        calc(-50% + var(--offset) * var(--x-step)),
+        calc(-3px + (var(--offset) * var(--offset)) * var(--y-step) * 0.4)
+      )
+      rotate(calc(var(--offset) * var(--rot-step)));
+  }
+}
+
+@media (hover: hover) {
+  .cover:hover .card,
+  :global(.group):hover .card {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    transition: none;
+  }
+  .cover:hover .card,
+  :global(.group):hover .card {
+    transition: none;
+  }
+}

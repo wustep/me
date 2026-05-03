@@ -788,7 +788,19 @@ const LENS_BY_ID: Record<string, Lens> = Object.fromEntries(
 // Page
 // ============================================================================
 
-export function LensesPage() {
+/**
+ * Top-level Lenses experience.
+ *
+ *   When `embedded` is true, the page renders only the canvas + portaled
+ *   panels and skips its own header / theme toggle / body classes. Use
+ *   this when mounting `<LensesPage embedded />` inside another chrome
+ *   (e.g. `PlaygroundLayout`).
+ */
+export type LensesPageProps = {
+  embedded?: boolean
+}
+
+export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   const { isDarkMode, toggleDarkMode } = useDarkMode()
   const [hasMounted, setHasMounted] = React.useState(false)
   const [openLensId, setOpenLensId] = React.useState<string | null>(null)
@@ -808,31 +820,41 @@ export function LensesPage() {
 
   const activeLens = openLensId ? (LENS_BY_ID[openLensId] ?? null) : null
 
+  const frameClass = embedded
+    ? `${styles.frame} ${styles.frameEmbedded}`
+    : styles.frame
+
   return (
     <>
-      <BodyClassName className={isDarkMode ? 'notion dark-mode' : 'notion'} />
+      {/* Standalone mode owns the body class (notion + dark mode). When
+          embedded, the host layout (e.g. PlaygroundLayout) sets these. */}
+      {!embedded && (
+        <BodyClassName className={isDarkMode ? 'notion dark-mode' : 'notion'} />
+      )}
 
-      <div className={styles.frame}>
-        <header className={styles.header}>
-          <div className={styles.headerInner}>
-            <Link
-              href='/'
-              className={styles.homeBackButton}
-              aria-label='Back to home'
-            >
-              <span className={styles.homeBackArrow}>←</span>
-            </Link>
+      <div className={frameClass}>
+        {!embedded && (
+          <header className={styles.header}>
+            <div className={styles.headerInner}>
+              <Link
+                href='/'
+                className={styles.homeBackButton}
+                aria-label='Back to home'
+              >
+                <span className={styles.homeBackArrow}>←</span>
+              </Link>
 
-            <div className={styles.headerRhs}>
-              <LabsButton className={styles.headerButton} />
-              <ThemeToggle
-                isDark={hasMounted ? isDarkMode : false}
-                onToggle={toggleDarkMode}
-                className={styles.headerButton}
-              />
+              <div className={styles.headerRhs}>
+                <LabsButton className={styles.headerButton} />
+                <ThemeToggle
+                  isDark={hasMounted ? isDarkMode : false}
+                  onToggle={toggleDarkMode}
+                  className={styles.headerButton}
+                />
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+        )}
 
         <Canvas
           mounted={hasMounted}
