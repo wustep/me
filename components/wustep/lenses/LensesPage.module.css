@@ -1882,45 +1882,114 @@
   }
 }
 
-/* Evo psych — four bond dots on a stylized helix light up in
-   sequence from bottom (`target='4'`, the accent dot) up to the
-   top, like a signal travelling up inherited code. The bottom
-   dot is the accent so the loop has a clear starting beat. */
-:global(svg[data-anim='evo-psych'] [data-anim-target]) {
-  animation: lensEvoBond 3.2s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
-:global(svg[data-anim='evo-psych'] [data-anim-target='4']) {
-  animation-delay: 0s;
-}
+/* Evo psych — a three-generation family tree where a "trait"
+   pulse travels top → bottom each cycle. Four ancestors pulse
+   first, the two upper connectors draw on as the signal descends,
+   the parents pulse, the center connector draws, then the
+   accent-colored descendant pulses last. The whole sequence reads
+   as inheritance arriving from the deep past at a single living
+   present.
+
+   We share one cycle length (3.6s) across all targets and stagger
+   them with `animation-delay` so the eye perceives one continuous
+   wave rather than four independent loops.
+
+   The connector trunks each carry their own draw-on animation that
+   uses `stroke-dasharray` / `stroke-dashoffset` to reveal the
+   path; we set `pathLength: 1` via SVG-or-CSS-equivalent (here we
+   just use a large dasharray that exceeds the actual path length,
+   so the dashoffset transition reads as a clean reveal regardless
+   of the underlying length). */
+
+/* Generation dots — they share one keyframe (a brief grow + glow
+   pulse) but fire on different beats. Each generation gets its
+   own `:global(...)` selector; CSS Modules' `:global()` doesn't
+   accept comma-separated selector lists, so we list the rules
+   side by side at the top level instead. */
+:global(svg[data-anim='evo-psych'] [data-anim-target='1']),
+:global(svg[data-anim='evo-psych'] [data-anim-target='2']),
 :global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
-  animation-delay: 0.3s;
-}
-:global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
-  animation-delay: 0.6s;
+  animation: lensEvoPulse 3.6s ease-in-out infinite;
 }
 :global(svg[data-anim='evo-psych'] [data-anim-target='1']) {
+  animation-delay: 0s;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
   animation-delay: 0.9s;
 }
-@keyframes lensEvoBond {
+:global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
+  animation-delay: 1.8s;
+}
+
+@keyframes lensEvoPulse {
+  /* Rest. */
   0%,
-  6% {
-    opacity: 0.85;
+  10% {
     transform: scale(1);
+    opacity: var(--evo-rest-opacity, 0.85);
   }
-  14% {
+  /* Quick rise — the trait "arrives" at this generation. */
+  16% {
+    transform: scale(1.5);
     opacity: 1;
-    transform: scale(1.45);
   }
+  /* Settle — slightly enlarged afterglow. */
   26% {
+    transform: scale(1.12);
     opacity: 0.95;
-    transform: scale(1.1);
   }
+  /* Return to rest and hold for the rest of the cycle so other
+     generations get their moment. */
   40%,
   100% {
-    opacity: 0.85;
     transform: scale(1);
+    opacity: var(--evo-rest-opacity, 0.85);
+  }
+}
+
+/* Connector trunks — the right-angled pedigree-chart paths that
+   carry the signal between generations. Each trunk reveals via
+   stroke-dashoffset, then resets and waits its turn next cycle.
+   The dasharray is generous so the same rule works regardless of
+   the trunk's actual measured length.
+
+   Two upper trunks (left and right) draw simultaneously between
+   generation-1 and generation-2 pulses. The center trunk draws
+   between generation-2 and generation-3. */
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-r']),
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-c']) {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: lensEvoTrunk 3.6s ease-in-out infinite;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-r']) {
+  animation-delay: 0.45s;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='trunk-c']) {
+  animation-delay: 1.35s;
+}
+
+@keyframes lensEvoTrunk {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  /* Draw on quickly so the signal reads as moving, not painting. */
+  18% {
+    stroke-dashoffset: 0;
+  }
+  /* Hold the drawn line for a beat so the next-generation pulse
+     can fire while the connector is fully visible. */
+  60% {
+    stroke-dashoffset: 0;
+  }
+  /* Fade back out before the next cycle by undrawing from the
+     near end (dashoffset increases). The eye reads this as the
+     signal moving on. */
+  85%,
+  100% {
+    stroke-dashoffset: 200;
   }
 }
 

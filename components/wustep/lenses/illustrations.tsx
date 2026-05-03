@@ -108,101 +108,148 @@ function ArtGreatMan({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Evo psych — a stylized double helix. Two strands cross at four
- *  evenly-spaced bond points; bonds pulse in sequence from bottom
- *  to top on hover, like an old signal climbing inherited
- *  circuitry. The strands meet cleanly at the bonds so the figure
- *  reads as a helix rather than two squiggles next to four lines.
+/** Evo psych — a three-generation family tree. Four ancestor dots
+ *  pair up into two parents, who join into one descendant (the
+ *  accent) at the bottom. The tree is drawn with right-angled
+ *  "pedigree chart" connectors — horizontal sibling bars meeting
+ *  short vertical drops — which is the classic visual grammar for
+ *  inheritance.
  *
- *    data-anim-target='1..4' = each bond dot, animated in sequence.
+ *  Animation: a "trait" travels down the tree generation by
+ *  generation. The four ancestor dots pulse first (in pairs), the
+ *  pulse then descends to the two parents, then to the descendant
+ *  — so the eye reads the loop as inherited material flowing
+ *  forward in time, top → bottom. The descendant lights up with
+ *  the accent color at the end of the cycle, the moment the
+ *  inheritance has "arrived."
+ *
+ *    data-anim-target='1' = the four ancestor dots (top row).
+ *    data-anim-target='2' = the two parent dots (middle row).
+ *    data-anim-target='3' = the descendant dot (bottom, accent).
+ *    data-anim-target='trunk-l' / 'trunk-r' = the two upper
+ *      pedigree connectors that drop from each parent-pair bar
+ *      down to the parent dot. Their stroke draws on as the pulse
+ *      descends.
+ *    data-anim-target='trunk-c' = the lower connector that drops
+ *      from the parents' sibling bar down to the descendant.
  */
 function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
-  // Bond y-positions, evenly spaced from top to bottom. The strands
-  // weave through these four x-mirror points, swapping sides at each
-  // one so the silhouette reads as a helix.
-  const bondYs: [number, number, number, number] = [22, 44, 66, 88]
-  const innerX = 42
-  const outerX = 58
-  const railsLeft =
-    `M ${innerX} ${bondYs[0]} ` +
-    `C ${innerX - 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
-    `${outerX + 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
-    `${outerX} ${bondYs[1]} ` +
-    `C ${outerX + 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
-    `${innerX - 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
-    `${innerX} ${bondYs[2]} ` +
-    `C ${innerX - 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
-    `${outerX + 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
-    `${outerX} ${bondYs[3]}`
-  const railsRight =
-    `M ${outerX} ${bondYs[0]} ` +
-    `C ${outerX + 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
-    `${innerX - 14} ${(bondYs[0] + bondYs[1]) / 2}, ` +
-    `${innerX} ${bondYs[1]} ` +
-    `C ${innerX - 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
-    `${outerX + 14} ${(bondYs[1] + bondYs[2]) / 2}, ` +
-    `${outerX} ${bondYs[2]} ` +
-    `C ${outerX + 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
-    `${innerX - 14} ${(bondYs[2] + bondYs[3]) / 2}, ` +
-    `${innerX} ${bondYs[3]}`
+  // Three generations on three rows.
+  // Row Y positions chosen so the tree breathes inside the 100×100
+  // viewBox without crowding the edges or the card title below.
+  const Y_GP = 22
+  const Y_P = 54
+  const Y_C = 82
+
+  // Grandparent (ancestor) x-positions, arranged in two pairs.
+  const GP = [22, 38, 62, 78] as const
+
+  // Each pair of grandparents joins at a sibling bar and drops to
+  // a parent below it. The parents sit at the midpoint of each
+  // pair, then themselves join at a shared bar that drops to the
+  // single descendant in the middle.
+  const P_LEFT_X = (GP[0] + GP[1]) / 2 // = 30
+  const P_RIGHT_X = (GP[2] + GP[3]) / 2 // = 70
+  const C_X = (P_LEFT_X + P_RIGHT_X) / 2 // = 50
+
+  // Vertical position of the two horizontal "sibling bars" — one
+  // joining each grandparent pair, and one joining the parents.
+  const BAR_GP_Y = (Y_GP + Y_P) / 2 - 2 // sits in upper half between rows
+  const BAR_P_Y = (Y_P + Y_C) / 2 - 2
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='evo-psych'>
-      {/* Two strands that swap sides at each bond. The 'back'
-          strand is drawn first at lower opacity so the 'front'
-          strand reads in front; each pair of curves looks like a
-          twist when overlaid. */}
+      {/* ─── Generation 1 → 2 connectors ───────────────────────────
+          For each grandparent pair: two short stems dropping from
+          each grandparent to a horizontal bar, then a single drop
+          from the bar down to the parent. Drawn as one continuous
+          path per side so the pulse can travel along it. */}
       <path
-        d={railsRight}
+        d={
+          `M ${GP[0]} ${Y_GP} V ${BAR_GP_Y} ` +
+          `H ${GP[1]} V ${Y_GP} ` +
+          `M ${P_LEFT_X} ${BAR_GP_Y} V ${Y_P}`
+        }
         fill='none'
         stroke={fg}
-        strokeWidth='1.6'
+        strokeWidth='1.4'
         strokeLinecap='round'
-        opacity='0.32'
+        opacity='0.55'
+        data-anim-target='trunk-l'
       />
       <path
-        d={railsLeft}
+        d={
+          `M ${GP[2]} ${Y_GP} V ${BAR_GP_Y} ` +
+          `H ${GP[3]} V ${Y_GP} ` +
+          `M ${P_RIGHT_X} ${BAR_GP_Y} V ${Y_P}`
+        }
         fill='none'
         stroke={fg}
-        strokeWidth='1.8'
+        strokeWidth='1.4'
         strokeLinecap='round'
-        opacity='0.7'
+        opacity='0.55'
+        data-anim-target='trunk-r'
       />
 
-      {/* Four bond dots — anchor the helix and serve as the
-          animation actors. Bottom-most fires first (`target='4'`),
-          climbing upward, so the cycle reads as a signal travelling
-          up the inherited code. */}
-      <circle
-        cx='50'
-        cy={bondYs[0]}
-        r='3'
-        fill={fg}
-        opacity='0.85'
-        data-anim-target='1'
+      {/* ─── Generation 2 → 3 connector ────────────────────────────
+          Parents' sibling bar plus the central drop to the
+          descendant. */}
+      <path
+        d={
+          `M ${P_LEFT_X} ${Y_P} V ${BAR_P_Y} ` +
+          `H ${P_RIGHT_X} V ${Y_P} ` +
+          `M ${C_X} ${BAR_P_Y} V ${Y_C}`
+        }
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.4'
+        strokeLinecap='round'
+        opacity='0.7'
+        data-anim-target='trunk-c'
       />
+
+      {/* ─── Generation 1: four ancestors ─────────────────────────
+          All four share `target='1'` so they pulse together as
+          "the ancestors" at the start of each cycle. */}
+      {GP.map((x, i) => (
+        <circle
+          key={`gp-${i}`}
+          cx={x}
+          cy={Y_GP}
+          r='3'
+          fill={fg}
+          opacity='0.7'
+          data-anim-target='1'
+          style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        />
+      ))}
+
+      {/* ─── Generation 2: two parents ────────────────────────────
+          Both share `target='2'` so they pulse together one beat
+          after the ancestors. */}
+      {[P_LEFT_X, P_RIGHT_X].map((x, i) => (
+        <circle
+          key={`p-${i}`}
+          cx={x}
+          cy={Y_P}
+          r='3.4'
+          fill={fg}
+          opacity='0.85'
+          data-anim-target='2'
+          style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        />
+      ))}
+
+      {/* ─── Generation 3: the descendant ─────────────────────────
+          The accent-colored "you" — what the inheritance arrives
+          at. Slightly larger so the eye lands here last. */}
       <circle
-        cx='50'
-        cy={bondYs[1]}
-        r='3'
-        fill={fg}
-        opacity='0.85'
-        data-anim-target='2'
-      />
-      <circle
-        cx='50'
-        cy={bondYs[2]}
-        r='3'
-        fill={fg}
-        opacity='0.85'
-        data-anim-target='3'
-      />
-      <circle
-        cx='50'
-        cy={bondYs[3]}
-        r='3.6'
+        cx={C_X}
+        cy={Y_C}
+        r='4.2'
         fill={accent}
-        data-anim-target='4'
+        data-anim-target='3'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
       />
     </svg>
   )
