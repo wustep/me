@@ -16,7 +16,7 @@ export const LENSES: Lens[] = [
     category: 'History',
     title: 'Great Man theory',
     tagline: 'History bends around individuals.',
-    x: 5,
+    x: 18.75,
     y: 12,
     bg: '#1F2A5C',
     fg: '#F5F1E8',
@@ -51,7 +51,7 @@ export const LENSES: Lens[] = [
     category: 'Psychology',
     title: 'Evolutionary psychology',
     tagline: 'Old hardware, new world.',
-    x: 95,
+    x: 81.25,
     y: 12,
     bg: '#3F6B4E',
     fg: '#F1EFE3',
@@ -84,7 +84,7 @@ export const LENSES: Lens[] = [
     category: 'Aesthetic',
     title: 'Minimalism',
     tagline: 'What is essential? Subtract the rest.',
-    x: 5,
+    x: 18.75,
     y: 88,
     bg: '#EFE6D2',
     fg: '#1A1A1A',
@@ -116,7 +116,7 @@ export const LENSES: Lens[] = [
     category: 'Economics',
     title: 'Utility functions',
     tagline: 'Everyone is optimizing something.',
-    x: 23,
+    x: 31.25,
     y: 88,
     bg: '#C8552B',
     fg: '#FBF6EC',
@@ -151,7 +151,7 @@ export const LENSES: Lens[] = [
     category: 'Sociology',
     title: 'Status',
     tagline: 'The invisible currency.',
-    x: 77,
+    x: 68.75,
     y: 12,
     bg: '#A12C5E',
     fg: '#FBF1F2',
@@ -185,7 +185,7 @@ export const LENSES: Lens[] = [
     category: 'Economics',
     title: 'Incentives',
     tagline: 'Show me what gets rewarded.',
-    x: 41,
+    x: 43.75,
     y: 88,
     bg: '#D4A53A',
     fg: '#1F2A5C',
@@ -222,7 +222,7 @@ export const LENSES: Lens[] = [
     category: 'Strategy',
     title: 'Game theory',
     tagline: 'Make good behavior playable.',
-    x: 59,
+    x: 56.25,
     y: 88,
     bg: '#2E6B7C',
     fg: '#F1EFE3',
@@ -257,7 +257,7 @@ export const LENSES: Lens[] = [
     category: 'Causality',
     title: 'Systems',
     tagline: 'Outcomes emerge from loops.',
-    x: 77,
+    x: 68.75,
     y: 88,
     bg: '#4A5D3F',
     fg: '#F1EFE3',
@@ -291,7 +291,7 @@ export const LENSES: Lens[] = [
     category: 'Psychology',
     title: 'Headspace',
     tagline: 'Enter the world-model first.',
-    x: 5,
+    x: 18.75,
     y: 38,
     bg: '#7B6CA8',
     fg: '#F4F1FA',
@@ -326,7 +326,7 @@ export const LENSES: Lens[] = [
     category: 'Knowledge',
     title: 'Legibility',
     tagline: 'Name it to improve it.',
-    x: 77,
+    x: 68.75,
     y: 38,
     bg: '#5C8DB8',
     fg: '#F1F4F8',
@@ -360,7 +360,7 @@ export const LENSES: Lens[] = [
     category: 'Culture',
     title: 'Narrative',
     tagline: 'Stories shape what feels possible.',
-    x: 23,
+    x: 31.25,
     y: 12,
     bg: '#B85C3F',
     fg: '#FAF1E8',
@@ -394,7 +394,7 @@ export const LENSES: Lens[] = [
     category: 'Design',
     title: 'Constraint',
     tagline: 'The right limit creates expression.',
-    x: 23,
+    x: 31.25,
     y: 62,
     bg: '#3A3A42',
     fg: '#F1EFE3',
@@ -429,7 +429,7 @@ export const LENSES: Lens[] = [
     category: 'Design',
     title: 'Interface',
     tagline: 'Everything has a UX.',
-    x: 77,
+    x: 68.75,
     y: 62,
     bg: '#E08066',
     fg: '#FAF0EA',
@@ -463,7 +463,7 @@ export const LENSES: Lens[] = [
     category: 'Behavior',
     title: 'Energy',
     tagline: 'Design around it, not against it.',
-    x: 5,
+    x: 18.75,
     y: 62,
     bg: '#7A8A3A',
     fg: '#F4F1E0',
@@ -499,7 +499,7 @@ export const LENSES: Lens[] = [
     category: 'Philosophy',
     title: 'Epistemic pragmatism',
     tagline: 'Beliefs are maps for action.',
-    x: 95,
+    x: 81.25,
     y: 38,
     bg: '#5C3A6E',
     fg: '#F2EAF6',
@@ -536,7 +536,7 @@ export const LENSES: Lens[] = [
     category: 'Growth',
     title: 'Osmosis',
     tagline: 'Become what you repeatedly notice.',
-    x: 59,
+    x: 56.25,
     y: 12,
     bg: '#9CAB87',
     fg: '#1F2A2A',
@@ -571,7 +571,7 @@ export const LENSES: Lens[] = [
     category: 'Reasoning',
     title: 'Probabilistic thinking',
     tagline: 'The world runs in distributions.',
-    x: 95,
+    x: 81.25,
     y: 88,
     bg: '#6B7785',
     fg: '#F1F2F4',
@@ -606,7 +606,7 @@ export const LENSES: Lens[] = [
     category: 'Relationships',
     title: 'Communication',
     tagline: 'Most problems are translation problems.',
-    x: 23,
+    x: 31.25,
     y: 38,
     bg: '#A66D4F',
     fg: '#FAF1E6',
@@ -641,7 +641,7 @@ export const LENSES: Lens[] = [
     category: 'Culture',
     title: 'Mimetics',
     tagline: 'Ideas compete to spread.',
-    x: 41,
+    x: 43.75,
     y: 12,
     bg: '#E55A8E',
     fg: '#FBF1F4',
@@ -680,7 +680,7 @@ export const LENSES: Lens[] = [
     category: 'Design',
     title: 'Primitives',
     tagline: 'Find the simpler thing underneath.',
-    x: 95,
+    x: 81.25,
     y: 62,
     bg: '#3D5BC4',
     fg: '#F1F3FA',
@@ -709,6 +709,315 @@ export const LENSES: Lens[] = [
           architecture, and reality sometimes refuses to factor cleanly. But
           almost every elegant system is one good primitive away from being ten
           times simpler.
+        </p>
+      </>
+    )
+  },
+
+  // ── Outer columns: the deck grew ──────────────────────────────────────
+  {
+    id: 'projection',
+    category: 'Psychology',
+    title: 'Projection',
+    tagline: 'What people say about others is also about themselves.',
+    x: 6.25,
+    y: 12,
+    bg: '#4A5466',
+    fg: '#F1EFE8',
+    accent: '#E8B83A',
+    illustration: 'projection',
+    related: ['headspace', 'communication', 'narrative'],
+    body: (
+      <>
+        <p>
+          Almost every general statement a person makes is, to some degree, a
+          self-portrait in disguise. Their feedback to others, the patterns
+          they keep noticing, the flaws they find unbearable — the source is
+          inside them, refracted onto whoever happens to be standing in
+          front of them.
+        </p>
+        <p>
+          Through this lens, listening changes. When someone says{' '}
+          <em>people in this industry are all so insecure,</em> ask{' '}
+          <em>what about me right now made that line feel important to
+          say?</em> The same goes for praise: what someone admires reveals
+          what they wish were more true of themselves.
+        </p>
+        <p>
+          Weaknesses: not everything is projection — sometimes a sharp
+          observation is just a sharp observation, and dismissing critique
+          as &ldquo;they&rsquo;re just projecting&rdquo; is its own ugly
+          move. But the part of the message that&rsquo;s about{' '}
+          <em>them</em> is almost always the louder signal.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'attention',
+    category: 'Psychology',
+    title: 'Attention',
+    tagline: 'You become what you keep looking at.',
+    x: 6.25,
+    y: 38,
+    bg: '#1A2433',
+    fg: '#F1EFE8',
+    accent: '#F2D74A',
+    illustration: 'attention',
+    related: ['osmosis', 'energy', 'headspace'],
+    body: (
+      <>
+        <p>
+          Attention is the most concentrated form of energy a person
+          spends, and it&rsquo;s spent constantly — on phones, conversations,
+          worries, screens, faces, ideas. What you keep looking at trains
+          the rest of you: your taste, your reactions, your sense of what
+          counts as normal, your idea of what is even possible.
+        </p>
+        <p>
+          Through this lens, the question stops being{' '}
+          <em>what should I do with my time?</em> and becomes{' '}
+          <em>what is allowed to occupy my attention, and what isn&rsquo;t?</em>{' '}
+          Most regrets, on inspection, are not failures of effort — they
+          are failures of attention. The wrong things were given the air.
+        </p>
+        <p>
+          Weaknesses: rigid attention can become tunnel vision, and life
+          rewards a certain amount of wandering. But unattended attention
+          is the cheapest possession to lose without noticing.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'dopamine',
+    category: 'Behavior',
+    title: 'Dopamine',
+    tagline: 'Behavior is internal-state regulation.',
+    x: 6.25,
+    y: 62,
+    bg: '#C8395E',
+    fg: '#FBF1F2',
+    accent: '#FFE4B0',
+    illustration: 'dopamine',
+    related: ['energy', 'incentives', 'mimetics'],
+    body: (
+      <>
+        <p>
+          A surprising amount of human behavior makes more sense as{' '}
+          <em>internal state regulation</em> than as goal-pursuit. People
+          are seeking novelty, reward, relief, control, connection, or a
+          sense of meaning — and the brain&rsquo;s dopamine system is
+          quietly orchestrating most of it underneath the conscious story.
+        </p>
+        <p>
+          Through this lens, scrolling, snacking, gambling, refreshing
+          email, picking fights, falling in love, doomscrolling, and even
+          starting a new project all start to look like flavors of the
+          same loop: <em>I felt off; this promised to make it less off.</em>{' '}
+          The fix isn&rsquo;t shame — it&rsquo;s noticing the loop and
+          changing the inputs.
+        </p>
+        <p>
+          Weaknesses: reducing all behavior to neurotransmitters flattens
+          meaning that is genuinely there, and &ldquo;your dopamine made
+          you do it&rdquo; can become a way to dodge responsibility. But
+          most failures of self-control are state-regulation problems
+          mislabeled as character problems.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'reps',
+    category: 'Practice',
+    title: 'Reps',
+    tagline: 'Volume beats theory, almost every time.',
+    x: 6.25,
+    y: 88,
+    bg: '#D9C9A3',
+    fg: '#2A1F18',
+    accent: '#7A2E2E',
+    illustration: 'reps',
+    related: ['expertise', 'energy', 'minimalism'],
+    body: (
+      <>
+        <p>
+          Almost every visible skill — writing, cooking, public speaking,
+          coding, painting, reading people — was built by someone who did
+          a lot of the thing, badly, for long enough that &ldquo;badly&rdquo;
+          slowly stopped being true. Theory, frameworks, and feedback all
+          help, but they&rsquo;re multipliers on a base of volume.
+        </p>
+        <p>
+          Through this lens, &ldquo;I don&rsquo;t know how to do this&rdquo;
+          almost always rephrases as{' '}
+          <em>I haven&rsquo;t done it enough times yet.</em> The plan stops
+          being &ldquo;learn it, then do it&rdquo; and becomes{' '}
+          <em>do it, badly, on purpose, while paying attention.</em> Most
+          ambitions die in the gap between knowing what to do and being
+          willing to be bad at it for a while.
+        </p>
+        <p>
+          Weaknesses: blind reps without feedback compound the wrong
+          patterns, and not every skill rewards brute volume. But used
+          with even a little reflection, this lens beats almost every
+          alternative on raw return.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'agency',
+    category: 'Philosophy',
+    title: 'Agency',
+    tagline: 'Most ceilings are self-imposed.',
+    x: 93.75,
+    y: 12,
+    bg: '#B8332A',
+    fg: '#FBF1E6',
+    accent: '#F4E9D2',
+    illustration: 'agency',
+    related: ['great-man', 'narrative', 'incentives'],
+    body: (
+      <>
+        <p>
+          A surprising amount of what feels like a wall is actually a
+          social convention, an unexamined assumption, or a story the
+          person carrying it tells themselves. Real walls exist — but
+          they&rsquo;re rarer than they feel, and most ceilings give if
+          you push them on purpose.
+        </p>
+        <p>
+          Through this lens, the question stops being{' '}
+          <em>am I allowed to do this?</em> and becomes{' '}
+          <em>who exactly is stopping me, and what would actually happen
+          if I tried?</em> Many of the people who change their lives are
+          not unusually talented; they are unusually unwilling to treat
+          the default as the limit.
+        </p>
+        <p>
+          Weaknesses: leaning too hard on agency curdles into a
+          contempt for structural reality — some walls really are made of
+          stone, and pretending otherwise hurts people. But walls are far
+          easier to find than doors, so the default error is to under-try.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'expertise',
+    category: 'Knowledge',
+    title: 'Expertise',
+    tagline: 'Every skill is a long, populated curve.',
+    x: 93.75,
+    y: 38,
+    bg: '#2C5F70',
+    fg: '#F1EFE3',
+    accent: '#F2C04A',
+    illustration: 'expertise',
+    related: ['reps', 'legibility', 'primitives'],
+    body: (
+      <>
+        <p>
+          Every skill is a long curve, and people sit all over it. This is
+          obvious for cooking or chess — but it&rsquo;s also true for the
+          things we don&rsquo;t usually call skills: patience, listening,
+          taste, charisma, attention, knowing when to stop. The world
+          becomes much more legible the moment you start treating these
+          as <em>practiced abilities</em> rather than fixed traits.
+        </p>
+        <p>
+          Through this lens, &ldquo;I&rsquo;m not good at conflict&rdquo;
+          rephrases as <em>I&rsquo;m on the early part of that curve.</em>{' '}
+          The annoying coworker becomes someone with a different skill
+          mix, not a different species. And the genuinely impressive
+          person stops being a wonder and becomes a question:{' '}
+          <em>which curve are they very far along, and how did they get
+          there?</em>
+        </p>
+        <p>
+          Weaknesses: reducing every quality to a skill flattens
+          temperament and circumstance, and some abilities are genuinely
+          gated by talent. But treating &ldquo;trait&rdquo; as the
+          default explanation for behavior is one of the most common ways
+          to misread a person.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'tempo',
+    category: 'Strategy',
+    title: 'Tempo',
+    tagline: 'When matters as much as what.',
+    x: 93.75,
+    y: 62,
+    bg: '#2D5A45',
+    fg: '#F1EFE3',
+    accent: '#D9923A',
+    illustration: 'tempo',
+    related: ['systems', 'incentives', 'probabilistic'],
+    body: (
+      <>
+        <p>
+          The same move at the right moment is brilliant; six months
+          earlier or later, identical. Markets, conversations, careers,
+          relationships, and products all run on tempo — windows where
+          attention, energy, and readiness line up briefly, and the cost
+          of acting collapses for a little while before going back up.
+        </p>
+        <p>
+          Through this lens, you stop asking <em>is this a good idea?</em>{' '}
+          and start asking <em>is this the right time for this idea?</em>{' '}
+          The same pitch, hire, launch, or honest conversation lands very
+          differently depending on what just happened. Most of strategy is
+          reading tempo: knowing when to push, when to wait, and when the
+          window has already closed.
+        </p>
+        <p>
+          Weaknesses: timing fetishism becomes paralysis — there&rsquo;s
+          almost always a reason to wait, and most windows feel
+          inconvenient. But people who never read tempo do all the right
+          things at all the wrong moments and wonder why nothing lands.
+        </p>
+      </>
+    )
+  },
+  {
+    id: 'surface-area',
+    category: 'Luck',
+    title: 'Surface area',
+    tagline: 'Luck finds you where you’re exposed.',
+    x: 93.75,
+    y: 88,
+    bg: '#E8C460',
+    fg: '#3A2418',
+    accent: '#C8492E',
+    illustration: 'surface-area',
+    related: ['osmosis', 'probabilistic', 'mimetics'],
+    body: (
+      <>
+        <p>
+          Lucky breaks happen — but only where you&rsquo;ve put yourself.
+          The introduction comes from a dinner you almost skipped. The
+          job comes from a tweet you almost didn&rsquo;t post. Most of
+          what looks like fortune from the outside is, on closer
+          inspection, the consequence of someone simply being{' '}
+          <em>findable</em> in the right rooms.
+        </p>
+        <p>
+          Through this lens, the leverage move is rarely &ldquo;work
+          harder on the thing.&rdquo; It&rsquo;s <em>show up in more
+          places where the thing might find you</em> — write publicly,
+          take the unpaid coffee, go to the worse-looking event, post the
+          half-formed idea. Surface area compounds, slowly, then suddenly.
+        </p>
+        <p>
+          Weaknesses: maximum exposure with no substance becomes
+          performance, and noise crowds out the signal. But quiet
+          excellence in a closed room is the most common way for a real
+          career to never start.
         </p>
       </>
     )

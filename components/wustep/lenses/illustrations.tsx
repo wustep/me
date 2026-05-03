@@ -67,6 +67,22 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
       return <ArtMimetics fg={fg} accent={accent} />
     case 'primitives':
       return <ArtPrimitives fg={fg} accent={accent} />
+    case 'projection':
+      return <ArtProjection fg={fg} accent={accent} />
+    case 'attention':
+      return <ArtAttention fg={fg} accent={accent} />
+    case 'dopamine':
+      return <ArtDopamine fg={fg} accent={accent} />
+    case 'reps':
+      return <ArtReps fg={fg} accent={accent} />
+    case 'agency':
+      return <ArtAgency fg={fg} accent={accent} />
+    case 'expertise':
+      return <ArtExpertise fg={fg} accent={accent} />
+    case 'tempo':
+      return <ArtTempo fg={fg} accent={accent} />
+    case 'surface-area':
+      return <ArtSurfaceArea fg={fg} accent={accent} />
     case 'lenses-deck':
       return <ArtLensesDeck fg={fg} accent={accent} bg={bg} />
   }
@@ -925,6 +941,312 @@ function ArtLensesDeck({
           is shared with the regular cards. */}
       <rect x='0' y='0' width='0' height='0' fill={bg} />
       <rect x='0' y='0' width='0' height='0' fill={accent} />
+    </svg>
+  )
+}
+
+/** Projection — a figure casts a long shadow that doesn't quite match
+ *  it. The shadow is the projection: what gets seen is the speaker,
+ *  refracted onto the world.
+ *
+ *    data-anim-target='1' = the cast shadow (subtle sway, suggesting
+ *      it isn't a faithful copy of the figure above it).
+ */
+function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='projection'>
+      {/* Ground plane. */}
+      <line x1='14' y1='72' x2='86' y2='72' stroke={fg} strokeWidth='1' opacity='0.3' />
+
+      {/* The figure (head + torso). */}
+      <circle cx='50' cy='34' r='8' fill={fg} opacity='0.6' />
+      <path
+        d='M 38 70 Q 38 50 50 50 Q 62 50 62 70 Z'
+        fill={fg}
+        opacity='0.6'
+      />
+
+      {/* The cast shadow — accent color, longer and slightly distorted
+          relative to the figure, so it reads as a *projection* rather
+          than a literal shadow. */}
+      <g style={{ transformOrigin: '50px 72px' }} data-anim-target='1'>
+        <ellipse cx='50' cy='73' rx='30' ry='3.5' fill={accent} opacity='0.55' />
+        <ellipse cx='50' cy='73' rx='22' ry='2.4' fill={accent} opacity='0.85' />
+      </g>
+    </svg>
+  )
+}
+
+/** Attention — a narrow cone of light singling out a single dot from
+ *  among many possibles. Hover sweeps the cone left-right, brushing
+ *  past inattentive dots before settling.
+ *
+ *    data-anim-target='1' = the cone group (rotates around its apex).
+ */
+function ArtAttention({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='attention'>
+      {/* The unattended field — small dim dots scattered. */}
+      <g fill={fg} opacity='0.28'>
+        <circle cx='22' cy='70' r='2.4' />
+        <circle cx='34' cy='78' r='2.4' />
+        <circle cx='66' cy='78' r='2.4' />
+        <circle cx='78' cy='70' r='2.4' />
+      </g>
+
+      {/* The cone of attention, hinged at apex (50, 22). */}
+      <g style={{ transformOrigin: '50px 22px' }} data-anim-target='1'>
+        <path
+          d='M 50 22 L 30 76 L 70 76 Z'
+          fill={accent}
+          opacity='0.45'
+        />
+        <path
+          d='M 50 22 L 30 76 L 70 76 Z'
+          fill='none'
+          stroke={accent}
+          strokeWidth='0.8'
+          opacity='0.85'
+        />
+        {/* The illuminated dot under the cone. */}
+        <circle cx='50' cy='74' r='3.4' fill={accent} />
+      </g>
+
+      {/* The eye / source at the apex. */}
+      <circle cx='50' cy='22' r='3' fill={fg} opacity='0.7' />
+    </svg>
+  )
+}
+
+/** Dopamine — a chase loop: a small dot orbits around a brighter
+ *  attractor. The reward (the bright center) pulses as the seeker
+ *  circles, never quite catching up.
+ *
+ *    data-anim-target='1' = the chasing dot's orbit (rotates).
+ *    data-anim-target='2' = the attractor center (gentle pulse).
+ */
+function ArtDopamine({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='dopamine'>
+      {/* Orbit ring — dashed so the path of the chase reads. */}
+      <circle
+        cx='50'
+        cy='50'
+        r='24'
+        fill='none'
+        stroke={fg}
+        strokeWidth='0.8'
+        strokeDasharray='2 3'
+        opacity='0.35'
+      />
+
+      {/* The reward / attractor. */}
+      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='2'>
+        <circle cx='50' cy='50' r='8' fill={accent} />
+        <circle cx='50' cy='50' r='8' fill='none' stroke={accent} strokeWidth='1.2' opacity='0.5' />
+      </g>
+
+      {/* The chasing dot, sits at 12 o'clock of the orbit ring. The
+          group rotates around the center to drag it around the loop. */}
+      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
+        <circle cx='50' cy='26' r='3.6' fill={fg} opacity='0.85' />
+      </g>
+    </svg>
+  )
+}
+
+/** Reps — five tally marks stacked on a baseline. The fifth strikes
+ *  diagonally across the four — the unit of mastery is volume, and
+ *  the cross is the moment a count completes.
+ *
+ *    data-anim-target='1' = the diagonal stroke (animates draw-on
+ *      via stroke-dashoffset, completing then resetting).
+ */
+function ArtReps({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='reps'>
+      {/* Baseline. */}
+      <line x1='18' y1='80' x2='82' y2='80' stroke={fg} strokeWidth='0.8' opacity='0.4' />
+
+      {/* The four upright tally marks. */}
+      <g stroke={fg} strokeWidth='3' strokeLinecap='round' opacity='0.65'>
+        <line x1='30' y1='34' x2='30' y2='74' />
+        <line x1='42' y1='34' x2='42' y2='74' />
+        <line x1='54' y1='34' x2='54' y2='74' />
+        <line x1='66' y1='34' x2='66' y2='74' />
+      </g>
+
+      {/* The diagonal closing stroke, in accent. dasharray ≈ stroke
+          length so the keyframe can animate dashoffset to redraw it. */}
+      <line
+        x1='24'
+        y1='72'
+        x2='72'
+        y2='34'
+        stroke={accent}
+        strokeWidth='3.4'
+        strokeLinecap='round'
+        strokeDasharray='62'
+        strokeDashoffset='0'
+        data-anim-target='1'
+      />
+    </svg>
+  )
+}
+
+/** Agency — an arrow breaking out of a frame. The frame is the
+ *  default. The arrow is the move that exceeds it.
+ *
+ *    data-anim-target='1' = the breakout arrow head + shaft (slides
+ *      further outside the frame on hover, like an action being
+ *      taken).
+ */
+function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='agency'>
+      {/* The frame (the default world). */}
+      <rect
+        x='20'
+        y='26'
+        width='52'
+        height='52'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.4'
+        opacity='0.55'
+      />
+
+      {/* The breakout arrow — its tail starts inside the frame, its
+          head pierces the right wall. The whole group translates a few
+          px on hover so the head drives further out. */}
+      <g data-anim-target='1' style={{ transformOrigin: '50px 52px' }}>
+        <line
+          x1='32'
+          y1='52'
+          x2='80'
+          y2='52'
+          stroke={accent}
+          strokeWidth='3.2'
+          strokeLinecap='round'
+        />
+        <polygon points='80,52 70,46 70,58' fill={accent} />
+      </g>
+
+      {/* A small origin dot inside the frame (the seat of choice). */}
+      <circle cx='32' cy='52' r='3' fill={fg} opacity='0.7' />
+    </svg>
+  )
+}
+
+/** Expertise — a staircase of skill, each step taller than the last.
+ *  A small marker rests on the top step. Hover steps the marker up
+ *  and down the stair like progress accumulating.
+ *
+ *    data-anim-target='1' = the climbing marker.
+ */
+function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='expertise'>
+      {/* Three ascending steps, drawn as filled rects sharing a
+          baseline. Heights climb so the silhouette reads as a stair. */}
+      <g fill={fg} opacity='0.5'>
+        <rect x='18' y='62' width='18' height='18' />
+        <rect x='38' y='50' width='18' height='30' />
+        <rect x='58' y='34' width='18' height='46' />
+      </g>
+
+      {/* The climbing marker — sits atop the tallest step at rest. */}
+      <g data-anim-target='1' style={{ transformOrigin: '67px 30px' }}>
+        <circle cx='67' cy='30' r='4.5' fill={accent} />
+      </g>
+
+      {/* Baseline. */}
+      <line x1='14' y1='80' x2='86' y2='80' stroke={fg} strokeWidth='0.8' opacity='0.4' />
+    </svg>
+  )
+}
+
+/** Tempo — a metronome. The triangular body sits still; the pendulum
+ *  arm swings side to side at a steady cadence. The story: when
+ *  matters as much as what.
+ *
+ *    data-anim-target='1' = the pendulum arm + bob (swings).
+ */
+function ArtTempo({ fg, accent }: { fg: string; accent: string }) {
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='tempo'>
+      {/* The metronome body — a tall isoceles triangle. */}
+      <polygon
+        points='50,18 28,82 72,82'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.6'
+        opacity='0.55'
+      />
+
+      {/* Pivot dot at the bottom-center of the triangle. */}
+      <circle cx='50' cy='80' r='2.6' fill={fg} opacity='0.7' />
+
+      {/* The pendulum — arm + weight bob — anchored at the pivot so it
+          swings around it on hover. */}
+      <g style={{ transformOrigin: '50px 80px' }} data-anim-target='1'>
+        <line
+          x1='50'
+          y1='80'
+          x2='50'
+          y2='28'
+          stroke={accent}
+          strokeWidth='1.8'
+          strokeLinecap='round'
+        />
+        <circle cx='50' cy='32' r='4.6' fill={accent} />
+      </g>
+    </svg>
+  )
+}
+
+/** Surface area — a central self with short rays poking outward into
+ *  the surrounding world. Hover lengthens the rays: more exposure,
+ *  more chances for serendipity.
+ *
+ *    data-anim-target='1' = the rays group (each ray scales out from
+ *      the center on hover, reaches further into the world).
+ */
+function ArtSurfaceArea({ fg, accent }: { fg: string; accent: string }) {
+  // 8 rays at uniform angles. Pre-compute end coordinates so the path
+  // strings stay readable in the markup.
+  const rays = Array.from({ length: 8 }, (_, i) => {
+    const angle = (i * Math.PI) / 4
+    const r1 = 18
+    const r2 = 36
+    const x1 = 50 + r1 * Math.cos(angle)
+    const y1 = 50 + r1 * Math.sin(angle)
+    const x2 = 50 + r2 * Math.cos(angle)
+    const y2 = 50 + r2 * Math.sin(angle)
+    return { key: i, x1, y1, x2, y2 }
+  })
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='surface-area'>
+      {/* The rays (exposure). Animated via scale around the center. */}
+      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
+        {rays.map((r) => (
+          <line
+            key={r.key}
+            x1={r.x1}
+            y1={r.y1}
+            x2={r.x2}
+            y2={r.y2}
+            stroke={accent}
+            strokeWidth='2.2'
+            strokeLinecap='round'
+            opacity='0.85'
+          />
+        ))}
+      </g>
+
+      {/* The self at the center. */}
+      <circle cx='50' cy='50' r='12' fill={fg} opacity='0.6' />
+      <circle cx='50' cy='50' r='6' fill={accent} />
     </svg>
   )
 }

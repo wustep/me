@@ -42,14 +42,14 @@ export const DURATION = {
 
 /** Spatial constants that the canvas uses to stagger cards by row+col.
  *  Cards' `y` values come from a 4-row grid at 12/38/62/88, and `x`
- *  from a 6-column grid at 5/23/41/59/77/95 — six cards spaced at
- *  uniform 18% intervals so every neighbor pair has identical
- *  horizontal breathing room (~99px clearance at a 1440px viewport).
- *  The outer ring of rows and columns is pulled slightly off the
- *  canvas edge so corner cards peek from the viewport border. */
+ *  from an 8-column grid at 6/19/31/44/56/69/81/94 — eight cards
+ *  spaced at uniform 12.5% intervals. The deck grew past what six
+ *  columns could hold, and the wider canvas leans into the
+ *  "looking through many lenses" thesis: the eye picks up two
+ *  edge cards on either side, and the rest unfold inward. */
 export const GRID = {
   rowAnchors: [12, 38, 62, 88],
-  colAnchors: [5, 23, 41, 59, 77, 95]
+  colAnchors: [6.25, 18.75, 31.25, 43.75, 56.25, 68.75, 81.25, 93.75]
 } as const
 
 export type IllustrationId =
@@ -73,6 +73,14 @@ export type IllustrationId =
   | 'communication'
   | 'mimetics'
   | 'primitives'
+  | 'projection'
+  | 'attention'
+  | 'dopamine'
+  | 'reps'
+  | 'agency'
+  | 'expertise'
+  | 'tempo'
+  | 'surface-area'
   | 'lenses-deck'
 
 export type Lens = {

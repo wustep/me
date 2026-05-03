@@ -340,7 +340,7 @@
   position: absolute;
   /* Anchor center of card to (left%, top%) of `.cards`. */
   transform: translate(-50%, -50%) scale(0.92);
-  width: clamp(132px, 12.5vw, 160px);
+  width: clamp(118px, 10.8vw, 144px);
   /* 4:5 keeps the cards card-shaped without making them so tall
      that four rows overlap on a typical 810px viewport. Combined
      with the peek-from-top/bottom rows it leaves clean gaps
@@ -439,7 +439,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-  width: clamp(196px, 18vw, 240px);
+  width: clamp(176px, 16.5vw, 220px);
   aspect-ratio: 4 / 5;
   padding: 18px 20px 22px;
   background: #0e0e10;
@@ -1526,6 +1526,94 @@
   @keyframes lensSettle3 {
     0%, 100% { transform: translateX(0); }
     50%      { transform: translateX(2px); }
+  }
+
+  /* ── Projection: the cast shadow sways slightly — what gets seen
+        isn't a faithful copy of the speaker, it shifts under its
+        own influence. */
+  .card:hover .cardArt :global(svg[data-anim='projection'] [data-anim-target='1']) {
+    animation: lensProjectSway 3.4s ease-in-out infinite;
+  }
+  @keyframes lensProjectSway {
+    0%, 100% { transform: scaleX(1)    translateX(0); }
+    50%      { transform: scaleX(1.08) translateX(2px); }
+  }
+
+  /* ── Attention: the cone sweeps left and right, brushing past the
+        unattended dots, then settles back over the highlighted one. */
+  .card:hover .cardArt :global(svg[data-anim='attention'] [data-anim-target='1']) {
+    animation: lensAttentionSweep 3.6s ease-in-out infinite;
+  }
+  @keyframes lensAttentionSweep {
+    0%, 100% { transform: rotate(0deg);   }
+    25%      { transform: rotate(-12deg); }
+    75%      { transform: rotate(12deg);  }
+  }
+
+  /* ── Dopamine: the chasing dot orbits the attractor; the attractor
+        itself gives a soft pulse, like a reward signal flickering. */
+  .card:hover .cardArt :global(svg[data-anim='dopamine'] [data-anim-target='1']) {
+    animation: lensOrbit 3s linear infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='dopamine'] [data-anim-target='2']) {
+    animation: lensDopaminePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes lensDopaminePulse {
+    0%, 100% { transform: scale(1);    opacity: 1;   }
+    50%      { transform: scale(1.18); opacity: 0.8; }
+  }
+
+  /* ── Reps: the diagonal stroke draws on, holds, then resets — the
+        moment a five-count completes, over and over. */
+  .card:hover .cardArt :global(svg[data-anim='reps'] [data-anim-target='1']) {
+    animation: lensRepsDraw 2.4s ease-in-out infinite;
+  }
+  @keyframes lensRepsDraw {
+    0%       { stroke-dashoffset: 62; }
+    50%, 80% { stroke-dashoffset: 0;  }
+    100%     { stroke-dashoffset: 62; }
+  }
+
+  /* ── Agency: the breakout arrow pushes a few pixels further past
+        the frame, then resets — the visual of choice being taken. */
+  .card:hover .cardArt :global(svg[data-anim='agency'] [data-anim-target='1']) {
+    animation: lensAgencyBreakout 2.4s ease-in-out infinite;
+  }
+  @keyframes lensAgencyBreakout {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(4px); }
+  }
+
+  /* ── Expertise: the marker climbs the staircase one step at a time,
+        then resets — accumulation, not arrival. */
+  .card:hover .cardArt :global(svg[data-anim='expertise'] [data-anim-target='1']) {
+    animation: lensExpertiseClimb 3.2s steps(1, end) infinite;
+  }
+  @keyframes lensExpertiseClimb {
+    0%   { transform: translate(-40px, 32px); }
+    25%  { transform: translate(-20px, 20px); }
+    50%  { transform: translate(0,     0);    }
+    100% { transform: translate(0,     0);    }
+  }
+
+  /* ── Tempo: the metronome arm swings side to side at a steady,
+        unhurried cadence. The hinge is at the bottom of the arm. */
+  .card:hover .cardArt :global(svg[data-anim='tempo'] [data-anim-target='1']) {
+    animation: lensTempoSwing 1.6s ease-in-out infinite;
+  }
+  @keyframes lensTempoSwing {
+    0%, 100% { transform: rotate(-14deg); }
+    50%      { transform: rotate(14deg);  }
+  }
+
+  /* ── Surface area: the rays extend outward and pull back, the self
+        breathing into the world a little further with each cycle. */
+  .card:hover .cardArt :global(svg[data-anim='surface-area'] [data-anim-target='1']) {
+    animation: lensSurfaceReach 2.8s ease-in-out infinite;
+  }
+  @keyframes lensSurfaceReach {
+    0%, 100% { transform: scale(1);    }
+    50%      { transform: scale(1.18); }
   }
 
   /* The card's own scale-up shouldn't override the inner SVG's scale —
