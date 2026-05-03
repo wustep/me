@@ -1355,7 +1355,7 @@ function loadValues(): Values {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return {}
-    return JSON.parse(raw)
+    return JSON.parse(raw) as Values
   } catch {
     return {}
   }
