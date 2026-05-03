@@ -1128,6 +1128,289 @@
   }
 }
 
+/* =============================================================================
+ * Lens illustrations — bespoke hover animations (one per lens)
+ *
+ *   Each canvas card SVG has data-anim="<id>" on the root. One or more
+ *   inner elements carry data-anim-target="<n>" — those are the
+ *   actors. Animations only run while the card is :hover'd on a
+ *   pointer-capable device (no false-fires on touch). Each loop is
+ *   short (1.5–3s) and only animates `transform`, `opacity`, or
+ *   `stroke-dashoffset` so the GPU does the work.
+ *
+ *   Because data-anim-target lives on a <g> (or a <circle>/<rect>)
+ *   inside an SVG, we set transform-origin via inline style on the
+ *   element where it matters, so each animation rotates/scales around
+ *   its own anchor instead of the SVG's top-left corner.
+ *
+ *   Discoverability rule: nothing animates by default. The card has to
+ *   invite the motion. If a user never hovers, they pay zero CPU cost.
+ * ========================================================================== */
+
+@media (hover: hover) and (pointer: fine) {
+  /* ── Great Man: the leader's head bobs and the dot pulses.
+        Vertical drift + opacity wobble suggests "the eye seeks the peak." */
+  .card:hover .cardArt :global(svg[data-anim='great-man'] [data-anim-target]) {
+    animation: lensGreatMan 1.8s ease-in-out infinite;
+    transform-origin: 52px 20px;
+  }
+  @keyframes lensGreatMan {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50%      { transform: translateY(-3px); opacity: 0.78; }
+  }
+
+  /* ── Evo psych: rings ripple outward, staggered (firing circuitry). */
+  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target]) {
+    transform-origin: 50px 50px;
+    animation: lensEvoRipple 2.4s ease-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
+    animation-delay: 0.4s;
+  }
+  .card:hover .cardArt :global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
+    animation-delay: 0.8s;
+  }
+  @keyframes lensEvoRipple {
+    0%   { transform: scale(0.92); opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform: scale(1.08); opacity: 0; }
+  }
+
+  /* ── Minimalism: a slow, calm breath. Almost imperceptible — that's
+        the joke. The whole point of this lens is *less*. */
+  .card:hover .cardArt :global(svg[data-anim='minimalism'] [data-anim-target]) {
+    animation: lensBreath 3s ease-in-out infinite;
+  }
+  @keyframes lensBreath {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.18); }
+  }
+
+  /* ── Utility: the winning dot bounces, like the optimum is celebrating. */
+  .card:hover .cardArt :global(svg[data-anim='utility'] [data-anim-target]) {
+    transform-origin: 75px 18px;
+    animation: lensBounce 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  }
+  @keyframes lensBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30%           { transform: translateY(-4px); }
+  }
+
+  /* ── Status: the high-status dot orbits the rings. Slow, steady. */
+  .card:hover .cardArt :global(svg[data-anim='status'] [data-anim-target]) {
+    animation: lensOrbit 5s linear infinite;
+  }
+  @keyframes lensOrbit {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ── Incentives: the arrow nudges toward the target. */
+  .card:hover .cardArt :global(svg[data-anim='incentives'] [data-anim-target]) {
+    animation: lensIncentivesArrow 1.6s ease-in-out infinite;
+  }
+  @keyframes lensIncentivesArrow {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(4px); }
+  }
+
+  /* ── Game theory: cells take turns pulsing (round-robin payoff). */
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target]) {
+    animation: lensGamePulse 2s ease-in-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='1']) { animation-delay: 0s; }
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='2']) { animation-delay: 0.5s; }
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='4']) { animation-delay: 1s; }
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='3']) { animation-delay: 1.5s; }
+  @keyframes lensGamePulse {
+    0%, 80%, 100% { transform: scale(1); opacity: 0.55; }
+    10%, 30%      { transform: scale(1.3); opacity: 1; }
+  }
+
+  /* ── Systems: the loop slowly rotates (cycles cycling). */
+  .card:hover .cardArt :global(svg[data-anim='systems'] [data-anim-target]) {
+    animation: lensOrbit 8s linear infinite;
+  }
+
+  /* ── Headspace: the inner thought-dot pulses (mind ticking). */
+  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target]) {
+    animation: lensThoughtPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes lensThoughtPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.18); opacity: 0.7; }
+  }
+
+  /* ── Legibility: the accent label "writes itself in" from the left. */
+  .card:hover .cardArt :global(svg[data-anim='legibility'] [data-anim-target]) {
+    animation: lensLabelWrite 2.4s ease-in-out infinite;
+  }
+  @keyframes lensLabelWrite {
+    0%, 100% { transform: scaleX(0.2); opacity: 0.2; }
+    40%, 70% { transform: scaleX(1);   opacity: 1; }
+  }
+
+  /* ── Narrative: a beat travels along the arc.
+        We approximate the arc with a translate path that mirrors the curve. */
+  .card:hover .cardArt :global(svg[data-anim='narrative'] [data-anim-target]) {
+    animation: lensStoryBeat 3.2s ease-in-out infinite;
+  }
+  @keyframes lensStoryBeat {
+    0%   { transform: translate(-38px, 44px); }
+    50%  { transform: translate(0, 0); }
+    100% { transform: translate(38px, 44px); }
+  }
+
+  /* ── Constraint: the diagonal line tugs against the brackets — energy
+        under pressure. Subtle scale around the midpoint. */
+  .card:hover .cardArt :global(svg[data-anim='constraint'] [data-anim-target]) {
+    animation: lensTug 1.4s ease-in-out infinite;
+  }
+  @keyframes lensTug {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+
+  /* ── Interface: cursor "clicks," button reacts (depresses slightly). */
+  .card:hover .cardArt :global(svg[data-anim='interface'] [data-anim-target='1']) {
+    animation: lensCursorClick 1.6s ease-in-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='interface'] [data-anim-target='2']) {
+    animation: lensButtonPress 1.6s ease-in-out infinite;
+  }
+  @keyframes lensCursorClick {
+    0%, 60%, 100% { transform: translate(0, 0); }
+    30%           { transform: translate(-2px, -2px); }
+    40%           { transform: translate(0, 0); }
+  }
+  @keyframes lensButtonPress {
+    0%, 35%, 50%, 100% { transform: scale(1); }
+    40%                { transform: scale(0.95); }
+  }
+
+  /* ── Energy: the bolt strobes (charge surging). */
+  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target]) {
+    animation: lensCharge 1.2s ease-in-out infinite;
+  }
+  @keyframes lensCharge {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50%      { opacity: 1;    transform: scale(1.08); }
+  }
+
+  /* ── Epistemic pragmatism: the dashed path flows forward
+        (map → action). Animating stroke-dashoffset is an exception to
+        "transform/opacity only" but on a single small path it's cheap. */
+  .card:hover .cardArt :global(svg[data-anim='epistemic'] [data-anim-target]) {
+    stroke-dasharray: 3 3;
+    animation: lensFlowDashes 1.6s linear infinite;
+  }
+  @keyframes lensFlowDashes {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -12; }
+  }
+
+  /* ── Osmosis: the two crossing dots drift toward the absorbed side. */
+  .card:hover .cardArt :global(svg[data-anim='osmosis'] [data-anim-target='1']) {
+    animation: lensOsmosis1 2.6s ease-in-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='osmosis'] [data-anim-target='2']) {
+    animation: lensOsmosis2 2.6s ease-in-out infinite;
+    animation-delay: 0.6s;
+  }
+  @keyframes lensOsmosis1 {
+    0%   { transform: translateX(0);    opacity: 1; }
+    70%  { transform: translateX(-22px); opacity: 0.7; }
+    100% { transform: translateX(-22px); opacity: 0; }
+  }
+  @keyframes lensOsmosis2 {
+    0%   { transform: translateX(0);    opacity: 1; }
+    70%  { transform: translateX(-18px); opacity: 0.7; }
+    100% { transform: translateX(-18px); opacity: 0; }
+  }
+
+  /* ── Probabilistic: the bell curve breathes — the distribution
+        widens and narrows like a sample re-rolling. */
+  .card:hover .cardArt :global(svg[data-anim='probabilistic'] [data-anim-target]) {
+    animation: lensBellBreath 2.8s ease-in-out infinite;
+  }
+  @keyframes lensBellBreath {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(1.1); }
+  }
+
+  /* ── Communication: the speech bubble pulses (saying it again);
+        the misalignment crack flickers (the gap between us). */
+  .card:hover .cardArt :global(svg[data-anim='communication'] [data-anim-target='1']) {
+    animation: lensSpeak 1.8s ease-in-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='communication'] [data-anim-target='2']) {
+    animation: lensCrackFlicker 1.8s ease-in-out infinite;
+  }
+  @keyframes lensSpeak {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+  }
+  @keyframes lensCrackFlicker {
+    0%, 50%, 100% { opacity: 0.45; }
+    20%, 70%      { opacity: 0.8; }
+  }
+
+  /* ── Mimetics: copies twinkle outward in waves (idea spreading).
+        Source pulses; first-gen flicker; second-gen flicker later. */
+  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='0']) {
+    transform-origin: 30px 50px;
+    animation: lensSourcePulse 2s ease-in-out infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='1']) {
+    animation: lensTwinkle 2s ease-in-out infinite;
+    animation-delay: 0.4s;
+  }
+  .card:hover .cardArt :global(svg[data-anim='mimetics'] [data-anim-target='2']) {
+    animation: lensTwinkle 2s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
+  @keyframes lensSourcePulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.12); }
+  }
+  @keyframes lensTwinkle {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+  }
+
+  /* ── Primitives: the three atoms below rotate in place — atomic units
+        spinning, ready to recombine. */
+  .card:hover .cardArt :global(svg[data-anim='primitives'] [data-anim-target]) {
+    animation: lensOrbit 6s linear infinite;
+  }
+  .card:hover .cardArt :global(svg[data-anim='primitives'] [data-anim-target='2']) {
+    animation-direction: reverse;
+  }
+
+  /* ── Center "Lenses" deck: the three discs gyre slowly around the
+        centroid, like aligning lenses snapping into focus. */
+  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+    animation: lensGyre 9s ease-in-out infinite;
+  }
+  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='2']) {
+    animation-delay: -3s;
+  }
+  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='3']) {
+    animation-delay: -6s;
+  }
+  @keyframes lensGyre {
+    0%, 100% { transform: translate(0, 0); }
+    25%      { transform: translate(2px, -2px); }
+    50%      { transform: translate(0, 0); }
+    75%      { transform: translate(-2px, 2px); }
+  }
+
+  /* The card's own scale-up shouldn't override the inner SVG's scale —
+     so we already animate inner <g> elements, not the SVG root, and
+     rely on `.card:hover .cardArt svg { transform: scale(1.06) }` from
+     the existing rule to lift the whole illustration. */
+}
+
 /* ===== Reduced motion =====
    Per Emil: every animation needs its own reduced-motion fallback.
    We disable both `animation` and `transition` on every animated
@@ -1138,6 +1421,7 @@
   .cards,
   .card,
   .cardArt :global(svg),
+  .cardArt :global(svg [data-anim-target]),
   .centerCard,
   .panel,
   .panelHero,
