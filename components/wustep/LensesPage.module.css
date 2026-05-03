@@ -1,0 +1,1096 @@
+/* =============================================================================
+ * Lenses — full-screen canvas of Pip-deck-style cards.
+ *
+ *   Each card is a solid color with a flat geometric illustration on top
+ *   and a bold sans-serif title at the bottom. Cards sit scattered on a
+ *   warm off-white canvas and parallax with the cursor. The center
+ *   "Lenses" card is the index — black with white type — and opens a
+ *   dialog listing every lens. Each surrounding card opens a side panel.
+ *
+ *   Type stack:
+ *     • Card titles + dialog/panel titles → --font-geist (clean modern sans)
+ *     • Eyebrows / labels                 → --font-geist or --font-sans
+ *     • Body essay text + taglines        → --font-serif (Crimson Pro)
+ *     • UI chrome                         → --font-sans (Inter)
+ * ========================================================================== */
+
+@property --pan-x {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --pan-y {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* Shared focus ring */
+.frame button:focus-visible,
+.frame a:focus-visible,
+.panel button:focus-visible,
+.panel a:focus-visible,
+.dialog button:focus-visible {
+  outline: 2px solid #1A1A1A;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+:global(.dark-mode) .frame button:focus-visible,
+:global(.dark-mode) .frame a:focus-visible,
+:global(.dark-mode) .panel button:focus-visible,
+:global(.dark-mode) .panel a:focus-visible,
+:global(.dark-mode) .dialog button:focus-visible {
+  outline-color: #F5F1E8;
+}
+
+/* ===== Frame ===== */
+
+.frame {
+  position: relative;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  background: #F1ECDF;
+  color: #1A1A1A;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  display: flex;
+  flex-direction: column;
+}
+
+:global(.dark-mode) .frame {
+  background: #18181B;
+  color: #F5F1E8;
+}
+
+/* ===== Header — minimal, edges only ===== */
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 18px 22px 0;
+}
+
+.headerInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.homeBackButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  text-decoration: none !important;
+  background: none !important;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.4;
+  transition: opacity 200ms ease;
+}
+
+.homeBackButton:hover {
+  opacity: 1;
+}
+
+.homeBackArrow {
+  display: inline-block;
+  font-size: 1.2em;
+  line-height: 1;
+  transform: translateX(2px);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.homeBackButton:hover .homeBackArrow {
+  transform: translateX(-2px);
+}
+
+.headerRhs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.5);
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.headerButton:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.22);
+}
+
+.headerButton:active {
+  transform: scale(0.96);
+}
+
+:global(.dark-mode) .headerButton {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:global(.dark-mode) .headerButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.headerButton :global(svg) {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Canvas ===== */
+
+.canvas {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.canvasVisible {
+  opacity: 1;
+}
+
+/* ===== Background — soft texture, subtle dot grid ===== */
+
+.bgWrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1.5px);
+  background-size: 32px 32px;
+  background-position: 0 0;
+  mask-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0) 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0) 80%
+  );
+}
+
+:global(.dark-mode) .bgGrid {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1.5px);
+}
+
+/* ===== Cards container =====
+   The `.cards` is a viewport-sized layer holding all cards positioned
+   by % (anchored at center). It receives the mouse-driven pan transform
+   so cards near the edges peek in/out as the user moves the cursor.
+   The translation is smoothed via a transition; we don't constantly
+   re-render — only when the React `pan` state changes. */
+
+.cards {
+  --pan-x: 0px;
+  --pan-y: 0px;
+
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transform: translate3d(var(--pan-x), var(--pan-y), 0);
+  transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+/* ===== Lens card =====
+   All cards uniform — same size, no rotation, anchored to a virtual
+   grid via (left%, top%). The hover state is intentionally prominent:
+   ~13% scale-up, 16px lift, and a colored ring matching the card's
+   accent. */
+
+.card {
+  --card-bg: #1F2A5C;
+  --card-fg: #F5F1E8;
+  --card-accent: #F2C04A;
+
+  position: absolute;
+  /* Anchor center of card to (left%, top%) of `.cards`. */
+  transform: translate(-50%, -50%) scale(0.92);
+  width: clamp(132px, 13vw, 168px);
+  aspect-ratio: 5 / 7;
+  padding: 13px 14px 16px;
+  background: var(--card-bg);
+  color: var(--card-fg);
+  border: none;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 8px 22px -8px rgba(0, 0, 0, 0.24),
+    0 24px 48px -20px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
+  opacity: 0;
+  transition:
+    opacity 600ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 320ms cubic-bezier(0.34, 1.4, 0.4, 1),
+    box-shadow 280ms ease;
+  will-change: transform, opacity;
+}
+
+.cardVisible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translate(-50%, calc(-50% - 14px)) scale(1.13);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.08),
+      0 18px 36px -10px rgba(0, 0, 0, 0.34),
+      0 44px 90px -18px rgba(0, 0, 0, 0.52),
+      0 0 0 3px var(--card-accent),
+      0 0 36px -4px var(--card-accent);
+    z-index: 5;
+  }
+}
+
+.card:active {
+  transform: translate(-50%, -50%) scale(1.02);
+  transition-duration: 120ms;
+}
+
+.cardArt {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px -2px 8px;
+  min-height: 0;
+}
+
+.cardArt :global(svg) {
+  width: 92%;
+  height: 92%;
+  max-height: 100%;
+  transition: transform 320ms cubic-bezier(0.34, 1.4, 0.4, 1);
+}
+
+@media (hover: hover) {
+  .card:hover .cardArt :global(svg) {
+    transform: scale(1.06);
+  }
+}
+
+.cardTitle {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  line-height: 1.18;
+  color: var(--card-fg);
+  flex: 0 0 auto;
+}
+
+/* ===== Center "Lenses" card — sized larger (~2× regular card), focal point ===== */
+
+.centerCard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  /* Roughly 1.35× a regular card's width — clearly the focal point but
+     not so big it dwarfs the deck. Same 5:7 aspect for unity. */
+  width: clamp(180px, 17vw, 220px);
+  aspect-ratio: 5 / 7;
+  padding: 16px 18px 20px;
+  background: #0E0E10;
+  color: #F5F1E8;
+  border: none;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.1),
+    0 18px 36px -10px rgba(0, 0, 0, 0.45),
+    0 50px 100px -20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  opacity: 0;
+  z-index: 3;
+  transition:
+    opacity 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 380ms cubic-bezier(0.34, 1.4, 0.4, 1),
+    box-shadow 280ms ease;
+  will-change: transform, opacity;
+}
+
+:global(.dark-mode) .centerCard {
+  background: #F5F1E8;
+  color: #0E0E10;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 18px 36px -10px rgba(0, 0, 0, 0.6),
+    0 50px 100px -20px rgba(0, 0, 0, 0.75);
+}
+
+.centerCardVisible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (hover: hover) {
+  .centerCard:hover {
+    transform: translate(-50%, calc(-50% - 14px)) scale(1.06);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.12),
+      0 28px 56px -12px rgba(0, 0, 0, 0.5),
+      0 60px 120px -20px rgba(0, 0, 0, 0.7),
+      0 0 0 3px #F2C04A,
+      0 0 48px -4px rgba(242, 192, 74, 0.6);
+    z-index: 6;
+  }
+
+  :global(.dark-mode) .centerCard:hover {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.4),
+      0 28px 56px -12px rgba(0, 0, 0, 0.65),
+      0 60px 120px -20px rgba(0, 0, 0, 0.85),
+      0 0 0 3px #C8552B,
+      0 0 48px -4px rgba(200, 85, 43, 0.6);
+  }
+}
+
+.centerCard:active {
+  transform: translate(-50%, -50%) scale(1.02);
+  transition-duration: 120ms;
+}
+
+.centerCardTitle {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  flex: 0 0 auto;
+}
+
+/* ===== Side panel ===== */
+
+.panelOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 22, 0.4);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 50;
+}
+
+.panelOverlay[data-state='open'] {
+  animation: fadeIn 220ms ease-out;
+}
+
+.panelOverlay[data-state='closed'] {
+  animation: fadeOut 200ms ease-out;
+}
+
+.panel {
+  --panel-bg: #1F2A5C;
+  --panel-fg: #F5F1E8;
+  --panel-accent: #F2C04A;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(480px, 100vw);
+  background: #FAF7EE;
+  display: flex;
+  flex-direction: column;
+  z-index: 60;
+  outline: none;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  color: #1A1A1A;
+  box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.25);
+  transition: background 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:global(.dark-mode) .panel {
+  background: #1C1D1F;
+  color: #F5F1E8;
+  box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+.panel[data-state='open'] {
+  animation: slideInRight 340ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.panel[data-state='closed'] {
+  animation: slideOutRight 280ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* The hero is the colored top zone — uses panel's bg/fg/accent vars. */
+.panelHero {
+  position: relative;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  padding: 32px 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 auto;
+  transition:
+    background 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 280ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.panelArt {
+  display: block;
+  width: 110px;
+  height: 110px;
+  align-self: flex-start;
+}
+
+.panelArt :global(svg) {
+  width: 100%;
+  height: 100%;
+}
+
+.panelHeroText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panelEyebrow {
+  display: inline-block;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  color: var(--panel-fg);
+  opacity: 0.7;
+}
+
+.panelTitle {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  margin: 0;
+  color: var(--panel-fg);
+}
+
+.panelTagline {
+  font-family: var(--font-serif, Georgia, serif);
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--panel-fg);
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.panelClose {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  cursor: pointer;
+  color: var(--panel-fg);
+  border-radius: 999px;
+  transition:
+    background 200ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.panelClose:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.panelClose:active {
+  transform: scale(0.94);
+}
+
+.panelBody {
+  font-family: var(--font-serif, Georgia, serif);
+  padding: 30px 36px 40px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  font-weight: 400;
+  animation: bodyFade 220ms ease-out;
+}
+
+.panelBody p {
+  margin: 0 0 1em;
+}
+
+.panelBody p:last-child {
+  margin-bottom: 0;
+}
+
+.panelBody em {
+  font-style: italic;
+  color: var(--panel-bg);
+  font-weight: 600;
+}
+
+:global(.dark-mode) .panelBody em {
+  color: var(--panel-accent);
+}
+
+/* Related-lenses block at bottom of panel body. */
+.relatedBlock {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(.dark-mode) .relatedBlock {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.relatedLabel {
+  display: block;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.55;
+  margin-bottom: 12px;
+}
+
+.relatedChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.relatedChip {
+  --chip-bg: #1F2A5C;
+  --chip-fg: #F5F1E8;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 9px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:global(.dark-mode) .relatedChip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.relatedChip:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+:global(.dark-mode) .relatedChip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.relatedChip:active {
+  transform: scale(0.97);
+}
+
+.relatedChipSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: var(--chip-bg);
+  flex: 0 0 auto;
+}
+
+.relatedChipArrow {
+  opacity: 0.5;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.relatedChip:hover .relatedChipArrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+/* ===== Center dialog (the "Lenses" index) ===== */
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 22, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 70;
+}
+
+.dialogOverlay[data-state='open'] {
+  animation: fadeIn 240ms ease-out;
+}
+
+.dialogOverlay[data-state='closed'] {
+  animation: fadeOut 200ms ease-out;
+}
+
+.dialog {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  background: #FAF7EE;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.1),
+    0 30px 80px -20px rgba(0, 0, 0, 0.4);
+  z-index: 80;
+  outline: none;
+  overflow: hidden;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  color: #1A1A1A;
+  display: flex;
+  flex-direction: column;
+}
+
+:global(.dark-mode) .dialog {
+  background: #1C1D1F;
+  color: #F5F1E8;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 30px 80px -20px rgba(0, 0, 0, 0.7);
+}
+
+.dialog[data-state='open'] {
+  animation: scaleIn 280ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dialog[data-state='closed'] {
+  animation: scaleOut 200ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dialogInner {
+  padding: 38px 42px 32px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.dialogEyebrow {
+  display: inline-block;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+.dialogTitle {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 18px;
+}
+
+.dialogIntro {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  max-width: 58ch;
+  margin-bottom: 26px;
+  opacity: 0.88;
+}
+
+.dialogIntro p {
+  margin: 0 0 0.8em;
+}
+
+.dialogIntro p:last-child {
+  margin-bottom: 0;
+}
+
+/* Lens jump list */
+.dialogList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 600px) {
+  .dialogList {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.dialogListItem {
+  margin: 0;
+}
+
+.dialogJumpBtn {
+  --jump-bg: #1F2A5C;
+  --jump-fg: #F5F1E8;
+  --jump-accent: #F2C04A;
+
+  width: 100%;
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  color: inherit;
+  text-align: left;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:global(.dark-mode) .dialogJumpBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dialogJumpBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+:global(.dark-mode) .dialogJumpBtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.dialogJumpBtn:active {
+  transform: scale(0.985);
+}
+
+.dialogJumpArt {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--jump-bg);
+  color: var(--jump-fg);
+  padding: 6px;
+  flex: 0 0 auto;
+}
+
+.dialogJumpArt :global(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dialogJumpText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dialogJumpCategory {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+.dialogJumpTitle {
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+
+.dialogJumpTagline {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  opacity: 0.7;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.dialogJumpArrow {
+  font-size: 1.1rem;
+  opacity: 0.4;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dialogJumpBtn:hover .dialogJumpArrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+.dialogCloseBtn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  border-radius: 999px;
+  transition:
+    background 200ms ease,
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dialogCloseBtn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:global(.dark-mode) .dialogCloseBtn {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:global(.dark-mode) .dialogCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dialogCloseBtn:active {
+  transform: scale(0.94);
+}
+
+/* ===== Animations ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+}
+
+@keyframes bodyFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Reduced motion ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas,
+  .card,
+  .centerCard,
+  .panel,
+  .dialog,
+  .panelOverlay,
+  .dialogOverlay,
+  .panelBody {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== Mobile / small viewport adjustments =====
+   On phones the constellation gets cramped — drop the cards into a
+   simple scrollable column so everything stays tappable. */
+
+@media (max-width: 720px) {
+  .cards {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 76px 14px 32px;
+    align-content: flex-start;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .canvas {
+    overflow-y: auto;
+  }
+
+  .bgWrap {
+    display: none;
+  }
+
+  .card,
+  .centerCard {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    width: 100%;
+    transform: none !important;
+    aspect-ratio: 5 / 7;
+  }
+
+  .cardVisible,
+  .centerCardVisible {
+    transform: none !important;
+  }
+
+  .centerCard {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+
+  .cardTitle {
+    font-size: 0.86rem;
+  }
+
+  .centerCardTitle {
+    font-size: 1.15rem;
+  }
+
+  .panelArt {
+    width: 92px;
+    height: 92px;
+  }
+
+  .panelHero {
+    padding: 26px 24px 22px;
+  }
+
+  .panelTitle {
+    font-size: 1.55rem;
+  }
+
+  .panelBody {
+    padding: 24px 24px 32px;
+    font-size: 1.04rem;
+  }
+
+  .dialogInner {
+    padding: 28px 22px 24px;
+  }
+
+  .dialogIntro {
+    font-size: 1.02rem;
+  }
+
+  .dialogList {
+    grid-template-columns: 1fr;
+  }
+}

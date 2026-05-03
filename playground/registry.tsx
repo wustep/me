@@ -29,6 +29,16 @@ export const playgroundSections: PlaygroundSection[] = [
     title: 'Experiments',
     items: [
       {
+        title: 'Lenses',
+        url: '/lenses',
+        description:
+          'A canvas of lenses for seeing the world. Each card is a different frame — Great Man theory, evolutionary psychology, minimalism, utility functions, status — and no single one sees everything.',
+        summary: 'A canvas of frames for seeing the world',
+        date: 'May 2026',
+        year: '2026',
+        gradient: 'from-purple-500 via-fuchsia-500 to-rose-500'
+      },
+      {
         title: 'DOM-ino',
         url: '/playground/dom-ino',
         description:
