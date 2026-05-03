@@ -79,6 +79,11 @@ type ParamColor = {
   label: string
   cssVar: string
   default: string
+  /** When set, this row is rendered disabled/dimmed unless the
+   *  referenced toggle param is on. Purely cosmetic — the value
+   *  still applies to its CSS var, but the UI tells you the
+   *  control is currently a no-op. */
+  dependsOn?: { id: string; equals: boolean | string }
 }
 
 type ParamToggle = {
@@ -514,13 +519,39 @@ const SECTIONS: Section[] = [
       {
         kind: 'select',
         id: 'serifFont',
-        label: 'Serif family',
+        // Drives `--design-serif`, which (despite its name, kept
+        // for back-compat) is the body-text family across the
+        // panel, dialog, and lens essays. Options now include
+        // sans + mono so you can take the deck fully sans-serif
+        // without touching anything else.
+        label: 'Body family',
         cssVar: '--design-serif',
         options: [
-          { value: "var(--font-serif, 'Crimson Pro', Georgia, serif)", label: 'Crimson Pro (default)' },
+          {
+            value: "var(--font-serif, 'Crimson Pro', Georgia, serif)",
+            label: 'Crimson Pro (default)'
+          },
           { value: "Georgia, 'Times New Roman', serif", label: 'Georgia' },
-          { value: "'Iowan Old Style', 'Palatino', serif", label: 'Iowan / Palatino' },
-          { value: "ui-serif, serif", label: 'System serif' }
+          {
+            value: "'Iowan Old Style', 'Palatino', serif",
+            label: 'Iowan / Palatino'
+          },
+          { value: 'ui-serif, serif', label: 'System serif' },
+          {
+            value:
+              'var(--font-geist, var(--font-sans, system-ui)), system-ui, sans-serif',
+            label: 'Geist (sans)'
+          },
+          {
+            value:
+              "'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+            label: 'Inter (sans)'
+          },
+          {
+            value:
+              "ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace",
+            label: 'Monospace'
+          }
         ],
         default: "var(--font-serif, 'Crimson Pro', Georgia, serif)"
       },
@@ -531,8 +562,7 @@ const SECTIONS: Section[] = [
         cssVar: '--design-sans',
         options: [
           {
-            value:
-              'var(--font-geist, var(--font-sans, system-ui), sans-serif)',
+            value: 'var(--font-geist, var(--font-sans, system-ui), sans-serif)',
             label: 'Geist (default)'
           },
           {
@@ -551,7 +581,7 @@ const SECTIONS: Section[] = [
             label: 'Monospace (chaos)'
           },
           {
-            value: "system-ui, sans-serif",
+            value: 'system-ui, sans-serif',
             label: 'System default'
           }
         ],
@@ -696,23 +726,20 @@ const SECTIONS: Section[] = [
         default: 1
       },
       {
-        kind: 'select',
+        kind: 'slider',
         id: 'mono',
         label: 'Monochrome',
         cssVar: '--design-mono',
-        options: [
-          { value: '0', label: 'Off (default)' },
-          { value: '0.5', label: 'Half' },
-          { value: '1', label: 'Full greyscale' }
-        ],
-        default: '0'
-      },
-      {
-        kind: 'color',
-        id: 'accentOverride',
-        label: 'Accent override',
-        cssVar: '--design-accent-override',
-        default: '#e8a547'
+        cssUnit: '',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        default: 0,
+        // Greyscale near 0 reads as "color-faded", which is
+        // visually interesting; full 1 is rarely the move. Bias
+        // chaos toward partial desaturation.
+        chaosMin: 0,
+        chaosMax: 0.6
       },
       {
         kind: 'toggle',
@@ -720,6 +747,16 @@ const SECTIONS: Section[] = [
         label: 'Use accent override',
         dataAttr: 'accent-on',
         default: false
+      },
+      {
+        kind: 'color',
+        id: 'accentOverride',
+        label: 'Accent override',
+        cssVar: '--design-accent-override',
+        default: '#e8a547',
+        // Color picker only does anything once the toggle above
+        // it is on. Dim the row when off so it reads as gated.
+        dependsOn: { id: 'accentOn', equals: true }
       }
     ]
   },
@@ -1063,6 +1100,19 @@ const SECTIONS: Section[] = [
       },
       {
         kind: 'select',
+        id: 'eyebrowWeight',
+        label: 'Eyebrow weight',
+        cssVar: '--design-eyebrow-weight',
+        options: [
+          { value: '400', label: 'Regular' },
+          { value: '500', label: 'Medium (default)' },
+          { value: '600', label: 'Semibold' },
+          { value: '700', label: 'Bold' }
+        ],
+        default: '500'
+      },
+      {
+        kind: 'select',
         id: 'bodyDensity',
         label: 'Body density',
         dataAttr: 'body-density',
@@ -1250,7 +1300,8 @@ function randomizeValues(): Values {
       const snapped = Math.round(raw / param.step) * param.step
       out[param.id] = snapped
     } else if (param.kind === 'select') {
-      const opt = param.options[Math.floor(Math.random() * param.options.length)]
+      const opt =
+        param.options[Math.floor(Math.random() * param.options.length)]
       out[param.id] = opt!.value
     } else if (param.kind === 'color') {
       // HSL roll, biased to the warm/cream palette so we don't get
@@ -1275,9 +1326,10 @@ function randomizeValues(): Values {
  * In production the design panel never mounts, so the predicate
  * always returns false and Radix behaves normally.
  * ─────────────────────────────────────────────────────────────────── */
-export function ignoreDesignPanelOutside(
-  event: { target: EventTarget | null; preventDefault: () => void }
-) {
+export function ignoreDesignPanelOutside(event: {
+  target: EventTarget | null
+  preventDefault: () => void
+}) {
   const target = event.target as Element | null
   if (target?.closest?.('[data-design-panel]')) {
     event.preventDefault()
@@ -1374,7 +1426,11 @@ function defaultValues(): Values {
   const out: Values = {}
   for (const p of Object.values(PARAM_BY_ID)) {
     out[p.id] =
-      p.kind === 'toggle' ? p.default : p.kind === 'slider' ? p.default : p.default
+      p.kind === 'toggle'
+        ? p.default
+        : p.kind === 'slider'
+          ? p.default
+          : p.default
   }
   return out
 }
@@ -1387,13 +1443,15 @@ function applyValues(values: Values) {
 
     if (param.kind === 'slider') {
       const num = typeof v === 'number' ? v : param.default
-      if (param.cssVar) root.style.setProperty(param.cssVar, `${num}${param.cssUnit}`)
+      if (param.cssVar)
+        root.style.setProperty(param.cssVar, `${num}${param.cssUnit}`)
     } else if (param.kind === 'select') {
       const raw = String(v ?? param.default)
       // Decode underscores back to spaces for values like padding shorthands.
       const decoded = raw.replaceAll('_', ' ')
       if (param.cssVar) root.style.setProperty(param.cssVar, decoded)
-      if (param.dataAttr) root.setAttribute(`data-design-${param.dataAttr}`, decoded)
+      if (param.dataAttr)
+        root.setAttribute(`data-design-${param.dataAttr}`, decoded)
     } else if (param.kind === 'color') {
       const s = typeof v === 'string' ? v : param.default
       root.style.setProperty(param.cssVar, s)
@@ -1690,14 +1748,22 @@ function SectionView({
       </summary>
       {section.hint && <p className={styles.sectionHint}>{section.hint}</p>}
       <div className={styles.sectionBody}>
-        {section.params.map((param) => (
-          <ParamRow
-            key={param.id}
-            param={param}
-            value={values[param.id]}
-            onChange={(v) => setValue(param.id, v)}
-          />
-        ))}
+        {section.params.map((param) => {
+          // dependsOn lives only on color params today; the
+          // generic check stays cheap and supports future
+          // gating elsewhere.
+          const dep = 'dependsOn' in param ? param.dependsOn : undefined
+          const disabled = dep != null && values[dep.id] !== dep.equals
+          return (
+            <ParamRow
+              key={param.id}
+              param={param}
+              value={values[param.id]}
+              disabled={disabled}
+              onChange={(v) => setValue(param.id, v)}
+            />
+          )
+        })}
       </div>
     </details>
   )
@@ -1706,16 +1772,19 @@ function SectionView({
 function ParamRow({
   param,
   value,
+  disabled,
   onChange
 }: {
   param: Param
   value: string | number | boolean | undefined
+  disabled?: boolean
   onChange: (v: string | number | boolean) => void
 }) {
+  const rowClass = disabled ? `${styles.row} ${styles.rowDisabled}` : styles.row
   if (param.kind === 'slider') {
     const v = typeof value === 'number' ? value : param.default
     return (
-      <label className={styles.row}>
+      <label className={rowClass}>
         <span className={styles.rowLabel}>{param.label}</span>
         <span className={styles.rowControl}>
           <input
@@ -1745,7 +1814,7 @@ function ParamRow({
   if (param.kind === 'select') {
     const v = typeof value === 'string' ? value : param.default
     return (
-      <label className={styles.row}>
+      <label className={rowClass}>
         <span className={styles.rowLabel}>{param.label}</span>
         <span className={styles.rowControl}>
           <select
@@ -1766,7 +1835,7 @@ function ParamRow({
   if (param.kind === 'color') {
     const v = typeof value === 'string' ? value : param.default
     return (
-      <label className={styles.row}>
+      <label className={rowClass} aria-disabled={disabled || undefined}>
         <span className={styles.rowLabel}>{param.label}</span>
         <span className={styles.rowControl}>
           <input
@@ -1775,6 +1844,7 @@ function ParamRow({
             onChange={(e) => onChange(e.target.value)}
             className={styles.colorInput}
             aria-label={param.label}
+            disabled={disabled}
           />
           <input
             type='text'
@@ -1782,6 +1852,7 @@ function ParamRow({
             onChange={(e) => onChange(e.target.value)}
             className={styles.textInput}
             spellCheck={false}
+            disabled={disabled}
           />
         </span>
       </label>
@@ -1790,7 +1861,7 @@ function ParamRow({
   // toggle
   const v = typeof value === 'boolean' ? value : param.default
   return (
-    <label className={styles.row}>
+    <label className={rowClass}>
       <span className={styles.rowLabel}>{param.label}</span>
       <span className={styles.rowControl}>
         <input

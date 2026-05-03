@@ -480,6 +480,18 @@
   font-size: 11.5px;
 }
 
+/* Gated row — its `dependsOn` toggle is currently off, so the
+   control would be a no-op. Dim the whole row and disable the
+   inputs to make the dependency obvious without hiding the
+   control entirely (you can still see what's there). */
+.rowDisabled {
+  opacity: 0.4;
+}
+.rowDisabled .colorInput,
+.rowDisabled .textInput {
+  cursor: not-allowed;
+}
+
 .rowLabel {
   color: var(--panel-fg-dim);
   font-weight: 500;
@@ -682,6 +694,20 @@
 }
 
 /* ───── Mobile / narrow viewports ───── */
+
+/* Below ~900px the panel is hidden entirely. The lenses canvas
+   restructures heavily at this width (auto-fit grid, hero card,
+   smaller gaps) and tweaking design vars on a 4-inch viewport
+   isn't a real use case — the panel is a desk tool. Hiding both
+   the body and the handle frees the bottom-right corner for the
+   page itself and prevents the panel from accidentally covering
+   the side panel's close button on touch. Re-appears as soon as
+   the viewport widens. */
+@media (max-width: 899px) {
+  .panel {
+    display: none !important;
+  }
+}
 
 @media (max-width: 540px) {
   .panel {
