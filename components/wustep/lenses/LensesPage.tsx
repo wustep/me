@@ -7,11 +7,13 @@ import BodyClassName from 'react-body-classname'
 
 import { LabsButton } from '@/components/wustep/LabsButton'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
+import { isDev } from '@/lib/config'
 import { useDarkMode } from '@/lib/use-dark-mode'
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
 
 import { Canvas } from './Canvas'
 import { CenterDialog } from './CenterDialog'
+import { DesignPanel } from './DesignPanel'
 import styles from './LensesPage.module.css'
 import { keyToDirection, neighborInDirection } from './navigation'
 import { LENS_BY_ID } from './registry'
@@ -119,7 +121,11 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   }, [hydratedFromUrl, openLensId, centerOpen])
 
   /* Drive the entrance storyboard. Snap to final stage instantly when
-     the user prefers reduced motion. */
+     the user prefers reduced motion.
+     `entranceTick` is bumped by the dev DesignPanel ("Replay" action)
+     to re-run the entrance from stage 0 — handy when tweaking timing. */
+  const [entranceTick, setEntranceTick] = React.useState(0)
+
   React.useEffect(() => {
     if (!hasMounted) return
 
@@ -128,6 +134,7 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
       return
     }
 
+    setStage(STAGE.hidden)
     const timers: ReturnType<typeof setTimeout>[] = [
       setTimeout(() => setStage(STAGE.canvas), TIMING.canvasIn),
       setTimeout(() => setStage(STAGE.center), TIMING.centerIn),
@@ -136,7 +143,42 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
     return () => {
       for (const t of timers) clearTimeout(t)
     }
-  }, [hasMounted, prefersReducedMotion])
+  }, [hasMounted, prefersReducedMotion, entranceTick])
+
+  /* Listen for the dev panel's replay event. Only relevant in dev,
+     and the listener is cheap when no event is dispatched. */
+  React.useEffect(() => {
+    if (!isDev) return
+    const onReplay = () => setEntranceTick((t) => t + 1)
+    window.addEventListener('lenses:replay-entrance', onReplay)
+    return () => window.removeEventListener('lenses:replay-entrance', onReplay)
+  }, [])
+
+  /* Cursor parallax — sets `--mx` / `--my` on the document root
+     so the .cards CSS rule (gated by data-design-parallax) can
+     translate the deck. Throttled with rAF, cheap, and only
+     active when the design panel turns parallax on. */
+  React.useEffect(() => {
+    if (!isDev) return
+    let raf = 0
+    let pendingX = 0
+    let pendingY = 0
+    const tick = () => {
+      raf = 0
+      document.documentElement.style.setProperty('--mx', String(pendingX))
+      document.documentElement.style.setProperty('--my', String(pendingY))
+    }
+    const onMove = (e: MouseEvent) => {
+      pendingX = (e.clientX / window.innerWidth - 0.5) * -2
+      pendingY = (e.clientY / window.innerHeight - 0.5) * -2
+      if (!raf) raf = requestAnimationFrame(tick)
+    }
+    window.addEventListener('mousemove', onMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   const openLens = React.useCallback((id: string) => {
     setCenterOpen(false)
@@ -286,6 +328,10 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
         onOpenChange={setCenterOpen}
         onOpenLens={openLens}
       />
+
+      {/* Dev-only design panel. Tree-shakes out in production because
+          the JSX is gated on a build-time `isDev` constant. */}
+      {isDev && hasMounted && <DesignPanel />}
     </>
   )
 }

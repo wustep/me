@@ -1,0 +1,715 @@
+/* =============================================================================
+ * DesignPanel — dev-only floating control panel.
+ *
+ *   Renders fixed in the bottom-right. Collapsed state shows a small
+ *   pill ("Design"); expanded state opens a tall, scrollable panel
+ *   with grouped controls. Glassmorphic surface with a sharp border
+ *   so it sits comfortably over the lenses canvas without competing
+ *   with the cards visually.
+ *
+ *   Dark/light: panel is always dark — it's a tool, not a doc, so
+ *   it stays readable regardless of the page theme being tweaked.
+ * ========================================================================== */
+
+.panel {
+  --panel-bg: rgba(16, 16, 18, 0.94);
+  --panel-bg-solid: rgba(16, 16, 18, 0.98);
+  --panel-fg: #f0ece2;
+  --panel-fg-dim: rgba(240, 236, 226, 0.62);
+  --panel-fg-faint: rgba(240, 236, 226, 0.42);
+  --panel-stroke: rgba(255, 255, 255, 0.12);
+  --panel-stroke-strong: rgba(255, 255, 255, 0.22);
+  --panel-accent: #e8a547;
+  --panel-radius: 14px;
+
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 9999;
+  font-family:
+    var(--font-geist, var(--font-sans, system-ui)),
+    system-ui,
+    sans-serif;
+  font-size: 12px;
+  color: var(--panel-fg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  /* Disable iOS double-tap zoom so the slider drag UX feels native. */
+  touch-action: manipulation;
+  /* Don't let the panel get tinted by the page's color-mode filters,
+     and don't fight cursor inheritance. */
+  isolation: isolate;
+}
+
+/* ───── Handle (always visible) ───── */
+
+.handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  height: 32px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--panel-stroke);
+  border-radius: 999px;
+  color: var(--panel-fg);
+  font: inherit;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 28px -12px rgba(0, 0, 0, 0.45);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .handle:hover {
+    background: var(--panel-bg-solid);
+    border-color: var(--panel-stroke-strong);
+  }
+}
+
+.handle:active {
+  transform: scale(0.97);
+}
+
+.handle:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 3px;
+}
+
+.handleDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--panel-accent);
+  box-shadow: 0 0 12px var(--panel-accent);
+}
+
+.handleLabel {
+  /* Tabular nums + fixed width keep the pill from jiggling when
+     the agent toggles open/closed adjacent labels later. */
+  font-variant-numeric: tabular-nums;
+}
+
+.handleHint {
+  color: var(--panel-fg-faint);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.04em;
+}
+
+/* ───── Body (expanded) ───── */
+
+.body {
+  width: 340px;
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--panel-stroke);
+  border-radius: var(--panel-radius);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 30px 80px -16px rgba(0, 0, 0, 0.6);
+  /* Slide-up entrance — quick so the panel feels responsive when
+     toggling with the keyboard shortcut. */
+  animation: designPanelOpen 220ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes designPanelOpen {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.panelCollapsed .body {
+  display: none;
+}
+
+/* ───── Dodge the lens side-panel ─────
+ *
+ * When a lens detail panel is open, the dev DesignPanel is
+ * functionally clickable (z-index 9999 vs 60) but visually
+ * obscured because both anchor to the same edge by default.
+ * Slide the DesignPanel to the opposite side of whichever edge
+ * the lens panel is anchored to, so both surfaces stay usable.
+ *
+ * `[data-lenses-side-open]` is set on <html> by SidePanel while
+ * the dialog is open. `[data-design-panel-side]` reflects the
+ * user's choice for which edge the lens panel uses. We select
+ * the combination so the dodge always moves *away* from the
+ * lens panel, never toward it.
+ *
+ * Animated via the same `transition` properties already on
+ * `.panel` — bottom/right/left interpolate smoothly so the
+ * dodge feels intentional rather than a teleport.
+ * ───────────────────────────── */
+
+.panel {
+  transition:
+    right 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    left 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    align-items 0s linear 320ms;
+}
+
+/* Default: lens panel on right → dodge to left.
+   Also covers the case where panelSide is unset. */
+:global(html[data-lenses-side-open]):not(:global([data-design-panel-side='left'])):not(
+    :global([data-design-panel-side='sheet'])
+  )
+  .panel {
+  right: auto;
+  left: 18px;
+  align-items: flex-start;
+}
+
+/* Lens panel on left → dodge stays on the right (already default,
+   but make the rule explicit so future right-anchored variants
+   don't accidentally inherit the leftward dodge). */
+:global(html[data-lenses-side-open][data-design-panel-side='left']) .panel {
+  right: 18px;
+  left: auto;
+  align-items: flex-end;
+}
+
+/* Lens panel as bottom sheet → lift to the top-right. The sheet
+   covers the bottom 60–70% of the viewport; sliding to the top
+   puts the DesignPanel above the sheet header where it's still
+   reachable but out of the way of the content. */
+:global(html[data-lenses-side-open][data-design-panel-side='sheet']) .panel {
+  bottom: auto;
+  top: 18px;
+  right: 18px;
+  left: auto;
+  align-items: flex-end;
+}
+
+/* Reduced-motion users get an instant snap rather than a slide. */
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid var(--panel-stroke);
+  flex: 0 0 auto;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.iconBtn {
+  /* Square 26px touch target — comfy with cursor + finger, while still
+     reading as a tight icon row in the header. */
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--panel-fg-dim);
+  border: 1px solid var(--panel-stroke);
+  border-radius: 7px;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    transform 100ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.iconBtn svg {
+  display: block;
+  /* Stroke + fill inherit currentColor so icons recolor with the
+     button's text color on hover / pressed states. */
+  color: currentColor;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iconBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--panel-stroke-strong);
+    color: var(--panel-fg);
+  }
+}
+
+.iconBtn:active {
+  transform: scale(0.92);
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 2px;
+}
+
+.iconBtn[aria-pressed='true'] {
+  /* Used by the dark-mode flipper to surface "currently dark" state.
+     Subtle glow on the border + brighter foreground keeps it from
+     looking like a generic button. */
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--panel-stroke-strong);
+  color: var(--panel-fg);
+}
+
+.iconBtnDanger {
+  color: rgba(255, 184, 168, 0.85);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iconBtnDanger:hover {
+    background: rgba(255, 80, 60, 0.15);
+    border-color: rgba(255, 120, 100, 0.4);
+    color: #ffd4c8;
+  }
+}
+
+/* ───── Preset slots ───── */
+
+.slots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--panel-stroke);
+  flex: 0 0 auto;
+}
+
+.slotsLabel {
+  font-size: 10.5px;
+  color: var(--panel-fg-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  flex: 0 0 auto;
+}
+
+.slotGroup {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--panel-stroke);
+  border-radius: 6px;
+  overflow: hidden;
+  /* Prevent the inner buttons' focus rings from clipping. */
+  isolation: isolate;
+}
+
+.slotBtn,
+.slotSave {
+  height: 22px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--panel-fg);
+  border: none;
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.slotSave {
+  padding: 0 6px;
+  border-left: 1px solid var(--panel-stroke);
+  font-weight: 400;
+  color: var(--panel-fg-dim);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .slotBtn:hover,
+  .slotSave:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--panel-fg);
+  }
+}
+
+.slotBtn:focus-visible,
+.slotSave:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* ───── Sections ───── */
+
+.sections {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 0 8px;
+  /* Subtle scrollbar inside the small body — Emil rule allows
+     custom scrollbars in small contained surfaces. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+.sections::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sections::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sections::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.section {
+  border-bottom: 1px solid var(--panel-stroke);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--panel-fg);
+  user-select: none;
+  list-style: none;
+  transition: background 120ms ease;
+}
+
+.sectionSummary::-webkit-details-marker {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sectionSummary:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+.sectionSummary:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: -2px;
+}
+
+.sectionLabel {
+  flex: 1 1 auto;
+}
+
+.sectionChevron {
+  color: var(--panel-fg-faint);
+  font-size: 16px;
+  line-height: 1;
+  transform: rotate(90deg);
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.section[open] .sectionChevron {
+  transform: rotate(-90deg);
+}
+
+.sectionHint {
+  margin: -4px 14px 6px;
+  font-size: 10.5px;
+  color: var(--panel-fg-dim);
+  font-style: italic;
+  font-family: var(--font-serif, Georgia, serif);
+  letter-spacing: 0.005em;
+}
+
+.sectionBody {
+  padding: 4px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ───── Rows ───── */
+
+.row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+}
+
+.rowLabel {
+  color: var(--panel-fg-dim);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  /* Don't let long labels break — wrap is fine for a UI panel. */
+  text-wrap: balance;
+}
+
+.rowControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.slider {
+  flex: 1 1 auto;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+}
+
+.slider:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--panel-fg);
+  border: none;
+  cursor: grab;
+  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--panel-fg);
+  border: none;
+  cursor: grab;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.numberInput {
+  width: 52px;
+  flex: 0 0 auto;
+  height: 22px;
+  padding: 0 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--panel-stroke);
+  border-radius: 4px;
+  color: var(--panel-fg);
+  font: inherit;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  /* Hide the spinner — we have the slider for granular control. */
+  -moz-appearance: textfield;
+  text-align: right;
+}
+
+.numberInput::-webkit-outer-spin-button,
+.numberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.numberInput:focus {
+  outline: none;
+  border-color: var(--panel-accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rowValue {
+  /* Hidden but reserved-space — the number input gives us the
+     same info, but keeping the units visible at a glance is
+     useful when the input is narrow. */
+  display: none;
+}
+
+.select {
+  flex: 1 1 auto;
+  height: 26px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--panel-stroke);
+  border-radius: 6px;
+  color: var(--panel-fg);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'><path fill='%23f0ece2' d='M0 0l4 5 4-5z' opacity='0.6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 22px;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--panel-accent);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.select option {
+  background: #1c1c1f;
+  color: var(--panel-fg);
+}
+
+.colorInput {
+  /* Native color picker, sized down and styled to match the
+     row chrome. We can't fully restyle it cross-browser, but we
+     can chop the chrome and round the corners. */
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--panel-stroke);
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+.colorInput::-moz-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.textInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 22px;
+  padding: 0 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--panel-stroke);
+  border-radius: 4px;
+  color: var(--panel-fg);
+  font: inherit;
+  font-size: 10.5px;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: var(--panel-accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--panel-accent);
+  cursor: pointer;
+}
+
+/* ───── Reduced motion ───── */
+
+@media (prefers-reduced-motion: reduce) {
+  .body {
+    animation: none;
+  }
+  .handle,
+  .iconBtn,
+  .slider::-webkit-slider-thumb,
+  .sectionChevron {
+    transition: none;
+  }
+}
+
+/* ───── Mobile / narrow viewports ───── */
+
+@media (max-width: 540px) {
+  .panel {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    align-items: stretch;
+  }
+  .body {
+    width: 100%;
+    max-height: 60vh;
+  }
+  .handle {
+    align-self: flex-end;
+  }
+
+  /* Side panel takes the full viewport at this size, so dodging
+     left/right is a no-op. Lift the DesignPanel to the top edge
+     instead so its handle pokes out above the side panel's hero
+     and stays grabbable. Body is also clamped shorter so it
+     doesn't overhang the lens content. */
+  :global(html[data-lenses-side-open]) .panel {
+    top: 12px;
+    bottom: auto;
+    right: 12px;
+    left: 12px;
+  }
+  :global(html[data-lenses-side-open]) .body {
+    max-height: 50vh;
+  }
+}

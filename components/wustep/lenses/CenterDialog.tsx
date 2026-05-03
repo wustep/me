@@ -1,6 +1,9 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
 
+import { isDev } from '@/lib/config'
+
+import { ignoreDesignPanelOutside } from './DesignPanel'
 import { CloseIcon } from './icons'
 import { Illustration } from './illustrations'
 import styles from './LensesPage.module.css'
@@ -29,12 +32,39 @@ export function CenterDialog({
   onOpenLens
 }: CenterDialogProps) {
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+    <DialogPrimitive.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      /* See SidePanel for the rationale: non-modal in dev so the
+         DesignPanel stays interactive; modal in prod. */
+      modal={!isDev}
+    >
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className={styles.dialogOverlay} />
+        {/* See SidePanel for the full rationale. Manual overlay in
+            dev keeps the backdrop and still blocks canvas pointer
+            events. Click-to-dismiss mirrors Radix's modal-mode
+            overlay. The DesignPanel sits above this at z-index
+            9999 and stays interactive. */}
+        {isDev ? (
+          open ? (
+            <div
+              className={styles.dialogOverlay}
+              data-state='open'
+              aria-hidden='true'
+              onClick={() => onOpenChange(false)}
+            />
+          ) : null
+        ) : (
+          <DialogPrimitive.Overlay className={styles.dialogOverlay} />
+        )}
         <DialogPrimitive.Content
           className={styles.dialog}
           aria-describedby={undefined}
+          /* Let the dev DesignPanel receive clicks even when this
+             dialog is open. Radix would otherwise close on any
+             click outside `Content`. No-op in production. */
+          onPointerDownOutside={ignoreDesignPanelOutside}
+          onInteractOutside={ignoreDesignPanelOutside}
         >
           <header className={styles.dialogHeader}>
             <div className={styles.dialogHeaderText}>

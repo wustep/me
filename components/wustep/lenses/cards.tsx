@@ -80,8 +80,15 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
       aria-label={`Open lens: ${lens.title}`}
       aria-pressed={selected}
       data-lens-id={lens.id}
+      data-lens-category={lens.category}
       data-lens-selected={selected ? 'true' : undefined}
     >
+      {/* Hidden by default; the design panel can flip a data
+          attribute on <html> to reveal it. Keeps the markup
+          uniform between standard/dev modes. */}
+      <span className={styles.cardEyebrow} aria-hidden='true'>
+        {lens.category}
+      </span>
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
           id={lens.illustration}
@@ -91,6 +98,11 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
         />
       </span>
       <span className={styles.cardTitle}>{lens.title}</span>
+      {/* Tagline preview only renders in design-panel mode. Sits
+          absolute so it doesn't affect layout when hidden. */}
+      <span className={styles.cardHoverTagline} aria-hidden='true'>
+        {lens.tagline}
+      </span>
     </button>
   )
 }
