@@ -643,6 +643,55 @@ const LENSES_RAW: Lens[] = [
     )
   },
   {
+    id: 'momentum',
+    category: 'Strategy',
+    title: 'Momentum',
+    tagline: 'Consistency is the currency that buys bold moves.',
+    x: 93.75,
+    y: 62,
+    bg: '#1F4A38',
+    fg: '#F5EFE0',
+    accent: '#E8A370',
+    illustration: 'momentum',
+    related: ['agency', 'systems', 'taste'],
+    body: (
+      <>
+        <p>
+          Most people think about effort as a single push: how hard, in what
+          direction, right now. Momentum is the idea that what you can do today
+          depends on what you&rsquo;ve been doing. Effort compounds into mass —
+          trust, reputation, shipping cadence, a team that expects to win — and
+          that mass is what makes the hard moves possible later. The unpopular
+          call, the risky bet, the honest conversation: all of them are easier
+          to land when you&rsquo;ve built the credibility to spend.
+        </p>
+        <p>
+          Through this lens, the question is rarely{' '}
+          <em>should I do this now?</em> but{' '}
+          <em>
+            am I building the momentum I&rsquo;ll need, and spending it on the
+            right things?
+          </em>{' '}
+          Early wins aren&rsquo;t vanity; they&rsquo;re mass you&rsquo;ll cash
+          in later. Consistency isn&rsquo;t conservatism; it&rsquo;s the
+          currency that buys the right to be bold. And you rarely stop momentum
+          head-on — you nudge its vector. A small push on something already
+          moving beats a big push against something that&rsquo;s going to win
+          regardless.
+        </p>
+        <p>
+          Weaknesses: the lens romanticizes motion and underrates the deliberate
+          halt — sometimes the highest-value move is stopping a thing that
+          shouldn&rsquo;t continue, and <em>we have momentum here</em> is how
+          bad projects survive. It also flatters incumbents, who confuse
+          inherited mass with earned mass. But ignoring momentum is how smart
+          people keep making technically-correct moves that don&rsquo;t land,
+          because they never built the standing to make them work.
+        </p>
+      </>
+    )
+  },
+  {
     id: 'minimalism',
     category: 'Aesthetic',
     title: 'Minimalism',
@@ -961,44 +1010,6 @@ const LENSES_RAW: Lens[] = [
     )
   },
   {
-    id: 'tempo',
-    category: 'Strategy',
-    title: 'Tempo',
-    tagline: 'When matters as much as what.',
-    x: 93.75,
-    y: 62,
-    bg: '#1F4A38',
-    fg: '#F5EFE0',
-    accent: '#E8A370',
-    illustration: 'tempo',
-    related: ['systems', 'incentives', 'probabilistic'],
-    body: (
-      <>
-        <p>
-          The same move at the right moment is brilliant; six months earlier or
-          later, identical. Markets, conversations, careers, relationships, and
-          products all run on tempo — windows where attention, energy, and
-          readiness line up briefly, and the cost of acting collapses for a
-          little while before going back up.
-        </p>
-        <p>
-          Through this lens, you stop asking <em>is this a good idea?</em> and
-          start asking <em>is this the right time for this idea?</em> The same
-          pitch, hire, launch, or honest conversation lands very differently
-          depending on what just happened. Most of strategy is reading tempo:
-          knowing when to push, when to wait, and when the window has already
-          closed.
-        </p>
-        <p>
-          Weaknesses: timing fetishism becomes paralysis — there&rsquo;s almost
-          always a reason to wait, and most windows feel inconvenient. But
-          people who never read tempo do all the right things at all the wrong
-          moments and wonder why nothing lands.
-        </p>
-      </>
-    )
-  },
-  {
     id: 'utility',
     category: 'Economics',
     title: 'Utility',
@@ -1023,16 +1034,16 @@ const LENSES_RAW: Lens[] = [
           And it contains far more than the utilitarian&rsquo;s ledger of pain
           and pleasure. People also pay for identity, status, belonging,
           coherence, dignity, the feeling of being right, the feeling of having
-          chosen. Costs that look irrational on a spreadsheet — staying in a
-          bad job for the title, picking the harder gym, refusing the cheap
-          win — make sense the moment you allow the function to weigh those
-          terms.
+          chosen. Costs that look irrational on a spreadsheet — staying in a bad
+          job for the title, picking the harder gym, refusing the cheap win —
+          make sense the moment you allow the function to weigh those terms.
         </p>
         <p>
           Used this way, &ldquo;they&rsquo;re being irrational&rdquo; almost
-          always rephrases as <em>their function has terms mine doesn&rsquo;t</em>.
-          The middle manager isn&rsquo;t confused; she&rsquo;s pricing risk to
-          her standing. The friend who&rsquo;d rather be right than agree
+          always rephrases as{' '}
+          <em>their function has terms mine doesn&rsquo;t</em>. The middle
+          manager isn&rsquo;t confused; she&rsquo;s pricing risk to her
+          standing. The friend who&rsquo;d rather be right than agree
           isn&rsquo;t broken; identity is in the function. Once you can write
           down even a rough version of someone&rsquo;s utility function — yours
           included — strange behavior turns ordinary.
@@ -1068,12 +1079,12 @@ for (let r = 0; r < GRID.rowAnchors.length; r++) {
   }
 }
 
-export const LENSES: Lens[] = [...LENSES_RAW]
-  .sort((a, b) => a.title.localeCompare(b.title))
-  .map((lens, i) => {
-    const slot = SLOTS[i]
-    return slot ? { ...lens, x: slot.x, y: slot.y } : lens
-  })
+export const LENSES: Lens[] = LENSES_RAW.toSorted((a, b) =>
+  a.title.localeCompare(b.title)
+).map((lens, i) => {
+  const slot = SLOTS[i]
+  return slot ? { ...lens, x: slot.x, y: slot.y } : lens
+})
 
 export const LENS_BY_ID: Record<string, Lens> = Object.fromEntries(
   LENSES.map((l) => [l.id, l])

@@ -630,13 +630,19 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* Safety net for very long single-word titles + chaos
-     padding/tracking values: never paint past the card edge.
-     `min-width: 0` lets a flex child shrink below its content
-     width; `overflow-wrap: anywhere` lets the long word ("Probabilistic")
-     break inside the card instead of forcing the parent to widen. */
+  /* Wrap only at whitespace — never split a word across lines,
+     even if `text-wrap: balance` would prefer it. Combined with
+     `balance` above, a naive `break-word` still lets the browser
+     carve "Evolutionary" into "Evolutionar / y" because that
+     produces evener line widths; `normal` takes that option
+     away entirely. `min-width: 0` keeps flex happy. The longest
+     single word in the deck ("Communication") has its own
+     font-size override below, so nothing needs a mid-word break
+     fallback at any supported container width. */
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 /* "Communication" is the longest single-word title in the deck
@@ -2822,11 +2828,11 @@
   }
 }
 
-/* Tempo — the metronome arm swings. */
-:global(svg[data-anim='tempo'] [data-anim-target='1']) {
-  animation: lensTempoSwing 1.6s ease-in-out infinite;
+/* Momentum — the metronome arm swings; motion, once started, keeps going. */
+:global(svg[data-anim='momentum'] [data-anim-target='1']) {
+  animation: lensMomentumSwing 1.6s ease-in-out infinite;
 }
-@keyframes lensTempoSwing {
+@keyframes lensMomentumSwing {
   0%,
   100% {
     transform: rotate(-14deg);

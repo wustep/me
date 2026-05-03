@@ -79,8 +79,8 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
       return <ArtAgency fg={fg} accent={accent} />
     case 'expertise':
       return <ArtExpertise fg={fg} accent={accent} />
-    case 'tempo':
-      return <ArtTempo fg={fg} accent={accent} />
+    case 'momentum':
+      return <ArtMomentum fg={fg} accent={accent} />
     case 'identity':
       return <ArtIdentity fg={fg} accent={accent} />
     case 'lenses-deck':
@@ -1934,15 +1934,16 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Tempo — a metronome. The triangular body sits still; the pendulum
- *  arm swings side to side at a steady cadence. The story: when
- *  matters as much as what.
+/** Momentum — a metronome. The triangular body sits still; the
+ *  pendulum arm swings, carrying its own motion. The story: what&rsquo;s
+ *  already moving keeps moving, and most outcomes are decided by mass
+ *  in flight rather than the best argument in the room.
  *
  *    data-anim-target='1' = the pendulum arm + bob (swings).
  */
-function ArtTempo({ fg, accent }: { fg: string; accent: string }) {
+function ArtMomentum({ fg, accent }: { fg: string; accent: string }) {
   return (
-    <svg {...SVG_BASE} aria-hidden='true' data-anim='tempo'>
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='momentum'>
       {/* The metronome body — a tall isoceles triangle. */}
       <polygon
         points='50,18 28,82 72,82'
