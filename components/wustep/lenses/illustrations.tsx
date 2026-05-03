@@ -470,10 +470,18 @@ function ArtInterface({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Energy — the bolt strobes (charge surging). */
+/** Energy — the charge bar fills and drains, the bolt glows softly.
+ *
+ *   data-anim-target='1' = the yellow fill bar (scales horizontally
+ *     from the battery's negative terminal, like a charge meter
+ *     rising and falling).
+ *   data-anim-target='2' = the lightning bolt (a soft opacity pulse,
+ *     so it reads as ambient current rather than a strobe).
+ */
 function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='energy'>
+      {/* Battery body. */}
       <rect
         x='22'
         y='30'
@@ -485,6 +493,7 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
         strokeWidth='1.6'
         opacity='0.55'
       />
+      {/* Positive terminal nub. */}
       <rect
         x='74'
         y='42'
@@ -494,14 +503,32 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
         fill={fg}
         opacity='0.55'
       />
-      <rect x='26' y='34' width='28' height='32' fill={accent} />
-      <g style={{ transformOrigin: '46px 53px' }} data-anim-target='1'>
-        <polygon
-          points='44,40 36,56 46,56 40,66 56,50 46,50 52,40'
-          fill={fg}
-          opacity='0.85'
-        />
+      {/* Tick marks inside the battery body — fill-level guides that
+          stay visible behind the moving charge bar, so the meter
+          reads as "level rising past these gradations." */}
+      <g stroke={fg} strokeWidth='0.5' opacity='0.18'>
+        <line x1='38' y1='34' x2='38' y2='66' />
+        <line x1='50' y1='34' x2='50' y2='66' />
+        <line x1='62' y1='34' x2='62' y2='66' />
       </g>
+      {/* The yellow fill bar. We anchor scaleX at the left edge of the
+          battery interior so the bar grows toward the positive
+          terminal — like a charging meter — when the keyframe runs. */}
+      <g
+        style={{ transformOrigin: '26px 50px' }}
+        data-anim-target='1'
+      >
+        <rect x='26' y='34' width='44' height='32' rx='1' fill={accent} />
+      </g>
+      {/* Lightning bolt — sits over the fill bar, slightly translucent
+          so the charge level shows through. Animated subtly via
+          opacity, no scale. */}
+      <polygon
+        points='44,40 36,56 46,56 40,66 56,50 46,50 52,40'
+        fill={fg}
+        opacity='0.78'
+        data-anim-target='2'
+      />
     </svg>
   )
 }
@@ -803,19 +830,23 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Center "Lenses" card: three overlapping translucent lens discs.
+/** Center "Lenses" card: three lenses seen edge-on, stacked.
  *
- *   The metaphor leans literal — these are *actual* lenses, the kind
- *   you stack to focus light. Each disc is a saturated primary drawn
- *   from the deck's palette (warm amber, cool teal, magenta-rose).
- *   Where they overlap the colors mix toward white, exactly as
- *   refracted light does, making the central trefoil feel like a
- *   focal point. A subtle alignment grid behind reinforces "optical
- *   instrument," and a bright pinprick at the meeting point says:
- *   this is where the deck converges.
+ *   Side view of three discs of optical glass — the kind you'd pull
+ *   from a kit and place in front of the eye, one at a time. Each
+ *   ellipse is a different lens (amber, teal, rose) drawn slim so
+ *   they read as *the edges* of physical lenses rather than as
+ *   filled circles. A single thin sight-line passes through their
+ *   centers — this is where the metaphor lives: line up three
+ *   lenses on the same axis, look through, and what they reveal
+ *   together is more than any one shows alone.
  *
- *   On hover the three discs slowly drift around the centroid in a
- *   gentle gyre, like aligning lenses snapping into focus.
+ *   Quieter than the previous trefoil. The three colors persist as
+ *   continuity with the deck palette but the composition is just
+ *   three horizontal strokes + a vertical axis — almost diagrammatic.
+ *
+ *   On hover the three lenses drift left/right by a few pixels,
+ *   like an instrument settling into focus.
  */
 function ArtLensesDeck({
   accent,
@@ -829,93 +860,68 @@ function ArtLensesDeck({
   const LENS_TEAL = '#5CB8C8'
   const LENS_ROSE = '#E55A8E'
 
-  const r = 22
-  const discs = [
-    { cx: 50, cy: 36, fill: LENS_AMBER, target: '1' },
-    { cx: 36, cy: 60, fill: LENS_TEAL, target: '2' },
-    { cx: 64, cy: 60, fill: LENS_ROSE, target: '3' }
+  const lenses = [
+    { cy: 28, fill: LENS_AMBER, target: '1' },
+    { cy: 50, fill: LENS_TEAL, target: '2' },
+    { cy: 72, fill: LENS_ROSE, target: '3' }
   ] as const
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='lenses-deck'>
-      {/* Alignment cross — quietly evokes the reticle of an optical
-          instrument without overwhelming the discs. */}
-      <g stroke='currentColor' strokeWidth='0.4' opacity='0.32'>
-        <line x1='10' y1='50' x2='28' y2='50' />
-        <line x1='72' y1='50' x2='90' y2='50' />
-        <line x1='50' y1='10' x2='50' y2='22' />
-        <line x1='50' y1='78' x2='50' y2='90' />
-      </g>
-
-      {/* Outer reticle ring — extra-thin, just enough to read as "tool". */}
-      <circle
-        cx='50'
-        cy='50'
-        r='40'
-        fill='none'
+      {/* The optical axis — a single hairline that all three lenses
+          align to. Reads as "you look down this line." */}
+      <line
+        x1='50'
+        y1='14'
+        x2='50'
+        y2='86'
         stroke='currentColor'
-        strokeWidth='0.3'
-        opacity='0.28'
-        strokeDasharray='1 3'
+        strokeWidth='0.4'
+        opacity='0.22'
       />
 
-      {/* Tick marks on the outer ring — the four cardinal axes only. */}
-      <g stroke='currentColor' strokeWidth='0.6' opacity='0.45'>
-        <line x1='50' y1='8' x2='50' y2='12' />
-        <line x1='50' y1='88' x2='50' y2='92' />
-        <line x1='8' y1='50' x2='12' y2='50' />
-        <line x1='88' y1='50' x2='92' y2='50' />
-      </g>
-
-      {/* Each disc lives in its own <g> so we can drift them
-          independently. The crisp outline ring on each disc reads as
-          "lens" rather than "blob"; the stroke is matched to the fill
-          so it feels like a single object even at small sizes. */}
-      {discs.map((d) => (
+      {/* Each lens is rendered as a thin ellipse (the edge profile of
+          a glass disc) plus two short lines for the meridians, so it
+          reads as a 3D lens rather than a filled oval. */}
+      {lenses.map((l) => (
         <g
-          key={`fill-${d.target}`}
-          style={{ transformOrigin: '50px 52px' }}
-          data-anim-target={d.target}
+          key={`lens-${l.target}`}
+          style={{ transformOrigin: `50px ${l.cy}px` }}
+          data-anim-target={l.target}
         >
-          <circle cx={d.cx} cy={d.cy} r={r} fill={d.fill} opacity='0.82' />
-          <circle
-            cx={d.cx}
-            cy={d.cy}
-            r={r}
-            fill='none'
-            stroke={d.fill}
-            strokeWidth='1'
-            opacity='1'
-          />
-          {/* Inner glint — a tiny offset highlight that gives each disc
-              the luster of polished glass. */}
           <ellipse
-            cx={d.cx - 7}
-            cy={d.cy - 9}
-            rx='5'
-            ry='3'
+            cx='50'
+            cy={l.cy}
+            rx='28'
+            ry='6'
+            fill={l.fill}
+            opacity='0.85'
+          />
+          <ellipse
+            cx='50'
+            cy={l.cy}
+            rx='28'
+            ry='6'
+            fill='none'
+            stroke={l.fill}
+            strokeWidth='0.8'
+          />
+          {/* A tiny inner highlight on the upper edge — pure white at
+              low alpha so it reads as polished glass, not paint. */}
+          <ellipse
+            cx='42'
+            cy={l.cy - 2}
+            rx='6'
+            ry='1.2'
             fill='#FFFFFF'
-            opacity='0.22'
+            opacity='0.32'
           />
         </g>
       ))}
 
-      {/* Focal point: the convergence pinprick where all three lenses
-          meet. The double-circle reads as "this is the focus." */}
-      <circle cx='50' cy='52' r='1.8' fill='currentColor' />
-      <circle
-        cx='50'
-        cy='52'
-        r='5'
-        fill='none'
-        stroke='currentColor'
-        strokeWidth='0.5'
-        opacity='0.6'
-      />
-
-      {/* Suppress 'unused' warnings from the background props — we
-          deliberately don't render bg/accent here, but the prop
-          contract is shared with the regular cards. */}
+      {/* Suppress 'unused' warnings from the bg/accent props — we
+          deliberately don't render them here, but the prop contract
+          is shared with the regular cards. */}
       <rect x='0' y='0' width='0' height='0' fill={bg} />
       <rect x='0' y='0' width='0' height='0' fill={accent} />
     </svg>

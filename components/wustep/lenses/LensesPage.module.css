@@ -1370,17 +1370,25 @@
     40%                { transform: scale(0.95); }
   }
 
-  /* ── Energy: the bolt strobes — sharp on/off flicker mimicking a
-        live current pulsing through the cell. */
-  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target]) {
-    animation: lensCharge 0.9s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  /* ── Energy: the yellow charge bar rises and drains like a live
+        meter; the lightning bolt does a softer ambient pulse on
+        top, so motion reads as "current flowing" with the bolt as
+        the witness rather than the spectacle. */
+  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target='1']) {
+    animation: lensChargeBar 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
   }
-  @keyframes lensCharge {
-    0%, 100% { opacity: 0.55; transform: scale(0.92); }
-    20%      { opacity: 1;    transform: scale(1.18); }
-    35%      { opacity: 0.7;  transform: scale(1);    }
-    55%      { opacity: 1;    transform: scale(1.12); }
-    80%      { opacity: 0.6;  transform: scale(0.96); }
+  .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target='2']) {
+    animation: lensBoltPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes lensChargeBar {
+    0%   { transform: scaleX(0.18); }
+    45%  { transform: scaleX(1);    }
+    55%  { transform: scaleX(1);    }
+    100% { transform: scaleX(0.18); }
+  }
+  @keyframes lensBoltPulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1;    }
   }
 
   /* ── Epistemic pragmatism: the dashed path flows forward
@@ -1475,20 +1483,31 @@
 
   /* ── Center "Lenses" deck: the three discs gyre slowly around the
         centroid, like aligning lenses snapping into focus. */
-  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-    animation: lensGyre 9s ease-in-out infinite;
+  /* Each of the three stacked lenses drifts a few pixels left/right
+        with a staggered offset, like an instrument settling into
+        focus. Slow and asymmetric — never quite repeats. */
+  .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='1']) {
+    animation: lensSettle1 5.4s ease-in-out infinite;
   }
   .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='2']) {
-    animation-delay: -3s;
+    animation: lensSettle2 5.4s ease-in-out infinite;
+    animation-delay: -1.6s;
   }
   .centerCard:hover .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target='3']) {
-    animation-delay: -6s;
+    animation: lensSettle3 5.4s ease-in-out infinite;
+    animation-delay: -3.2s;
   }
-  @keyframes lensGyre {
-    0%, 100% { transform: translate(0, 0); }
-    25%      { transform: translate(2px, -2px); }
-    50%      { transform: translate(0, 0); }
-    75%      { transform: translate(-2px, 2px); }
+  @keyframes lensSettle1 {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(2.5px); }
+  }
+  @keyframes lensSettle2 {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(-2.5px); }
+  }
+  @keyframes lensSettle3 {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(2px); }
   }
 
   /* The card's own scale-up shouldn't override the inner SVG's scale —
