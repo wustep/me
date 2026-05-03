@@ -12,6 +12,12 @@
  *     • Eyebrows / labels                 → --font-geist or --font-sans
  *     • Body essay text + taglines        → --font-serif (Crimson Pro)
  *     • UI chrome                         → --font-sans (Inter)
+ *
+ *   Animation philosophy:
+ *     • Enter/exit transitions use ease-out (responsive feel)
+ *     • Hover/color transitions use ease (gentle)
+ *     • Hover effects gated to (hover: hover) — touch never falsely triggers
+ *     • prefers-reduced-motion disables all animation, no exceptions
  * ========================================================================== */
 
 @property --pan-x {
@@ -26,13 +32,23 @@
   initial-value: 0px;
 }
 
-/* Shared focus ring */
+/* Reusable easing — kept narrow so we can tune timing globally. */
+.frame {
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-spring-soft: cubic-bezier(0.34, 1.4, 0.4, 1);
+  --ease-spring-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Shared focus ring — Emil rule: stick to grey/black/white outlines,
+   never custom colors. Outline lives on a fixed scale so the same
+   value applies everywhere a focusable element exists. */
 .frame button:focus-visible,
 .frame a:focus-visible,
 .panel button:focus-visible,
 .panel a:focus-visible,
 .dialog button:focus-visible {
-  outline: 2px solid #1A1A1A;
+  outline: 2px solid #1a1a1a;
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -42,7 +58,7 @@
 :global(.dark-mode) .panel button:focus-visible,
 :global(.dark-mode) .panel a:focus-visible,
 :global(.dark-mode) .dialog button:focus-visible {
-  outline-color: #F5F1E8;
+  outline-color: #f5f1e8;
 }
 
 /* ===== Frame ===== */
@@ -52,16 +68,19 @@
   min-height: 100vh;
   height: 100vh;
   overflow: hidden;
-  background: #F1ECDF;
-  color: #1A1A1A;
+  background: #f1ecdf;
+  color: #1a1a1a;
   font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
   display: flex;
   flex-direction: column;
+  /* Treat the whole canvas as a custom interaction zone — disables
+     iOS double-tap zoom on cards/buttons inside. */
+  touch-action: manipulation;
 }
 
 :global(.dark-mode) .frame {
-  background: #18181B;
-  color: #F5F1E8;
+  background: #18181b;
+  color: #f5f1e8;
 }
 
 /* When embedded inside another chrome (e.g. PlaygroundLayout) the parent
@@ -82,7 +101,8 @@
   left: 0;
   right: 0;
   z-index: 10;
-  padding: 18px 22px 0;
+  /* Account for iOS notch / Android cutouts. */
+  padding: max(18px, env(safe-area-inset-top)) 22px 0;
 }
 
 .headerInner {
@@ -93,6 +113,7 @@
 }
 
 .homeBackButton {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,8 +128,21 @@
   transition: opacity 200ms ease;
 }
 
-.homeBackButton:hover {
-  opacity: 1;
+/* 44px hit area — visual size stays 36px for visual rhythm. */
+.homeBackButton::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .homeBackButton:hover {
+    opacity: 1;
+  }
+
+  .homeBackButton:hover .homeBackArrow {
+    transform: translateX(-2px);
+  }
 }
 
 .homeBackArrow {
@@ -116,11 +150,7 @@
   font-size: 1.2em;
   line-height: 1;
   transform: translateX(2px);
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.homeBackButton:hover .homeBackArrow {
-  transform: translateX(-2px);
+  transition: transform 200ms var(--ease-spring-snap);
 }
 
 .headerRhs {
@@ -130,6 +160,7 @@
 }
 
 .headerButton {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -144,12 +175,22 @@
   transition:
     background 200ms ease,
     border-color 200ms ease,
-    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 150ms var(--ease-spring-snap);
 }
 
-.headerButton:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.22);
+/* 44px hit area via pseudo-element — visual size stays 34px. */
+.headerButton::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .headerButton:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.22);
+  }
 }
 
 .headerButton:active {
@@ -161,9 +202,11 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-:global(.dark-mode) .headerButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.32);
+@media (hover: hover) and (pointer: fine) {
+  :global(.dark-mode) .headerButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.32);
+  }
 }
 
 .headerButton :global(svg) {
@@ -179,7 +222,7 @@
   width: 100%;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: opacity 700ms var(--ease-out-quint);
 }
 
 .canvasVisible {
@@ -193,15 +236,21 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  user-select: none;
 }
 
 .bgGrid {
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1.5px);
+  background-image: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.07) 1px,
+    transparent 1.5px
+  );
   background-size: 32px 32px;
   background-position: 0 0;
+  /* Fade toward the corners using a mask (more flexible than a
+     gradient and works against varying dark-mode bg). */
   mask-image: radial-gradient(
     ellipse at center,
     rgba(0, 0, 0, 0.85) 0%,
@@ -215,8 +264,11 @@
 }
 
 :global(.dark-mode) .bgGrid {
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1.5px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1.5px
+  );
 }
 
 /* ===== Cards container =====
@@ -224,7 +276,11 @@
    by % (anchored at center). It receives the mouse-driven pan transform
    so cards near the edges peek in/out as the user moves the cursor.
    The translation is smoothed via a transition; we don't constantly
-   re-render — only when the React `pan` state changes. */
+   re-render — only when the React `pan` state changes.
+
+   `will-change: transform` only kicks in while the user is actively
+   panning (`.cardsPanning`). Leaving it on permanently bloats the
+   compositor on a static page. */
 
 .cards {
   --pan-x: 0px;
@@ -234,20 +290,23 @@
   inset: 0;
   z-index: 2;
   transform: translate3d(var(--pan-x), var(--pan-y), 0);
-  transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 380ms var(--ease-out-quart);
+}
+
+.cardsPanning {
   will-change: transform;
 }
 
 /* ===== Lens card =====
    All cards uniform — same size, no rotation, anchored to a virtual
    grid via (left%, top%). The hover state is intentionally prominent:
-   ~13% scale-up, 16px lift, and a colored ring matching the card's
+   ~13% scale-up, 14px lift, and a colored ring matching the card's
    accent. */
 
 .card {
-  --card-bg: #1F2A5C;
-  --card-fg: #F5F1E8;
-  --card-accent: #F2C04A;
+  --card-bg: #1f2a5c;
+  --card-fg: #f5f1e8;
+  --card-accent: #f2c04a;
 
   position: absolute;
   /* Anchor center of card to (left%, top%) of `.cards`. */
@@ -270,8 +329,8 @@
   font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
   opacity: 0;
   transition:
-    opacity 600ms cubic-bezier(0.32, 0.72, 0, 1),
-    transform 320ms cubic-bezier(0.34, 1.4, 0.4, 1),
+    opacity 600ms var(--ease-out-quint),
+    transform 320ms var(--ease-spring-soft),
     box-shadow 280ms ease;
   will-change: transform, opacity;
 }
@@ -281,7 +340,7 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
     transform: translate(-50%, calc(-50% - 14px)) scale(1.13);
     box-shadow:
@@ -291,6 +350,10 @@
       0 0 0 3px var(--card-accent),
       0 0 36px -4px var(--card-accent);
     z-index: 5;
+  }
+
+  .card:hover .cardArt :global(svg) {
+    transform: scale(1.06);
   }
 }
 
@@ -312,13 +375,7 @@
   width: 92%;
   height: 92%;
   max-height: 100%;
-  transition: transform 320ms cubic-bezier(0.34, 1.4, 0.4, 1);
-}
-
-@media (hover: hover) {
-  .card:hover .cardArt :global(svg) {
-    transform: scale(1.06);
-  }
+  transition: transform 320ms var(--ease-spring-soft);
 }
 
 .cardTitle {
@@ -327,24 +384,24 @@
   font-weight: 700;
   letter-spacing: -0.012em;
   line-height: 1.18;
+  /* Prevent awkward single-word last lines on long titles. */
+  text-wrap: balance;
   color: var(--card-fg);
   flex: 0 0 auto;
 }
 
-/* ===== Center "Lenses" card — sized larger (~2× regular card), focal point ===== */
+/* ===== Center "Lenses" card — sized larger (~1.35×), focal point ===== */
 
 .centerCard {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-  /* Roughly 1.35× a regular card's width — clearly the focal point but
-     not so big it dwarfs the deck. Same 5:7 aspect for unity. */
   width: clamp(180px, 17vw, 220px);
   aspect-ratio: 5 / 7;
   padding: 16px 18px 20px;
-  background: #0E0E10;
-  color: #F5F1E8;
+  background: #0e0e10;
+  color: #f5f1e8;
   border: none;
   border-radius: 18px;
   box-shadow:
@@ -359,15 +416,15 @@
   opacity: 0;
   z-index: 3;
   transition:
-    opacity 700ms cubic-bezier(0.32, 0.72, 0, 1),
-    transform 380ms cubic-bezier(0.34, 1.4, 0.4, 1),
+    opacity 700ms var(--ease-out-quint),
+    transform 380ms var(--ease-spring-soft),
     box-shadow 280ms ease;
   will-change: transform, opacity;
 }
 
 :global(.dark-mode) .centerCard {
-  background: #F5F1E8;
-  color: #0E0E10;
+  background: #f5f1e8;
+  color: #0e0e10;
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.4),
     0 18px 36px -10px rgba(0, 0, 0, 0.6),
@@ -379,14 +436,14 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .centerCard:hover {
     transform: translate(-50%, calc(-50% - 14px)) scale(1.06);
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.12),
       0 28px 56px -12px rgba(0, 0, 0, 0.5),
       0 60px 120px -20px rgba(0, 0, 0, 0.7),
-      0 0 0 3px #F2C04A,
+      0 0 0 3px #f2c04a,
       0 0 48px -4px rgba(242, 192, 74, 0.6);
     z-index: 6;
   }
@@ -396,7 +453,7 @@
       0 1px 2px rgba(0, 0, 0, 0.4),
       0 28px 56px -12px rgba(0, 0, 0, 0.65),
       0 60px 120px -20px rgba(0, 0, 0, 0.85),
-      0 0 0 3px #C8552B,
+      0 0 0 3px #c8552b,
       0 0 48px -4px rgba(200, 85, 43, 0.6);
   }
 }
@@ -412,11 +469,14 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.12;
+  text-wrap: balance;
   flex: 0 0 auto;
 }
 
 /* ===== Side panel ===== */
 
+/* Overlay + panel are paired — they share opacity timing so the fade
+   feels like a single object opening, not two layers racing. */
 .panelOverlay {
   position: fixed;
   inset: 0;
@@ -427,46 +487,46 @@
 }
 
 .panelOverlay[data-state='open'] {
-  animation: fadeIn 220ms ease-out;
+  animation: fadeIn 340ms var(--ease-out-quart);
 }
 
 .panelOverlay[data-state='closed'] {
-  animation: fadeOut 200ms ease-out;
+  animation: fadeOut 280ms var(--ease-out-quart);
 }
 
 .panel {
-  --panel-bg: #1F2A5C;
-  --panel-fg: #F5F1E8;
-  --panel-accent: #F2C04A;
+  --panel-bg: #1f2a5c;
+  --panel-fg: #f5f1e8;
+  --panel-accent: #f2c04a;
 
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   width: min(480px, 100vw);
-  background: #FAF7EE;
+  background: #faf7ee;
   display: flex;
   flex-direction: column;
   z-index: 60;
   outline: none;
   font-family: var(--font-sans, system-ui, sans-serif);
-  color: #1A1A1A;
+  color: #1a1a1a;
   box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.25);
-  transition: background 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: background 320ms var(--ease-out-quart);
 }
 
 :global(.dark-mode) .panel {
-  background: #1C1D1F;
-  color: #F5F1E8;
+  background: #1c1d1f;
+  color: #f5f1e8;
   box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.7);
 }
 
 .panel[data-state='open'] {
-  animation: slideInRight 340ms cubic-bezier(0.32, 0.72, 0, 1);
+  animation: slideInRight 340ms var(--ease-out-quart);
 }
 
 .panel[data-state='closed'] {
-  animation: slideOutRight 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  animation: slideOutRight 280ms var(--ease-out-quart);
 }
 
 /* The hero is the colored top zone — uses panel's bg/fg/accent vars. */
@@ -480,8 +540,8 @@
   gap: 16px;
   flex: 0 0 auto;
   transition:
-    background 280ms cubic-bezier(0.32, 0.72, 0, 1),
-    color 280ms cubic-bezier(0.32, 0.72, 0, 1);
+    background 280ms var(--ease-out-quart),
+    color 280ms var(--ease-out-quart);
 }
 
 .panelArt {
@@ -489,6 +549,7 @@
   width: 110px;
   height: 110px;
   align-self: flex-start;
+  user-select: none;
 }
 
 .panelArt :global(svg) {
@@ -519,6 +580,7 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.08;
+  text-wrap: balance;
   margin: 0;
   color: var(--panel-fg);
 }
@@ -528,6 +590,7 @@
   margin: 6px 0 0;
   font-size: 1.05rem;
   line-height: 1.45;
+  text-wrap: pretty;
   font-style: italic;
   color: var(--panel-fg);
   opacity: 0.85;
@@ -550,11 +613,21 @@
   border-radius: 999px;
   transition:
     background 200ms ease,
-    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 150ms var(--ease-spring-snap);
 }
 
-.panelClose:hover {
-  background: rgba(255, 255, 255, 0.24);
+/* 44px hit area via pseudo-element so visual size stays 32px. */
+.panelClose::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .panelClose:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
 }
 
 .panelClose:active {
@@ -569,11 +642,12 @@
   font-size: 1.08rem;
   line-height: 1.6;
   font-weight: 400;
-  animation: bodyFade 220ms ease-out;
+  animation: bodyFade 220ms var(--ease-out-quart);
 }
 
 .panelBody p {
   margin: 0 0 1em;
+  text-wrap: pretty;
 }
 
 .panelBody p:last-child {
@@ -587,7 +661,7 @@
 .panelBody em {
   font-style: italic;
   font-weight: 600;
-  color: #0E0E10;
+  color: #0e0e10;
   /* Subtle hairline underline in the lens accent — keeps personality
      without sacrificing contrast. */
   background-image: linear-gradient(
@@ -600,7 +674,7 @@
 }
 
 :global(.dark-mode) .panelBody em {
-  color: #F8F4E8;
+  color: #f8f4e8;
   background-image: linear-gradient(
     to bottom,
     transparent calc(100% - 2px),
@@ -637,13 +711,15 @@
 }
 
 .relatedChip {
-  --chip-bg: #1F2A5C;
-  --chip-fg: #F5F1E8;
+  --chip-bg: #1f2a5c;
+  --chip-fg: #f5f1e8;
 
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 12px 7px 9px;
+  /* Larger pad → 36px tall visual, 44px+ tap target with pseudo-element. */
+  padding: 9px 12px 9px 9px;
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 999px;
@@ -655,7 +731,14 @@
   transition:
     background 180ms ease,
     border-color 180ms ease,
-    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 150ms var(--ease-spring-snap);
+}
+
+.relatedChip::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
 }
 
 :global(.dark-mode) .relatedChip {
@@ -663,14 +746,21 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-.relatedChip:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.2);
-}
+@media (hover: hover) and (pointer: fine) {
+  .relatedChip:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
 
-:global(.dark-mode) .relatedChip:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.24);
+  :global(.dark-mode) .relatedChip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.24);
+  }
+
+  .relatedChip:hover .relatedChipArrow {
+    transform: translateX(2px);
+    opacity: 1;
+  }
 }
 
 .relatedChip:active {
@@ -687,16 +777,13 @@
 
 .relatedChipArrow {
   opacity: 0.5;
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.relatedChip:hover .relatedChipArrow {
-  transform: translateX(2px);
-  opacity: 1;
+  transition: transform 200ms var(--ease-spring-snap);
 }
 
 /* ===== Center dialog (the "Lenses" index) ===== */
 
+/* Overlay + dialog are paired — same easing on opacity / scale so the
+   transition feels like one object emerging. */
 .dialogOverlay {
   position: fixed;
   inset: 0;
@@ -707,11 +794,11 @@
 }
 
 .dialogOverlay[data-state='open'] {
-  animation: fadeIn 240ms ease-out;
+  animation: fadeIn 280ms var(--ease-out-quart);
 }
 
 .dialogOverlay[data-state='closed'] {
-  animation: fadeOut 200ms ease-out;
+  animation: fadeOut 200ms var(--ease-out-quart);
 }
 
 .dialog {
@@ -721,7 +808,7 @@
   transform: translate(-50%, -50%);
   width: min(760px, calc(100vw - 32px));
   max-height: calc(100vh - 64px);
-  background: #FAF7EE;
+  background: #faf7ee;
   border-radius: 18px;
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.1),
@@ -730,25 +817,25 @@
   outline: none;
   overflow: hidden;
   font-family: var(--font-sans, system-ui, sans-serif);
-  color: #1A1A1A;
+  color: #1a1a1a;
   display: flex;
   flex-direction: column;
 }
 
 :global(.dark-mode) .dialog {
-  background: #1C1D1F;
-  color: #F5F1E8;
+  background: #1c1d1f;
+  color: #f5f1e8;
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.4),
     0 30px 80px -20px rgba(0, 0, 0, 0.7);
 }
 
 .dialog[data-state='open'] {
-  animation: scaleIn 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  animation: scaleIn 280ms var(--ease-out-quart);
 }
 
 .dialog[data-state='closed'] {
-  animation: scaleOut 200ms cubic-bezier(0.32, 0.72, 0, 1);
+  animation: scaleOut 200ms var(--ease-out-quart);
 }
 
 .dialogInner {
@@ -774,6 +861,7 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.05;
+  text-wrap: balance;
   margin: 0 0 18px;
 }
 
@@ -788,6 +876,7 @@
 
 .dialogIntro p {
   margin: 0 0 0.8em;
+  text-wrap: pretty;
 }
 
 .dialogIntro p:last-child {
@@ -815,9 +904,9 @@
 }
 
 .dialogJumpBtn {
-  --jump-bg: #1F2A5C;
-  --jump-fg: #F5F1E8;
-  --jump-accent: #F2C04A;
+  --jump-bg: #1f2a5c;
+  --jump-fg: #f5f1e8;
+  --jump-accent: #f2c04a;
 
   width: 100%;
   display: grid;
@@ -835,7 +924,7 @@
   transition:
     background 220ms ease,
     border-color 220ms ease,
-    transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 160ms var(--ease-spring-snap);
 }
 
 :global(.dark-mode) .dialogJumpBtn {
@@ -843,14 +932,21 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dialogJumpBtn:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.14);
-}
+@media (hover: hover) and (pointer: fine) {
+  .dialogJumpBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.14);
+  }
 
-:global(.dark-mode) .dialogJumpBtn:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.18);
+  :global(.dark-mode) .dialogJumpBtn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .dialogJumpBtn:hover .dialogJumpArrow {
+    transform: translateX(3px);
+    opacity: 1;
+  }
 }
 
 .dialogJumpBtn:active {
@@ -866,6 +962,7 @@
   color: var(--jump-fg);
   padding: 6px;
   flex: 0 0 auto;
+  user-select: none;
 }
 
 .dialogJumpArt :global(svg) {
@@ -896,6 +993,7 @@
   font-weight: 700;
   letter-spacing: -0.012em;
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .dialogJumpTagline {
@@ -904,18 +1002,14 @@
   font-style: italic;
   opacity: 0.7;
   line-height: 1.4;
+  text-wrap: pretty;
   margin-top: 2px;
 }
 
 .dialogJumpArrow {
   font-size: 1.1rem;
   opacity: 0.4;
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.dialogJumpBtn:hover .dialogJumpArrow {
-  transform: translateX(3px);
-  opacity: 1;
+  transition: transform 200ms var(--ease-spring-snap);
 }
 
 .dialogCloseBtn {
@@ -934,19 +1028,29 @@
   border-radius: 999px;
   transition:
     background 200ms ease,
-    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 150ms var(--ease-spring-snap);
 }
 
-.dialogCloseBtn:hover {
-  background: rgba(0, 0, 0, 0.1);
+/* 44px hit area, visual stays 32px. */
+.dialogCloseBtn::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dialogCloseBtn:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.dark-mode) .dialogCloseBtn:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
 }
 
 :global(.dark-mode) .dialogCloseBtn {
   background: rgba(255, 255, 255, 0.06);
-}
-
-:global(.dark-mode) .dialogCloseBtn:hover {
-  background: rgba(255, 255, 255, 0.14);
 }
 
 .dialogCloseBtn:active {
@@ -1024,19 +1128,44 @@
   }
 }
 
-/* ===== Reduced motion ===== */
+/* ===== Reduced motion =====
+   Per Emil: every animation needs its own reduced-motion fallback.
+   We disable both `animation` and `transition` on every animated
+   surface so the page snaps to its end state with zero motion. */
 
 @media (prefers-reduced-motion: reduce) {
   .canvas,
+  .cards,
   .card,
+  .cardArt :global(svg),
   .centerCard,
   .panel,
-  .dialog,
+  .panelHero,
+  .panelBody,
   .panelOverlay,
+  .panelClose,
+  .dialog,
   .dialogOverlay,
-  .panelBody {
+  .dialogJumpBtn,
+  .dialogJumpArrow,
+  .dialogCloseBtn,
+  .relatedChip,
+  .relatedChipArrow,
+  .headerButton,
+  .homeBackButton,
+  .homeBackArrow {
     animation: none !important;
     transition: none !important;
+  }
+
+  /* Hover transforms also off — otherwise the page still moves on
+     pointer events even when the user asked for stillness. */
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover,
+    .centerCard:hover,
+    .card:hover .cardArt :global(svg) {
+      transform: translate(-50%, -50%) scale(1) !important;
+    }
   }
 }
 
@@ -1050,7 +1179,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    padding: 76px 14px 32px;
+    padding: 76px 14px max(32px, env(safe-area-inset-bottom));
     align-content: flex-start;
     overflow-y: auto;
     height: 100%;

@@ -3,10 +3,9 @@ import * as React from 'react'
 
 import { CloseIcon } from './icons'
 import { Illustration } from './illustrations'
+import styles from './LensesPage.module.css'
 import { LENS_BY_ID } from './registry'
 import { type Lens } from './types'
-
-import styles from './LensesPage.module.css'
 
 /**
  * SidePanel — slide-in detail view for a single lens.

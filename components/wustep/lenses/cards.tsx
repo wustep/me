@@ -1,32 +1,49 @@
 import * as React from 'react'
 
 import { Illustration } from './illustrations'
-import { TIMING, type Lens } from './types'
-
 import styles from './LensesPage.module.css'
+import { GRID, type Lens, STAGE, type Stage,TIMING } from './types'
 
-/**
- * LensCard — a single lens card on the canvas.
+/* ─────────────────────────────────────────────────────────
+ * Cards — staggered entrance after the center card lands.
  *
- *   Position is read from the lens (`x`, `y` as viewport-percent).
- *   Entrance is staggered by row then column so the reveal sweeps
- *   roughly top-to-bottom, left-to-right after the center card lands.
- */
+ *   Each lens card snaps to a (rowIndex, colIndex) on a 4×6 grid
+ *   inferred from its (x, y) position via GRID.rowAnchors /
+ *   GRID.colAnchors. We then apply a transition-delay sized like:
+ *
+ *     delay = TIMING.cardsInBase
+ *           + rowIndex * TIMING.rowStaggerMs
+ *           + colIndex * TIMING.colStaggerMs
+ *
+ *   This gives a soft top-to-bottom, left-to-right reveal that
+ *   completes in ~640ms after the center card finishes.
+ * ───────────────────────────────────────────────────────── */
+
+function indexOfClosest(value: number, anchors: readonly number[]) {
+  let bestIndex = 0
+  let bestDelta = Infinity
+  for (const [i, anchor] of anchors.entries()) {
+    const delta = Math.abs(value - anchor!)
+    if (delta < bestDelta) {
+      bestDelta = delta
+      bestIndex = i
+    }
+  }
+  return bestIndex
+}
 
 type LensCardProps = {
   lens: Lens
-  index: number
-  visible: boolean
+  stage: Stage
   onOpen: () => void
 }
 
-export function LensCard({ lens, index, visible, onOpen }: LensCardProps) {
-  // Stagger entrance by row (y) then column (x). Cards in the same row
-  // come in within ~60ms; rows are ~110ms apart. The whole reveal
-  // wraps in roughly 500ms after `cardsIn`.
-  const rowIndex = Math.round(lens.y / 28) // 0..3 across rows at y=8,36,64,92
-  const colIndex = Math.round((lens.x - 3) / 19) // 0..5 across cols at x=3,22,41,59,78,97
-  const delay = TIMING.cardsIn + rowIndex * 110 + colIndex * 25 + (index % 3) * 8
+export function LensCard({ lens, stage, onOpen }: LensCardProps) {
+  const visible = stage >= STAGE.cards
+  const rowIndex = indexOfClosest(lens.y, GRID.rowAnchors)
+  const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
+  const delay =
+    rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
 
   const style: React.CSSProperties = {
     left: `${lens.x}%`,
@@ -59,23 +76,20 @@ export function LensCard({ lens, index, visible, onOpen }: LensCardProps) {
 }
 
 type CenterCardProps = {
-  visible: boolean
+  stage: Stage
   onOpen: () => void
 }
 
 /**
  * CenterCard — the larger "Lenses" card that opens the index dialog.
  */
-export function CenterCard({ visible, onOpen }: CenterCardProps) {
-  const style: React.CSSProperties = {
-    transitionDelay: visible ? `${TIMING.centerIn}ms` : '0ms'
-  }
+export function CenterCard({ stage, onOpen }: CenterCardProps) {
+  const visible = stage >= STAGE.center
 
   return (
     <button
       type='button'
       className={`${styles.centerCard} ${visible ? styles.centerCardVisible : ''}`}
-      style={style}
       onClick={onOpen}
       aria-label='Open: Lenses index'
     >

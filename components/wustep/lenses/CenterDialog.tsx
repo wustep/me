@@ -3,9 +3,8 @@ import * as React from 'react'
 
 import { CloseIcon } from './icons'
 import { Illustration } from './illustrations'
-import { LENSES } from './registry'
-
 import styles from './LensesPage.module.css'
+import { LENSES } from './registry'
 
 /**
  * CenterDialog — the central "Lenses" index. Presents the philosophy

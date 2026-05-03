@@ -1,20 +1,53 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 /* ─────────────────────────────────────────────────────────
- * Animation storyboard
+ * ANIMATION STORYBOARD — Lenses
  *
- *    0ms   canvas fades in
- *  120ms   center "Lenses" card scales 0.9 → 1
- *  220ms   surrounding lens cards stagger in (35ms apart)
+ * Read top-to-bottom. Each `at` is ms after the page mounts.
  *
- *  Side panel: slides in from right, 340ms
- *  Center dialog: scale 0.96 → 1 + fade, 280ms
- *  In-panel lens swap: cross-fade body 220ms; hero color 280ms
+ *    0ms   waiting for mount
+ *   60ms   canvas fades in (opacity 0 → 1)
+ *  180ms   center "Lenses" card scales 0.9 → 1 (ease-spring)
+ *  280ms   surrounding cards begin staggering in:
+ *            • by row (top → bottom), 90ms per row
+ *            • inside each row, 22ms per column
+ *            • full reveal wraps in ~640ms
+ *
+ * ── User interactions ─────────────────────────────────────
+ *  hover card        scale 0.92 → 1.13, lift 14px, accent ring
+ *  click center      open index dialog (scale 0.96 → 1, 280ms)
+ *  click side card   open side panel (slide from right, 340ms)
+ *  swap inside panel cross-fade body 220ms; hero color 280ms
+ *
+ * All timings live in TIMING and DURATION below — no magic
+ * numbers in JSX or component bodies.
  * ───────────────────────────────────────────────────────── */
 export const TIMING = {
-  centerIn: 120,
-  cardsIn: 220
-}
+  canvasIn: 60,
+  centerIn: 180,
+  cardsInBase: 280,
+  rowStaggerMs: 90,
+  colStaggerMs: 22
+} as const
+
+export const DURATION = {
+  canvasFade: 700,
+  cardEntrance: 600,
+  cardTransform: 320,
+  panelSlide: 340,
+  panelFade: 200,
+  dialogScale: 280,
+  bodyFade: 220
+} as const
+
+/** Spatial constants that the canvas uses to stagger cards by row+col.
+ *  Cards' `y` values come from a 4-row grid at 8/36/64/92, and `x` from
+ *  a 6-column grid at 3/22/41/59/78/97. We compute row/col indices from
+ *  these so a designer can tweak positions without rewriting math. */
+export const GRID = {
+  rowAnchors: [8, 36, 64, 92],
+  colAnchors: [3, 22, 41, 59, 78, 97]
+} as const
 
 export type IllustrationId =
   | 'great-man'
@@ -58,3 +91,15 @@ export type Lens = {
 export type LensesPageProps = {
   embedded?: boolean
 }
+
+/** Animation stage. A single integer drives the whole entrance — no
+ *  scattered booleans. Components check `stage >= N` so stages are
+ *  additive. */
+export const STAGE = {
+  hidden: 0,
+  canvas: 1,
+  center: 2,
+  cards: 3
+} as const
+
+export type Stage = (typeof STAGE)[keyof typeof STAGE]
