@@ -27,8 +27,8 @@ type IllustrationProps = {
 
 export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
   switch (id) {
-    case 'great-man':
-      return <ArtGreatMan fg={fg} accent={accent} />
+    case 'second-order':
+      return <ArtSecondOrder fg={fg} accent={accent} />
     case 'evo-psych':
       return <ArtEvoPsych fg={fg} accent={accent} />
     case 'minimalism':
@@ -94,16 +94,60 @@ const SVG_BASE: React.SVGProps<SVGSVGElement> = {
   xmlns: 'http://www.w3.org/2000/svg'
 }
 
-/** Great Man — the leader's bar + dot. On hover the dot bobs and pulses. */
-function ArtGreatMan({ fg, accent }: { fg: string; accent: string }) {
+/** Second-order effects — a stone dropped in still water sends rings
+ *  outward, and the rings grow bigger as they travel. The accent dot
+ *  at center is the direct action; the three concentric rings are
+ *  the cascading consequences. The story: the thing you dropped in
+ *  is never the thing that actually moves the surface — the rings are.
+ *
+ *    data-anim-target='1','2','3' = the three rings, each expanding
+ *    and fading on its own staggered timing so you read an ongoing
+ *    emission rather than a single pulse.
+ */
+function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
   return (
-    <svg {...SVG_BASE} aria-hidden='true' data-anim='great-man'>
-      <rect x='14' y='62' width='12' height='22' fill={fg} opacity='0.5' />
-      <rect x='30' y='52' width='12' height='32' fill={fg} opacity='0.5' />
-      <rect x='46' y='28' width='12' height='56' fill={accent} />
-      <circle cx='52' cy='20' r='6' fill={accent} data-anim-target='1' />
-      <rect x='62' y='44' width='12' height='40' fill={fg} opacity='0.5' />
-      <rect x='78' y='58' width='12' height='26' fill={fg} opacity='0.5' />
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='second-order'>
+      {/* Centered solid dot: the triggering action. */}
+      <circle cx='50' cy='50' r='4' fill={accent} />
+
+      {/* Three concentric rings. Start radii are tight around the
+          center; the keyframes scale them outward and fade them off,
+          staggered so the rings continuously emit. Drawn with the
+          foreground stroke at decreasing opacity for depth — the
+          outermost ring is the faintest, like a real water surface. */}
+      <circle
+        cx='50'
+        cy='50'
+        r='10'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.6'
+        opacity='0.85'
+        data-anim-target='1'
+        style={{ transformOrigin: '50px 50px' }}
+      />
+      <circle
+        cx='50'
+        cy='50'
+        r='10'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.4'
+        opacity='0.6'
+        data-anim-target='2'
+        style={{ transformOrigin: '50px 50px' }}
+      />
+      <circle
+        cx='50'
+        cy='50'
+        r='10'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.2'
+        opacity='0.4'
+        data-anim-target='3'
+        style={{ transformOrigin: '50px 50px' }}
+      />
     </svg>
   )
 }

@@ -45,8 +45,7 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
   const visible = stage >= STAGE.cards
   const rowIndex = indexOfClosest(lens.y, GRID.rowAnchors)
   const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
-  const delay =
-    rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
+  const delay = rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
 
   const style: React.CSSProperties = {
     // CSS grid is 1-indexed for grid-column/grid-row.
@@ -136,9 +135,9 @@ export function CenterCard({ stage, onOpen }: CenterCardProps) {
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
           id='lenses-deck'
-          fg='#F5EFE0'
-          bg='#0E0E10'
-          accent='#E8A547'
+          fg='#EDE4D1'
+          bg='#1A1F2A'
+          accent='#C99E5B'
         />
       </span>
       <span className={styles.centerCardTextWrap}>

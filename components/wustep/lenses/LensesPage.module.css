@@ -417,8 +417,7 @@
      panel only — at defaults this is the identity filter. */
   filter: saturate(var(--design-card-saturation, 1))
     hue-rotate(var(--design-card-hue, 0deg))
-    contrast(var(--design-card-contrast, 1))
-    grayscale(var(--design-mono, 0));
+    contrast(var(--design-card-contrast, 1)) grayscale(var(--design-mono, 0));
   /* Optional border that animates in from 0 — using the inset
      box-shadow channel below would conflict with the inner
      stroke; we use a separate outline instead. */
@@ -436,8 +435,10 @@
      immediately, then settles back calmly when you leave. */
   transition:
     opacity 600ms var(--ease-out-quint),
-    transform var(--design-hover-out, 180ms) var(--design-ease, var(--ease-out-snap)),
-    box-shadow var(--design-hover-out, 180ms) var(--design-ease, var(--ease-out-snap));
+    transform var(--design-hover-out, 180ms)
+      var(--design-ease, var(--ease-out-snap)),
+    box-shadow var(--design-hover-out, 180ms)
+      var(--design-ease, var(--ease-out-snap));
 }
 
 /* Cast-shadow layer. Opacity 0 at rest, 1 when lifted. */
@@ -529,10 +530,14 @@
   opacity: 0.42;
   transition:
     opacity 220ms var(--ease-out-quart),
-    transform var(--design-hover-out, 180ms) var(--design-ease, var(--ease-out-snap)),
-    box-shadow var(--design-hover-out, 180ms) var(--design-ease, var(--ease-out-snap));
+    transform var(--design-hover-out, 180ms)
+      var(--design-ease, var(--ease-out-snap)),
+    box-shadow var(--design-hover-out, 180ms)
+      var(--design-ease, var(--ease-out-snap));
 }
-:global(html[data-design-selection='spotlight']) .cards:has(.cardSelected) .centerCard {
+:global(html[data-design-selection='spotlight'])
+  .cards:has(.cardSelected)
+  .centerCard {
   opacity: 0.42;
   transition: opacity 220ms var(--ease-out-quart);
 }
@@ -757,8 +762,7 @@
      the focal card too. */
   filter: saturate(var(--design-card-saturation, 1))
     hue-rotate(var(--design-card-hue, 0deg))
-    contrast(var(--design-card-contrast, 1))
-    grayscale(var(--design-mono, 0));
+    contrast(var(--design-card-contrast, 1)) grayscale(var(--design-mono, 0));
   /* Sits one stacking layer above regular cards by default so it
      reads as the focal card of the deck. Hover bumps it higher
      still. */
@@ -780,8 +784,8 @@
       rgba(0, 0, 0, 0) 70%,
       rgba(0, 0, 0, 0.18) 100%
     ),
-    #0e0e10;
-  color: #f5f1e8;
+    #1a1f2a;
+  color: #ede4d1;
   border: none;
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
@@ -845,8 +849,8 @@
       rgba(0, 0, 0, 0) 72%,
       rgba(0, 0, 0, 0.08) 100%
     ),
-    #f5f1e8;
-  color: #0e0e10;
+    #ede4d1;
+  color: #1a1f2a;
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.6) inset,
@@ -1196,7 +1200,9 @@
        line wraps cleanly past the cap rather than half-covering it.
      • padding-top: 0.06em nudges down very slightly so heavy serifs
        (Georgia 'A') don't poke above the body's cap height. */
-:global(html[data-design-dropcap='on']) .panelBody p:first-of-type::first-letter {
+:global(html[data-design-dropcap='on'])
+  .panelBody
+  p:first-of-type::first-letter {
   font-family: var(--design-serif, var(--font-serif, Georgia, serif));
   /* Sized so the cap-height ≈ 2 body line-heights: with body
      line-height around 1.55, font-size 4.3em × line-height 0.78
@@ -1871,20 +1877,31 @@
       then flip it back to `running` in the three contexts at the
       very bottom of this section. */
 
-/* Great Man — the leader's head bobs and the dot pulses. */
-:global(svg[data-anim='great-man'] [data-anim-target]) {
-  animation: lensGreatMan 1.8s ease-in-out infinite;
-  transform-origin: 52px 20px;
+/* Second-order effects — concentric rings expand outward from the
+   center dot and fade as they grow, staggered so the emission reads
+   as ongoing rather than a single pulse. Each ring runs the same
+   keyframe with a different `animation-delay`, approximating a
+   dropped-stone ripple on water. */
+:global(svg[data-anim='second-order'] [data-anim-target]) {
+  animation: lensSecondOrderRipple 2.4s ease-out infinite;
 }
-@keyframes lensGreatMan {
-  0%,
-  100% {
-    transform: translateY(0);
+:global(svg[data-anim='second-order'] [data-anim-target='2']) {
+  animation-delay: 0.8s;
+}
+:global(svg[data-anim='second-order'] [data-anim-target='3']) {
+  animation-delay: 1.6s;
+}
+@keyframes lensSecondOrderRipple {
+  0% {
+    transform: scale(0.35);
+    opacity: 0;
+  }
+  15% {
     opacity: 1;
   }
-  50% {
-    transform: translateY(-3px);
-    opacity: 0.78;
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
   }
 }
 
@@ -2773,8 +2790,7 @@
 /* Foundation — first to lift. Heaviest piece, smallest hop, like
    the base shifting under its own weight before settling. */
 :global(svg[data-anim='expertise'] [data-anim-target='1']) {
-  animation: lensExpertiseBase 3s cubic-bezier(0.34, 1.5, 0.4, 1)
-    infinite;
+  animation: lensExpertiseBase 3s cubic-bezier(0.34, 1.5, 0.4, 1) infinite;
 }
 @keyframes lensExpertiseBase {
   /* Resting — the assembled pyramid. */
@@ -2812,8 +2828,7 @@
    The expert's precise move gets the showcase moment at the top
    of the wave. */
 :global(svg[data-anim='expertise'] [data-anim-target='3']) {
-  animation: lensExpertiseCap 3s cubic-bezier(0.34, 1.6, 0.4, 1)
-    infinite;
+  animation: lensExpertiseCap 3s cubic-bezier(0.34, 1.6, 0.4, 1) infinite;
 }
 @keyframes lensExpertiseCap {
   0%,
@@ -3306,7 +3321,7 @@
    superseded. Only active when the toggle is on. */
 :global(html[data-design-accent-on='on']) .card,
 :global(html[data-design-accent-on='on']) .centerCard {
-  --card-accent: var(--design-accent-override, #e8a547) !important;
+  --card-accent: var(--design-accent-override, #c99e5b) !important;
 }
 :global(html[data-design-accent-on='on']) .panel {
   --panel-accent: var(--design-accent-override, #e8a547) !important;
@@ -3340,8 +3355,7 @@
     #fff8e7;
 }
 :global(html[data-design-palette='pastel']) .frame {
-  background:
-    linear-gradient(180deg, #fef3f7 0%, #f0ecf7 100%);
+  background: linear-gradient(180deg, #fef3f7 0%, #f0ecf7 100%);
 }
 :global(html[data-design-palette='brutalist']) .frame {
   background: #f0ede4;

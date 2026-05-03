@@ -28,7 +28,7 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
   const open = !!lens
   const [shown, setShown] = React.useState<Lens | null>(lens)
   const [bodyKey, setBodyKey] = React.useState(0)
-  const closeBtnRef = React.useRef<HTMLButtonElement>(null)
+  const contentRef = React.useRef<HTMLDivElement>(null)
   /* Body density mode comes from the dev DesignPanel. In production
      this hook always returns 'full' (the schema default), which
      renders the full essay — identical to the prior behavior. */
@@ -49,9 +49,9 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
     if (typeof document === 'undefined') return
     const root = document.documentElement
     if (open) {
-      root.setAttribute('data-lenses-side-open', 'true')
+      root.dataset.lensesSideOpen = 'true'
       return () => {
-        root.removeAttribute('data-lenses-side-open')
+        delete root.dataset.lensesSideOpen
       }
     }
     return undefined
@@ -99,7 +99,9 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
           <DialogPrimitive.Overlay className={styles.panelOverlay} />
         )}
         <DialogPrimitive.Content
+          ref={contentRef}
           className={styles.panel}
+          tabIndex={-1}
           style={
             shown
               ? ({
@@ -112,12 +114,24 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
           aria-describedby={undefined}
           onOpenAutoFocus={(event) => {
             // Radix's default is to focus the first focusable element,
-            // which is now the prev/next chevron. That makes the panel
-            // open with a focus ring on a navigation button — too loud.
-            // Send focus to the Close button instead (still keyboard
-            // accessible, but visually unobtrusive next to the X glyph).
+            // which is now the prev/next chevron — too loud. Focusing
+            // the Close button instead still painted a ring on the X.
+            // Park focus on the dialog container itself: keyboard users
+            // get ESC to close (Radix handles it at the dialog level)
+            // and Enter still closes via the keydown handler below,
+            // but no button shows a focus ring on open.
             event.preventDefault()
-            closeBtnRef.current?.focus({ preventScroll: true })
+            contentRef.current?.focus({ preventScroll: true })
+          }}
+          onKeyDown={(event) => {
+            // Preserve the "Enter closes the panel" affordance that the
+            // focused Close button used to provide. Only when focus is
+            // parked on the container itself — if the user has tabbed
+            // to a real control, let that control handle Enter.
+            if (event.key === 'Enter' && event.target === contentRef.current) {
+              event.preventDefault()
+              onClose()
+            }
           }}
           /* The dev DesignPanel sits at z-index 9999, visually above
              this dialog, but Radix treats a click anywhere outside
@@ -178,7 +192,6 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
                     <ChevronIcon direction='right' />
                   </button>
                   <DialogPrimitive.Close
-                    ref={closeBtnRef}
                     className={styles.panelClose}
                     aria-label='Close panel'
                   >

@@ -27,7 +27,7 @@ const LENSES_RAW: Lens[] = [
     fg: '#F5EFE0',
     accent: '#F2C77A',
     illustration: 'agency',
-    related: ['great-man', 'narrative', 'incentives'],
+    related: ['momentum', 'narrative', 'incentives'],
     body: (
       <>
         <p>
@@ -383,41 +383,6 @@ const LENSES_RAW: Lens[] = [
     )
   },
   {
-    id: 'great-man',
-    category: 'History',
-    title: 'Great Man',
-    tagline: 'History bends around individuals.',
-    x: 18.75,
-    y: 12,
-    bg: '#1B2754',
-    fg: '#F5EFE0',
-    accent: '#E8A547',
-    illustration: 'great-man',
-    related: ['status', 'narrative', 'incentives'],
-    body: (
-      <>
-        <p>
-          History as a chronicle of remarkable individuals. In its strongest
-          form, this lens argues that the arc of civilization is bent by a
-          handful of singular minds — Caesar, Napoleon, Newton, Lincoln — and
-          that without them, the trajectory is unrecognizable.
-        </p>
-        <p>
-          Through this lens, founders, generals, prophets, and inventors become
-          the unit of analysis. The question shifts from{' '}
-          <em>what conditions produced this?</em> to{' '}
-          <em>who decided, who saw it first, who refused to give in?</em>
-        </p>
-        <p>
-          Weaknesses: it underweights structures, institutions, networks, and
-          luck. The same person born a century earlier may produce nothing at
-          all. But it captures something real about agency, taste, and the
-          asymmetric returns of conviction.
-        </p>
-      </>
-    )
-  },
-  {
     id: 'headspace',
     category: 'Psychology',
     title: 'Headspace',
@@ -643,6 +608,38 @@ const LENSES_RAW: Lens[] = [
     )
   },
   {
+    id: 'minimalism',
+    category: 'Aesthetic',
+    title: 'Minimalism',
+    tagline: 'What is essential? Subtract the rest.',
+    x: 18.75,
+    y: 88,
+    bg: '#E8DCC0',
+    fg: '#1A1A1A',
+    accent: '#B43A2E',
+    illustration: 'minimalism',
+    related: ['constraint', 'primitives', 'interface'],
+    body: (
+      <>
+        <p>
+          Value comes from what remains after you remove the unnecessary. Not
+          aesthetic austerity for its own sake, but a discipline of asking{' '}
+          <em>what is the smallest thing that still does the job?</em>
+        </p>
+        <p>
+          Through this lens, complexity is a tax. Every feature, possession,
+          obligation, and abstraction has a hidden cost — cognitive,
+          maintenance, emotional. Subtraction is creative work.
+        </p>
+        <p>
+          Weaknesses: the world is genuinely complicated, and over-pruned
+          systems are brittle. But as a counterweight to default accumulation,
+          it&rsquo;s nearly always corrective.
+        </p>
+      </>
+    )
+  },
+  {
     id: 'momentum',
     category: 'Strategy',
     title: 'Momentum',
@@ -687,38 +684,6 @@ const LENSES_RAW: Lens[] = [
           inherited mass with earned mass. But ignoring momentum is how smart
           people keep making technically-correct moves that don&rsquo;t land,
           because they never built the standing to make them work.
-        </p>
-      </>
-    )
-  },
-  {
-    id: 'minimalism',
-    category: 'Aesthetic',
-    title: 'Minimalism',
-    tagline: 'What is essential? Subtract the rest.',
-    x: 18.75,
-    y: 88,
-    bg: '#E8DCC0',
-    fg: '#1A1A1A',
-    accent: '#B43A2E',
-    illustration: 'minimalism',
-    related: ['constraint', 'primitives', 'interface'],
-    body: (
-      <>
-        <p>
-          Value comes from what remains after you remove the unnecessary. Not
-          aesthetic austerity for its own sake, but a discipline of asking{' '}
-          <em>what is the smallest thing that still does the job?</em>
-        </p>
-        <p>
-          Through this lens, complexity is a tax. Every feature, possession,
-          obligation, and abstraction has a hidden cost — cognitive,
-          maintenance, emotional. Subtraction is creative work.
-        </p>
-        <p>
-          Weaknesses: the world is genuinely complicated, and over-pruned
-          systems are brittle. But as a counterweight to default accumulation,
-          it&rsquo;s nearly always corrective.
         </p>
       </>
     )
@@ -904,6 +869,53 @@ const LENSES_RAW: Lens[] = [
     )
   },
   {
+    id: 'second-order',
+    category: 'Strategy',
+    title: 'Second-order effects',
+    tagline: 'The consequence of the consequence is usually bigger.',
+    x: 18.75,
+    y: 12,
+    bg: '#2B5F6B',
+    fg: '#F5EFE0',
+    accent: '#F2C77A',
+    illustration: 'second-order',
+    related: ['incentives', 'systems', 'constraint'],
+    body: (
+      <>
+        <p>
+          Every action has a direct effect and a ripple of effects that follow
+          from it. The direct effect is what you intended; the ripples are what
+          actually shape the world. Price a thing lower, and usage goes up, and
+          the people using it change, and the culture around it shifts, and the
+          thing itself becomes something different — all of which happens after
+          the decision is made and none of which shows up in the pitch deck.
+          Most of history&rsquo;s biggest surprises, scandals, and own-goals are
+          second-order effects that someone could have seen but didn&rsquo;t
+          bother to.
+        </p>
+        <p>
+          Through this lens, the honest question is rarely{' '}
+          <em>does this solve the problem?</em> but{' '}
+          <em>what does this produce downstream?</em> Rent control reduces rent,
+          then reduces housing supply. A metric rewards a behavior, then
+          corrupts it. A feature adds a capability, then reshapes how people use
+          the whole product. The first-order answer is almost always the one
+          people argue about; the second-order answer is almost always the one
+          that matters.
+        </p>
+        <p>
+          Weaknesses: taken too far, it becomes paralysis — every move has an
+          infinite downstream, and you can always invent a scary second-order
+          story for any change. It also favors the status quo by default,
+          because the consequences of <em>not acting</em> are less legible than
+          the consequences of acting. But people who only think in first-order
+          effects build systems that solve the visible problem and create three
+          invisible ones, over and over, for decades.
+        </p>
+      </>
+    )
+  },
+  {
     id: 'status',
     category: 'Sociology',
     title: 'Status',
@@ -914,7 +926,7 @@ const LENSES_RAW: Lens[] = [
     fg: '#F5EFE0',
     accent: '#F2C77A',
     illustration: 'status',
-    related: ['great-man', 'evo-psych', 'narrative'],
+    related: ['mimetics', 'evo-psych', 'narrative'],
     body: (
       <>
         <p>

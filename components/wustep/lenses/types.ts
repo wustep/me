@@ -53,7 +53,7 @@ export const GRID = {
 } as const
 
 export type IllustrationId =
-  | 'great-man'
+  | 'second-order'
   | 'evo-psych'
   | 'minimalism'
   | 'utility'
