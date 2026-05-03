@@ -436,39 +436,130 @@ function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Legibility — a name and its underline.
+/** Legibility — a magnifying glass over text.
  *
- *  One headline bar (the name) sitting on a thin underline that draws
- *  itself in beneath it. That's the whole image: a word, underlined.
- *  The underline is the gesture of naming — a stroke of attention
- *  that says "this one, this is what we'll call it."
+ *  Three lines of text run across the panel. Each line has two
+ *  layers: a faint base (the unread, just-noise version) and a
+ *  crisp accent-or-fg version that's clipped to a circular lens.
+ *  Wherever the lens passes, the text becomes legible; outside the
+ *  lens it stays a quiet murmur.
  *
- *  Animation (card hover): the underline draws in from left to right,
- *  rests, then resets. The headline stays still so the eye lands on
- *  the act of underlining.
+ *  The lens itself is a stroked circle with a short handle — the
+ *  universal "look closer" object. The whole instrument glides
+ *  slowly left-to-right (and back), so the act of *applying
+ *  attention* is what does the work. That's the lens of legibility:
+ *  not creating the text, but turning your gaze on it.
+ *
+ *  data-anim-target='1' — the magnifying glass group (translates).
+ *
+ *  Implementation note: we use a per-svg <clipPath> tied to the
+ *  same translation as the lens via SVG transform on the clip's
+ *  child, so the clipped reveal moves in lock-step with the chrome.
+ *  React renders one ID per mount, but since each card has its own
+ *  illustration instance the IDs collide harmlessly across cards
+ *  (they're scoped by SVG ownership). To be safe we still use a
+ *  stable string — if we ever inline these across one document, a
+ *  React.useId() pass could replace it.
  */
 function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
-  const X = 22 // shared left edge — anchors name and underline
-  const W = 56 // shared width
+  // Three text-lines. Top is the "headline" (accent + slightly
+  // taller); the others are body. Lengths taper.
+  const lines = [
+    { y: 32, w: 60, h: 4.5, color: accent, isHead: true },
+    { y: 46, w: 52, h: 2.6, color: fg, isHead: false },
+    { y: 56, w: 44, h: 2.6, color: fg, isHead: false }
+  ]
+  const X = 18
+
+  // Lens geometry. The circle starts on the left and the CSS
+  // animation translates the entire group across the panel.
+  const LENS_CX = 28
+  const LENS_CY = 44
+  const LENS_R = 14
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='legibility'>
-      {/* The name. */}
-      <rect x={X} y={46} width={W} height={6} rx={1} fill={fg} opacity={0.9} />
+      <defs>
+        {/* The clip path is itself a <g> containing the lens
+            circle. We give it the same transform target as the
+            visible lens so the clipped "sharp" text moves with
+            the chrome. */}
+        <clipPath id='legibility-lens-clip'>
+          <g data-anim-target='1'>
+            <circle cx={LENS_CX} cy={LENS_CY} r={LENS_R - 1.5} />
+          </g>
+        </clipPath>
+      </defs>
 
-      {/* The underline. Animates via stroke-dashoffset so it draws
-          in beneath the name like a pen-stroke of attention. */}
-      <line
-        data-anim-target='1'
-        x1={X}
-        y1={60}
-        x2={X + W}
-        y2={60}
-        stroke={accent}
-        strokeWidth={2}
-        strokeLinecap='round'
-        strokeDasharray={W}
-        strokeDashoffset={W}
-      />
+      {/* Base layer — faint, unread text. Always visible at low
+          opacity so the panel reads as "page of text, mostly
+          murmur." */}
+      {lines.map((l, i) => (
+        <rect
+          key={`base-${i}`}
+          x={X}
+          y={l.y}
+          width={l.w}
+          height={l.h}
+          rx={l.h / 2}
+          fill={fg}
+          opacity={0.22}
+        />
+      ))}
+
+      {/* Sharp layer — same lines, drawn at full strength but
+          clipped to the lens. Where the lens is, you can read
+          them; everywhere else, this layer is invisible. */}
+      <g clipPath='url(#legibility-lens-clip)'>
+        {lines.map((l, i) => (
+          <rect
+            key={`sharp-${i}`}
+            x={X}
+            y={l.y}
+            width={l.w}
+            height={l.h}
+            rx={l.h / 2}
+            fill={l.color}
+            opacity={l.isHead ? 1 : 0.85}
+          />
+        ))}
+      </g>
+
+      {/* The magnifying glass chrome — a stroked circle and a
+          short handle. Sits on top of everything so the lens
+          frame reads cleanly over both base and sharp text. */}
+      <g data-anim-target='1'>
+        {/* Soft inner tint — gives the lens a faint warmth so
+            you read it as glass, not as a hole. */}
+        <circle
+          cx={LENS_CX}
+          cy={LENS_CY}
+          r={LENS_R - 1.5}
+          fill={fg}
+          opacity={0.06}
+        />
+        {/* Lens rim. */}
+        <circle
+          cx={LENS_CX}
+          cy={LENS_CY}
+          r={LENS_R}
+          fill='none'
+          stroke={fg}
+          strokeWidth='2.2'
+          opacity='0.85'
+        />
+        {/* Handle — a short stub at the lower-right of the rim. */}
+        <line
+          x1={LENS_CX + LENS_R * 0.71}
+          y1={LENS_CY + LENS_R * 0.71}
+          x2={LENS_CX + LENS_R * 0.71 + 7}
+          y2={LENS_CY + LENS_R * 0.71 + 7}
+          stroke={fg}
+          strokeWidth='3'
+          strokeLinecap='round'
+          opacity='0.85'
+        />
+      </g>
     </svg>
   )
 }

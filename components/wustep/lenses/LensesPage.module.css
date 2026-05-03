@@ -89,7 +89,7 @@
       rgba(0, 0, 0, 0.08) 0%,
       rgba(0, 0, 0, 0) 60%
     ),
-    #ece6d6;
+    #ece4d0;
   color: #1a1a1a;
   font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
   display: flex;
@@ -1204,6 +1204,16 @@
   display: flex;
 }
 
+/* Grid stagger — only on dialog open, never on close.
+   The frame finishes scaling at ~280ms; the grid is intentionally
+   sequenced to settle inside roughly the same window so the dialog
+   never feels half-loaded. We cap the stagger index so adding more
+   lenses doesn't push the tail past ~400ms. */
+.dialog[data-state='open'] .dialogListItem {
+  animation: dialogJumpAppear 260ms var(--ease-out-quart) both;
+  animation-delay: calc(min(var(--i, 0), 14) * 18ms + 120ms);
+}
+
 .dialogJumpBtn {
   --jump-bg: #1f2a5c;
   --jump-fg: #f5f1e8;
@@ -1418,6 +1428,19 @@
 }
 
 @keyframes bodyFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Per-item grid stagger inside the dialog. Tiny lift + fade —
+   same vocabulary as bodyFade, just used as an entrance per row. */
+@keyframes dialogJumpAppear {
   from {
     opacity: 0;
     transform: translateY(4px);
@@ -1703,20 +1726,26 @@
   }
 }
 
-/* Legibility — an underline draws itself beneath the name. */
-:global(svg[data-anim='legibility'] [data-anim-target]) {
-  animation: lensLegibilityUnderline 2.6s ease-in-out infinite;
+/* Legibility — a magnifying glass glides across faint text, making
+ * each line readable as it passes. The chrome and the clip path
+ * share the same target so the sharp reveal tracks the lens.
+ * Storyboard (4.4s loop, ease-in-out so motion lingers at edges):
+ *    0%   lens at far left over the start of the headline
+ *   45%   lens has glided to the right edge
+ *   55%   brief hold
+ *  100%   lens returns to start
+ */
+:global(svg[data-anim='legibility'] [data-anim-target='1']) {
+  animation: lensLegibilityScan 4.4s ease-in-out infinite;
 }
-@keyframes lensLegibilityUnderline {
-  0% {
-    stroke-dashoffset: 56;
+@keyframes lensLegibilityScan {
+  0%,
+  100% {
+    transform: translateX(0);
   }
   45%,
-  85% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: 56;
+  55% {
+    transform: translateX(40px);
   }
 }
 
@@ -2251,6 +2280,7 @@
   .panelNavBtn,
   .dialog,
   .dialogOverlay,
+  .dialogListItem,
   .dialogJumpBtn,
   .dialogJumpArrow,
   .dialogCloseBtn,

@@ -65,8 +65,12 @@ export function CenterDialog({
           </header>
 
           <ul className={styles.dialogList}>
-            {LENSES.map((lens) => (
-              <li key={lens.id} className={styles.dialogListItem}>
+            {LENSES.map((lens, i) => (
+              <li
+                key={lens.id}
+                className={styles.dialogListItem}
+                style={{ ['--i' as string]: i } as React.CSSProperties}
+              >
                 <button
                   type='button'
                   className={styles.dialogJumpBtn}

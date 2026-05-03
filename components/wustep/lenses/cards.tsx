@@ -124,9 +124,9 @@ export function CenterCard({ stage, onOpen }: CenterCardProps) {
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
           id='lenses-deck'
-          fg='#F5F1E8'
+          fg='#F5EFE0'
           bg='#0E0E10'
-          accent='#F2C04A'
+          accent='#E8A547'
         />
       </span>
       <span className={styles.centerCardTextWrap}>
