@@ -1,20 +1,21 @@
-import type { Lens } from './types'
+import { GRID, type Lens } from './types'
 
 /**
- * LENSES — the canonical list of lens cards.
+ * LENSES_RAW — the canonical list of lens cards.
  *
- *   Order matters: array order is the deck's reading order. The
- *   list flows left-to-right, top-to-bottom across an 8-col × 4-row
- *   grid, with the center "Lenses" card spanning the middle 2×2.
- *   Document order matches that visual order, so:
- *     • The dialog index lists lenses in the order they appear on
- *       the canvas.
- *     • If the grid auto-fits at narrower viewports (cards flow
- *       instead of being placed), the deck still reads coherently.
+ *   The exported `LENSES` array (below) is this list sorted
+ *   alphabetically by title and re-anchored onto the 8×4 canvas
+ *   in reading order, skipping the middle 2×2 (the "Lenses"
+ *   center card). Authoring stays grouped however we like; the
+ *   on-canvas layout is always A→Z left-to-right, top-to-bottom.
+ *
+ *   The hand-authored `x`/`y` on each entry below is ignored —
+ *   they're overwritten at module load. Kept on the type so the
+ *   shape doesn't fork between authoring and runtime.
  *
  *   Each `body` is freeform JSX for the side-panel detail view.
  */
-export const LENSES: Lens[] = [
+const LENSES_RAW: Lens[] = [
   {
     id: 'agency',
     category: 'Philosophy',
@@ -1046,6 +1047,33 @@ export const LENSES: Lens[] = [
     )
   }
 ]
+
+/* ─────────────────────────────────────────────────────────
+ * Layout: alphabetical by title, left-to-right, top-to-bottom,
+ * skipping the middle 2×2 cells reserved for the center card.
+ *
+ * The canvas is an 8-col × 4-row grid (see GRID anchors). The
+ * center card occupies columns 4–5 (0-indexed: 3–4) of rows
+ * 2–3 (0-indexed: 1–2). Every other cell takes one lens, so
+ * 32 − 4 = 28 surrounding slots — matches the deck size.
+ * ───────────────────────────────────────────────────────── */
+const CENTER_COLS = new Set([3, 4])
+const CENTER_ROWS = new Set([1, 2])
+
+const SLOTS: { x: number; y: number }[] = []
+for (let r = 0; r < GRID.rowAnchors.length; r++) {
+  for (let c = 0; c < GRID.colAnchors.length; c++) {
+    if (CENTER_ROWS.has(r) && CENTER_COLS.has(c)) continue
+    SLOTS.push({ x: GRID.colAnchors[c]!, y: GRID.rowAnchors[r]! })
+  }
+}
+
+export const LENSES: Lens[] = [...LENSES_RAW]
+  .sort((a, b) => a.title.localeCompare(b.title))
+  .map((lens, i) => {
+    const slot = SLOTS[i]
+    return slot ? { ...lens, x: slot.x, y: slot.y } : lens
+  })
 
 export const LENS_BY_ID: Record<string, Lens> = Object.fromEntries(
   LENSES.map((l) => [l.id, l])

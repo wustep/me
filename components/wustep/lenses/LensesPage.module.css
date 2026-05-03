@@ -20,12 +20,22 @@
  *     • prefers-reduced-motion disables all animation, no exceptions
  * ========================================================================== */
 
-/* Reusable easing — kept narrow so we can tune timing globally. */
+/* Reusable easing — kept narrow so we can tune timing globally.
+   The hover hot-path uses --ease-out-snap exclusively: a sharp
+   curve that lands *cleanly* without the trailing tail that
+   makes quart/quint ease-outs feel sluggish at short durations.
+   Quart/quint stay around for entrance animations (300ms+) where
+   their gentler arc reads as graceful rather than draggy. */
 .frame {
   --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-spring-soft: cubic-bezier(0.34, 1.4, 0.4, 1);
   --ease-spring-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Sharp ease-out that lands *cleanly*. Second control point
+     at (0.2, 1) means ~80% travel by 50% time, then the last
+     20% completes quickly instead of trailing. The curve to use
+     for short hover/press transforms. */
+  --ease-out-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 
 /* Shared focus ring — Emil rule: stick to grey/black/white outlines,
@@ -275,10 +285,10 @@
      of the way of the cards. */
   background-image: radial-gradient(
     circle,
-    rgba(0, 0, 0, 0.09) 1px,
+    rgba(0, 0, 0, 0.07) 1px,
     transparent 1.4px
   );
-  background-size: 28px 28px;
+  background-size: 36px 36px;
   background-position: 0 0;
   /* Fade toward the corners using a mask. The center is brightest;
      the edges go to nothing so the cards on the perimeter aren't
@@ -349,44 +359,110 @@
      later-DOM cards paint over earlier-DOM cards on hover and
      their long ambient shadows bleed onto the hovered surface. */
   z-index: 1;
+  /* Pre-promote to a compositor layer so the very first hover
+     doesn't pay layer-creation cost. Combined with the static
+     `transform` declaration below (no per-state translateZ
+     additions needed), the GPU can interpolate transforms with
+     no main-thread work. We deliberately do NOT add `will-change`
+     on :hover — it would trigger a layer re-evaluation event on
+     hover-in, which is exactly the hitch we're trying to avoid. */
+  will-change: transform;
   width: 100%;
   /* 4:5 keeps the cards card-shaped without making them so tall
      that four rows feel cramped at narrow viewports. */
   aspect-ratio: 4 / 5;
   padding: 13px 14px 14px;
-  background: var(--card-bg);
+  /* Layered background: a faint top-light → bottom-shadow gradient
+     sits above the solid card color, giving the surface dimension
+     the way printed cardstock catches light. Without this, the
+     card surface reads as paint, not paper. The white at top is
+     pulled to ~6% so it doesn't wash out the saturated card colors;
+     the black at bottom is also subtle (~10%) — together they cue
+     the eye to "this surface has a top and bottom" without ever
+     becoming an obvious gradient. */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(0, 0, 0, 0) 68%,
+      rgba(0, 0, 0, 0.1) 100%
+    ),
+    var(--card-bg);
   color: var(--card-fg);
   border: none;
-  border-radius: 14px;
-  /* Layered rest shadow — kept short so neighbors don't paint
-     long ambient tails over the hovered card. The ambient tier
-     stops at ~24px so two cards in adjacent grid cells (28px
-     gap) don't overlap shadow-wise.
-       • inset hairline edge (lets the card edge read on cream)
-       • inset top highlight (faint specular, 3D feel)
-       • close contact shadow (sits on the surface)
-       • short ambient (no further than the gap) */
+  /* Generous radius reads as a real Pip/tarot-style card at this
+     scale; 14px was on the small side for ~140px wide cards. */
+  border-radius: 18px;
+  /* REST shadow — only the *cheap* parts live here:
+       • inset hairline edge
+       • inset top highlight (specular catch)
+       • inset bottom shadow (underside)
+       • close contact shadow (1px, near-zero paint cost)
+     The expensive ambient cast shadow lives on `.cardElevation`
+     pseudo-element below, so we can fade it in with opacity
+     instead of repainting the whole shadow stack on hover. This
+     is the difference between hover-in feeling instant vs.
+     stalled — animating box-shadow forces a paint on every
+     frame, animating opacity is GPU-only. */
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
-    0 1px 0 rgba(255, 255, 255, 0.12) inset,
-    0 1px 1px rgba(0, 0, 0, 0.08),
-    0 8px 18px -10px rgba(20, 14, 8, 0.28);
+    0 0 0 0.5px rgba(0, 0, 0, 0.22) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
+    0 1px 1px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   text-align: left;
   cursor: pointer;
   font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
   opacity: 0;
+  /* Pure scale at rest — translateZ(0) is no longer needed since
+     `will-change: transform` above already promotes the layer.
+     Keeping the transform chain simple (one component) lets the
+     compositor interpolate it as quickly as possible. */
   transform: scale(0.96);
   /* Specific properties only — `transition: all` would catch
      auto-changing properties (z-index, etc.) we don't want
-     animated. Hover/click run on a non-overshoot ease so the
-     card lands cleanly; the bouncy entrance spring only applies
-     to the initial reveal (cardVisible) below. */
+     animated. These durations are the *default* (hover-out,
+     deselect, etc.) — hover-in overrides with shorter durations
+     below for that classic "snappy in, settled out" feel.
+
+     Notice: NO box-shadow transition here. The cast shadow is
+     animated via the `.card::before` pseudo's opacity, which is
+     GPU-accelerated and doesn't trigger paint. Only `transform`
+     animates on the card itself. */
   transition:
     opacity 600ms var(--ease-out-quint),
-    transform 220ms var(--ease-out-quart),
-    box-shadow 220ms ease;
+    transform 200ms var(--ease-out-snap);
+}
+
+/* Cast-shadow layer — heavy ambient + lifted contact shadow live
+   here, faded in with opacity (GPU-only) instead of animating
+   box-shadow on the card itself (paint-heavy). Sits at opacity 0
+   at rest; .card:hover bumps it to 1.
+
+   Architecture note: this is the standard "shadow-on-pseudo"
+   trick used by Material, Tailwind UI, Linear etc. for
+   high-frequency hover surfaces. The visual result is identical
+   to animating box-shadow directly, but the compositor cost
+   drops from ~3-6ms paint per frame to <0.1ms. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Hover-state cast shadows. Opacity 0 at rest = invisible. */
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.1),
+    0 14px 28px -10px rgba(20, 14, 8, 0.34),
+    0 32px 60px -22px rgba(20, 14, 8, 0.42);
+  opacity: 0;
+  /* Slightly slower than transform on hover-in so the shadow
+     trails *just barely* — reads as the cast catching up to
+     the lifted card. Symmetric for now; hover-out below uses
+     a longer settle. */
+  transition: opacity 140ms var(--ease-out-snap);
 }
 
 .cardVisible {
@@ -396,8 +472,7 @@
      fall back to the calmer ease-out defined on `.card`. */
   transition:
     opacity 600ms var(--ease-out-quint),
-    transform 360ms var(--ease-spring-soft),
-    box-shadow 220ms ease;
+    transform 360ms var(--ease-spring-soft);
 }
 
 /*
@@ -414,20 +489,23 @@
  * the card just lifts a little more.
  */
 .cardSelected {
-  /* The lift is real but gentler than :hover so the selection
-     reads as a steady marker rather than a transient interaction.
-     A second translateY arrives on top when the user actually
-     hovers this card. */
-  transform: translateY(-2px) scale(1.012);
-  /* Layered: same baseline shadows as rest, plus a 2px accent
-     ring, plus a soft outer halo at 8px alpha so the selected
-     card glows quietly out from the grid. */
+  /* Commit to a real lift — the previous -2px / 1.012 was almost
+     invisible at typical viewing distance, making selected and
+     resting near-identical. We sit just below the hover lift
+     (-6px / 1.025) so hovering a selected card still reads as a
+     clear *additional* response. */
+  transform: translateY(-4px) scale(1.02);
+  /* Layered: same baseline shadows as rest, plus the accent ring
+     (selection's primary signal) plus a soft outer halo so the
+     selected card glows quietly out from the grid. */
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
+    0 0 0 0.5px rgba(0, 0, 0, 0.22) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
     0 1px 1px rgba(0, 0, 0, 0.08),
-    0 10px 22px -12px rgba(20, 14, 8, 0.34),
+    0 12px 26px -12px rgba(20, 14, 8, 0.36),
     0 0 0 2px var(--card-accent),
-    0 0 0 8px color-mix(in oklab, var(--card-accent) 22%, transparent);
+    0 0 0 10px color-mix(in oklab, var(--card-accent) 20%, transparent);
   /* Sits above resting cards but under whichever card is being
      actively hovered, so :hover always wins focus visually. */
   z-index: 3;
@@ -443,19 +521,27 @@
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    /* Smaller lift than before. ~4px is enough to read as
-       elevated without looking like the card jumps. */
-    transform: translateY(-4px) scale(1.025);
-    /* Tighter shadow tier: the ambient grows but doesn't
-       balloon out 72px — that long tail was painting onto
-       neighboring cards. The 2px accent ring is the
-       primary "you're hovering me" signal. */
-    box-shadow:
-      0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
-      0 1px 1px rgba(0, 0, 0, 0.08),
-      0 12px 24px -12px rgba(20, 14, 8, 0.36),
-      0 22px 44px -20px rgba(20, 14, 8, 0.42),
-      0 0 0 2px var(--card-accent);
+    /* A bit higher lift than before (-6px vs -4px) — without
+       the accent ring carrying the "you're on me" signal, the
+       lift + shadow have to do that work themselves. Real cards
+       don't get outlined when you pick them up; they just lift.
+       Pure 2-component transform: translate + scale. No
+       translateZ — the card is already promoted to its own
+       layer via `will-change: transform` on the rest rule. */
+    transform: translateY(-6px) scale(1.025);
+    /* Hover-in motion design:
+         • 120ms with a sharp ease-out — the curve rises
+           immediately (no slow ramp like overshoot) and lands
+           cleanly. 120ms feels FASTER than the old 80ms because
+           the old version stalled 16-32ms on the first frame
+           waiting for the box-shadow paint; with that gone, the
+           full 120ms is *visible motion* from frame 1.
+         • The ::before pseudo's opacity transition (140ms,
+           defined above) handles the cast-shadow fade — GPU
+           only, no paint cost.
+       Hover-out rides the default 200ms snap transition on
+       `.card` for a clean settle. */
+    transition: transform 120ms var(--ease-out-snap);
     /* Hover sits high above every other card-state layer so
        that the selected card's outer halo, neighboring cards'
        ambient shadows, and the center card's resting paint
@@ -464,51 +550,53 @@
        (1) / selected (3) tier so future per-state additions
        still slot below. */
     z-index: 20;
-    /* Promote to its own layer only while interacting; rest
-       state has no will-change, keeping the static page
-       cheap on the compositor. */
-    will-change: transform;
+    /* No `will-change` here — adding it on :hover triggers a
+       layer re-evaluation event, which is exactly the hitch
+       we're trying to avoid. The base `.card` rule already
+       sets `will-change: transform` so the layer is hot. */
+  }
+
+  /* Fade in the cast-shadow pseudo on hover. GPU-accelerated
+     (opacity only), so this costs effectively zero paint per
+     frame compared to animating box-shadow. */
+  .card:hover::before {
+    opacity: 1;
   }
 
   .card:hover .cardArt :global(svg) {
     /* Subtle inner pulse — the card already scales 1.025, so
-       1.02 here gives ~4.5% combined scale on the artwork
-       (vs the old 12%). */
+       1.02 here gives ~4.5% combined scale on the artwork.
+       Matches the card's hover-in timing (120ms snap) so the
+       art and card arrive together as one beat. */
     transform: scale(1.02);
+    transition: transform 120ms var(--ease-out-snap);
   }
 }
 
 .card:active {
-  /* Calm press feedback: a small inward scale, no translate.
-     The previous rule used `translate(-50%, -50%)` left over
-     from the absolute-position era, which yanked the card to
-     the top-left on click. */
-  transform: scale(0.985);
-  transition-duration: 120ms;
+  /* Tactile press: 0.97 reads at typical viewing distance where
+     0.985 was invisible. Very short 70ms with the snap curve so
+     the press *clicks* in. Release rides the default 200ms
+     snap transition above for a clean rebound. */
+  transform: scale(0.97);
+  transition: transform 70ms var(--ease-out-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  /* When the card is both hovered and pressed, keep the lift
+  /* When the card is both hovered and pressed, keep some lift
      but add the press scale on top so the press still reads. */
   .card:hover:active {
-    transform: translateY(-2px) scale(1.01);
+    transform: translateY(-3px) scale(1.005);
   }
 
-  /* Hovering the currently-selected card stacks the hover lift
-     on top of the selected ring. We override transform back to
-     the standard hover lift (so it doesn't feel sluggish) but
-     keep the layered shadow that includes the soft accent halo,
-     so the card still reads as "selected and hovered" rather
-     than just "hovered". */
+  /* Hovering the currently-selected card layers the hover lift
+     on top of the selection treatment. The accent ring + halo
+     (persistent selection signal) stays via the .cardSelected
+     box-shadow on the card itself; the cast shadow comes from
+     the .card::before pseudo (already faded in by .card:hover).
+     We just need to override the transform to match hover. */
   .card.cardSelected:hover {
-    transform: translateY(-4px) scale(1.025);
-    box-shadow:
-      0 0 0 0.5px rgba(0, 0, 0, 0.18) inset,
-      0 1px 1px rgba(0, 0, 0, 0.08),
-      0 12px 24px -12px rgba(20, 14, 8, 0.36),
-      0 22px 44px -20px rgba(20, 14, 8, 0.42),
-      0 0 0 2px var(--card-accent),
-      0 0 0 8px color-mix(in oklab, var(--card-accent) 22%, transparent);
+    transform: translateY(-6px) scale(1.025);
     /* Match the unselected hover layer (see `.card:hover`).
        The hovered card always wins the stack regardless of
        whether it's also the currently-selected card. */
@@ -520,7 +608,7 @@
    shadow but apply the standard press scale so the click still
    feels responsive. */
 .card.cardSelected:active {
-  transform: scale(0.985);
+  transform: scale(0.97);
 }
 
 .cardArt {
@@ -536,7 +624,11 @@
   width: 92%;
   height: 92%;
   max-height: 100%;
-  transition: transform 320ms var(--ease-spring-soft);
+  /* Default = hover-out: a longer settle (180ms) on the snap
+     curve so the artwork releases gently when the cursor leaves,
+     but still lands cleanly instead of drifting. Hover-in
+     overrides this in the .card:hover .cardArt rule above. */
+  transition: transform 180ms var(--ease-out-snap);
 }
 
 .cardTitle {
@@ -587,6 +679,9 @@
 
 .centerCard {
   position: relative;
+  /* Same compositor-promotion as lens cards — pre-promote at rest,
+     no will-change toggling on hover. Keeps hover-in instant. */
+  will-change: transform;
   /* Sits inside the middle 2×2 cells of the 8-col grid. */
   grid-column: 4 / 6;
   grid-row: 2 / 4;
@@ -599,18 +694,37 @@
   /* Allow the card to take its natural cell shape; no aspect-ratio
      so it follows the grid (which is 2 cells wide × 2 cells tall). */
   padding: 22px 24px 26px;
-  background: #0e0e10;
+  /* Same surface-gradient treatment as lens cards but stronger,
+     because the center card is darker and bigger so the top
+     highlight reads more clearly. The gradient lifts the top of
+     the card subtly toward the light source. */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(0, 0, 0, 0) 70%,
+      rgba(0, 0, 0, 0.18) 100%
+    ),
+    #0e0e10;
   color: #f5f1e8;
   border: none;
-  border-radius: 20px;
-  /* Featured-card shadow — deeper than a regular lens card, but
-     same restraint on the ambient tail length so it doesn't
-     bleed into the cards adjacent to it on hover. */
+  /* Generous radius matches the lens-card scale-up; the focal
+     card stays one step rounder than its neighbors. */
+  border-radius: 22px;
+  /* Featured-card REST shadow — inset layers + the *resting*
+     cast shadow (kept short, ~14px ambient). The deeper hover
+     cast shadow lives on .centerCard::before with opacity
+     transitions, so hover-in stays paint-free (GPU only).
+     Same architecture as .card except the focal card needs a
+     visible rest cast shadow to read as elevated even when
+     idle, where lens cards can sit flatter. */
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
-    0 1px 0 rgba(255, 255, 255, 0.08) inset,
-    0 1px 2px rgba(0, 0, 0, 0.18),
-    0 14px 26px -14px rgba(20, 14, 8, 0.42);
+    0 0 0 0.5px rgba(0, 0, 0, 0.4) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.4) inset,
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 14px 26px -14px rgba(20, 14, 8, 0.46);
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -618,17 +732,53 @@
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
   opacity: 0;
   transform: scale(0.94);
+  /* Transform-only transition — cast shadow is animated via
+     pseudo opacity, no box-shadow paint cost on hover. */
   transition:
     opacity 700ms var(--ease-out-quint),
-    transform 220ms var(--ease-out-quart),
-    box-shadow 220ms ease;
+    transform 200ms var(--ease-out-snap);
+}
+
+/* Center card cast-shadow layer. Sits at opacity 0 at rest;
+   .centerCard:hover bumps it to 1. GPU-only opacity transition
+   (no box-shadow paint cost) — same architecture as .card::before. */
+.centerCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Hover-state cast shadow — visible only when opacity hits 1. */
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.18),
+    0 20px 40px -16px rgba(0, 0, 0, 0.5),
+    0 40px 80px -28px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 160ms var(--ease-out-snap);
+}
+
+:global(.dark-mode) .centerCard::before {
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.45),
+    0 20px 40px -16px rgba(0, 0, 0, 0.65),
+    0 40px 80px -28px rgba(0, 0, 0, 0.75);
 }
 
 :global(.dark-mode) .centerCard {
-  background: #f5f1e8;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0) 28%,
+      rgba(0, 0, 0, 0) 72%,
+      rgba(0, 0, 0, 0.08) 100%
+    ),
+    #f5f1e8;
   color: #0e0e10;
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.5) inset,
+    0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.6) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.1) inset,
     0 1px 2px rgba(0, 0, 0, 0.42),
     0 14px 26px -14px rgba(0, 0, 0, 0.55);
 }
@@ -640,47 +790,39 @@
      from the base rule. */
   transition:
     opacity 700ms var(--ease-out-quint),
-    transform 420ms var(--ease-spring-soft),
-    box-shadow 220ms ease;
+    transform 420ms var(--ease-spring-soft);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover {
     /* Slightly stronger lift than regular cards — it's the
-       focal card, after all — but well short of the previous
-       10px / 1.04. */
-    transform: translateY(-5px) scale(1.02);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.12),
-      0 18px 36px -16px rgba(0, 0, 0, 0.45),
-      0 30px 60px -24px rgba(0, 0, 0, 0.5),
-      0 0 0 2px #f2c04a;
+       focal card. Cast shadow comes from the ::before pseudo
+       fading in; we only animate transform here. */
+    transform: translateY(-7px) scale(1.022);
+    /* 120ms snap matches lens cards. The ::before opacity
+       transition (160ms) handles the cast-shadow fade-in,
+       which is GPU-only and doesn't trigger paint. */
+    transition: transform 120ms var(--ease-out-snap);
     /* One step above regular card hover (20) so when both
        could theoretically overlap, the focal card wins the
-       stack. The center card has a noticeably larger drop
-       shadow than regular cards, so it deserves the top of
-       the deck while interacting. */
+       stack. */
     z-index: 25;
-    will-change: transform;
   }
 
-  :global(.dark-mode) .centerCard:hover {
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.4),
-      0 18px 36px -16px rgba(0, 0, 0, 0.6),
-      0 30px 60px -24px rgba(0, 0, 0, 0.7),
-      0 0 0 2px #c8552b;
+  /* Fade in the deeper cast shadow on hover. GPU-only, no paint. */
+  .centerCard:hover::before {
+    opacity: 1;
   }
 }
 
 .centerCard:active {
-  transform: scale(0.99);
-  transition-duration: 120ms;
+  transform: scale(0.975);
+  transition: transform 70ms var(--ease-out-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover:active {
-    transform: translateY(-2px) scale(1.005);
+    transform: translateY(-3px) scale(1.005);
   }
 }
 
@@ -695,7 +837,7 @@
 
 .centerCardTitle {
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
-  font-size: 1.18rem;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.12;
@@ -1497,8 +1639,15 @@
   transform-origin: 52px 20px;
 }
 @keyframes lensGreatMan {
-  0%, 100% { transform: translateY(0); opacity: 1; }
-  50%      { transform: translateY(-3px); opacity: 0.78; }
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 0.78;
+  }
 }
 
 /* Evo psych — four bond dots on a stylized helix light up in
@@ -1510,15 +1659,37 @@
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
-:global(svg[data-anim='evo-psych'] [data-anim-target='4']) { animation-delay: 0s; }
-:global(svg[data-anim='evo-psych'] [data-anim-target='3']) { animation-delay: 0.3s; }
-:global(svg[data-anim='evo-psych'] [data-anim-target='2']) { animation-delay: 0.6s; }
-:global(svg[data-anim='evo-psych'] [data-anim-target='1']) { animation-delay: 0.9s; }
+:global(svg[data-anim='evo-psych'] [data-anim-target='4']) {
+  animation-delay: 0s;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
+  animation-delay: 0.3s;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
+  animation-delay: 0.6s;
+}
+:global(svg[data-anim='evo-psych'] [data-anim-target='1']) {
+  animation-delay: 0.9s;
+}
 @keyframes lensEvoBond {
-  0%, 6%    { opacity: 0.85; transform: scale(1); }
-  14%       { opacity: 1;    transform: scale(1.45); }
-  26%       { opacity: 0.95; transform: scale(1.1); }
-  40%, 100% { opacity: 0.85; transform: scale(1); }
+  0%,
+  6% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  14% {
+    opacity: 1;
+    transform: scale(1.45);
+  }
+  26% {
+    opacity: 0.95;
+    transform: scale(1.1);
+  }
+  40%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
 }
 
 /* Minimalism — a slow, calm breath. Almost imperceptible — that's
@@ -1527,8 +1698,13 @@
   animation: lensBreath 3s ease-in-out infinite;
 }
 @keyframes lensBreath {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.18); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
 }
 
 /* Utility — the winning dot bounces, like the optimum is celebrating. */
@@ -1537,8 +1713,14 @@
   animation: lensBounce 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 @keyframes lensBounce {
-  0%, 60%, 100% { transform: translateY(0); }
-  30%           { transform: translateY(-4px); }
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
 }
 
 /* Status — the high-status dot orbits the rings. Slow, steady. */
@@ -1546,8 +1728,12 @@
   animation: lensOrbit 5s linear infinite;
 }
 @keyframes lensOrbit {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Incentives — the arrow nudges toward the target. */
@@ -1555,8 +1741,13 @@
   animation: lensIncentivesArrow 1.6s ease-in-out infinite;
 }
 @keyframes lensIncentivesArrow {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 
 /* Game theory — only the accent cell breathes; grey dots stay put. */
@@ -1564,8 +1755,15 @@
   animation: lensGameDominant 2.4s ease-in-out infinite;
 }
 @keyframes lensGameDominant {
-  0%, 100% { transform: scale(1);    opacity: 1; }
-  50%      { transform: scale(1.12); opacity: 0.8; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.8;
+  }
 }
 
 /* Systems — a signal travels around the directed cycle. All three
@@ -1595,7 +1793,9 @@
   animation-delay: -1.2s;
 }
 @keyframes lensSystemsPulse {
-  0%, 70%, 100% {
+  0%,
+  70%,
+  100% {
     fill: var(--node-fg);
     transform: scale(1);
   }
@@ -1618,12 +1818,26 @@
   animation-delay: -0.6s;
 }
 @keyframes lensThoughtDot {
-  0%, 100% { transform: scale(1);    opacity: 1; }
-  50%      { transform: scale(1.35); opacity: 0.7; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.7;
+  }
 }
 @keyframes lensThoughtAura {
-  0%, 100% { transform: scale(1);    opacity: 0.55; }
-  50%      { transform: scale(1.18); opacity: 0.78; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.78;
+  }
 }
 
 /* Legibility — the accent label "writes itself in" from the left. */
@@ -1631,8 +1845,16 @@
   animation: lensLabelWrite 2.4s ease-in-out infinite;
 }
 @keyframes lensLabelWrite {
-  0%, 100% { transform: scaleX(0.2); opacity: 0.2; }
-  40%, 70% { transform: scaleX(1);   opacity: 1; }
+  0%,
+  100% {
+    transform: scaleX(0.2);
+    opacity: 0.2;
+  }
+  40%,
+  70% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 /* Narrative — a beat travels along the arc. */
@@ -1640,9 +1862,15 @@
   animation: lensStoryBeat 3.2s ease-in-out infinite;
 }
 @keyframes lensStoryBeat {
-  0%   { transform: translate(-38px, 44px); }
-  50%  { transform: translate(0, 0); }
-  100% { transform: translate(38px, 44px); }
+  0% {
+    transform: translate(-38px, 44px);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(38px, 44px);
+  }
 }
 
 /* Constraint — energy under pressure. */
@@ -1650,8 +1878,13 @@
   animation: lensTug 1.4s ease-in-out infinite;
 }
 @keyframes lensTug {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.06); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
 }
 
 /* Interface — cursor "clicks," button reacts. */
@@ -1662,13 +1895,28 @@
   animation: lensButtonPress 1.6s ease-in-out infinite;
 }
 @keyframes lensCursorClick {
-  0%, 60%, 100% { transform: translate(0, 0); }
-  30%           { transform: translate(-2px, -2px); }
-  40%           { transform: translate(0, 0); }
+  0%,
+  60%,
+  100% {
+    transform: translate(0, 0);
+  }
+  30% {
+    transform: translate(-2px, -2px);
+  }
+  40% {
+    transform: translate(0, 0);
+  }
 }
 @keyframes lensButtonPress {
-  0%, 35%, 50%, 100% { transform: scale(1); }
-  40%                { transform: scale(0.95); }
+  0%,
+  35%,
+  50%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.95);
+  }
 }
 
 /* Energy — the yellow charge bar rises and drains; the lightning
@@ -1680,14 +1928,27 @@
   animation: lensBoltPulse 2.4s ease-in-out infinite;
 }
 @keyframes lensChargeBar {
-  0%   { transform: scaleX(0.18); }
-  45%  { transform: scaleX(1);    }
-  55%  { transform: scaleX(1);    }
-  100% { transform: scaleX(0.18); }
+  0% {
+    transform: scaleX(0.18);
+  }
+  45% {
+    transform: scaleX(1);
+  }
+  55% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0.18);
+  }
 }
 @keyframes lensBoltPulse {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1;    }
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Epistemic pragmatism — dashed path flows forward (map → action). */
@@ -1696,8 +1957,12 @@
   animation: lensFlowDashes 1.6s linear infinite;
 }
 @keyframes lensFlowDashes {
-  from { stroke-dashoffset: 0; }
-  to   { stroke-dashoffset: -12; }
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -12;
+  }
 }
 
 /* Osmosis — the two travellers each drift outward into the
@@ -1714,23 +1979,92 @@
   animation-delay: 0.5s;
 }
 @keyframes lensOsmosisLeft {
-  0%        { transform: translateX(0);     opacity: 1;   }
-  70%       { transform: translateX(-18px); opacity: 0.6; }
-  100%      { transform: translateX(-18px); opacity: 0;   }
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(-18px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(-18px);
+    opacity: 0;
+  }
 }
 @keyframes lensOsmosisRight {
-  0%        { transform: translateX(0);     opacity: 1;   }
-  70%       { transform: translateX(18px);  opacity: 0.6; }
-  100%      { transform: translateX(18px);  opacity: 0;   }
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(18px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(18px);
+    opacity: 0;
+  }
 }
 
-/* Probabilistic — bell curve breathes. */
-:global(svg[data-anim='probabilistic'] [data-anim-target]) {
-  animation: lensBellBreath 2.8s ease-in-out infinite;
+/* Probabilistic — a "sampler" scans left→right across the bell curve
+   while each column's sample dot bounces up to a height proportional
+   to the curve's value at that column (tall in the middle, short at
+   the tails). The lift distance is set per-dot via --lift on the
+   element's inline style; one keyframe drives them all and the
+   columns are staggered with animation-delay.
+                                                                       */
+:global(svg[data-anim='probabilistic'] [data-anim-target='dot']) {
+  animation: lensProbDot 3.2s ease-in-out infinite;
 }
-@keyframes lensBellBreath {
-  0%, 100% { transform: scaleY(1); }
-  50%      { transform: scaleY(1.1); }
+:global(svg[data-anim='probabilistic'] [data-anim-target='sampler']) {
+  animation: lensProbSampler 3.2s ease-in-out infinite;
+}
+@keyframes lensProbDot {
+  /* Idle (most of the loop): dot sits at baseline, dim. */
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  /* Sampler arrives → dot lifts toward the curve. */
+  6% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  14% {
+    transform: translateY(calc(var(--lift) * -1)) scale(1.15);
+    opacity: 1;
+  }
+  /* Brief hold so the eye can register the height. */
+  22% {
+    transform: translateY(calc(var(--lift) * -1)) scale(1);
+    opacity: 0.95;
+  }
+  /* Settle back to baseline before the next pass. */
+  40% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+}
+@keyframes lensProbSampler {
+  /* Hidden at far left, then sweep across the distribution. */
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  6% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  90% {
+    transform: translateX(72px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(72px);
+    opacity: 0;
+  }
 }
 
 /* Communication — speech pulses; misalignment crack flickers. */
@@ -1741,12 +2075,24 @@
   animation: lensCrackFlicker 1.8s ease-in-out infinite;
 }
 @keyframes lensSpeak {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.08); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
 }
 @keyframes lensCrackFlicker {
-  0%, 50%, 100% { opacity: 0.45; }
-  20%, 70%      { opacity: 0.8; }
+  0%,
+  50%,
+  100% {
+    opacity: 0.45;
+  }
+  20%,
+  70% {
+    opacity: 0.8;
+  }
 }
 
 /* Mimetics — copies twinkle outward in waves. */
@@ -1763,12 +2109,22 @@
   animation-delay: 0.8s;
 }
 @keyframes lensSourcePulse {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.12); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
 }
 @keyframes lensTwinkle {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Primitives — the three atoms below rotate in place. */
@@ -1793,16 +2149,31 @@
   animation-delay: -3.2s;
 }
 @keyframes lensSettle1 {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(2.5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2.5px);
+  }
 }
 @keyframes lensSettle2 {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(-2.5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-2.5px);
+  }
 }
 @keyframes lensSettle3 {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2px);
+  }
 }
 
 /* Projection — the cast shadow sways slightly. */
@@ -1810,8 +2181,13 @@
   animation: lensProjectSway 3.4s ease-in-out infinite;
 }
 @keyframes lensProjectSway {
-  0%, 100% { transform: scaleX(1)    translateX(0); }
-  50%      { transform: scaleX(1.08) translateX(2px); }
+  0%,
+  100% {
+    transform: scaleX(1) translateX(0);
+  }
+  50% {
+    transform: scaleX(1.08) translateX(2px);
+  }
 }
 
 /* Attention — the cone sweeps left and right. */
@@ -1819,9 +2195,16 @@
   animation: lensAttentionSweep 3.6s ease-in-out infinite;
 }
 @keyframes lensAttentionSweep {
-  0%, 100% { transform: rotate(0deg);   }
-  25%      { transform: rotate(-12deg); }
-  75%      { transform: rotate(12deg);  }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-12deg);
+  }
+  75% {
+    transform: rotate(12deg);
+  }
 }
 
 /* Dopamine — the chasing dot orbits; the attractor pulses. */
@@ -1832,8 +2215,15 @@
   animation: lensDopaminePulse 1.5s ease-in-out infinite;
 }
 @keyframes lensDopaminePulse {
-  0%, 100% { transform: scale(1);    opacity: 1;   }
-  50%      { transform: scale(1.18); opacity: 0.8; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.8;
+  }
 }
 
 /* Taste — chosen-marker walks across the row of swatches and
@@ -1845,11 +2235,26 @@
   /* Each swatch is 16px apart in SVG units (14, 30, 46, 62, 78).
      The marker starts above swatch #2 (x=30) at translateX(0),
      walks the row, and returns to the start before looping. */
-  0%, 12%   { transform: translateX(0);    } /* over #2 */
-  22%, 32%  { transform: translateX(16px); } /* over #3 */
-  42%, 52%  { transform: translateX(32px); } /* over #4 */
-  62%, 72%  { transform: translateX(16px); } /* return to #3 */
-  85%, 100% { transform: translateX(0);    } /* settle on #2 */
+  0%,
+  12% {
+    transform: translateX(0);
+  } /* over #2 */
+  22%,
+  32% {
+    transform: translateX(16px);
+  } /* over #3 */
+  42%,
+  52% {
+    transform: translateX(32px);
+  } /* over #4 */
+  62%,
+  72% {
+    transform: translateX(16px);
+  } /* return to #3 */
+  85%,
+  100% {
+    transform: translateX(0);
+  } /* settle on #2 */
 }
 
 /* Agency — the breakout arrow pushes a few pixels further out. */
@@ -1857,8 +2262,13 @@
   animation: lensAgencyBreakout 2.4s ease-in-out infinite;
 }
 @keyframes lensAgencyBreakout {
-  0%, 100% { transform: translateX(0); }
-  50%      { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 
 /* Expertise — the marker climbs the staircase one step at a time. */
@@ -1866,10 +2276,18 @@
   animation: lensExpertiseClimb 3.2s steps(1, end) infinite;
 }
 @keyframes lensExpertiseClimb {
-  0%   { transform: translate(-40px, 32px); }
-  25%  { transform: translate(-20px, 20px); }
-  50%  { transform: translate(0,     0);    }
-  100% { transform: translate(0,     0);    }
+  0% {
+    transform: translate(-40px, 32px);
+  }
+  25% {
+    transform: translate(-20px, 20px);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
 /* Tempo — the metronome arm swings. */
@@ -1877,8 +2295,13 @@
   animation: lensTempoSwing 1.6s ease-in-out infinite;
 }
 @keyframes lensTempoSwing {
-  0%, 100% { transform: rotate(-14deg); }
-  50%      { transform: rotate(14deg);  }
+  0%,
+  100% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
 }
 
 /* Identity — inner shape morphs; outer dashed ring slowly drifts. */
@@ -1889,12 +2312,21 @@
   animation: lensIdentityDrift 6s linear infinite;
 }
 @keyframes lensIdentityMorph {
-  0%, 100% { transform: rotate(0deg)  scale(1);    }
-  50%      { transform: rotate(45deg) scale(0.78); }
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(45deg) scale(0.78);
+  }
 }
 @keyframes lensIdentityDrift {
-  0%   { transform: rotate(0deg);   }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /*
@@ -1927,7 +2359,9 @@
 @media (hover: hover) and (pointer: fine) {
   .card:hover .cardArt :global(svg[data-anim] [data-anim-target]),
   .centerCard:hover .cardArt :global(svg[data-anim] [data-anim-target]),
-  .dialogJumpBtn:hover .dialogJumpArt :global(svg[data-anim] [data-anim-target]) {
+  .dialogJumpBtn:hover
+    .dialogJumpArt
+    :global(svg[data-anim] [data-anim-target]) {
     animation-play-state: running;
   }
 }

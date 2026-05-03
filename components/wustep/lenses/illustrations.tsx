@@ -796,39 +796,129 @@ function ArtOsmosis({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Probabilistic — the bell curve gently breathes vertically. */
+/** Probabilistic — a bell curve with sample dots dropping under it.
+ *
+ *  Storyboard (one 3.2s loop, paused until hover/selection):
+ *
+ *     0ms   curve is drawn (steady), seven sample dots sit at baseline
+ *           with low opacity. The "sampler" marker rests at far left.
+ *   200ms   sampler glides left → right along the top of the curve,
+ *           tracing the distribution.
+ *   ~each
+ *   400ms   as the sampler passes over a column, that column's dot
+ *           "lights up" — bouncing up toward the curve at a height
+ *           proportional to the curve's value (tall in the middle,
+ *           short at the tails) — then settles. This visualises
+ *           drawing samples: outcomes near the mean happen often and
+ *           with conviction, outcomes in the tails are dim and rare.
+ *  3000ms   sampler fades out at the right edge; column highlights
+ *           decay back to baseline; loop restarts.
+ *
+ *  Implementation notes
+ *  ────────────────────
+ *  • The curve itself is static — the *interpretation* (the moving
+ *    sampler + reactive columns) carries the meaning. A "breathing"
+ *    curve felt arbitrary; sampling under a fixed distribution is
+ *    what probabilistic thinking actually looks like.
+ *  • Each column = a thin guide tick + a dot. The dot's CSS animation
+ *    translates it up by a column-specific distance encoded as a CSS
+ *    custom property (`--lift`), so we share one keyframe across all
+ *    columns and stagger them with `animation-delay`.
+ *  • The sampler is a small accent-coloured dot that rides along an
+ *    invisible horizontal track at y≈40; its x is animated via
+ *    `translateX`. We don't try to follow the curve precisely — the
+ *    mental model ("scanning across outcomes") reads cleanly with a
+ *    straight horizontal sweep. */
 function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
+  // Seven sample columns spanning x = 18..82. Lift heights mirror a
+  // bell curve: tall in the middle (column 4 ≈ 36px lift), short at
+  // the tails (≈ 6px). Stagger order is left-to-right so the bounce
+  // chases the sampler.
+  const columns = [
+    { x: 18, lift: 6, delay: 0.2 },
+    { x: 28, lift: 14, delay: 0.6 },
+    { x: 38, lift: 26, delay: 1.0 },
+    { x: 50, lift: 36, delay: 1.4 },
+    { x: 62, lift: 26, delay: 1.8 },
+    { x: 72, lift: 14, delay: 2.2 },
+    { x: 82, lift: 6, delay: 2.6 },
+  ]
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='probabilistic'>
-      <g style={{ transformOrigin: '50px 76px' }} data-anim-target='1'>
-        <path
-          d='M 12 76 C 26 76, 32 76, 38 60 C 44 36, 56 36, 62 60 C 68 76, 74 76, 88 76'
-          stroke={fg}
-          strokeWidth='2'
-          fill='none'
-          opacity='0.6'
-          strokeLinecap='round'
-        />
-      </g>
+      {/* Baseline */}
       <line
-        x1='50'
-        y1='44'
-        x2='50'
+        x1='10'
+        y1='76'
+        x2='90'
         y2='76'
         stroke={fg}
         strokeWidth='1'
         opacity='0.35'
-        strokeDasharray='2 3'
       />
-      <circle cx='50' cy='80' r='3' fill={accent} />
-      <circle cx='44' cy='80' r='2.4' fill={fg} opacity='0.7' />
-      <circle cx='56' cy='80' r='2.4' fill={fg} opacity='0.7' />
-      <circle cx='38' cy='84' r='2' fill={fg} opacity='0.5' />
-      <circle cx='62' cy='84' r='2' fill={fg} opacity='0.5' />
-      <circle cx='28' cy='86' r='1.6' fill={fg} opacity='0.35' />
-      <circle cx='72' cy='86' r='1.6' fill={fg} opacity='0.35' />
-      <circle cx='18' cy='88' r='1.4' fill={fg} opacity='0.25' />
-      <circle cx='82' cy='88' r='1.4' fill={fg} opacity='0.25' />
+
+      {/* Bell curve (static, drawn slightly thicker so it reads as
+          the "underlying distribution" rather than a passing stroke). */}
+      <path
+        d='M 12 76 C 26 76, 32 76, 38 60 C 44 36, 56 36, 62 60 C 68 76, 74 76, 88 76'
+        stroke={fg}
+        strokeWidth='2'
+        fill='none'
+        opacity='0.55'
+        strokeLinecap='round'
+      />
+
+      {/* Faint vertical ticks for each sample column — these give the
+          eye a grid to register the bouncing dots against. */}
+      {columns.map(c => (
+        <line
+          key={`tick-${c.x}`}
+          x1={c.x}
+          y1='73'
+          x2={c.x}
+          y2='77'
+          stroke={fg}
+          strokeWidth='1'
+          opacity='0.3'
+        />
+      ))}
+
+      {/* Sample dots. Each one rides at baseline (cy=80) and uses a
+          per-column `--lift` to translate upward toward the curve. */}
+      {columns.map((c, i) => (
+        <circle
+          key={`dot-${c.x}`}
+          cx={c.x}
+          cy='80'
+          r={i === 3 ? 2.8 : 2.2}
+          fill={i === 3 ? accent : fg}
+          opacity={i === 3 ? 1 : 0.55}
+          data-anim-target='dot'
+          style={
+            {
+              transformOrigin: `${c.x}px 80px`,
+              animationDelay: `${c.delay}s`,
+              ['--lift' as string]: `${c.lift}px`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+
+      {/* Sampler — the moving marker that "scans" across outcomes.
+          Sits hidden at left, sweeps across, fades. transformOrigin
+          centred so its subtle scale pulse stays put. */}
+      <g data-anim-target='sampler' style={{ transformOrigin: '14px 40px' }}>
+        <circle cx='14' cy='40' r='2.6' fill={accent} />
+        <line
+          x1='14'
+          y1='42'
+          x2='14'
+          y2='74'
+          stroke={accent}
+          strokeWidth='1'
+          opacity='0.45'
+        />
+      </g>
     </svg>
   )
 }
@@ -1132,7 +1222,6 @@ function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
           relative to the figure, so it reads as a *projection* rather
           than a literal shadow. */}
       <g style={{ transformOrigin: '50px 72px' }} data-anim-target='1'>
-        <ellipse cx='50' cy='73' rx='30' ry='3.5' fill={accent} opacity='0.55' />
         <ellipse cx='50' cy='73' rx='22' ry='2.4' fill={accent} opacity='0.85' />
       </g>
     </svg>
@@ -1287,17 +1376,20 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
       {/* The breakout arrow — its tail starts inside the frame, its
           head pierces the right wall. The whole group translates a few
           px on hover so the head drives further out. */}
+      {/* Shaft stops short of the tip so the triangular head sits
+          flush at the arrow's point — together they read as one
+          continuous arrow rather than a line with a notch. */}
       <g data-anim-target='1' style={{ transformOrigin: '50px 52px' }}>
         <line
           x1='32'
           y1='52'
-          x2='80'
+          x2='78'
           y2='52'
           stroke={accent}
           strokeWidth='3.2'
           strokeLinecap='round'
         />
-        <polygon points='80,52 70,46 70,58' fill={accent} />
+        <polygon points='86,52 74,45 74,59' fill={accent} />
       </g>
 
       {/* A small origin dot inside the frame (the seat of choice). */}
