@@ -7,8 +7,15 @@ import styles from './LensesPage.module.css'
 import { LENSES } from './registry'
 
 /**
- * CenterDialog — the central "Lenses" index. Presents the philosophy
- * of using lenses + a jump list to every lens in the registry.
+ * CenterDialog — the central "Lenses" index.
+ *
+ *   Two jobs share one frame:
+ *     • A short philosophy lede (the deck's premise)
+ *     • A grid of every lens, immediately browsable.
+ *
+ *   The lede stays small on top so the index isn't gated behind 200
+ *   words of prose — the most common goal here is "find a lens
+ *   quickly," and the grid serves that without scrolling.
  */
 type CenterDialogProps = {
   open: boolean
@@ -29,75 +36,67 @@ export function CenterDialog({
           className={styles.dialog}
           aria-describedby={undefined}
         >
-          <div className={styles.dialogInner}>
-            <span className={styles.dialogEyebrow}>Index</span>
-            <DialogPrimitive.Title className={styles.dialogTitle}>
-              Lenses
-            </DialogPrimitive.Title>
-            <div className={styles.dialogIntro}>
-              <p>
-                A lens is a way of looking — a model the mind reaches for to
-                make a complicated thing legible. Each one foregrounds something
-                real, and each one quietly hides everything else.
-              </p>
-              <p>
-                The mistake is to pick one and live inside it. Hold many,
-                lightly. Look at the same situation through three different ones
-                in a row and notice what each surfaces and what each occludes.
-                The combined image is never finished — but it is more honest
-                than any single frame can be.
+          <header className={styles.dialogHeader}>
+            <div className={styles.dialogHeaderText}>
+              <span className={styles.dialogEyebrow}>Index · {LENSES.length} lenses</span>
+              <DialogPrimitive.Title className={styles.dialogTitle}>
+                Hold many, lightly.
+              </DialogPrimitive.Title>
+              <p className={styles.dialogLede}>
+                A lens is a way of looking. Each one foregrounds something real
+                and quietly hides everything else — so don't pick one. Look
+                through three in a row and notice what each surfaces.
               </p>
             </div>
-
-            <ul className={styles.dialogList}>
-              {LENSES.map((lens) => (
-                <li key={lens.id} className={styles.dialogListItem}>
-                  <button
-                    type='button'
-                    className={styles.dialogJumpBtn}
-                    onClick={() => onOpenLens(lens.id)}
-                    style={
-                      {
-                        ['--jump-bg' as string]: lens.bg,
-                        ['--jump-fg' as string]: lens.fg,
-                        ['--jump-accent' as string]: lens.accent ?? lens.fg
-                      } as React.CSSProperties
-                    }
-                  >
-                    <span className={styles.dialogJumpArt} aria-hidden='true'>
-                      <Illustration
-                        id={lens.illustration}
-                        fg={lens.fg}
-                        bg={lens.bg}
-                        accent={lens.accent ?? lens.fg}
-                      />
-                    </span>
-                    <span className={styles.dialogJumpText}>
-                      <span className={styles.dialogJumpCategory}>
-                        {lens.category}
-                      </span>
-                      <span className={styles.dialogJumpTitle}>
-                        {lens.title}
-                      </span>
-                      <span className={styles.dialogJumpTagline}>
-                        {lens.tagline}
-                      </span>
-                    </span>
-                    <span className={styles.dialogJumpArrow} aria-hidden='true'>
-                      →
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-
             <DialogPrimitive.Close
               className={styles.dialogCloseBtn}
               aria-label='Close'
             >
               <CloseIcon />
             </DialogPrimitive.Close>
-          </div>
+          </header>
+
+          <ul className={styles.dialogList}>
+            {LENSES.map((lens) => (
+              <li key={lens.id} className={styles.dialogListItem}>
+                <button
+                  type='button'
+                  className={styles.dialogJumpBtn}
+                  onClick={() => onOpenLens(lens.id)}
+                  style={
+                    {
+                      ['--jump-bg' as string]: lens.bg,
+                      ['--jump-fg' as string]: lens.fg,
+                      ['--jump-accent' as string]: lens.accent ?? lens.fg
+                    } as React.CSSProperties
+                  }
+                >
+                  <span className={styles.dialogJumpArt} aria-hidden='true'>
+                    <Illustration
+                      id={lens.illustration}
+                      fg={lens.fg}
+                      bg={lens.bg}
+                      accent={lens.accent ?? lens.fg}
+                    />
+                  </span>
+                  <span className={styles.dialogJumpText}>
+                    <span className={styles.dialogJumpCategory}>
+                      {lens.category}
+                    </span>
+                    <span className={styles.dialogJumpTitle}>
+                      {lens.title}
+                    </span>
+                    <span className={styles.dialogJumpTagline}>
+                      {lens.tagline}
+                    </span>
+                  </span>
+                  <span className={styles.dialogJumpArrow} aria-hidden='true'>
+                    →
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>

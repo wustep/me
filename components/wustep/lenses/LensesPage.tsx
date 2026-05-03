@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import * as React from 'react'
 import BodyClassName from 'react-body-classname'
 
@@ -12,9 +13,32 @@ import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
 import { Canvas } from './Canvas'
 import { CenterDialog } from './CenterDialog'
 import styles from './LensesPage.module.css'
+import { keyToDirection, neighborInDirection } from './navigation'
 import { LENS_BY_ID } from './registry'
 import { SidePanel } from './SidePanel'
-import { type LensesPageProps, STAGE, type Stage,TIMING } from './types'
+import { type LensesPageProps, STAGE, type Stage, TIMING } from './types'
+
+/**
+ * Build the next URL search string given the current path's params plus
+ * an override patch. Empty values strip the key entirely. We mutate the
+ * URL via `history.replaceState` rather than `router.replace` so we
+ * don't trigger a Next re-render (state already reflects the change).
+ */
+function syncUrl(
+  pathname: string,
+  current: URLSearchParams,
+  patch: Record<string, string | null>
+) {
+  const next = new URLSearchParams(current)
+  for (const [k, v] of Object.entries(patch)) {
+    if (v == null || v === '') next.delete(k)
+    else next.set(k, v)
+  }
+  const qs = next.toString()
+  const url = qs ? `${pathname}?${qs}` : pathname
+  if (url === window.location.pathname + window.location.search) return
+  window.history.replaceState(null, '', url)
+}
 
 /**
  * LensesPage — top-level Lenses experience.
@@ -37,13 +61,48 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   const { isDarkMode, toggleDarkMode } = useDarkMode()
   const [hasMounted, setHasMounted] = React.useState(false)
   const [stage, setStage] = React.useState<Stage>(STAGE.hidden)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  const router = useRouter()
+  const [hydratedFromUrl, setHydratedFromUrl] = React.useState(false)
+
   const [openLensId, setOpenLensId] = React.useState<string | null>(null)
   const [centerOpen, setCenterOpen] = React.useState(false)
-  const prefersReducedMotion = usePrefersReducedMotion()
 
   React.useEffect(() => {
     setHasMounted(true)
   }, [])
+
+  /* Hydrate panel + dialog state from the URL once the router is ready.
+     `router.isReady` flips to true on the client after Next has parsed
+     `query`. Reading on first render in SSR would yield empty values
+     and overwrite a real `?lens=…` after hydration, hence this guard.
+     We only seed once — the user takes over from there. */
+  React.useEffect(() => {
+    if (!router.isReady || hydratedFromUrl) return
+    const lensRaw =
+      typeof router.query.lens === 'string' ? router.query.lens : null
+    const indexRaw =
+      typeof router.query.index === 'string' ? router.query.index : null
+    if (lensRaw && LENS_BY_ID[lensRaw]) setOpenLensId(lensRaw)
+    if (indexRaw === 'open') setCenterOpen(true)
+    setHydratedFromUrl(true)
+  }, [router.isReady, router.query.lens, router.query.index, hydratedFromUrl])
+
+  /* Push state -> URL whenever the user opens / closes / swaps a panel
+     or the index dialog. We use `history.replaceState` rather than
+     `router.replace` so we don't re-render the page tree (state already
+     reflects the change) and we don't re-trigger the entrance
+     animation. We never touch `pathname`, so this is safe for both
+     standalone (/lenses) and embedded (/playground/lenses) mounts. */
+  React.useEffect(() => {
+    if (!hydratedFromUrl) return
+    const current = new URLSearchParams(window.location.search)
+    syncUrl(window.location.pathname, current, {
+      lens: openLensId,
+      index: centerOpen ? 'open' : null
+    })
+  }, [hydratedFromUrl, openLensId, centerOpen])
 
   /* Drive the entrance storyboard. Snap to final stage instantly when
      the user prefers reduced motion. */
@@ -71,6 +130,28 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   }, [])
 
   const closeLens = React.useCallback(() => setOpenLensId(null), [])
+
+  /* Arrow-key nav when a side panel is open: jump to the spatial
+     neighbor in the pressed direction. We don't intercept arrows when
+     the dialog is open (it has its own focus + scroll behavior). */
+  React.useEffect(() => {
+    if (!openLensId || centerOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      const dir = keyToDirection(event.key)
+      if (!dir) return
+      const target = event.target as HTMLElement | null
+      const tag = target?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) {
+        return
+      }
+      const next = neighborInDirection(openLensId, dir)
+      if (!next) return
+      event.preventDefault()
+      setOpenLensId(next)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [openLensId, centerOpen])
 
   const activeLens = openLensId ? (LENS_BY_ID[openLensId] ?? null) : null
 

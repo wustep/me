@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { CenterCard, LensCard } from './cards'
 import styles from './LensesPage.module.css'
+import { keyToDirection, neighborInDirection } from './navigation'
 import { LENSES } from './registry'
 import { STAGE, type Stage } from './types'
 
@@ -79,6 +80,35 @@ export function Canvas({
     return () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
     }
+  }, [])
+
+  /* Arrow-key navigation across the canvas. Triggered only when a card
+     button currently has focus — we don't want to steal arrows from
+     scroll, modals, or text editing. We compute the spatial neighbor
+     in `navigation.ts` and call `.focus()` on the matching button. */
+  React.useEffect(() => {
+    const root = canvasRef.current
+    if (!root) return
+    const onKey = (event: KeyboardEvent) => {
+      const dir = keyToDirection(event.key)
+      if (!dir) return
+      const active = document.activeElement as HTMLElement | null
+      if (!active || !root.contains(active)) return
+
+      const fromId = active.dataset.lensId ?? null
+      // active is the center card if it has no data-lens-id but is a
+      // card; treat it as the canvas center.
+      const next = neighborInDirection(fromId, dir)
+      if (!next) return
+      const target = root.querySelector<HTMLElement>(
+        `[data-lens-id="${next}"]`
+      )
+      if (!target) return
+      event.preventDefault()
+      target.focus()
+    }
+    root.addEventListener('keydown', onKey)
+    return () => root.removeEventListener('keydown', onKey)
   }, [])
 
   const cardsStyle: React.CSSProperties = {

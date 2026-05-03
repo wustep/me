@@ -61,6 +61,7 @@ export function LensCard({ lens, stage, onOpen }: LensCardProps) {
       style={style}
       onClick={onOpen}
       aria-label={`Open lens: ${lens.title}`}
+      data-lens-id={lens.id}
     >
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
@@ -92,6 +93,7 @@ export function CenterCard({ stage, onOpen }: CenterCardProps) {
       className={`${styles.centerCard} ${visible ? styles.centerCardVisible : ''}`}
       onClick={onOpen}
       aria-label='Open: Lenses index'
+      data-lens-id='__center__'
     >
       <span className={styles.cardArt} aria-hidden='true'>
         <Illustration
