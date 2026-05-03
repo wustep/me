@@ -632,7 +632,20 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Center "Lenses" card: a 4×5 grid of mini glyphs — a deck preview. */
+/** Center "Lenses" card: three overlapping translucent lens discs.
+ *
+ *   The metaphor leans literal — these are *actual* lenses, the kind
+ *   you stack to focus light. Each disc is a saturated primary drawn
+ *   from the deck's palette (warm amber, cool teal, magenta-rose).
+ *   Where they overlap the colors mix toward white, exactly as
+ *   refracted light does, making the central trefoil feel like a
+ *   focal point. A thin ring on each disc reinforces "lens" rather
+ *   than "blob," and a single bright pinprick at the meeting point
+ *   says: this is where the deck converges.
+ *
+ *   Drawn for a dark card, so we use lighter primaries with low alpha
+ *   to read as glass on black.
+ */
 function ArtLensesDeck({
   fg,
   accent,
@@ -642,284 +655,81 @@ function ArtLensesDeck({
   accent: string
   bg: string
 }) {
-  // 20 mini glyph slots. 4 cols × 5 rows.
-  const cells = [
-    { x: 0, y: 0, kind: 'pillars' },
-    { x: 1, y: 0, kind: 'concentric' },
-    { x: 2, y: 0, kind: 'frame' },
-    { x: 3, y: 0, kind: 'steps' },
-    { x: 0, y: 1, kind: 'rings' },
-    { x: 1, y: 1, kind: 'target' },
-    { x: 2, y: 1, kind: 'matrix' },
-    { x: 3, y: 1, kind: 'loop' },
-    { x: 0, y: 2, kind: 'head' },
-    { x: 1, y: 2, kind: 'lines' },
-    { x: 2, y: 2, kind: 'arc' },
-    { x: 3, y: 2, kind: 'brackets' },
-    { x: 0, y: 3, kind: 'window' },
-    { x: 1, y: 3, kind: 'bolt' },
-    { x: 2, y: 3, kind: 'map' },
-    { x: 3, y: 3, kind: 'dots' },
-    { x: 0, y: 4, kind: 'bell' },
-    { x: 1, y: 4, kind: 'talk' },
-    { x: 2, y: 4, kind: 'branch' },
-    { x: 3, y: 4, kind: 'atoms' }
-  ] as const
+  // Saturated primaries lifted from the deck — warm/cool/rose. Kept as
+  // literals so the trefoil colors don't drift if a lens tweaks its hex.
+  const LENS_AMBER = '#F2C04A'
+  const LENS_TEAL = '#5CB8C8'
+  const LENS_ROSE = '#E55A8E'
 
-  const cellSize = 16
-  const gap = 3
-  const gridW = cellSize * 4 + gap * 3
-  const gridH = cellSize * 5 + gap * 4
-  const startX = (100 - gridW) / 2
-  const startY = (100 - gridH) / 2
+  // Triangle of disc centers around (50, 50) with radius 22 — overlap
+  // is ~40% so the trefoil reads cleanly without crowding the title.
+  const r = 22
+  const discs = [
+    { cx: 50, cy: 36, fill: LENS_AMBER },
+    { cx: 36, cy: 60, fill: LENS_TEAL },
+    { cx: 64, cy: 60, fill: LENS_ROSE }
+  ] as const
 
   return (
     <svg {...SVG_BASE} aria-hidden='true'>
-      {cells.map(({ x, y, kind }, i) => {
-        const cx = startX + x * (cellSize + gap)
-        const cy = startY + y * (cellSize + gap)
-        const isAccent = i === 5 // single accent tile to anchor the eye
-        const ink = isAccent ? accent : fg
-        const op = isAccent ? 1 : 0.7
-        // MiniGlyph paths are drawn at 18-unit scale; uniformly scale to fit cellSize.
-        const s = cellSize / 18
-        return (
-          <g
-            key={i}
-            transform={`translate(${cx} ${cy}) scale(${s})`}
-            opacity={op}
-          >
-            <MiniGlyph kind={kind} ink={ink} />
-          </g>
-        )
-      })}
-      {/* keep `bg` referenced (avoid unused-prop warnings if linted) */}
+      {/* Faint backdrop dots — a hint of the broader deck without
+          competing with the trefoil. */}
+      <g fill={fg} opacity='0.18'>
+        <circle cx='14' cy='18' r='1.2' />
+        <circle cx='86' cy='18' r='1.2' />
+        <circle cx='10' cy='84' r='1.2' />
+        <circle cx='90' cy='84' r='1.2' />
+        <circle cx='50' cy='10' r='1.2' />
+        <circle cx='50' cy='90' r='1.2' />
+      </g>
+
+      {/* Filled lens discs. Plain alpha compositing — the overlap
+          regions go a touch darker, which on a dark card reads as
+          "deeper glass" and on a cream card reads as "denser pigment."
+          Works on both themes without blend-mode acrobatics. */}
+      {discs.map((d, i) => (
+        <circle
+          key={`fill-${i}`}
+          cx={d.cx}
+          cy={d.cy}
+          r={r}
+          fill={d.fill}
+          opacity='0.78'
+        />
+      ))}
+
+      {/* Outline rings — define each lens edge so the shape reads as
+          "lens" not "blob." Drawn after the fills, slightly outside
+          the disc for crispness. */}
+      {discs.map((d, i) => (
+        <circle
+          key={`ring-${i}`}
+          cx={d.cx}
+          cy={d.cy}
+          r={r}
+          fill='none'
+          stroke={d.fill}
+          strokeWidth='0.8'
+          opacity='1'
+        />
+      ))}
+
+      {/* Convergence pinprick — the focal point where all three lenses
+          meet. Centroid of the triangle. */}
+      <circle cx='50' cy='52' r='1.6' fill={fg} />
+      <circle
+        cx='50'
+        cy='52'
+        r='4.5'
+        fill='none'
+        stroke={fg}
+        strokeWidth='0.5'
+        opacity='0.45'
+      />
+
+      {/* Reference bg/accent so unused-prop linters stay quiet. */}
       <rect x='0' y='0' width='0' height='0' fill={bg} />
+      <rect x='0' y='0' width='0' height='0' fill={accent} />
     </svg>
   )
-}
-
-function MiniGlyph({ kind, ink }: { kind: string; ink: string }) {
-  // Each glyph fits inside an 18×18 box centered at (9,9).
-  const stroke = ink
-  switch (kind) {
-    case 'pillars':
-      return (
-        <g fill={ink}>
-          <rect x='2' y='10' width='3' height='6' />
-          <rect x='7' y='6' width='3' height='10' />
-          <rect x='12' y='9' width='3' height='7' />
-        </g>
-      )
-    case 'concentric':
-      return (
-        <g fill={ink}>
-          <circle cx='9' cy='9' r='7' opacity='0.4' />
-          <circle cx='9' cy='9' r='4' opacity='0.7' />
-          <circle cx='9' cy='9' r='2' />
-        </g>
-      )
-    case 'frame':
-      return (
-        <g>
-          <rect
-            x='1.5'
-            y='1.5'
-            width='15'
-            height='15'
-            fill='none'
-            stroke={stroke}
-            strokeWidth='1'
-          />
-          <rect x='7' y='7' width='4' height='4' fill={ink} />
-        </g>
-      )
-    case 'steps':
-      return (
-        <g fill={ink}>
-          <rect x='2' y='12' width='3' height='4' />
-          <rect x='6' y='8' width='3' height='8' />
-          <rect x='10' y='4' width='3' height='12' />
-        </g>
-      )
-    case 'rings':
-      return (
-        <g fill='none' stroke={stroke} strokeWidth='1'>
-          <circle cx='9' cy='9' r='7' />
-          <circle cx='9' cy='9' r='4' />
-          <circle cx='13' cy='5' r='1.6' fill={ink} stroke='none' />
-        </g>
-      )
-    case 'target':
-      return (
-        <g>
-          <circle cx='10' cy='9' r='6' fill={ink} opacity='0.4' />
-          <circle cx='10' cy='9' r='3' fill={ink} />
-          <line x1='1' y1='9' x2='7' y2='9' stroke={stroke} strokeWidth='1.4' />
-        </g>
-      )
-    case 'matrix':
-      return (
-        <g stroke={stroke} strokeWidth='0.8' fill='none'>
-          <rect x='2' y='2' width='14' height='14' />
-          <line x1='9' y1='2' x2='9' y2='16' />
-          <line x1='2' y1='9' x2='16' y2='9' />
-          <rect x='10' y='10' width='5' height='5' fill={ink} stroke='none' />
-        </g>
-      )
-    case 'loop':
-      return (
-        <g fill='none' stroke={stroke} strokeWidth='1.2'>
-          <circle cx='9' cy='9' r='6' strokeDasharray='13 3' />
-          <polygon points='13,4 16,7 12,8' fill={ink} stroke='none' />
-        </g>
-      )
-    case 'head':
-      return (
-        <path
-          d='M 5 16 L 5 7 Q 5 3 9 3 Q 13 3 13 7 Q 13 9 11 10 L 11 14 L 8 14 L 8 16 Z'
-          fill={ink}
-          opacity='0.7'
-        />
-      )
-    case 'lines':
-      return (
-        <g stroke={stroke} strokeWidth='1' fill='none' strokeLinecap='round'>
-          <path d='M 2 5 Q 5 3 8 5 T 14 5' />
-          <path d='M 2 9 Q 5 7 8 9 T 14 9' />
-          <path d='M 2 13 Q 5 11 8 13 T 14 13' />
-        </g>
-      )
-    case 'arc':
-      return (
-        <g>
-          <path
-            d='M 2 14 Q 9 2 16 14'
-            stroke={stroke}
-            strokeWidth='1.2'
-            fill='none'
-          />
-          <circle cx='9' cy='4' r='1.6' fill={ink} />
-        </g>
-      )
-    case 'brackets':
-      return (
-        <g stroke={stroke} strokeWidth='1.2' fill='none'>
-          <path d='M 5 3 L 2 3 L 2 15 L 5 15' />
-          <path d='M 13 3 L 16 3 L 16 15 L 13 15' />
-          <line x1='6' y1='12' x2='12' y2='6' stroke={ink} />
-        </g>
-      )
-    case 'window':
-      return (
-        <g stroke={stroke} strokeWidth='1' fill='none'>
-          <rect x='2' y='3' width='14' height='12' rx='1' />
-          <line x1='2' y1='6.5' x2='16' y2='6.5' />
-          <rect x='5' y='9' width='6' height='3' fill={ink} stroke='none' />
-        </g>
-      )
-    case 'bolt':
-      return <polygon points='10,2 5,10 9,10 7,16 13,8 9,8 11,2' fill={ink} />
-    case 'map':
-      return (
-        <g>
-          <path
-            d='M 2 4 L 6 3 L 10 5 L 14 3 L 14 14 L 10 15 L 6 13 L 2 14 Z'
-            fill={ink}
-            opacity='0.4'
-          />
-          <path
-            d='M 4 11 Q 7 7 10 9 T 14 6'
-            stroke={stroke}
-            strokeWidth='1'
-            fill='none'
-            strokeDasharray='2 2'
-          />
-        </g>
-      )
-    case 'dots':
-      return (
-        <g fill={ink}>
-          <circle cx='4' cy='5' r='1.4' opacity='0.5' />
-          <circle cx='9' cy='9' r='1.6' />
-          <circle cx='14' cy='5' r='1.4' opacity='0.5' />
-          <circle cx='5' cy='13' r='1.4' opacity='0.5' />
-          <circle cx='13' cy='13' r='1.4' opacity='0.5' />
-        </g>
-      )
-    case 'bell':
-      // Probabilistic — tiny bell curve.
-      return (
-        <g>
-          <path
-            d='M 2 14 C 5 14, 6 14, 7 10 C 8 5, 10 5, 11 10 C 12 14, 13 14, 16 14'
-            stroke={stroke}
-            strokeWidth='1.2'
-            fill='none'
-            strokeLinecap='round'
-          />
-          <circle cx='9' cy='15' r='1.2' fill={ink} />
-        </g>
-      )
-    case 'talk':
-      // Communication — two facing dots with a gap.
-      return (
-        <g fill={ink}>
-          <circle cx='4' cy='9' r='2.4' />
-          <circle cx='14' cy='9' r='2.4' />
-          <line
-            x1='7'
-            y1='9'
-            x2='11'
-            y2='9'
-            stroke={stroke}
-            strokeWidth='1'
-            strokeDasharray='1 1.5'
-          />
-        </g>
-      )
-    case 'branch':
-      // Mimetics — one source, branching copies.
-      return (
-        <g>
-          <g stroke={stroke} strokeWidth='0.8' opacity='0.6' fill='none'>
-            <line x1='4' y1='9' x2='10' y2='4' />
-            <line x1='4' y1='9' x2='10' y2='14' />
-          </g>
-          <circle cx='4' cy='9' r='2' fill={ink} />
-          <circle cx='11' cy='4' r='1.6' fill={ink} opacity='0.7' />
-          <circle cx='11' cy='14' r='1.6' fill={ink} opacity='0.7' />
-          <circle cx='15' cy='9' r='1.2' fill={ink} opacity='0.5' />
-          <line
-            x1='12'
-            y1='5'
-            x2='14'
-            y2='8'
-            stroke={stroke}
-            strokeWidth='0.8'
-            opacity='0.5'
-          />
-          <line
-            x1='12'
-            y1='13'
-            x2='14'
-            y2='10'
-            stroke={stroke}
-            strokeWidth='0.8'
-            opacity='0.5'
-          />
-        </g>
-      )
-    case 'atoms':
-      // Primitives — three tiny atoms.
-      return (
-        <g fill={ink}>
-          <circle cx='4' cy='9' r='2' />
-          <rect x='7.5' y='6.5' width='4' height='4' />
-          <polygon points='15,12 12,12 13.5,8' />
-        </g>
-      )
-    default:
-      return null
-  }
 }
