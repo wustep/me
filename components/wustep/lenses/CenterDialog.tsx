@@ -3,7 +3,8 @@ import * as React from 'react'
 
 import { isDev } from '@/lib/config'
 
-import { ignoreDesignPanelOutside } from './DesignPanel'
+import type { Lens } from './types'
+import { ignoreDesignPanelOutside, useDesignFlag } from './DesignPanel'
 import { CloseIcon } from './icons'
 import { Illustration } from './illustrations'
 import styles from './LensesPage.module.css'
@@ -31,6 +32,22 @@ export function CenterDialog({
   onOpenChange,
   onOpenLens
 }: CenterDialogProps) {
+  /* Optional grouping by category. Default keeps the alphabetical
+     reading order (the registry's runtime sort) so finding a lens
+     scans top-to-bottom on first letter. Grouped mode is for when
+     the user wants to browse the deck by family. */
+  const grouped = useDesignFlag<boolean>('dialogGroup', false)
+  const groups = React.useMemo(() => {
+    if (!grouped) return null
+    const map = new Map<string, Lens[]>()
+    for (const l of LENSES) {
+      const k = l.category
+      if (!map.has(k)) map.set(k, [])
+      map.get(k)!.push(l)
+    }
+    return [...map.entries()].toSorted(([a], [b]) => a.localeCompare(b))
+  }, [grouped])
+
   return (
     <DialogPrimitive.Root
       open={open}
@@ -89,51 +106,85 @@ export function CenterDialog({
             </DialogPrimitive.Close>
           </header>
 
-          <ul className={styles.dialogList}>
-            {LENSES.map((lens, i) => (
-              <li
-                key={lens.id}
-                className={styles.dialogListItem}
-                style={{ ['--i' as string]: i } as React.CSSProperties}
-              >
-                <button
-                  type='button'
-                  className={styles.dialogJumpBtn}
-                  onClick={() => onOpenLens(lens.id)}
-                  style={
-                    {
-                      ['--jump-bg' as string]: lens.bg,
-                      ['--jump-fg' as string]: lens.fg,
-                      ['--jump-accent' as string]: lens.accent ?? lens.fg
-                    } as React.CSSProperties
-                  }
-                >
-                  <span className={styles.dialogJumpArt} aria-hidden='true'>
-                    <Illustration
-                      id={lens.illustration}
-                      fg={lens.fg}
-                      bg={lens.bg}
-                      accent={lens.accent ?? lens.fg}
-                    />
-                  </span>
-                  <span className={styles.dialogJumpText}>
-                    <span className={styles.dialogJumpCategory}>
-                      {lens.category}
-                    </span>
-                    <span className={styles.dialogJumpTitle}>{lens.title}</span>
-                    <span className={styles.dialogJumpTagline}>
-                      {lens.tagline}
-                    </span>
-                  </span>
-                  <span className={styles.dialogJumpArrow} aria-hidden='true'>
-                    →
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          {groups ? (
+            <div className={styles.dialogGroups}>
+              {groups.map(([category, lenses], gi) => (
+                <section key={category} className={styles.dialogGroup}>
+                  <h3 className={styles.dialogGroupHead}>{category}</h3>
+                  <ul className={styles.dialogList}>
+                    {lenses.map((lens, i) => (
+                      <DialogJumpItem
+                        key={lens.id}
+                        lens={lens}
+                        index={gi * 100 + i}
+                        onOpenLens={onOpenLens}
+                      />
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <ul className={styles.dialogList}>
+              {LENSES.map((lens, i) => (
+                <DialogJumpItem
+                  key={lens.id}
+                  lens={lens}
+                  index={i}
+                  onOpenLens={onOpenLens}
+                />
+              ))}
+            </ul>
+          )}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
+  )
+}
+
+function DialogJumpItem({
+  lens,
+  index,
+  onOpenLens
+}: {
+  lens: Lens
+  index: number
+  onOpenLens: (id: string) => void
+}) {
+  return (
+    <li
+      className={styles.dialogListItem}
+      style={{ ['--i' as string]: index } as React.CSSProperties}
+    >
+      <button
+        type='button'
+        className={styles.dialogJumpBtn}
+        onClick={() => onOpenLens(lens.id)}
+        style={
+          {
+            ['--jump-bg' as string]: lens.bg,
+            ['--jump-fg' as string]: lens.fg,
+            ['--jump-accent' as string]: lens.accent ?? lens.fg
+          } as React.CSSProperties
+        }
+      >
+        <span className={styles.dialogJumpArt} aria-hidden='true'>
+          <Illustration
+            id={lens.illustration}
+            fg={lens.fg}
+            bg={lens.bg}
+            accent={lens.accent ?? lens.fg}
+          />
+        </span>
+        <span className={styles.dialogJumpText}>
+          <span className={styles.dialogJumpCategory}>{lens.category}</span>
+          <span className={styles.dialogJumpTitle}>{lens.title}</span>
+          <span className={styles.dialogJumpTagline}>{lens.tagline}</span>
+        </span>
+        <span className={styles.dialogJumpArrow} aria-hidden='true'>
+          →
+        </span>
+      </button>
+    </li>
   )
 }
