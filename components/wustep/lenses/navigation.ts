@@ -82,17 +82,17 @@ export function neighborInDirection(
     // keypress always lands on a sensible card.
     if (!fromId) {
       return direction === 'right'
-        ? READING_ORDER[0]
-        : READING_ORDER[READING_ORDER.length - 1]
+        ? (READING_ORDER[0] ?? null)
+        : (READING_ORDER[READING_ORDER.length - 1] ?? null)
     }
 
     const idx = READING_ORDER.indexOf(fromId)
-    if (idx === -1) return READING_ORDER[0]
+    if (idx === -1) return READING_ORDER[0] ?? null
 
     const step = direction === 'right' ? 1 : -1
     const nextIdx =
       (idx + step + READING_ORDER.length) % READING_ORDER.length
-    return READING_ORDER[nextIdx]
+    return READING_ORDER[nextIdx] ?? null
   }
 
   // Spatial-neighbor traversal for vertical arrows.

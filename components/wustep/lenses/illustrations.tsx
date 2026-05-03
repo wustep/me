@@ -120,7 +120,7 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
   // Bond y-positions, evenly spaced from top to bottom. The strands
   // weave through these four x-mirror points, swapping sides at each
   // one so the silhouette reads as a helix.
-  const bondYs = [22, 44, 66, 88]
+  const bondYs: [number, number, number, number] = [22, 44, 66, 88]
   const innerX = 42
   const outerX = 58
   const railsLeft =

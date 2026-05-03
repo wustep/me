@@ -1497,7 +1497,7 @@ export function DesignPanel() {
       // bulk-patch logic — don't fight it) and any excluded params
       // (debug overlays etc.) so chaos doesn't toggle dev tooling
       // along with design values.
-      next.paletteMode = prev.paletteMode
+      if (prev.paletteMode !== undefined) next.paletteMode = prev.paletteMode
       for (const id of NO_RANDOMIZE_IDS) {
         if (id in prev) next[id] = prev[id]!
       }
