@@ -25,6 +25,7 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
   const open = !!lens
   const [shown, setShown] = React.useState<Lens | null>(lens)
   const [bodyKey, setBodyKey] = React.useState(0)
+  const closeBtnRef = React.useRef<HTMLButtonElement>(null)
 
   React.useEffect(() => {
     if (lens) {
@@ -54,6 +55,15 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
               : undefined
           }
           aria-describedby={undefined}
+          onOpenAutoFocus={(event) => {
+            // Radix's default is to focus the first focusable element,
+            // which is now the prev/next chevron. That makes the panel
+            // open with a focus ring on a navigation button — too loud.
+            // Send focus to the Close button instead (still keyboard
+            // accessible, but visually unobtrusive next to the X glyph).
+            event.preventDefault()
+            closeBtnRef.current?.focus({ preventScroll: true })
+          }}
         >
           {shown && (
             <>
@@ -78,9 +88,15 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
                     type='button'
                     className={styles.panelNavBtn}
                     aria-label='Previous lens'
-                    onClick={() => {
+                    onClick={(event) => {
                       const prev = neighborInDirection(shown.id, 'left')
-                      if (prev) onOpenLens(prev)
+                      if (prev) {
+                        // Drop focus from the chevron after a mouse
+                        // click so the new panel doesn't open with a
+                        // ring stuck on a navigation control.
+                        event.currentTarget.blur()
+                        onOpenLens(prev)
+                      }
                     }}
                   >
                     <ChevronIcon direction='left' />
@@ -89,14 +105,18 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
                     type='button'
                     className={styles.panelNavBtn}
                     aria-label='Next lens'
-                    onClick={() => {
+                    onClick={(event) => {
                       const next = neighborInDirection(shown.id, 'right')
-                      if (next) onOpenLens(next)
+                      if (next) {
+                        event.currentTarget.blur()
+                        onOpenLens(next)
+                      }
                     }}
                   >
                     <ChevronIcon direction='right' />
                   </button>
                   <DialogPrimitive.Close
+                    ref={closeBtnRef}
                     className={styles.panelClose}
                     aria-label='Close panel'
                   >

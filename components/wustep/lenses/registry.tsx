@@ -29,12 +29,13 @@ export const LENSES: Lens[] = [
           History as a chronicle of remarkable individuals. In its strongest
           form, this lens argues that the arc of civilization is bent by a
           handful of singular minds — Caesar, Napoleon, Newton, Lincoln — and
-          that without them, the trajectory would be unrecognizable.
+          that without them, the trajectory is unrecognizable.
         </p>
         <p>
-          Through this lens you notice founders, generals, prophets, and
-          inventors as the unit of analysis. You ask: <em>who decided?</em>{' '}
-          <em>who saw it first?</em> <em>who refused to give in?</em>
+          Through this lens, founders, generals, prophets, and inventors become
+          the unit of analysis. The question shifts from{' '}
+          <em>what conditions produced this?</em> to{' '}
+          <em>who decided, who saw it first, who refused to give in?</em>
         </p>
         <p>
           Weaknesses: it underweights structures, institutions, networks, and
@@ -231,10 +232,10 @@ export const LENSES: Lens[] = [
     body: (
       <>
         <p>
-          Life, products, organizations, and habits are shaped by rules,
-          rewards, feedback loops, skill curves, and affordances. The best
-          systems make good behavior <em>feel playable</em> — clear objectives,
-          visible progress, fair odds, and meaningful choice at every turn.
+          Life, products, and organizations are shaped by rules, rewards,
+          feedback loops, and affordances. The best of them make the right
+          behavior <em>feel playable</em> — clear objective, visible progress,
+          fair odds, meaningful choice at every turn.
         </p>
         <p>
           Through this lens, you stop asking{' '}
@@ -245,8 +246,8 @@ export const LENSES: Lens[] = [
         </p>
         <p>
           Weaknesses: not everything should be gamified, and over-designed games
-          can crowd out intrinsic motivation. But the best designers, coaches,
-          and managers are quietly thinking in payoffs and moves.
+          crowd out intrinsic motivation. But the best designers, coaches, and
+          managers are quietly thinking in payoffs and moves.
         </p>
       </>
     )
@@ -546,15 +547,16 @@ export const LENSES: Lens[] = [
       <>
         <p>
           People absorb culture, standards, vocabulary, and taste from their
-          environment. Put yourself near high-signal people and artifacts;
-          become what you repeatedly notice. Most growth is not effortful
-          self-improvement — it is steady proximity to better defaults.
+          environment. Most growth is not effortful self-improvement — it is
+          steady proximity to better defaults. Put yourself near high-signal
+          people and artifacts and you become what you repeatedly notice.
         </p>
         <p>
           Through this lens, who you spend time with, what you read, where you
           work, and what you stare at on a phone screen are all training data.
           The slow upgrade compounds: you start producing the kind of work,
-          opinions, and instincts of the people you keep around you.
+          holding the kind of opinions, having the kind of instincts of the
+          people you keep around you.
         </p>
         <p>
           Weaknesses: osmosis works in both directions and absorbs the mediocre
@@ -587,11 +589,7 @@ export const LENSES: Lens[] = [
         </p>
         <p>
           Through this lens, you stop asking <em>what will happen?</em> and
-          start asking{' '}
-          <em>
-            what is the spread, where is the mode, how fat is the tail, and what
-            is my edge over a coin flip?
-          </em>{' '}
+          start asking <em>what&rsquo;s the spread, and where&rsquo;s my edge?</em>{' '}
           Plans become ranges. Confidence becomes calibration. A 70% chance is
           not a promise; it is a posture.
         </p>
@@ -618,12 +616,10 @@ export const LENSES: Lens[] = [
     body: (
       <>
         <p>
-          Almost every problem that occurs between two people is, at root, a
-          communication problem. Two people fundamentally do not understand each
-          other — different vocabularies, different unsaid assumptions,
-          different levels of context, different stakes — and the gap quietly
-          grows until it surfaces as conflict, drift, or a quietly bad outcome
-          neither wanted.
+          Almost every problem between two people is, at root, a communication
+          problem. Different vocabularies, different unsaid assumptions,
+          different stakes — and the gap quietly grows until it surfaces as
+          conflict, drift, or a bad outcome neither wanted.
         </p>
         <p>
           Through this lens, &ldquo;they&rsquo;re wrong&rdquo; and &ldquo;they
@@ -656,17 +652,17 @@ export const LENSES: Lens[] = [
       <>
         <p>
           Ideas, beliefs, formats, and aesthetics compete to spread, the way
-          organisms compete to reproduce. The ones we encounter most are not
+          organisms compete to reproduce. The ones you see most are not
           necessarily the truest or the most useful — they are the most{' '}
-          <em>transmissible</em>. Catchy beats correct; sticky beats subtle; for
-          (const [i, l] of ent ies-) ts nuance, almost every time.
+          <em>transmissible</em>. Catchy beats correct; sticky beats subtle;
+          shareable beats nuanced, almost every time.
         </p>
         <p>
           Through this lens, the question stops being{' '}
           <em>is this idea right?</em> and becomes{' '}
           <em>
-            why is this idea winning right now? What is its host? What does it
-            offer the carrier?
+            why is this idea winning right now, and what does it offer the
+            people carrying it?
           </em>{' '}
           Most movements, fashions, and opinions are legible this way long
           before they make sense any other way.

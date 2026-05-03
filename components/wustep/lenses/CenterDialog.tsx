@@ -42,16 +42,18 @@ export function CenterDialog({
                 The deck · {LENSES.length} lenses
               </span>
               <p className={styles.dialogIntro}>
-                Every model of the world is partial. A lens names what it
-                foregrounds — and quietly hides the rest.
+                A lens is a way of looking. Each one foregrounds something
+                real and quietly hides everything else.
               </p>
               <DialogPrimitive.Title className={styles.dialogTitle}>
                 Hold many. Lightly.
               </DialogPrimitive.Title>
               <p className={styles.dialogLede}>
-                Don't pick one. Look through three in a row, notice what each
-                surfaces, then set them down. The world will keep being too
-                big for any single frame.
+                No single frame explains the world. The trick isn&rsquo;t
+                picking the right lens — it&rsquo;s learning to swap between
+                three or four, noticing what each one reveals and what it
+                quietly leaves out. Pull a card. Try it on the situation in
+                front of you. Set it down.
               </p>
             </div>
             <DialogPrimitive.Close
