@@ -28,6 +28,12 @@ const LENSES_RAW: Lens[] = [
     accent: '#F2C77A',
     illustration: 'agency',
     related: ['momentum', 'narrative', 'incentives'],
+    readings: [
+      {
+        label: 'How to be more agentic — Cate Hall',
+        href: 'https://usefulfictions.substack.com/p/how-to-be-more-agentic'
+      }
+    ],
     body: (
       <>
         <p>
@@ -62,7 +68,7 @@ const LENSES_RAW: Lens[] = [
     tagline: 'You become what you keep looking at.',
     x: 6.25,
     y: 38,
-    bg: '#16202E',
+    bg: '#243449',
     fg: '#F5EFE0',
     accent: '#E8B547',
     illustration: 'attention',
@@ -173,6 +179,12 @@ const LENSES_RAW: Lens[] = [
     accent: '#F2D9A0',
     illustration: 'dopamine',
     related: ['energy', 'incentives', 'mimetics'],
+    readings: [
+      {
+        label: 'The Molecule of More — Daniel Z. Lieberman & Michael E. Long',
+        href: 'https://amzn.to/4283g1X'
+      }
+    ],
     body: (
       <>
         <p>
@@ -394,6 +406,7 @@ const LENSES_RAW: Lens[] = [
     accent: '#F2C77A',
     illustration: 'headspace',
     related: ['communication', 'narrative', 'energy'],
+    readings: [{ label: 'Headspace', href: '/headspace' }],
     body: (
       <>
         <p>
@@ -429,6 +442,9 @@ const LENSES_RAW: Lens[] = [
     accent: '#B43A2E',
     illustration: 'identity',
     related: ['agency', 'narrative', 'headspace'],
+    readings: [
+      { label: 'Atomic Habits — James Clear', href: 'https://amzn.to/4w6JdP7' }
+    ],
     body: (
       <>
         <p>
@@ -502,6 +518,12 @@ const LENSES_RAW: Lens[] = [
     accent: '#1B2754',
     illustration: 'interface',
     related: ['legibility', 'minimalism', 'energy'],
+    readings: [
+      {
+        label: 'The Design of Everyday Things — Don Norman',
+        href: 'https://amzn.to/4n7GyQV'
+      }
+    ],
     body: (
       <>
         <p>
@@ -622,19 +644,38 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Value comes from what remains after you remove the unnecessary. Not
+          Dieter Rams put it in three words:{' '}
+          <em>&ldquo;Weniger, aber besser&rdquo;</em> — less, but better. Value
+          comes from what remains after you remove the unnecessary. Not
           aesthetic austerity for its own sake, but a discipline of asking{' '}
-          <em>what is the smallest thing that still does the job?</em>
+          <em>what is the smallest thing that still does the job?</em> — and
+          then making that thing exceptional.
         </p>
         <p>
           Through this lens, complexity is a tax. Every feature, possession,
-          obligation, and abstraction has a hidden cost — cognitive,
-          maintenance, emotional. Subtraction is creative work.
+          obligation, abstraction, and relationship has a hidden cost —
+          cognitive, maintenance, emotional, financial. The cost is rarely
+          visible at the moment of acquisition; it shows up later, as friction,
+          clutter, and the slow erosion of attention. Subtraction is creative
+          work, and often the harder half of it.
+        </p>
+        <p>
+          The lens applies as much to a life as to a product. What you make, but
+          also what you own, what you commit to, who you say yes to, what you
+          let onto your calendar, what you allow into your head. A clean surface
+          is downstream of a hundred small refusals. The minimalist isn&rsquo;t
+          the person with nothing; they&rsquo;re the person whose remaining
+          things — projects, possessions, people, beliefs — have all earned
+          their place. Default accumulation runs the other direction
+          automatically; staying lean takes intent.
         </p>
         <p>
           Weaknesses: the world is genuinely complicated, and over-pruned
-          systems are brittle. But as a counterweight to default accumulation,
-          it&rsquo;s nearly always corrective.
+          systems are brittle. Aestheticized minimalism can curdle into
+          performance — empty rooms, empty calendars, empty work — where the
+          subtraction becomes the point instead of the means. But as a
+          counterweight to default accumulation, the lens is nearly always
+          corrective: less, but better, applied to almost anything.
         </p>
       </>
     )
@@ -961,6 +1002,12 @@ const LENSES_RAW: Lens[] = [
     accent: '#D9A23A',
     illustration: 'systems',
     related: ['incentives', 'primitives', 'probabilistic'],
+    readings: [
+      {
+        label: 'Thinking in Systems — Donella Meadows',
+        href: 'https://amzn.to/4w6VpPF'
+      }
+    ],
     body: (
       <>
         <p>

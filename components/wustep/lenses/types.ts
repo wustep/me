@@ -83,6 +83,13 @@ export type IllustrationId =
   | 'identity'
   | 'lenses-deck'
 
+export type Reading = {
+  /** Human-readable label, e.g. "Thinking in Systems — Donella Meadows". */
+  label: string
+  /** Destination URL (internal path or external link). */
+  href: string
+}
+
 export type Lens = {
   id: string
   category: string
@@ -97,6 +104,8 @@ export type Lens = {
   illustration: IllustrationId
   body: React.ReactNode
   related?: string[]
+  /** Optional further-reading list rendered above the related lenses. */
+  readings?: Reading[]
 }
 
 export type LensesPageProps = {

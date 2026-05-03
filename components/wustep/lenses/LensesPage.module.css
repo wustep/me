@@ -1257,6 +1257,107 @@
   );
 }
 
+/* Further-reading block — sits above .relatedBlock when present. Same
+   divider treatment so the two sections read as a single footer. */
+.readingsBlock {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(.dark-mode) .readingsBlock {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* When readings AND related are both present, the related block sits
+   directly under readings — collapse the doubled divider/spacing so
+   it reads as one footer with two labels. */
+.readingsBlock + .relatedBlock {
+  margin-top: 22px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.readingsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.readingsItem {
+  margin: 0;
+}
+
+.readingsLink {
+  --readings-rule: rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--readings-rule);
+  font-family: var(--design-serif, var(--font-serif, Georgia, serif));
+  font-size: 1rem;
+  line-height: 1.4;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    color 200ms var(--ease-spring-snap),
+    border-color 200ms var(--ease-spring-snap);
+}
+
+.readingsItem:last-child .readingsLink {
+  border-bottom: 0;
+}
+
+:global(.dark-mode) .readingsLink {
+  --readings-rule: rgba(255, 255, 255, 0.1);
+}
+
+.readingsLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.readingsArrow {
+  flex: 0 0 auto;
+  opacity: 0.45;
+  font-size: 0.95em;
+  transition:
+    transform 200ms var(--ease-spring-snap),
+    opacity 200ms var(--ease-spring-snap);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .readingsLink:hover {
+    color: var(--panel-bg, inherit);
+    border-bottom-color: color-mix(
+      in srgb,
+      var(--panel-bg, currentColor) 50%,
+      transparent
+    );
+  }
+
+  .readingsLink:hover .readingsArrow {
+    opacity: 1;
+    transform: translate(2px, -2px);
+  }
+}
+
+.readingsLink:focus-visible {
+  outline: 2px solid var(--panel-bg, currentColor);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+:global(html[data-design-related='off']) .readingsBlock {
+  display: none;
+}
+
 /* Related-lenses block at bottom of panel body. */
 .relatedBlock {
   margin-top: 32px;
@@ -1349,7 +1450,7 @@
 .relatedChipSwatch {
   width: 12px;
   height: 12px;
-  border-radius: 4px;
+  border-radius: 50%;
   background: var(--chip-bg);
   flex: 0 0 auto;
 }
@@ -2030,7 +2131,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.18);
+    transform: scale(1.22);
   }
 }
 
@@ -2058,10 +2159,171 @@
   }
 }
 
-/* Status — the high-status dot orbits the rings. Slow, steady. */
-:global(svg[data-anim='status'] [data-anim-target]) {
-  animation: lensOrbit 5s linear infinite;
+/* Status — an Olympic-style podium. All three blocks expand and
+   contract along their own height (anchored at the ground), each
+   on its own phase, so the composition feels like a live ranking
+   continuously renegotiating itself. Each dot rides on top of its
+   block via a translateY keyframe whose values are derived from the
+   block's scaleY range and base height, so the dot tracks the bar's
+   top edge through the entire loop.
+
+   Hierarchy is preserved at every frame: silver and bronze use
+   smaller absolute amplitudes than gold and never reach gold's
+   base height, so the ordering is unambiguous at every moment.
+
+   Block ↔ dot translateY math (transform-origin: center bottom):
+     dotTranslateY(t) = -(scaleY(t) - 1) * baseHeight
+     Negative because the SVG y-axis grows downward; a taller bar
+     (scaleY > 1) means the top moves UP, i.e. translateY negative.
+
+   The block animation and its matching dot animation share the
+   same duration and animation-delay so they stay locked in phase. */
+
+/* Status — three podium bars in continuous, asymmetric motion.
+   Each bar uses a multi-keyframe curve (rise → hold near peak →
+   fall) rather than a sinusoidal up-and-down, so the motion reads
+   as live position-renegotiation rather than mechanical breathing.
+   The three bars also use slightly *different* loop durations
+   (3.0s / 3.4s / 2.7s) so their phases continuously evolve — the
+   composition never settles into a fixed cyclic pattern, which is
+   what status actually feels like. Each block uses
+   ease-in-out-quart (cubic-bezier(0.77, 0, 0.175, 1)) — a sharper
+   curve than the default ease-in-out, so the rises and falls feel
+   confident rather than soggy. */
+
+/* Gold (1st place) — base height 36, scaleY 0.85..1.25
+   Top travels: 0%/100% +5.40px, peak (50%) -9.00px.
+   Asymmetric keyframes give a quick rise, a small hold near the
+   peak, then a longer settle on the way down. */
+:global(svg[data-anim='status'] [data-anim-target='gold-block']) {
+  animation: lensStatusGoldBlock 3s cubic-bezier(0.77, 0, 0.175, 1) infinite;
 }
+:global(svg[data-anim='status'] [data-anim-target='gold-dot']) {
+  animation: lensStatusGoldDot 3s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+@keyframes lensStatusGoldBlock {
+  0%,
+  100% {
+    transform: scaleY(0.85);
+  }
+  40% {
+    transform: scaleY(1.25);
+  }
+  60% {
+    transform: scaleY(1.2);
+  }
+}
+@keyframes lensStatusGoldDot {
+  0%,
+  100% {
+    transform: translateY(5.4px);
+  }
+  40% {
+    transform: translateY(-9px);
+  }
+  60% {
+    transform: translateY(-7.2px);
+  }
+}
+
+/* Silver (2nd place) — base height 24, scaleY 0.80..1.50, 3.4s loop
+   Top travels: 0%/100% +4.80px, peak (50%) -12.00px. Slightly
+   longer cycle than gold so the relative phase keeps drifting. */
+:global(svg[data-anim='status'] [data-anim-target='silver-block']) {
+  animation: lensStatusSilverBlock 3.4s cubic-bezier(0.77, 0, 0.175, 1)
+    infinite;
+  animation-delay: -1.1s;
+}
+:global(svg[data-anim='status'] [data-anim-target='silver-dot']) {
+  animation: lensStatusSilverDot 3.4s cubic-bezier(0.77, 0, 0.175, 1)
+    infinite;
+  animation-delay: -1.1s;
+}
+@keyframes lensStatusSilverBlock {
+  0%,
+  100% {
+    transform: scaleY(0.8);
+  }
+  45% {
+    transform: scaleY(1.5);
+  }
+  60% {
+    transform: scaleY(1.42);
+  }
+}
+@keyframes lensStatusSilverDot {
+  0%,
+  100% {
+    transform: translateY(4.8px);
+  }
+  45% {
+    transform: translateY(-12px);
+  }
+  60% {
+    transform: translateY(-10.08px);
+  }
+}
+
+/* Bronze (3rd place) — base height 12, scaleY 0.70..1.80, 2.7s loop
+   Top travels: 0%/100% +3.60px, peak (50%) -9.60px. Shortest cycle
+   of the three so it's the most nervous bar in the composition. */
+:global(svg[data-anim='status'] [data-anim-target='bronze-block']) {
+  animation: lensStatusBronzeBlock 2.7s cubic-bezier(0.77, 0, 0.175, 1)
+    infinite;
+  animation-delay: -1.8s;
+}
+:global(svg[data-anim='status'] [data-anim-target='bronze-dot']) {
+  animation: lensStatusBronzeDot 2.7s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  animation-delay: -1.8s;
+}
+@keyframes lensStatusBronzeBlock {
+  0%,
+  100% {
+    transform: scaleY(0.7);
+  }
+  42% {
+    transform: scaleY(1.8);
+  }
+  62% {
+    transform: scaleY(1.7);
+  }
+}
+@keyframes lensStatusBronzeDot {
+  0%,
+  100% {
+    transform: translateY(3.6px);
+  }
+  42% {
+    transform: translateY(-9.6px);
+  }
+  62% {
+    transform: translateY(-8.4px);
+  }
+}
+
+/* Gold halo — gentle scale + opacity pulse on the spotlight,
+   independent of the bar's scaleY so the spotlight feels alive
+   even at moments when the bar is contracting. Sits inside the
+   gold-dot translation group so it travels with the dot. */
+:global(svg[data-anim='status'] [data-anim-target='gold-halo']) {
+  animation: lensStatusGoldHalo 2.4s ease-in-out infinite;
+}
+@keyframes lensStatusGoldHalo {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* Generic full-rotation keyframe used by lenses whose targets
+   are meant to spin in place (Primitives, Dopamine's chase loop,
+   etc). Kept near the top of the lens-anim block so it can be
+   reused without redefining the same trivial keyframe per lens. */
 @keyframes lensOrbit {
   from {
     transform: rotate(0deg);
@@ -2098,17 +2360,28 @@
   animation: lensGameCell 4s ease-in-out infinite;
   opacity: 0;
 }
+/* The cell delays are shifted by an extra -0.6s relative to the
+   "natural" stagger (0 / -3s / -2s / -1s) so that in the default
+   *paused* state — what users see when they're not hovering —
+   cell 1 (top-left) is frozen at 15 % through its keyframe, i.e.
+   in the middle of its lit plateau (6 %–22 %). Without this
+   offset cell 1 sits at 0 % of its keyframe in the paused state
+   and therefore renders as fully transparent, which made the
+   default illustration look "off" — half-lit on the wrong cell
+   instead of fully lit on the canonical first cell. The relative
+   spacing between cells is preserved, so the walk during the
+   running animation still reads TL → TR → BR → BL clockwise. */
 :global(svg[data-anim='game-theory'] [data-anim-target='1']) {
-  animation-delay: 0s;
+  animation-delay: -0.6s;
 }
 :global(svg[data-anim='game-theory'] [data-anim-target='2']) {
-  animation-delay: -3s;
+  animation-delay: -3.6s;
 }
 :global(svg[data-anim='game-theory'] [data-anim-target='3']) {
-  animation-delay: -2s;
+  animation-delay: -2.6s;
 }
 :global(svg[data-anim='game-theory'] [data-anim-target='4']) {
-  animation-delay: -1s;
+  animation-delay: -1.6s;
 }
 @keyframes lensGameCell {
   /* Each cell is "lit" for ~25% of the cycle, then fades out. */
@@ -2133,9 +2406,13 @@
 
 /* Row marker (Player 1) — walks between the two rows. The marker
    sits at y=37 for the first half of the cycle (top row lit) and
-   drops to y=63 for the second half (bottom row lit). */
+   drops to y=63 for the second half (bottom row lit). The -0.6s
+   delay matches the cell stagger so the row marker is on the top
+   row in the paused default state, where cell 1 (TL) is the lit
+   cell. */
 :global(svg[data-anim='game-theory'] [data-anim-target='row']) {
   animation: lensGameRow 4s steps(1, end) infinite;
+  animation-delay: -0.6s;
 }
 @keyframes lensGameRow {
   0%,
@@ -2159,6 +2436,7 @@
 */
 :global(svg[data-anim='game-theory'] [data-anim-target='col']) {
   animation: lensGameCol 4s steps(1, end) infinite;
+  animation-delay: -0.6s;
 }
 @keyframes lensGameCol {
   0%,
@@ -2187,7 +2465,9 @@
    inline on each <circle> so the keyframe can interpolate `fill`
    from the lens's foreground color to its accent without baking
    colors into the shared keyframe. */
-:global(svg[data-anim='systems'] [data-anim-target]) {
+:global(svg[data-anim='systems'] [data-anim-target='1']),
+:global(svg[data-anim='systems'] [data-anim-target='2']),
+:global(svg[data-anim='systems'] [data-anim-target='3']) {
   animation: lensSystemsPulse 3.6s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: center;
@@ -2208,13 +2488,29 @@
     fill: var(--node-fg);
     transform: scale(1);
   }
-  20% {
+  18% {
     fill: var(--node-accent);
-    transform: scale(1.18);
+    transform: scale(1.32);
   }
-  35% {
+  38% {
     fill: var(--node-accent);
-    transform: scale(1);
+    transform: scale(1.05);
+  }
+}
+
+/* The connecting arcs carry a moving dashed flow — the actual current
+   travelling between nodes. Without it the loop reads as a static
+   diagram with three blinking lights; with it the system feels alive,
+   like something is in transit at all times. */
+:global(svg[data-anim='systems'] [data-anim-target='flow']) {
+  animation: lensSystemsFlow 1.8s linear infinite;
+}
+@keyframes lensSystemsFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -16;
   }
 }
 
@@ -2367,17 +2663,20 @@
   }
 }
 
-/* Constraint — energy under pressure. */
+/* Constraint — energy under pressure. The diagonal tugs harder
+   against the brackets now: a stronger scale plus a small rotational
+   strain, so the bar reads as actually fighting its limits rather
+   than gently flexing. */
 :global(svg[data-anim='constraint'] [data-anim-target]) {
   animation: lensTug 1.4s ease-in-out infinite;
 }
 @keyframes lensTug {
   0%,
   100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
   50% {
-    transform: scale(1.06);
+    transform: scale(1.14) rotate(-2deg);
   }
 }
 
@@ -2561,12 +2860,16 @@
   }
 }
 
-/* Communication — speech pulses; misalignment crack flickers. */
+/* Communication — the speech bubble pulses while its color cycles
+   through the heat spectrum: yellow → orange → red → yellow. The
+   loop reads as a conversation warming up and cooling down — the
+   thing actually being communicated isn't the words, it's the
+   temperature. */
 :global(svg[data-anim='communication'] [data-anim-target='1']) {
-  animation: lensSpeak 1.8s ease-in-out infinite;
+  animation: lensSpeak 2.6s ease-in-out infinite;
 }
-:global(svg[data-anim='communication'] [data-anim-target='2']) {
-  animation: lensCrackFlicker 1.8s ease-in-out infinite;
+:global(svg[data-anim='communication'] [data-anim-target='bubble']) {
+  animation: lensCommHeat 2.6s ease-in-out infinite;
 }
 @keyframes lensSpeak {
   0%,
@@ -2574,18 +2877,28 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.04);
+    transform: scale(1.06);
   }
 }
-@keyframes lensCrackFlicker {
+@keyframes lensCommHeat {
+  /* Three notes of warmth, all picked to read cleanly on the lens's
+     warm brown background:
+       - amber yellow (the tagline accent),
+       - burnt orange (one step hotter),
+       - a deep brick / paprika red, NOT a saturated traffic-cone red,
+         so it stays inside the card's earth palette.
+     The bricky red sits adjacent in hue to the brown card itself, so
+     the cycle reads as the bubble heating *through* the card's own
+     temperature rather than fighting it. */
   0%,
-  50%,
   100% {
-    opacity: 0.45;
+    fill: #f3c25a;
   }
-  20%,
-  70% {
-    opacity: 0.8;
+  33% {
+    fill: #e89042;
+  }
+  66% {
+    fill: #c14a30;
   }
 }
 
@@ -2645,28 +2958,28 @@
 @keyframes lensSettle1 {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   50% {
-    transform: translateX(2.5px);
+    transform: translateX(7px) scale(1.04);
   }
 }
 @keyframes lensSettle2 {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   50% {
-    transform: translateX(-2.5px);
+    transform: translateX(-7px) scale(1.04);
   }
 }
 @keyframes lensSettle3 {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   50% {
-    transform: translateX(2px);
+    transform: translateX(6px) scale(1.04);
   }
 }
 
@@ -2947,6 +3260,8 @@
   .dialogCloseBtn,
   .relatedChip,
   .relatedChipArrow,
+  .readingsLink,
+  .readingsArrow,
   .headerButton,
   .homeBackButton,
   .homeBackArrow {

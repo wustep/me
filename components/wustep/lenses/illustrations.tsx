@@ -107,14 +107,46 @@ const SVG_BASE: React.SVGProps<SVGSVGElement> = {
 function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='second-order'>
+      {/* Static "field" rings — drawn at the radii a real ripple would
+          occupy mid-cascade. They make the at-rest composition look
+          like the surface of a pond already in motion, rather than a
+          single dot waiting to be tapped. The animated rings ride on
+          top of these and continue the emission outward. */}
+      <circle
+        cx='50'
+        cy='50'
+        r='18'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.4'
+        opacity='0.5'
+      />
+      <circle
+        cx='50'
+        cy='50'
+        r='28'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.2'
+        opacity='0.32'
+      />
+      <circle
+        cx='50'
+        cy='50'
+        r='38'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1'
+        opacity='0.18'
+      />
+
       {/* Centered solid dot: the triggering action. */}
       <circle cx='50' cy='50' r='4' fill={accent} />
 
-      {/* Three concentric rings. Start radii are tight around the
+      {/* Three animated rings. Start radii are tight around the
           center; the keyframes scale them outward and fade them off,
-          staggered so the rings continuously emit. Drawn with the
-          foreground stroke at decreasing opacity for depth — the
-          outermost ring is the faintest, like a real water surface. */}
+          staggered so the rings continuously emit on top of the
+          static field above. */}
       <circle
         cx='50'
         cy='50'
@@ -476,42 +508,193 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Status — the high-status dot orbits the rings, slowly. */
+/** Status — an Olympic-style podium. Three stepped blocks of
+ *  decreasing height — 2nd place (left), 1st place (center,
+ *  tallest), 3rd place (right) — each with a figure-dot resting on
+ *  top. The 1st-place dot is the accent: larger, brighter, with a
+ *  soft halo behind it. The other two are quieter foreground dots,
+ *  unmistakably ranked.
+ *
+ *  Animation
+ *  ─────────
+ *  Status isn't static — relative position keeps shifting. All
+ *  three podium blocks expand and contract along their own height
+ *  (anchored to the ground), each on its own phase, so the
+ *  composition feels like a live ranking continuously renegotiating
+ *  itself. Each dot rides along on top of its bar, translating in
+ *  lock-step with the bar's top edge — the dots don't do anything
+ *  extra, they're just carried by the rank beneath them.
+ *
+ *  All three blocks pulse with substantial amplitude and offset
+ *  phases, so they briefly overtake each other through the loop.
+ *  That's the point: rank isn't a stable fact, it's a moving
+ *  signal. The base resting heights still encode the canonical
+ *  podium order, but at any given frame the silver or bronze bar
+ *  may be the tallest in the composition.
+ *
+ *  How dot↔block sync works
+ *    Each block uses `transform: scaleY(...)` with origin at its
+ *    bottom edge, so its top moves by `(scaleY - 1) * baseHeight`.
+ *    Each dot's keyframe translates Y by exactly the matching
+ *    pixel delta, so the dot appears to sit on top of its bar
+ *    throughout the loop. The numbers in the CSS are derived from
+ *    the block heights here, so if the heights change, the dot
+ *    translateY values must be updated to match.
+ *
+ *    data-anim-target='gold-block' / 'silver-block' / 'bronze-block'
+ *      = the three podium blocks.
+ *    data-anim-target='gold-dot' / 'silver-dot' / 'bronze-dot'
+ *      = the dots that ride atop their respective blocks.
+ */
 function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
+  // Ground line — the floor everyone competes on.
+  const GROUND_Y = 78
+
+  // Podium block geometry. All blocks share the same width so the
+  // hierarchy is conveyed purely by height — the cleanest possible
+  // visual statement of "rank."
+  //
+  // Heights form a clean arithmetic sequence (12px steps), so the
+  // gap between 1st and 2nd is exactly half the gap between 1st and
+  // 3rd. Silver sits 1× step below gold, bronze sits 2× steps below
+  // gold — the eye reads the centre block as unambiguously taller
+  // and the proportions feel balanced rather than arbitrary.
+  const BLOCK_W = 18
+  const SILVER = { x: 22, h: 24 } // 2nd place — left  (gold − 12)
+  const GOLD = { x: 41, h: 36 } // 1st place — center (the winner)
+  const BRONZE = { x: 60, h: 12 } // 3rd place — right (gold − 24)
+
+  // Y-coordinate of the top of each block (where the dot sits).
+  const silverTop = GROUND_Y - SILVER.h
+  const goldTop = GROUND_Y - GOLD.h
+  const bronzeTop = GROUND_Y - BRONZE.h
+
+  // Centre x of each block — used to position the figure-dot above.
+  const silverCx = SILVER.x + BLOCK_W / 2
+  const goldCx = GOLD.x + BLOCK_W / 2
+  const bronzeCx = BRONZE.x + BLOCK_W / 2
+
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='status'>
-      <circle
-        cx='50'
-        cy='50'
-        r='38'
-        fill='none'
+      {/* Ground line — the level playing field everyone started on. */}
+      <line
+        x1='14'
+        y1={GROUND_Y}
+        x2='86'
+        y2={GROUND_Y}
         stroke={fg}
-        strokeWidth='1.2'
+        strokeWidth='0.8'
         opacity='0.4'
       />
-      <circle
-        cx='50'
-        cy='50'
-        r='27'
-        fill='none'
-        stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.55'
+
+      {/* The three podium blocks. Drawn before the figures so the
+          dots sit on top of them. Slight opacity gradient (gold
+          brightest, bronze dimmest) reinforces the rank visually.
+
+          Each block scales vertically anchored at its bottom edge
+          (transform-box: fill-box + transform-origin: center bottom)
+          so the bottoms stay planted on the ground line while the
+          tops breathe.
+
+          A small `rx` rounds the top-and-side corners so the blocks
+          read as solid podium pieces rather than abstract bars. */}
+      <rect
+        x={SILVER.x}
+        y={silverTop}
+        width={BLOCK_W}
+        height={SILVER.h}
+        rx='1.5'
+        fill={fg}
+        opacity='0.5'
+        data-anim-target='silver-block'
+        style={{
+          transformBox: 'fill-box',
+          transformOrigin: 'center bottom'
+        }}
       />
-      <circle
-        cx='50'
-        cy='50'
-        r='16'
-        fill='none'
-        stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.7'
+      <rect
+        x={GOLD.x}
+        y={goldTop}
+        width={BLOCK_W}
+        height={GOLD.h}
+        rx='1.5'
+        fill={fg}
+        opacity='0.85'
+        data-anim-target='gold-block'
+        style={{
+          transformBox: 'fill-box',
+          transformOrigin: 'center bottom'
+        }}
       />
-      <circle cx='50' cy='50' r='3' fill={fg} opacity='0.6' />
-      {/* The orbiting status dot: a <g> centered at (50,50) with the
-          dot painted at +24,-16 from origin so we can rotate the group. */}
-      <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
-        <circle cx='74' cy='34' r='6' fill={accent} />
+      <rect
+        x={BRONZE.x}
+        y={bronzeTop}
+        width={BLOCK_W}
+        height={BRONZE.h}
+        rx='1.5'
+        fill={fg}
+        opacity='0.36'
+        data-anim-target='bronze-block'
+        style={{
+          transformBox: 'fill-box',
+          transformOrigin: 'center bottom'
+        }}
+      />
+
+      {/* 2nd-place figure — silver dot rides atop the silver block.
+          translateY is driven by the matching keyframe in CSS so it
+          tracks the top of the bar through its scaleY pulse. The
+          dot's centre sits one radius above the block top so it
+          appears to *rest* on the bar rather than float above it. */}
+      <circle
+        cx={silverCx}
+        cy={silverTop - 3.6}
+        r='3.6'
+        fill={fg}
+        opacity='0.9'
+        data-anim-target='silver-dot'
+      />
+
+      {/* 3rd-place figure — bronze dot rests atop the bronze block. */}
+      <circle
+        cx={bronzeCx}
+        cy={bronzeTop - 3.2}
+        r='3.2'
+        fill={fg}
+        opacity='0.72'
+        data-anim-target='bronze-dot'
+      />
+
+      {/* 1st-place figure — accent dot + soft halo rest atop the gold
+          block. The halo is rendered as two stacked circles (a wide,
+          very low-alpha outer glow + a tighter inner glow), which
+          fakes a soft radial falloff without an SVG <radialGradient>.
+          Together they read as a real spotlight on the winner.
+
+          The whole group translates with the gold bar's top via the
+          shared `gold-dot` keyframe; the halo additionally pulses on
+          its own slow loop so the spotlight feels alive. */}
+      <g data-anim-target='gold-dot'>
+        <g
+          data-anim-target='gold-halo'
+          style={{ transformOrigin: `${goldCx}px ${goldTop - 5}px` }}
+        >
+          <circle
+            cx={goldCx}
+            cy={goldTop - 5}
+            r='14'
+            fill={accent}
+            opacity='0.12'
+          />
+          <circle
+            cx={goldCx}
+            cy={goldTop - 5}
+            r='8.5'
+            fill={accent}
+            opacity='0.22'
+          />
+        </g>
+        <circle cx={goldCx} cy={goldTop - 5} r='5' fill={accent} />
       </g>
     </svg>
   )
@@ -529,7 +712,10 @@ function ArtIncentives({ fg }: { fg: string; accent: string }) {
   // A vivid arrow color picked to stand out against both the gold
   // card background and the navy bullseye. Hard-coded because the
   // lens's `accent` would render the arrow invisible on the target.
-  const ARROW = '#E04A3C'
+  // Vivid teal: distinct in hue from both the warm gold card and the
+  // cool navy bullseye, with enough saturation to pop off either
+  // without resorting to generic red or hot pink.
+  const ARROW = '#19C8B0'
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='incentives'>
@@ -704,8 +890,22 @@ function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
 
       {/* Three directed arcs, each from one node to the next. The
           control points pull each arc outward so the three together
-          read as a closed circular flow, not a triangle. */}
-      <g stroke={fg} strokeWidth='1.6' fill='none' opacity='0.55'>
+          read as a closed circular flow, not a triangle.
+
+          Each arc runs an animated dashed stroke ("flow") — the
+          current literally moves along the wire from sender to
+          receiver. Pairs naturally with the staggered node pulse
+          below: the signal departs one node, flows along the arc,
+          arrives at the next. */}
+      <g
+        stroke={fg}
+        strokeWidth='1.6'
+        fill='none'
+        opacity='0.55'
+        strokeLinecap='round'
+        strokeDasharray='4 4'
+        data-anim-target='flow'
+      >
         <path d={`M ${A.x} ${A.y} C 78 28, 84 50, ${B.x} ${B.y}`} />
         <path d={`M ${B.x} ${B.y} C 60 80, 40 80, ${C.x} ${C.y}`} />
         <path d={`M ${C.x} ${C.y} C 16 50, 22 28, ${A.x} ${A.y}`} />
@@ -1222,33 +1422,35 @@ function ArtOsmosis({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='osmosis'>
       {/* The permeable midline. Dashed so it reads as a soft
-          boundary rather than a wall. */}
+          boundary rather than a wall. Stroke and dash spacing
+          bumped ~15% so the boundary holds its own against the
+          slightly larger cluster dots. */}
       <line
         x1='50'
         y1='14'
         x2='50'
         y2='86'
         stroke={fg}
-        strokeWidth='1.4'
+        strokeWidth='1.6'
         opacity='0.4'
-        strokeDasharray='3 4'
+        strokeDasharray='3.5 4.5'
       />
 
       {/* Left cluster — three fixed dots sitting at the left edge. */}
-      <circle cx='22' cy='30' r='3' fill={fg} opacity='0.55' />
-      <circle cx='16' cy='50' r='3' fill={fg} opacity='0.55' />
-      <circle cx='24' cy='70' r='3' fill={fg} opacity='0.55' />
+      <circle cx='22' cy='30' r='3.45' fill={fg} opacity='0.55' />
+      <circle cx='16' cy='50' r='3.45' fill={fg} opacity='0.55' />
+      <circle cx='24' cy='70' r='3.45' fill={fg} opacity='0.55' />
 
       {/* Right cluster — three fixed dots sitting at the right edge. */}
-      <circle cx='78' cy='30' r='3' fill={fg} opacity='0.55' />
-      <circle cx='84' cy='50' r='3' fill={fg} opacity='0.55' />
-      <circle cx='76' cy='70' r='3' fill={fg} opacity='0.55' />
+      <circle cx='78' cy='30' r='3.45' fill={fg} opacity='0.55' />
+      <circle cx='84' cy='50' r='3.45' fill={fg} opacity='0.55' />
+      <circle cx='76' cy='70' r='3.45' fill={fg} opacity='0.55' />
 
       {/* The two travellers — accent dots sitting just inside the
           midline on opposite halves. Each drifts outward into the
           cluster on its own side. */}
-      <circle cx='40' cy='38' r='3.2' fill={accent} data-anim-target='1' />
-      <circle cx='60' cy='62' r='3.2' fill={accent} data-anim-target='2' />
+      <circle cx='40' cy='38' r='3.7' fill={accent} data-anim-target='1' />
+      <circle cx='60' cy='62' r='3.7' fill={accent} data-anim-target='2' />
     </svg>
   )
 }
@@ -1380,8 +1582,15 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Communication — the speech bubble pulses; the misalignment crack flickers. */
-function ArtCommunication({ fg, accent }: { fg: string; accent: string }) {
+/** Communication — the speech bubble pulses while its color cycles
+ *  yellow → orange → red → yellow, suggesting the temperature of an
+ *  exchange shifting as the two parties try (and fail, and try again)
+ *  to sync. The misalignment crack flickers underneath.
+ *
+ *    data-anim-target='1' = the bubble group (scale pulse).
+ *    data-anim-target='bubble' = each shape inside the bubble whose
+ *      fill we cycle through the heat-spectrum keyframe. */
+function ArtCommunication({ fg }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='communication'>
       <path
@@ -1395,9 +1604,9 @@ function ArtCommunication({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.55'
       />
       <g style={{ transformOrigin: '50px 28px' }} data-anim-target='1'>
-        <ellipse cx='50' cy='28' rx='13' ry='7.5' fill={accent} />
-        <polygon points='46,36 50,31 48,40' fill={accent} />
-        <polygon points='54,36 50,31 52,40' fill={accent} />
+        <ellipse cx='50' cy='28' rx='13' ry='7.5' data-anim-target='bubble' />
+        <polygon points='46,36 50,31 48,40' data-anim-target='bubble' />
+        <polygon points='54,36 50,31 52,40' data-anim-target='bubble' />
       </g>
     </svg>
   )
@@ -1524,21 +1733,29 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.45'
         strokeDasharray='2 3'
       />
-      <g style={{ transformOrigin: '28px 72px' }} data-anim-target='1'>
-        <circle cx='28' cy='72' r='8' fill={accent} />
-      </g>
-      <g style={{ transformOrigin: '51px 71px' }} data-anim-target='2'>
-        <rect
-          x='44'
-          y='64'
-          width='14'
-          height='14'
-          rx='2'
+      {/* Hexagon — replaces the earlier circle so all three primitives
+          have orient-able geometry (a circle's rotation is invisible,
+          which made the trio feel uneven when the others spun). */}
+      <g
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        data-anim-target='1'
+      >
+        <polygon
+          points='28,64 35,68 35,76 28,80 21,76 21,68'
           fill={fg}
           opacity='0.7'
         />
       </g>
-      <g style={{ transformOrigin: '72px 73px' }} data-anim-target='3'>
+      <g
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        data-anim-target='2'
+      >
+        <rect x='44' y='64' width='14' height='14' rx='2' fill={accent} />
+      </g>
+      <g
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        data-anim-target='3'
+      >
         <polygon points='72,80 80,66 64,66' fill={fg} opacity='0.7' />
       </g>
     </svg>

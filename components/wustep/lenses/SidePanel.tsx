@@ -213,6 +213,36 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
                 ) : (
                   shown.body
                 )}
+                {shown.readings && shown.readings.length > 0 && (
+                  <div className={styles.readingsBlock}>
+                    <span className={styles.relatedLabel}>Further reading</span>
+                    <ul className={styles.readingsList}>
+                      {shown.readings.map((r) => {
+                        const external = /^https?:\/\//.test(r.href)
+                        return (
+                          <li key={r.href} className={styles.readingsItem}>
+                            <a
+                              className={styles.readingsLink}
+                              href={r.href}
+                              target={external ? '_blank' : undefined}
+                              rel={external ? 'noopener noreferrer' : undefined}
+                            >
+                              <span className={styles.readingsLabel}>
+                                {r.label}
+                              </span>
+                              <span
+                                className={styles.readingsArrow}
+                                aria-hidden='true'
+                              >
+                                {external ? '↗' : '→'}
+                              </span>
+                            </a>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )}
                 {shown.related && shown.related.length > 0 && (
                   <div className={styles.relatedBlock}>
                     <span className={styles.relatedLabel}>Related lenses</span>
