@@ -38,14 +38,20 @@ export function CenterDialog({
         >
           <header className={styles.dialogHeader}>
             <div className={styles.dialogHeaderText}>
-              <span className={styles.dialogEyebrow}>Index · {LENSES.length} lenses</span>
+              <span className={styles.dialogEyebrow}>
+                The deck · {LENSES.length} lenses
+              </span>
+              <p className={styles.dialogIntro}>
+                Every model of the world is partial. A lens names what it
+                foregrounds — and quietly hides the rest.
+              </p>
               <DialogPrimitive.Title className={styles.dialogTitle}>
-                Hold many, lightly.
+                Hold many. Lightly.
               </DialogPrimitive.Title>
               <p className={styles.dialogLede}>
-                A lens is a way of looking. Each one foregrounds something real
-                and quietly hides everything else — so don't pick one. Look
-                through three in a row and notice what each surfaces.
+                Don't pick one. Look through three in a row, notice what each
+                surfaces, then set them down. The world will keep being too
+                big for any single frame.
               </p>
             </div>
             <DialogPrimitive.Close

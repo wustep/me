@@ -860,7 +860,7 @@
 .dialogHeaderText {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -872,26 +872,40 @@
   letter-spacing: 0.2em;
   font-weight: 500;
   opacity: 0.5;
+  margin-bottom: 2px;
+}
+
+/* Pre-title intro: primes the metaphor before the title lands.
+   Slightly smaller and quieter than the lede below the title. */
+.dialogIntro {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-style: italic;
+  text-wrap: pretty;
+  max-width: 56ch;
+  margin: 0;
+  opacity: 0.7;
 }
 
 .dialogTitle {
   font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
-  font-size: clamp(1.3rem, 2.4vw, 1.65rem);
+  font-size: clamp(1.55rem, 2.8vw, 1.95rem);
   font-weight: 700;
-  letter-spacing: -0.022em;
-  line-height: 1.1;
+  letter-spacing: -0.024em;
+  line-height: 1.05;
   text-wrap: balance;
-  margin: 0;
+  margin: 4px 0 0;
 }
 
 .dialogLede {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 0.96rem;
-  line-height: 1.45;
+  font-size: 0.98rem;
+  line-height: 1.5;
   text-wrap: pretty;
   max-width: 56ch;
   margin: 4px 0 0;
-  opacity: 0.78;
+  opacity: 0.82;
 }
 
 /* Lens jump list — scrolls inside the dialog while the header stays. */
@@ -1246,13 +1260,17 @@
     animation: lensOrbit 8s linear infinite;
   }
 
-  /* ── Headspace: the inner thought-dot pulses (mind ticking). */
+  /* ── Headspace: the inner thought-dot ticks like a heartbeat — two
+        quick pulses then a rest. Strong scale so it reads against
+        the static silhouette behind it. */
   .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target]) {
-    animation: lensThoughtPulse 1.8s ease-in-out infinite;
+    animation: lensThoughtPulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   @keyframes lensThoughtPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%      { transform: scale(1.18); opacity: 0.7; }
+    0%, 60%, 100% { transform: scale(1);    opacity: 1; }
+    15%           { transform: scale(1.55); opacity: 0.55; }
+    30%           { transform: scale(1);    opacity: 1; }
+    45%           { transform: scale(1.35); opacity: 0.7; }
   }
 
   /* ── Legibility: the accent label "writes itself in" from the left. */
@@ -1302,13 +1320,17 @@
     40%                { transform: scale(0.95); }
   }
 
-  /* ── Energy: the bolt strobes (charge surging). */
+  /* ── Energy: the bolt strobes — sharp on/off flicker mimicking a
+        live current pulsing through the cell. */
   .card:hover .cardArt :global(svg[data-anim='energy'] [data-anim-target]) {
-    animation: lensCharge 1.2s ease-in-out infinite;
+    animation: lensCharge 0.9s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   }
   @keyframes lensCharge {
-    0%, 100% { opacity: 0.85; transform: scale(1); }
-    50%      { opacity: 1;    transform: scale(1.08); }
+    0%, 100% { opacity: 0.55; transform: scale(0.92); }
+    20%      { opacity: 1;    transform: scale(1.18); }
+    35%      { opacity: 0.7;  transform: scale(1);    }
+    55%      { opacity: 1;    transform: scale(1.12); }
+    80%      { opacity: 0.6;  transform: scale(0.96); }
   }
 
   /* ── Epistemic pragmatism: the dashed path flows forward
@@ -1541,8 +1563,9 @@
     padding: 22px 22px 14px;
   }
 
+  .dialogIntro,
   .dialogLede {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
 
   .dialogList {
