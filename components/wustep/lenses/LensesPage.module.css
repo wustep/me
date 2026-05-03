@@ -647,10 +647,21 @@
   font-weight: 400;
 }
 
-.panelClose {
+/* Cluster of prev / next / close at the top-right of the panel
+   hero. Sits absolute so it floats over the hero content; the
+   buttons themselves are flow elements within. */
+.panelControls {
   position: absolute;
   top: 18px;
   right: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.panelNavBtn,
+.panelClose {
+  position: relative;
   width: 32px;
   height: 32px;
   display: inline-flex;
@@ -667,6 +678,7 @@
 }
 
 /* 44px hit area via pseudo-element so visual size stays 32px. */
+.panelNavBtn::before,
 .panelClose::before {
   content: '';
   position: absolute;
@@ -675,11 +687,13 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .panelNavBtn:hover,
   .panelClose:hover {
     background: rgba(255, 255, 255, 0.24);
   }
 }
 
+.panelNavBtn:active,
 .panelClose:active {
   transform: scale(0.94);
 }
@@ -1292,17 +1306,15 @@
     50%      { transform: translateX(4px); }
   }
 
-  /* ── Game theory: cells take turns pulsing (round-robin payoff). */
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target]) {
-    animation: lensGamePulse 2s ease-in-out infinite;
+  /* ── Game theory: only the accent cell — the dominant strategy —
+        breathes. The grey dots stay put: every player is at the
+        table, but one cell quietly carries the payoff. */
+  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='4']) {
+    animation: lensGameDominant 2.4s ease-in-out infinite;
   }
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='1']) { animation-delay: 0s; }
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='2']) { animation-delay: 0.5s; }
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='4']) { animation-delay: 1s; }
-  .card:hover .cardArt :global(svg[data-anim='game-theory'] [data-anim-target='3']) { animation-delay: 1.5s; }
-  @keyframes lensGamePulse {
-    0%, 80%, 100% { transform: scale(1); opacity: 0.55; }
-    10%, 30%      { transform: scale(1.3); opacity: 1; }
+  @keyframes lensGameDominant {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.12); opacity: 0.8; }
   }
 
   /* ── Systems: the loop slowly rotates (cycles cycling). */
@@ -1310,17 +1322,23 @@
     animation: lensOrbit 8s linear infinite;
   }
 
-  /* ── Headspace: the inner thought-dot ticks like a heartbeat — two
-        quick pulses then a rest. Strong scale so it reads against
-        the static silhouette behind it. */
-  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target]) {
-    animation: lensThoughtPulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* ── Headspace: the dot pulses, the aura around it breathes. Two
+        offset motions so the head reads as actively thinking, not
+        idle. Continuous (no long rest), so it's always in motion. */
+  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target='1']) {
+    animation: lensThoughtDot 1.8s ease-in-out infinite;
   }
-  @keyframes lensThoughtPulse {
-    0%, 60%, 100% { transform: scale(1);    opacity: 1; }
-    15%           { transform: scale(1.55); opacity: 0.55; }
-    30%           { transform: scale(1);    opacity: 1; }
-    45%           { transform: scale(1.35); opacity: 0.7; }
+  .card:hover .cardArt :global(svg[data-anim='headspace'] [data-anim-target='2']) {
+    animation: lensThoughtAura 1.8s ease-in-out infinite;
+    animation-delay: -0.6s;
+  }
+  @keyframes lensThoughtDot {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.35); opacity: 0.7; }
+  }
+  @keyframes lensThoughtAura {
+    0%, 100% { transform: scale(1);    opacity: 0.55; }
+    50%      { transform: scale(1.18); opacity: 0.78; }
   }
 
   /* ── Legibility: the accent label "writes itself in" from the left. */
@@ -1533,6 +1551,7 @@
   .panelBody,
   .panelOverlay,
   .panelClose,
+  .panelNavBtn,
   .dialog,
   .dialogOverlay,
   .dialogJumpBtn,

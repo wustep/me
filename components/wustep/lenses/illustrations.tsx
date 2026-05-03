@@ -294,7 +294,13 @@ function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Headspace — the inner thought-dot pulses (mind ticking over). */
+/** Headspace — the inner thought-dot ticks; the surrounding aura
+ *  expands and contracts in counterpoint, like a mind ticking over.
+ *
+ *  data-anim-target='1' = the accent thought-dot (inner pulse).
+ *  data-anim-target='2' = the soft aura ring around it (outer
+ *    breath, offset in time so the two motions don't lock up).
+ */
 function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='headspace'>
@@ -303,7 +309,9 @@ function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
         fill={fg}
         opacity='0.32'
       />
-      <circle cx='56' cy='46' r='12' fill={fg} opacity='0.55' />
+      <g style={{ transformOrigin: '56px 46px' }} data-anim-target='2'>
+        <circle cx='56' cy='46' r='12' fill={fg} opacity='0.55' />
+      </g>
       <g style={{ transformOrigin: '56px 46px' }} data-anim-target='1'>
         <circle cx='56' cy='46' r='5' fill={accent} />
       </g>
@@ -503,16 +511,8 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
         fill={fg}
         opacity='0.55'
       />
-      {/* Tick marks inside the battery body — fill-level guides that
-          stay visible behind the moving charge bar, so the meter
-          reads as "level rising past these gradations." */}
-      <g stroke={fg} strokeWidth='0.5' opacity='0.18'>
-        <line x1='38' y1='34' x2='38' y2='66' />
-        <line x1='50' y1='34' x2='50' y2='66' />
-        <line x1='62' y1='34' x2='62' y2='66' />
-      </g>
-      {/* The yellow fill bar. We anchor scaleX at the left edge of the
-          battery interior so the bar grows toward the positive
+      {/* The yellow fill bar. We anchor scaleX at the left edge of
+          the battery interior so the bar grows toward the positive
           terminal — like a charging meter — when the keyframe runs. */}
       <g
         style={{ transformOrigin: '26px 50px' }}
@@ -520,11 +520,12 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
       >
         <rect x='26' y='34' width='44' height='32' rx='1' fill={accent} />
       </g>
-      {/* Lightning bolt — sits over the fill bar, slightly translucent
-          so the charge level shows through. Animated subtly via
-          opacity, no scale. */}
+      {/* Lightning bolt — centered on the battery body (cx=48, cy=50)
+          so it reads as the force inside the cell, not as a separate
+          icon. Slightly translucent so the charge level shows through.
+          Animated subtly via opacity, no scale. */}
       <polygon
-        points='44,40 36,56 46,56 40,66 56,50 46,50 52,40'
+        points='52,38 42,52 48,52 44,62 54,48 48,48 52,38'
         fill={fg}
         opacity='0.78'
         data-anim-target='2'

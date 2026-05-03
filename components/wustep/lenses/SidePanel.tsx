@@ -1,9 +1,10 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
 
-import { CloseIcon } from './icons'
+import { ChevronIcon, CloseIcon } from './icons'
 import { Illustration } from './illustrations'
 import styles from './LensesPage.module.css'
+import { neighborInDirection } from './navigation'
 import { LENS_BY_ID } from './registry'
 import { type Lens } from './types'
 
@@ -72,12 +73,36 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
                   </DialogPrimitive.Title>
                   <p className={styles.panelTagline}>{shown.tagline}</p>
                 </div>
-                <DialogPrimitive.Close
-                  className={styles.panelClose}
-                  aria-label='Close panel'
-                >
-                  <CloseIcon />
-                </DialogPrimitive.Close>
+                <div className={styles.panelControls}>
+                  <button
+                    type='button'
+                    className={styles.panelNavBtn}
+                    aria-label='Previous lens'
+                    onClick={() => {
+                      const prev = neighborInDirection(shown.id, 'left')
+                      if (prev) onOpenLens(prev)
+                    }}
+                  >
+                    <ChevronIcon direction='left' />
+                  </button>
+                  <button
+                    type='button'
+                    className={styles.panelNavBtn}
+                    aria-label='Next lens'
+                    onClick={() => {
+                      const next = neighborInDirection(shown.id, 'right')
+                      if (next) onOpenLens(next)
+                    }}
+                  >
+                    <ChevronIcon direction='right' />
+                  </button>
+                  <DialogPrimitive.Close
+                    className={styles.panelClose}
+                    aria-label='Close panel'
+                  >
+                    <CloseIcon />
+                  </DialogPrimitive.Close>
+                </div>
               </div>
               <div key={bodyKey} className={styles.panelBody}>
                 {shown.body}

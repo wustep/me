@@ -42,15 +42,14 @@ export const DURATION = {
 
 /** Spatial constants that the canvas uses to stagger cards by row+col.
  *  Cards' `y` values come from a 4-row grid at 12/38/62/88, and `x`
- *  from a 6-column grid at 5/25/41/59/75/95. Inter-column gaps are
- *  20%/16%/18%/16%/20% — the inner pair (41 and 59) sits a touch
- *  wider than the others so the cards on the row directly above and
- *  below the center card don't crowd each other. The outer ring of
- *  rows and columns is pulled slightly off the canvas edge so corner
- *  cards peek from the viewport border (~15-20% clipped). */
+ *  from a 6-column grid at 5/23/41/59/77/95 — six cards spaced at
+ *  uniform 18% intervals so every neighbor pair has identical
+ *  horizontal breathing room (~99px clearance at a 1440px viewport).
+ *  The outer ring of rows and columns is pulled slightly off the
+ *  canvas edge so corner cards peek from the viewport border. */
 export const GRID = {
   rowAnchors: [12, 38, 62, 88],
-  colAnchors: [5, 25, 41, 59, 75, 95]
+  colAnchors: [5, 23, 41, 59, 77, 95]
 } as const
 
 export type IllustrationId =

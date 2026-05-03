@@ -1,15 +1,22 @@
 import { LENSES } from './registry'
+import { GRID } from './types'
 
 /* ────────────────────────────────────────────────────────────────
  * Arrow-key navigation across the canvas of lenses.
  *
- *   Each lens has a normalized (x, y) on the canvas. Given a "from"
- *   lens (or pseudo-anchor) and a direction, we find the closest
- *   lens whose center sits in the half-plane that direction points
- *   to. We weight the perpendicular axis 2× harder than the
- *   parallel axis so cards in the *same row/column* are preferred,
- *   matching the user's visual expectation that ← steps to the next
- *   card on the same row, not a diagonal one.
+ *   Two different traversal models:
+ *
+ *   ← / →  Reading order. Cards are sorted into rows (by quantizing
+ *          y to the nearest row anchor) and then by x within a row.
+ *          The arrow steps to the next card in that flat sequence
+ *          and *wraps* across row ends — like a book. This matches
+ *          how people scan a deck and avoids the dead-end feeling
+ *          of "← from the leftmost card does nothing."
+ *
+ *   ↑ / ↓  Spatial neighbor. We pick the closest card in the
+ *          half-plane above/below, weighting horizontal distance
+ *          2× harder than vertical so the result feels like "the
+ *          card directly above/below," not a diagonal jump.
  *
  *   Used by both the canvas (focus the next card button) and the
  *   side panel (swap to the next lens).
@@ -24,19 +31,68 @@ const CENTER_ANCHOR: Anchor = { x: 50, y: 50 }
 
 const PERP_WEIGHT = 2
 
+/** Quantize a y-coordinate to the nearest row anchor index, so two
+ *  lenses on the same visual row group together regardless of any
+ *  small per-card y jitter. */
+function rowOf(y: number): number {
+  let bestIdx = 0
+  let bestDist = Number.POSITIVE_INFINITY
+  for (const [idx, anchor] of GRID.rowAnchors.entries()) {
+    const d = Math.abs(y - anchor)
+    if (d < bestDist) {
+      bestDist = d
+      bestIdx = idx
+    }
+  }
+  return bestIdx
+}
+
+/** Cards in reading order: row by row, left to right within a row. */
+const READING_ORDER: readonly string[] = [...LENSES]
+  .sort((a, b) => {
+    const ra = rowOf(a.y)
+    const rb = rowOf(b.y)
+    if (ra !== rb) return ra - rb
+    return a.x - b.x
+  })
+  .map((l) => l.id)
+
 /**
- * Find the spatial neighbor of `fromId` in the given direction.
- * Returns the neighbor lens id, or `null` if nothing lies in that
- * half-plane (e.g. asked for "left" from the leftmost lens).
+ * Find the next lens to navigate to from `fromId` in `direction`.
+ *
+ *   - left/right walks `READING_ORDER` and wraps at either end.
+ *   - up/down picks the spatial neighbor in that half-plane.
  *
  * If `fromId` is null, navigation starts from the canvas center —
- * this is what canvas-arrow-with-no-focus uses to seed a sensible
- * first hop.
+ * which gives the canvas-arrow-with-no-focus case a sensible seed.
  */
 export function neighborInDirection(
   fromId: string | null,
   direction: Direction
 ): string | null {
+  // Reading-order traversal for horizontal arrows.
+  if (direction === 'left' || direction === 'right') {
+    if (READING_ORDER.length === 0) return null
+
+    // From the canvas center (no current selection): seed at the
+    // start of reading order for → and the end for ←, so the first
+    // keypress always lands on a sensible card.
+    if (!fromId) {
+      return direction === 'right'
+        ? READING_ORDER[0]
+        : READING_ORDER[READING_ORDER.length - 1]
+    }
+
+    const idx = READING_ORDER.indexOf(fromId)
+    if (idx === -1) return READING_ORDER[0]
+
+    const step = direction === 'right' ? 1 : -1
+    const nextIdx =
+      (idx + step + READING_ORDER.length) % READING_ORDER.length
+    return READING_ORDER[nextIdx]
+  }
+
+  // Spatial-neighbor traversal for vertical arrows.
   const from: Anchor = fromId
     ? (LENSES.find((l) => l.id === fromId) ?? CENTER_ANCHOR)
     : CENTER_ANCHOR
@@ -52,27 +108,14 @@ export function neighborInDirection(
     let parallel: number
     let perp: number
 
-    switch (direction) {
-      case 'left':
-        if (dx >= 0) continue
-        parallel = -dx
-        perp = Math.abs(dy)
-        break
-      case 'right':
-        if (dx <= 0) continue
-        parallel = dx
-        perp = Math.abs(dy)
-        break
-      case 'up':
-        if (dy >= 0) continue
-        parallel = -dy
-        perp = Math.abs(dx)
-        break
-      case 'down':
-        if (dy <= 0) continue
-        parallel = dy
-        perp = Math.abs(dx)
-        break
+    if (direction === 'up') {
+      if (dy >= 0) continue
+      parallel = -dy
+      perp = Math.abs(dx)
+    } else {
+      if (dy <= 0) continue
+      parallel = dy
+      perp = Math.abs(dx)
     }
 
     const score = parallel + perp * PERP_WEIGHT
