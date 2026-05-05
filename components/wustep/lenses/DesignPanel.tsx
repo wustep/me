@@ -787,14 +787,14 @@ const SECTIONS: Section[] = [
         label: 'Background pattern',
         dataAttr: 'bg-pattern',
         options: [
-          { value: 'dots', label: 'Dots (default)' },
+          { value: 'none', label: 'None (default)' },
+          { value: 'dots', label: 'Dots' },
           { value: 'grid', label: 'Grid lines' },
           { value: 'lines', label: 'Diagonal lines' },
           { value: 'plus', label: 'Plus marks' },
-          { value: 'noise', label: 'Noise' },
-          { value: 'none', label: 'None (flat)' }
+          { value: 'noise', label: 'Noise' }
         ],
-        default: 'dots'
+        default: 'none'
       },
       {
         kind: 'toggle',

@@ -267,7 +267,7 @@
   opacity: 1;
 }
 
-/* ===== Background — soft texture, subtle dot grid ===== */
+/* ===== Background — optional texture / pattern field ===== */
 
 .bgWrap {
   position: absolute;
@@ -280,14 +280,7 @@
 .bgGrid {
   position: absolute;
   inset: 0;
-  /* Subtle dot grid — denser than before so it reads at all once
-     the gradient lifts the bg, but still quiet enough to step out
-     of the way of the cards. */
-  background-image: radial-gradient(
-    circle,
-    rgba(0, 0, 0, var(--design-grid-opacity, 0.07)) 1px,
-    transparent 1.4px
-  );
+  background-image: none;
   background-size: var(--design-grid-size, 36px) var(--design-grid-size, 36px);
   background-position: 0 0;
   /* Fade toward the corners using a mask. The center is brightest;
@@ -302,14 +295,6 @@
     ellipse at center,
     rgba(0, 0, 0, 0.6) 0%,
     rgba(0, 0, 0, 0) var(--design-grid-mask, 70%)
-  );
-}
-
-:global(.dark-mode) .bgGrid {
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, calc(var(--design-grid-opacity, 0.07) * 0.86)) 1px,
-    transparent 1.5px
   );
 }
 
@@ -348,12 +333,21 @@
   gap: var(--design-card-gap, clamp(12px, -26.9px + 3.81cqi, 28px));
   /* Cap the grid width so cards don't stretch absurdly wide on huge
      monitors — and make that cap height-aware so wide-but-short
-     screens fit the 4-row deck vertically. The 1.6 factor mirrors
-     the 8-col geometry: 4 rows at a 0.8 card aspect ratio need
-     roughly 0.625x as much height as deck width before padding/gaps. */
+     screens fit the 4-row deck vertically. The chrome reserve covers
+     the absolute header (18px top inset + 36px control + hit-area
+     bleed), bottom controls, and a little breathing room. Stop
+     shrinking at the readable floor; below that, vertical scroll is
+     better than tiny cards. The 1.6 factor mirrors the 8-col geometry:
+     4 rows at a 0.8 card aspect ratio need roughly 0.625x as much
+     height as deck width before padding/gaps. */
+  --deck-vertical-chrome: 148px;
+  --deck-readable-floor: 1040px;
   max-width: min(
     var(--design-deck-max-width, 1440px),
-    calc((100dvh - 66px) * 1.6)
+    max(
+      var(--deck-readable-floor),
+      calc((100dvh - var(--deck-vertical-chrome)) * 1.6)
+    )
   );
   margin: 0 auto;
 }
@@ -475,11 +469,10 @@
 }
 
 /* Cast-shadow layer. Opacity 0 at rest, 1 when lifted.
-   Light mode wants a broad, quiet ambient shadow: too much card
-   tint reads like a colored glow on the warm canvas, so the middle
-   tier only borrows a little card color while the outer falloff
-   stays neutral. Costs nothing — same paint layer that was already
-   here. */
+   Light mode wants definition without a colored aura, so the shadow
+   keeps a neutral base and borrows only modest card tint through the
+   middle/deep tiers. Costs nothing — same paint layer that was
+   already here. */
 .card::before {
   content: '';
   position: absolute;
@@ -487,17 +480,21 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    0 2px 3px rgba(44, 32, 18, calc(0.08 * var(--design-shadow-strength, 1))),
-    0 calc(var(--design-shadow-y, 12px))
-      calc(var(--design-shadow-blur, 36px)) -14px
+    0 2px 3px rgba(44, 32, 18, calc(0.1 * var(--design-shadow-strength, 1))),
+    0 calc(var(--design-shadow-y, 13px))
+      calc(var(--design-shadow-blur, 32px)) -12px
       color-mix(
         in oklab,
-        var(--card-bg) 8%,
-        rgba(44, 32, 18, calc(0.18 * var(--design-shadow-strength, 1)))
+        var(--card-bg) 13%,
+        rgba(44, 32, 18, calc(0.26 * var(--design-shadow-strength, 1)))
       ),
-    0 calc(var(--design-shadow-y, 12px) * 2.2)
-      calc(var(--design-shadow-blur, 36px) * 2) -30px
-      rgba(44, 32, 18, calc(0.16 * var(--design-shadow-strength, 1)));
+    0 calc(var(--design-shadow-y, 13px) * 2.25)
+      calc(var(--design-shadow-blur, 32px) * 2.05) -26px
+      color-mix(
+        in oklab,
+        var(--card-bg) 12%,
+        rgba(44, 32, 18, calc(0.24 * var(--design-shadow-strength, 1)))
+      );
   opacity: 0;
   transition: opacity var(--design-hover-out, 180ms)
     var(--design-ease, var(--ease-out-snap));
@@ -518,6 +515,12 @@
     var(--card-enter-delay, 0ms);
   animation: cardEnterRise calc(var(--design-entrance-dur, 600ms) * 0.6)
     var(--ease-spring-soft) var(--card-enter-delay, 0ms) backwards;
+}
+
+.cardInteractionReady {
+  /* Marker class: hover treatments wait until this card's staggered
+     entrance animation has finished. */
+  --card-interaction-ready: 1;
 }
 
 @keyframes cardEnterRise {
@@ -644,7 +647,7 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .card:hover {
+  .cardInteractionReady:hover {
     transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
       scale(var(--design-hover-scale, 1.025))
       rotate(var(--design-card-tilt, 0deg));
@@ -657,13 +660,13 @@
 
   /* Tilt direction alternates per-cell so the deck doesn't lean
      all one way under the cursor. */
-  .card:nth-child(even):hover {
+  .cardInteractionReady:nth-child(even):hover {
     transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
       scale(var(--design-hover-scale, 1.025))
       rotate(calc(var(--design-card-tilt, 0deg) * -1));
   }
 
-  .card:hover::before {
+  .cardInteractionReady:hover::before {
     opacity: 1;
     transition: opacity var(--design-hover-in, 90ms)
       var(--design-ease, var(--ease-out-snap));
@@ -689,8 +692,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .card:hover:active,
-  .card.cardSelected:hover:active {
+  .cardInteractionReady:hover:active,
+  .cardInteractionReady.cardSelected:hover:active {
     transform: translateY(calc(var(--design-hover-lift, 5px) * -0.4))
       scale(calc(var(--design-hover-scale, 1.025) * 0.985));
   }
@@ -926,12 +929,16 @@
   display: block;
 }
 @media (hover: hover) and (pointer: fine) {
-  :global(html[data-design-card-tagline='on']) .card:hover .cardHoverTagline {
+  :global(html[data-design-card-tagline='on'])
+    .cardInteractionReady:hover
+    .cardHoverTagline {
     opacity: 0.95;
     transform: translateY(0);
   }
   /* Slide the title up to make room for the tagline. */
-  :global(html[data-design-card-tagline='on']) .card:hover .cardTitle {
+  :global(html[data-design-card-tagline='on'])
+    .cardInteractionReady:hover
+    .cardTitle {
     transform: translateY(-22px);
     transition: transform 180ms var(--ease-out-snap);
   }
@@ -3487,7 +3494,9 @@
  */
 
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .cardArt :global(svg[data-anim] [data-anim-target]),
+  .cardInteractionReady:hover
+    .cardArt
+    :global(svg[data-anim] [data-anim-target]),
   .centerCard:hover .cardArt :global(svg[data-anim] [data-anim-target]),
   .dialogJumpBtn:hover
     .dialogJumpArt
@@ -3558,8 +3567,8 @@
      still moves on pointer events even when the user asked for
      stillness. */
   @media (hover: hover) and (pointer: fine) {
-    .card:hover,
-    .card:hover:active,
+    .cardInteractionReady:hover,
+    .cardInteractionReady:hover:active,
     .centerCard:hover,
     .centerCard:hover:active {
       transform: scale(1) !important;
@@ -3576,7 +3585,7 @@
      the user can still see which card is paired with the panel,
      they just don't see the card translate. */
   .cardSelected,
-  .card.cardSelected:hover,
+  .cardInteractionReady.cardSelected:hover,
   .card.cardSelected:active {
     transform: scale(1) !important;
   }
@@ -3798,12 +3807,29 @@
  *   and these rules contribute nothing (no specificity, no paint).
  * ========================================================================== */
 
-/* ── Background patterns ── replace the dot grid with alternates.
+/* ── Background patterns ── off by default; the design panel opt-in
+   choices add texture here.
    Each pattern uses `--pattern-color` and `--pattern-opacity`
    so light/dark themes can re-skin them with one rule below
    instead of forking the whole declaration. We also boost the
    opacity ~3× over the dot-grid baseline because lines/grids
    read much fainter than dots at the same alpha. */
+:global(html[data-design-bg-pattern='dots']) .bgGrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(0, 0, 0, var(--design-grid-opacity, 0.07)) 1px,
+    transparent 1.4px
+  );
+}
+
+:global(.dark-mode[data-design-bg-pattern='dots']) .bgGrid {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, calc(var(--design-grid-opacity, 0.07) * 0.86)) 1px,
+    transparent 1.5px
+  );
+}
+
 :global(html[data-design-bg-pattern='grid']) .bgGrid,
 :global(html[data-design-bg-pattern='lines']) .bgGrid,
 :global(html[data-design-bg-pattern='plus']) .bgGrid {
@@ -3980,7 +4006,7 @@
    sticky-hover-after-tap doesn't pin a card in its magnetic
    state until the next tap elsewhere. */
 @media (hover: hover) and (pointer: fine) {
-  :global(html[data-design-magnetic='on']) .card:hover {
+  :global(html[data-design-magnetic='on']) .cardInteractionReady:hover {
     transform: translateY(calc(var(--design-hover-lift, 5px) * -1.3))
       scale(calc(var(--design-hover-scale, 1.025) * 1.01))
       rotate(calc(var(--design-card-tilt, 0deg) * 1.5));

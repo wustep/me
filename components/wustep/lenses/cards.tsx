@@ -55,10 +55,7 @@ function indexOfClosest(value: number, anchors: readonly number[]) {
  */
 function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
   const words = title.split(/\s+/)
-  const longestWord = words.reduce(
-    (max, w) => (Math.max(w.length, max)),
-    0
-  )
+  const longestWord = words.reduce((max, w) => Math.max(w.length, max), 0)
   if (words.length === 1 && longestWord > 11) return 'long-word'
   if (title.length > 18) return 'long'
   return undefined
@@ -67,16 +64,32 @@ function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
 type LensCardProps = {
   lens: Lens
   stage: Stage
+  prefersReducedMotion: boolean
   selected: boolean
   onOpen: () => void
 }
 
-export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
+export function LensCard({
+  lens,
+  stage,
+  prefersReducedMotion,
+  selected,
+  onOpen
+}: LensCardProps) {
   const visible = stage >= STAGE.cards
+  const [interactionReady, setInteractionReady] = React.useState(false)
   const rowIndex = indexOfClosest(lens.y, GRID.rowAnchors)
   const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
   const delay = rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
   const titleBucket = titleLengthBucket(lens.title)
+
+  React.useEffect(() => {
+    if (!visible) {
+      setInteractionReady(false)
+      return
+    }
+    if (prefersReducedMotion) setInteractionReady(true)
+  }, [visible, prefersReducedMotion])
 
   const style: React.CSSProperties = {
     // CSS grid is 1-indexed for grid-column/grid-row.
@@ -96,6 +109,7 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
   const className = [
     styles.card,
     visible && styles.cardVisible,
+    interactionReady && styles.cardInteractionReady,
     selected && styles.cardSelected
   ]
     .filter(Boolean)
@@ -106,6 +120,9 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
       type='button'
       className={className}
       style={style}
+      onAnimationEnd={(event) => {
+        if (event.currentTarget === event.target) setInteractionReady(true)
+      }}
       onClick={onOpen}
       aria-label={`Open lens: ${lens.title}`}
       aria-pressed={selected}

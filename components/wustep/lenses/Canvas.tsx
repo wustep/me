@@ -33,11 +33,7 @@ type CanvasProps = {
 
 export function Canvas({
   stage,
-  // prefersReducedMotion is no longer used here (the only thing it
-  // gated was the mouse-pan, which we've removed). Kept in the prop
-  // signature for symmetry with other interaction surfaces, in case
-  // we add motion-sensitive behavior back later.
-  prefersReducedMotion: _prefersReducedMotion,
+  prefersReducedMotion,
   activeLensId,
   onOpenCenter,
   onOpenLens
@@ -54,6 +50,7 @@ export function Canvas({
             key={lens.id}
             lens={lens}
             stage={stage}
+            prefersReducedMotion={prefersReducedMotion}
             selected={activeLensId === lens.id}
             onOpen={() => onOpenLens(lens.id)}
           />
