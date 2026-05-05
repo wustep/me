@@ -4,7 +4,6 @@ import Link from 'next/link'
 import * as React from 'react'
 
 import { HouseFillIcon } from '@/components/icons/InlineIcons'
-import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,7 +20,21 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 import { PlaygroundSidebar } from '@/components/wustep/PlaygroundSidebar'
+import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { useDarkMode } from '@/lib/use-dark-mode'
+
+type PlaygroundThemeContextValue = {
+  hasMounted: boolean
+  isDarkMode: boolean
+  toggleDarkMode: () => void
+}
+
+const PlaygroundThemeContext =
+  React.createContext<PlaygroundThemeContextValue | null>(null)
+
+export function usePlaygroundTheme() {
+  return React.useContext(PlaygroundThemeContext)
+}
 
 interface PlaygroundLayoutProps {
   children: React.ReactNode
@@ -44,26 +57,33 @@ export function PlaygroundLayout({
     setHasMounted(true)
   }, [])
 
+  const playgroundTheme = React.useMemo(
+    () => ({ hasMounted, isDarkMode, toggleDarkMode }),
+    [hasMounted, isDarkMode, toggleDarkMode]
+  )
+
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': '16rem'
-        } as React.CSSProperties
-      }
-    >
-      <PlaygroundSidebar />
-      <LayoutContent
-        title={title}
-        breadcrumbs={breadcrumbs}
-        hasMounted={hasMounted}
-        isDarkMode={isDarkMode}
-        toggleDarkMode={toggleDarkMode}
-        fullFrame={fullFrame}
+    <PlaygroundThemeContext.Provider value={playgroundTheme}>
+      <SidebarProvider
+        style={
+          {
+            '--sidebar-width': '16rem'
+          } as React.CSSProperties
+        }
       >
-        {children}
-      </LayoutContent>
-    </SidebarProvider>
+        <PlaygroundSidebar />
+        <LayoutContent
+          title={title}
+          breadcrumbs={breadcrumbs}
+          hasMounted={hasMounted}
+          isDarkMode={isDarkMode}
+          toggleDarkMode={toggleDarkMode}
+          fullFrame={fullFrame}
+        >
+          {children}
+        </LayoutContent>
+      </SidebarProvider>
+    </PlaygroundThemeContext.Provider>
   )
 }
 

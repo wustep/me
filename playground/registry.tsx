@@ -3,6 +3,7 @@ import type React from 'react'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
+import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 
 export type PlaygroundEntry = {
@@ -40,20 +41,17 @@ export const playgroundSections: PlaygroundSection[] = [
         gradient: 'from-purple-500 via-fuchsia-500 to-rose-500',
         CoverComponent: LensesCover
       },
-      ...(process.env.NODE_ENV === 'development'
-        ? [
-            {
-              title: 'Lenses Illustration Lab',
-              url: '/playground/lenses-illustrations',
-              description:
-                'A development-only workbench for testing Lenses SVG illustrations against production, controlled, and randomized card color palettes.',
-              summary: 'Debug Lenses illustrations and card palettes',
-              date: 'May 2026',
-              year: '2026',
-              gradient: 'from-stone-800 via-amber-700 to-rose-700'
-            }
-          ]
-        : []),
+      {
+        title: 'Lenses Illustration Lab',
+        url: '/playground/lenses-illustrations',
+        description:
+          'A visual workbench for testing Lenses SVG illustrations against production, controlled, and randomized card color palettes.',
+        summary: 'Test Lenses illustrations and card palettes',
+        date: 'May 2026',
+        year: '2026',
+        gradient: 'from-stone-800 via-amber-700 to-rose-700',
+        CoverComponent: LensesIllustrationLabCover
+      },
       {
         title: 'DOM-ino',
         url: '/playground/dom-ino',

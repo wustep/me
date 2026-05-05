@@ -1,0 +1,260 @@
+.cover {
+  --cover-ink: #f5efe0;
+  --cover-accent: #f2c77a;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--cover-ink);
+  background:
+    radial-gradient(
+      circle at 76% 18%,
+      rgba(242, 199, 122, 0.26),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 18% 92%,
+      rgba(180, 58, 46, 0.32),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #17130f 0%, #252128 48%, #0f151d 100%);
+}
+
+.gridGlow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(245, 239, 224, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 239, 224, 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, black, transparent 88%);
+}
+
+.workbench {
+  position: absolute;
+  inset: 16% 12% 18%;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 0.86fr 1fr;
+  gap: 14px;
+  align-items: center;
+  transform: rotate(-2deg);
+  transition: transform 260ms ease-out;
+}
+
+.previewCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 0.8;
+  min-width: 0;
+  border-radius: 16px;
+  padding: 12px;
+  color: #f5efe0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 38%), #204a40;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 0 0 3px rgba(245, 239, 224, 0.18),
+    0 18px 38px rgba(0, 0, 0, 0.32);
+}
+
+.illustration {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+
+.trace {
+  stroke-dasharray: 92;
+  stroke-dashoffset: 18;
+}
+
+.mark {
+  transform-origin: 82px 22px;
+}
+
+.points {
+  transform-origin: center;
+}
+
+.cardLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.panel {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(245, 239, 224, 0.16);
+  border-radius: 18px;
+  background: rgba(20, 20, 23, 0.72);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
+}
+
+.panelHeader,
+.swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.panelHeader span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(245, 239, 224, 0.36);
+}
+
+.swatches span {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset,
+    0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.matrix span {
+  aspect-ratio: 1.1;
+  border-radius: 4px;
+  background: rgba(245, 239, 224, 0.14);
+}
+
+.matrix .activeCell {
+  background: var(--cover-accent);
+  box-shadow: 0 0 18px rgba(242, 199, 122, 0.46);
+}
+
+.titleLockup {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 2;
+  display: grid;
+  justify-items: end;
+  line-height: 0.86;
+  text-transform: uppercase;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.titleLockup span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgba(245, 239, 224, 0.72);
+}
+
+.titleLockup strong {
+  font-size: clamp(2.25rem, 8.5vw, 3.7rem);
+  letter-spacing: -0.08em;
+}
+
+@media (hover: hover) {
+  .cover:hover .workbench,
+  :global(.group):hover .workbench {
+    transform: rotate(0deg) translateY(-2px);
+  }
+
+  .cover:hover .activeCell,
+  :global(.group):hover .activeCell {
+    animation: labCoverPulse 820ms ease-out both;
+  }
+
+  .cover:hover .trace,
+  :global(.group):hover .trace {
+    animation: labCoverTrace 900ms ease-out both;
+  }
+
+  .cover:hover .mark,
+  :global(.group):hover .mark {
+    animation: labCoverMark 900ms ease-out both;
+  }
+
+  .cover:hover .points,
+  :global(.group):hover .points {
+    animation: labCoverPoints 900ms ease-out both;
+  }
+}
+
+@keyframes labCoverPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.18);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes labCoverTrace {
+  0% {
+    stroke-dashoffset: 36;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes labCoverMark {
+  0% {
+    transform: scale(0.82);
+    opacity: 0.74;
+  }
+
+  48% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes labCoverPoints {
+  0% {
+    opacity: 0.3;
+    transform: translateY(2px);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workbench {
+    transition: none;
+  }
+
+  .cover:hover .activeCell,
+  .cover:hover .trace,
+  .cover:hover .mark,
+  .cover:hover .points,
+  :global(.group):hover .trace,
+  :global(.group):hover .mark,
+  :global(.group):hover .points,
+  :global(.group):hover .activeCell {
+    animation: none;
+  }
+}

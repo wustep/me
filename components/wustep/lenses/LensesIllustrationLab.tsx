@@ -2,14 +2,15 @@
 
 import * as React from 'react'
 
-import { ThemeToggle } from '@/components/wustep/ThemeToggle'
+import { usePlaygroundTheme } from '@/components/wustep/PlaygroundLayout'
 
 import type { IllustrationId, Lens } from './types'
+import { ChevronIcon, CloseIcon } from './icons'
 import { Illustration } from './illustrations'
 import { EXPERTISE_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
 import styles from './LensesIllustrationLab.module.css'
 import cardStyles from './LensesPage.module.css'
-import { LENSES } from './registry'
+import { LENS_BY_ID, LENSES } from './registry'
 
 type Palette = {
   bg: string
@@ -22,6 +23,11 @@ type Playback = 'idle' | 'playing' | 'paused'
 type LabMode = 'production' | 'candidate'
 
 type GridMode = 'shared' | 'production'
+
+type LabSnapshot = {
+  selectedKey: string
+  palette: Palette
+}
 
 type LabIllustration = {
   /** Unique select-key. Production = lens illustration id. Candidate = `${lensId}:${candidateId}`. */
@@ -280,20 +286,25 @@ const ILLUSTRATIONS_WITH_CANDIDATES = new Set(
   CANDIDATE_LAB_ILLUSTRATIONS.map((entry) => entry.illustrationId)
 )
 
+const FLOATING_CONTROLS_TOP_OFFSET = 72
+const RECENT_RANDOM_SELECTION_LIMIT = 10
+
 export function LensesIllustrationLab() {
   const [labMode, setLabMode] = React.useState<LabMode>('production')
   const [selectedKey, setSelectedKey] = React.useState<string>(
     PRODUCTION_LAB_ILLUSTRATIONS[0]!.key
   )
-  const [canvasTheme, setCanvasTheme] = React.useState<'light' | 'dark'>(
-    'light'
-  )
+  const playgroundTheme = usePlaygroundTheme()
+  const controlsAnchorRef = React.useRef<HTMLDivElement>(null)
   const [playback, setPlayback] = React.useState<Playback>('idle')
   const [controlsFloating, setControlsFloating] = React.useState(false)
   const [palette, setPalette] = React.useState<Palette>(() =>
     paletteFromLens(LENSES[0]!)
   )
   const [gridMode, setGridMode] = React.useState<GridMode>('production')
+  const [undoStack, setUndoStack] = React.useState<LabSnapshot[]>([])
+  const [recentRandomSelectionKeys, setRecentRandomSelectionKeys] =
+    React.useState<string[]>([])
 
   const visibleEntries = React.useMemo(
     () =>
@@ -322,8 +333,79 @@ export function LensesIllustrationLab() {
     }
   }, [visibleEntries, selectedKey, selected.key])
 
+  const recordUndo = React.useCallback(
+    () =>
+      setUndoStack((stack) => [
+        ...stack,
+        {
+          selectedKey,
+          palette
+        }
+      ]),
+    [palette, selectedKey]
+  )
+
   const randomize = React.useCallback(() => {
+    recordUndo()
     setPalette(randomPalette())
+  }, [recordUndo])
+
+  const randomizeSelection = React.useCallback(() => {
+    const visibleKeys = new Set(visibleEntries.map((entry) => entry.key))
+    const recentKeys = new Set(
+      recentRandomSelectionKeys.filter((key) => visibleKeys.has(key))
+    )
+    const freshEntries = visibleEntries.filter(
+      (entry) => entry.key !== selectedKey && !recentKeys.has(entry.key)
+    )
+    const fallbackEntries = visibleEntries.filter(
+      (entry) => entry.key !== selectedKey
+    )
+    const nextEntries = freshEntries.length > 0 ? freshEntries : fallbackEntries
+    const nextEntry =
+      nextEntries[Math.floor(Math.random() * nextEntries.length)]
+    if (!nextEntry) return
+
+    recordUndo()
+    setSelectedKey(nextEntry.key)
+    setRecentRandomSelectionKeys((keys) =>
+      [
+        nextEntry.key,
+        selectedKey,
+        ...keys.filter((key) => key !== nextEntry.key)
+      ]
+        .filter((key, index, array) => array.indexOf(key) === index)
+        .filter((key) => visibleKeys.has(key))
+        .slice(0, RECENT_RANDOM_SELECTION_LIMIT)
+    )
+  }, [recentRandomSelectionKeys, recordUndo, selectedKey, visibleEntries])
+
+  const selectCard = React.useCallback(
+    (nextKey: string, nextPalette: Palette) => {
+      const selectionChanged = nextKey !== selectedKey
+      const paletteChanged =
+        nextPalette.bg !== palette.bg ||
+        nextPalette.fg !== palette.fg ||
+        nextPalette.accent !== palette.accent
+
+      if (!selectionChanged && !paletteChanged) return
+
+      recordUndo()
+      setSelectedKey(nextKey)
+      setPalette(nextPalette)
+    },
+    [palette, recordUndo, selectedKey]
+  )
+
+  const undo = React.useCallback(() => {
+    setUndoStack((stack) => {
+      const previous = stack.at(-1)
+      if (!previous) return stack
+
+      setSelectedKey(previous.selectedKey)
+      setPalette(previous.palette)
+      return stack.slice(0, -1)
+    })
   }, [])
 
   const resetPalette = React.useCallback(() => {
@@ -339,7 +421,11 @@ export function LensesIllustrationLab() {
     let raf = 0
     const update = () => {
       raf = 0
-      setControlsFloating(window.scrollY > 280)
+      const controlsAnchor = controlsAnchorRef.current
+      if (!controlsAnchor) return
+
+      const { top } = controlsAnchor.getBoundingClientRect()
+      setControlsFloating(top <= FLOATING_CONTROLS_TOP_OFFSET)
     }
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update)
@@ -347,8 +433,10 @@ export function LensesIllustrationLab() {
 
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
@@ -356,8 +444,8 @@ export function LensesIllustrationLab() {
   const selectedContrast = contrastRatio(palette.bg, palette.fg)
 
   const matrixPalettes = [
-    { label: 'Owner', palette: selected.ownerPalette },
     { label: 'Current', palette },
+    { label: 'Owner', palette: selected.ownerPalette },
     ...MATRIX_COLOR_CANDIDATES
   ].slice(0, 12)
 
@@ -371,9 +459,13 @@ export function LensesIllustrationLab() {
     onPaletteChange: setPalette,
     playback,
     onPlaybackChange: setPlayback,
+    onRandomizeSelection: randomizeSelection,
+    canRandomizeSelection: visibleEntries.length > 1,
     onRandomize: randomize,
     onReset: resetPalette,
     canReset: !palettesMatch,
+    onUndo: undo,
+    canUndo: undoStack.length > 0,
     resetTargetLabel: selected.ownerLens.title
   } satisfies LabControlsProps
 
@@ -384,6 +476,8 @@ export function LensesIllustrationLab() {
   const previewTagline = selected.candidate
     ? (selected.notes ?? previewLens.tagline)
     : previewLens.tagline
+  const canvasTheme =
+    playgroundTheme?.hasMounted && playgroundTheme.isDarkMode ? 'dark' : 'light'
 
   return (
     <div
@@ -396,28 +490,23 @@ export function LensesIllustrationLab() {
         <div>
           <div className={styles.heroTopline}>
             <p className={styles.kicker}>Development</p>
-            <div className={styles.themeControl}>
-              <span>{canvasTheme} canvas</span>
-              <ThemeToggle
-                isDark={canvasTheme === 'dark'}
-                onToggle={() =>
-                  setCanvasTheme((theme) =>
-                    theme === 'dark' ? 'light' : 'dark'
-                  )
-                }
-                className={styles.themeToggle}
-              />
-            </div>
           </div>
           <h1 className={styles.title}>Illustrations</h1>
           <p className={styles.intro}>
-            Test every Lenses illustration against real card colors, controlled
+            Test Lenses illustrations against real card colors, controlled
             palettes, and randomized color directions before moving changes into
             the production registry.
           </p>
         </div>
 
-        <LabControls {...controlProps} />
+        <div
+          ref={controlsAnchorRef}
+          className={styles.controlsAnchor}
+          data-floating={controlsFloating}
+          aria-hidden={controlsFloating}
+        >
+          <LabControls {...controlProps} />
+        </div>
       </section>
 
       {controlsFloating ? (
@@ -490,14 +579,23 @@ export function LensesIllustrationLab() {
                     </p>
                   </div>
                   <div className={styles.matrixCards}>
-                    {matrixPalettes.map((column) => (
-                      <PreviewCard
-                        key={`${entry.key}-${column.label}`}
-                        title={column.label}
-                        palette={column.palette}
-                        renderIllustration={entry.render}
-                      />
-                    ))}
+                    {matrixPalettes.map((column) => {
+                      const selectedCard =
+                        entry.key === selectedKey &&
+                        column.palette.bg === palette.bg &&
+                        column.palette.fg === palette.fg &&
+                        column.palette.accent === palette.accent
+                      return (
+                        <PreviewCard
+                          key={`${entry.key}-${column.label}`}
+                          title={column.label}
+                          palette={column.palette}
+                          renderIllustration={entry.render}
+                          selected={selectedCard}
+                          onClick={() => selectCard(entry.key, column.palette)}
+                        />
+                      )
+                    })}
                   </div>
                 </article>
               )
@@ -505,22 +603,6 @@ export function LensesIllustrationLab() {
           </div>
         </section>
       ) : null}
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>Selected Across Palettes</h2>
-        </div>
-        <div className={styles.grid}>
-          {[palette, ...PRESET_PALETTES].map((entry, index) => (
-            <PreviewCard
-              key={`${entry.bg}-${entry.fg}-${entry.accent}-${index}`}
-              title={index === 0 ? 'Current' : `Preset ${index}`}
-              palette={entry}
-              renderIllustration={selected.render}
-            />
-          ))}
-        </div>
-      </section>
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
@@ -535,12 +617,6 @@ export function LensesIllustrationLab() {
             ]}
           />
         </div>
-        {labMode === 'candidate' && selected.candidate ? (
-          <p className={styles.libraryHint}>
-            The {selected.ownerLens.title} card below is rendered with the
-            selected candidate so you can read it next to its real neighbors.
-          </p>
-        ) : null}
         <div className={styles.grid}>
           {PRODUCTION_LAB_ILLUSTRATIONS.map((entry) => {
             const useCandidate =
@@ -575,18 +651,141 @@ export function LensesIllustrationLab() {
                 selected={isSelected}
                 badge={badge}
                 onClick={() => {
-                  if (useCandidate) return
-                  setSelectedKey(entry.key)
-                  if (gridMode === 'production') {
-                    setPalette(entry.ownerPalette)
-                  }
+                  selectCard(
+                    labMode === 'candidate' ? selectedKey : entry.key,
+                    cardPalette
+                  )
                 }}
               />
             )
           })}
         </div>
       </section>
+
+      <SidePanelContextPreview entry={selected} palette={palette} />
     </div>
+  )
+}
+
+type SidePanelContextPreviewProps = {
+  entry: LabIllustration
+  palette: Palette
+}
+
+function SidePanelContextPreview({
+  entry,
+  palette
+}: SidePanelContextPreviewProps) {
+  const lens = entry.ownerLens
+  const related = (lens.related ?? [])
+    .map((id) => LENS_BY_ID[id])
+    .filter(Boolean)
+    .slice(0, 3)
+  const contextCards = LENSES.filter((candidate) => candidate.id !== lens.id)
+    .slice(0, 7)
+    .concat(lens)
+
+  return (
+    <section className={`${styles.section} ${styles.sidePanelPreviewSection}`}>
+      <div className={styles.sectionHeader}>
+        <div>
+          <h2>Side Panel in Context</h2>
+          <p>
+            Preview the selected illustration inside the production panel frame,
+            with neighboring cards still visible behind it.
+          </p>
+        </div>
+      </div>
+      <div className={styles.sidePanelStage}>
+        <div className={styles.sidePanelContextCards} aria-hidden='true'>
+          {contextCards.map((contextLens, index) => {
+            const isActive = contextLens.id === lens.id
+            return (
+              <span
+                key={`${contextLens.id}-${index}`}
+                className={`${styles.contextCard} ${
+                  isActive ? styles.contextCardActive : ''
+                }`}
+                style={
+                  {
+                    '--context-card-bg': isActive ? palette.bg : contextLens.bg,
+                    '--context-card-fg': isActive ? palette.fg : contextLens.fg,
+                    '--context-card-accent': isActive
+                      ? palette.accent
+                      : (contextLens.accent ?? contextLens.fg),
+                    '--context-card-y': `${10 + index * 13}%`,
+                    '--context-card-x': `${index % 2 === 0 ? 4 : 12}%`
+                  } as React.CSSProperties
+                }
+              >
+                <span>{contextLens.title}</span>
+              </span>
+            )
+          })}
+        </div>
+
+        <article
+          className={styles.sidePanelMock}
+          style={
+            {
+              '--panel-bg': palette.bg,
+              '--panel-fg': palette.fg,
+              '--panel-accent': palette.accent
+            } as React.CSSProperties
+          }
+        >
+          <div className={styles.sidePanelHero}>
+            <span className={styles.sidePanelArt} aria-hidden='true'>
+              {entry.render(palette)}
+            </span>
+            <div className={styles.sidePanelHeroText}>
+              <span className={styles.sidePanelEyebrow}>{lens.category}</span>
+              <h3 className={styles.sidePanelTitle}>{lens.title}</h3>
+              <p className={styles.sidePanelTagline}>{lens.tagline}</p>
+            </div>
+            <div className={styles.sidePanelControls} aria-hidden='true'>
+              <span>
+                <ChevronIcon direction='left' />
+              </span>
+              <span>
+                <ChevronIcon direction='right' />
+              </span>
+              <span>
+                <CloseIcon />
+              </span>
+            </div>
+          </div>
+          <div className={styles.sidePanelBody}>
+            <div className={styles.sidePanelBodyClamp}>{lens.body}</div>
+            {related.length > 0 ? (
+              <div className={styles.sidePanelRelated}>
+                <span className={styles.sidePanelRelatedLabel}>
+                  Related lenses
+                </span>
+                <div className={styles.sidePanelRelatedChips}>
+                  {related.map((relatedLens) => (
+                    <span
+                      key={relatedLens.id}
+                      className={styles.sidePanelRelatedChip}
+                      style={
+                        {
+                          '--chip-bg': relatedLens.bg,
+                          '--chip-fg': relatedLens.fg
+                        } as React.CSSProperties
+                      }
+                    >
+                      <span />
+                      {relatedLens.title}
+                      <small aria-hidden='true'>→</small>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </article>
+      </div>
+    </section>
   )
 }
 
@@ -606,9 +805,13 @@ type LabControlsProps = {
   onPaletteChange: React.Dispatch<React.SetStateAction<Palette>>
   playback: Playback
   onPlaybackChange: React.Dispatch<React.SetStateAction<Playback>>
+  onRandomizeSelection: () => void
+  canRandomizeSelection: boolean
   onRandomize: () => void
   onReset: () => void
   canReset: boolean
+  onUndo: () => void
+  canUndo: boolean
   resetTargetLabel: string
 }
 
@@ -622,9 +825,13 @@ function LabControls({
   onPaletteChange,
   playback,
   onPlaybackChange,
+  onRandomizeSelection,
+  canRandomizeSelection,
   onRandomize,
   onReset,
   canReset,
+  onUndo,
+  canUndo,
   resetTargetLabel
 }: LabControlsProps) {
   return (
@@ -643,16 +850,28 @@ function LabControls({
 
       <label className={styles.field}>
         <span>{labMode === 'candidate' ? 'Candidate' : 'Illustration'}</span>
-        <select
-          value={selectedKey}
-          onChange={(event) => onSelectedKeyChange(event.target.value)}
-        >
-          {visibleEntries.map((entry) => (
-            <option key={entry.key} value={entry.key}>
-              {entry.optionLabel}
-            </option>
-          ))}
-        </select>
+        <span className={styles.selectActionWrap}>
+          <select
+            value={selectedKey}
+            onChange={(event) => onSelectedKeyChange(event.target.value)}
+          >
+            {visibleEntries.map((entry) => (
+              <option key={entry.key} value={entry.key}>
+                {entry.optionLabel}
+              </option>
+            ))}
+          </select>
+          <button
+            type='button'
+            className={styles.iconButton}
+            onClick={onRandomizeSelection}
+            disabled={!canRandomizeSelection}
+            aria-label={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
+            title={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
+          >
+            <ShuffleIcon />
+          </button>
+        </span>
       </label>
 
       <ColorField
@@ -676,6 +895,15 @@ function LabControls({
       <div className={styles.actionRow}>
         <button type='button' className={styles.button} onClick={onRandomize}>
           Randomize palette
+        </button>
+        <button
+          type='button'
+          className={styles.buttonSecondary}
+          onClick={onUndo}
+          disabled={!canUndo}
+          title='Undo last randomize or card selection'
+        >
+          Undo
         </button>
         <button
           type='button'
@@ -787,6 +1015,21 @@ function PauseIcon() {
       <path
         d='M7 5.5h3.5v13H7v-13Zm6.5 0H17v13h-3.5v-13Z'
         fill='currentColor'
+      />
+    </svg>
+  )
+}
+
+function ShuffleIcon() {
+  return (
+    <svg viewBox='0 0 24 24' aria-hidden='true'>
+      <path
+        d='M4 7h3.5c2.8 0 4.2 2 5.6 5s2.8 5 5.4 5H20M17 14l3 3-3 3M4 17h3.5c1.5 0 2.6-.6 3.6-1.7M17 4l3 3-3 3M13.4 8.8C14.8 7.7 16.2 7 18.5 7H20'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.8'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   )
