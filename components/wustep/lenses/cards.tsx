@@ -34,6 +34,36 @@ function indexOfClosest(value: number, anchors: readonly number[]) {
   return bestIndex
 }
 
+/**
+ * Categorize a title by typographic challenge so CSS can pick a
+ * fit-friendly font-size / tracking pair per card. Three buckets:
+ *
+ *   - `long-word`  → single token > 11 chars. Can't wrap, so the only
+ *                    fix is shrinking the word ("Communication").
+ *   - `long`       → multi-word > 18 chars total. Wraps to 2 lines,
+ *                    but each line is still long enough that the
+ *                    default size hugs the card edge ("Epistemic
+ *                    pragmatism", "Probabilistic thinking",
+ *                    "Second-order effects", "Evolutionary
+ *                    psychology").
+ *   - default      → everything else. No data-attr written, regular
+ *                    typography applies.
+ *
+ * Thresholds are conservative — bumping any title from one bucket
+ * to the next should be a deliberate decision, not a side-effect
+ * of trimming a character.
+ */
+function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
+  const words = title.split(/\s+/)
+  const longestWord = words.reduce(
+    (max, w) => (Math.max(w.length, max)),
+    0
+  )
+  if (words.length === 1 && longestWord > 11) return 'long-word'
+  if (title.length > 18) return 'long'
+  return undefined
+}
+
 type LensCardProps = {
   lens: Lens
   stage: Stage
@@ -46,6 +76,7 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
   const rowIndex = indexOfClosest(lens.y, GRID.rowAnchors)
   const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
   const delay = rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
+  const titleBucket = titleLengthBucket(lens.title)
 
   const style: React.CSSProperties = {
     // CSS grid is 1-indexed for grid-column/grid-row.
@@ -81,6 +112,7 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
       data-lens-id={lens.id}
       data-lens-category={lens.category}
       data-lens-selected={selected ? 'true' : undefined}
+      data-title-length={titleBucket}
     >
       {/* Hidden by default; the design panel can flip a data
           attribute on <html> to reveal it. Keeps the markup
@@ -96,7 +128,15 @@ export function LensCard({ lens, stage, selected, onOpen }: LensCardProps) {
           accent={lens.accent ?? lens.fg}
         />
       </span>
-      <span className={styles.cardTitle}>{lens.title}</span>
+      <span className={styles.cardTitle}>
+        {/* Inner clamp span: the outer .cardTitle owns flex-end
+            bottom-alignment inside the reserved 2.3rem slot, the
+            inner owns the 2-line clamp via display: -webkit-box.
+            They can't share an element — `-webkit-line-clamp`
+            requires `display: -webkit-box`, which would collapse
+            the outer's flex layout. */}
+        <span className={styles.cardTitleClamp}>{lens.title}</span>
+      </span>
       {/* Tagline preview only renders in design-panel mode. Sits
           absolute so it doesn't affect layout when hidden. */}
       <span className={styles.cardHoverTagline} aria-hidden='true'>

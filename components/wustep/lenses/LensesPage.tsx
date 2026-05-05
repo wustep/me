@@ -123,13 +123,32 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
   /* Drive the entrance storyboard. Snap to final stage instantly when
      the user prefers reduced motion.
      `entranceTick` is bumped by the dev DesignPanel ("Replay" action)
-     to re-run the entrance from stage 0 — handy when tweaking timing. */
+     to re-run the entrance from stage 0 — handy when tweaking timing.
+
+     Repeat-visit skip: once a user has seen the entrance during this
+     browser session, subsequent navigations to the page snap straight
+     to the final stage. Emil's frequency principle — homepage
+     animations are friction on visit #2+. The flag lives in
+     sessionStorage so it resets on a new tab/window but persists
+     across in-session navigation. The dev panel's "Replay" path
+     bypasses the flag (entranceTick > 0) so designers can re-run
+     the storyboard at will. */
   const [entranceTick, setEntranceTick] = React.useState(0)
 
   React.useEffect(() => {
     if (!hasMounted) return
 
-    if (prefersReducedMotion) {
+    const SESSION_KEY = 'lenses:entrance-played'
+    const replayRequested = entranceTick > 0
+    let alreadyPlayed = false
+    try {
+      alreadyPlayed = sessionStorage.getItem(SESSION_KEY) === '1'
+    } catch {
+      /* Private mode or storage disabled — fall through to the
+         normal entrance. Not worth blocking on. */
+    }
+
+    if (prefersReducedMotion || (alreadyPlayed && !replayRequested)) {
       setStage(STAGE.cards)
       return
     }
@@ -138,7 +157,12 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
     const timers: ReturnType<typeof setTimeout>[] = [
       setTimeout(() => setStage(STAGE.canvas), TIMING.canvasIn),
       setTimeout(() => setStage(STAGE.center), TIMING.centerIn),
-      setTimeout(() => setStage(STAGE.cards), TIMING.cardsInBase)
+      setTimeout(() => {
+        setStage(STAGE.cards)
+        try {
+          sessionStorage.setItem(SESSION_KEY, '1')
+        } catch {}
+      }, TIMING.cardsInBase)
     ]
     return () => {
       for (const t of timers) clearTimeout(t)

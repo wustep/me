@@ -333,8 +333,19 @@
   grid-auto-rows: minmax(0, auto);
   /* Consistent padding around the deck. Top extra to clear the
      header (which sits absolutely at the top with its own padding). */
-  padding: var(--design-deck-pad-top, 88px) var(--design-deck-pad-x, 32px) 56px;
-  gap: var(--design-card-gap, 28px);
+  /* Fluid padding + gap interpolate from the 1019px tight values
+     up to the wide defaults across the 1020-1440px container
+     range. The `var(--design-...)` indirections preserve
+     design-panel overrides — the clamp expression is just the
+     fallback. Using `cqi` (1% of container inline size) so the
+     deck responds to its container, matching the named container
+     used elsewhere. The `(max-width: 1019px)` block below floors
+     these at the tight values; below 1000px we drop into a
+     different composition entirely. */
+  padding: var(--design-deck-pad-top, clamp(76px, 46.8px + 2.86cqi, 88px))
+    var(--design-deck-pad-x, clamp(14px, -29.7px + 4.29cqi, 32px))
+    clamp(44px, 14.8px + 2.86cqi, 56px);
+  gap: var(--design-card-gap, clamp(12px, -26.9px + 3.81cqi, 28px));
   /* Cap the grid width so cards don't stretch absurdly wide on huge
      monitors — the deck stays card-sized and centers in the
      viewport. */
@@ -342,16 +353,16 @@
   margin: 0 auto;
 }
 
-/* In the 8-col composition (container ≥ 900px), vertically center
+/* In the 8-col composition (container ≥ 1000px), vertically center
    the deck inside `.canvas` when the viewport is taller than the
    deck. We promote `.canvas` to a flex column *only* in this band so
    that `margin-block: auto` on the deck has free vertical space to
-   absorb. Below 900px we leave `.canvas` as block — flex-item sizing
+   absorb. Below 1000px we leave `.canvas` as block — flex-item sizing
    on a grid with `auto-fit` columns inside a flex column can fight
    the cross-axis stretch and push the grid off-screen horizontally.
    On viewports shorter than the deck, the auto margins collapse to 0
    and the deck pins to the top + scrolls naturally. */
-@container deck (min-width: 900px) {
+@container deck (min-width: 1000px) {
   .canvas {
     display: flex;
     flex-direction: column;
@@ -392,7 +403,14 @@
   will-change: transform;
   width: 100%;
   aspect-ratio: var(--design-card-aspect, 0.8);
-  padding: var(--design-card-pad-y, 13px) var(--design-card-pad-x, 14px);
+  /* 3-value padding (top / x / bottom). Bottom stays a touch more
+     generous than top across the range (12-13px vs 10-13px), so
+     the title rests visually centered on its baseline rather than
+     hugging the bottom edge. Fluid via clamp so tightening from
+     wide to 1019px is smooth. */
+  padding: var(--design-card-pad-y, clamp(10px, 2.7px + 0.71cqi, 13px))
+    var(--design-card-pad-x, clamp(10px, 0.3px + 0.95cqi, 14px))
+    clamp(12px, 9.6px + 0.24cqi, 13px);
   background:
     linear-gradient(
       180deg,
@@ -403,7 +421,11 @@
     ),
     var(--card-bg);
   color: var(--card-fg);
-  border: none;
+  /* `border: 0` instead of `border: none` so a UA stylesheet
+     reset like `button { border: initial }` can't reintroduce a
+     focus-stealing native outline. Width-zero is the same paint
+     cost as none but more defensible against resets — Emil rule. */
+  border: 0;
   border-radius: var(--design-card-radius, 18px);
   /* Rest shadow — cheap inset layers only. Cast shadow lives on
      `::before` so hover/selected can fade it in via opacity
@@ -432,16 +454,29 @@
   transform: scale(0.96);
   /* Default = hover-OUT timing. Hover-in overrides below with a
      much shorter duration so the card lifts under the cursor
-     immediately, then settles back calmly when you leave. */
+     immediately, then settles back calmly when you leave.
+     Opacity intentionally NOT in this base transition: the
+     entrance fade is owned entirely by `.cardVisible`, and
+     leaving a 600ms opacity transition on the rest state means
+     any later opacity change (e.g. spotlight selection mode at
+     0.42) inherits a sluggish 600ms fade unless every override
+     redeclares its own opacity timing. Letting opacity changes
+     after entrance be instant by default is the safer floor. */
   transition:
-    opacity 600ms var(--ease-out-quint),
     transform var(--design-hover-out, 180ms)
       var(--design-ease, var(--ease-out-snap)),
     box-shadow var(--design-hover-out, 180ms)
       var(--design-ease, var(--ease-out-snap));
 }
 
-/* Cast-shadow layer. Opacity 0 at rest, 1 when lifted. */
+/* Cast-shadow layer. Opacity 0 at rest, 1 when lifted.
+   Each shadow tier is tinted with the card's own bg color via
+   `color-mix` so a red card casts a red-warm shadow and a blue
+   card casts a blue-cool one — every card's lift "belongs to it"
+   instead of all 30 cards casting the same neutral brown. The
+   mix is small (15-25% bg into a brown base) so the shadow still
+   reads as shadow, not as a colored aura. Costs nothing — same
+   paint layer that was already here. */
 .card::before {
   content: '';
   position: absolute;
@@ -449,13 +484,26 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    0 2px 3px rgba(0, 0, 0, calc(0.1 * var(--design-shadow-strength, 1))),
+    0 2px 3px
+      color-mix(
+        in oklab,
+        var(--card-bg) 15%,
+        rgba(20, 14, 8, calc(0.1 * var(--design-shadow-strength, 1)))
+      ),
     0 calc(var(--design-shadow-y, 14px))
       calc(var(--design-shadow-blur, 28px)) -10px
-      rgba(20, 14, 8, calc(0.34 * var(--design-shadow-strength, 1))),
+      color-mix(
+        in oklab,
+        var(--card-bg) 22%,
+        rgba(20, 14, 8, calc(0.34 * var(--design-shadow-strength, 1)))
+      ),
     0 calc(var(--design-shadow-y, 14px) * 2.3)
       calc(var(--design-shadow-blur, 28px) * 2.1) -22px
-      rgba(20, 14, 8, calc(0.42 * var(--design-shadow-strength, 1)));
+      color-mix(
+        in oklab,
+        var(--card-bg) 25%,
+        rgba(20, 14, 8, calc(0.42 * var(--design-shadow-strength, 1)))
+      );
   opacity: 0;
   transition: opacity var(--design-hover-out, 180ms)
     var(--design-ease, var(--ease-out-snap));
@@ -494,12 +542,14 @@
    shadow — so the ring reads as a halo around the card rather
    than a border baked onto it. */
 .cardSelected {
-  /* Slightly smaller scale than :hover — the new ring + gap add
-     visual footprint, so we shrink the card itself a touch to keep
-     the overall selected silhouette in line with the hover lift
-     and avoid a "puffed up" feeling next to neighbors. */
+  /* Match :hover's lift exactly so re-entering the card with the
+     mouse isn't disorienting AND so a hovered-AND-selected card
+     can't grow LARGER than its hover-only neighbors (selection
+     must outrank hover, never the other way around). The ring +
+     gap below provide the unique selected signal — the lift just
+     needs to be at-least the hover amount. */
   transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
-    scale(var(--design-selected-scale, 1.005));
+    scale(var(--design-hover-scale, 1.025));
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
@@ -629,7 +679,19 @@
 .card:active,
 .card.cardSelected:active {
   transform: scale(var(--design-press-scale, 0.98));
-  transition: transform 80ms var(--design-ease, var(--ease-out-snap));
+  /* Collapse the inset top-highlight + bottom-shadow so the card
+     visibly settles into the surface, not just shrinks. On touch
+     devices (no hover state) this IS the only feedback the user
+     gets, so it has to register. The inner stroke stays at full
+     strength — that's the card's edge, not its lift. */
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, var(--card-knock-inner-stroke)) inset,
+    0 0.5px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -0.5px 0 rgba(0, 0, 0, 0.06) inset,
+    0 0.5px 0.5px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 80ms var(--design-ease, var(--ease-out-snap)),
+    box-shadow 80ms var(--design-ease, var(--ease-out-snap));
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -650,9 +712,18 @@
 }
 
 .cardArt :global(svg) {
-  width: calc(92% * var(--design-illus-scale, 1));
-  height: calc(92% * var(--design-illus-scale, 1));
-  max-height: 100%;
+  /* `width: 100%; height: auto` keeps subpixel rounding stable
+     on retina (the previous `width: calc(92%) + height: calc(92%)`
+     pair produced fractional dimensions that jittered ~0.5px on
+     hover). The visual 92% inset comes from `max-width / max-height`
+     instead, so the SVG is sized by its intrinsic aspect ratio
+     (every illustration uses `viewBox`) rather than independent
+     percentages. The illus-scale slider still works — it scales
+     the inset proportionally. */
+  width: 100%;
+  height: auto;
+  max-width: calc(92% * var(--design-illus-scale, 1));
+  max-height: calc(92% * var(--design-illus-scale, 1));
 }
 
 .cardTitle {
@@ -664,9 +735,32 @@
      "Probabilistic thinking") on two lines without crowding the
      card edge. Sits a little smaller than the playground/hero
      scale because the cards are dense and the illustration is
-     the primary read — the title is the label. */
-  font-size: calc(0.78rem * var(--design-title-scale, 1));
-  font-weight: var(--design-title-weight, 600);
+     the primary read — the title is the label.
+     Bumped from 0.78rem / weight 600 to 0.8rem / weight 650 for
+     better legibility on color-saturated backgrounds — Geist
+     supports the in-between weight and the extra ~10% of stroke
+     width reads cleaner at 12-13px without changing layout.
+     `--cardtitle-size`, `--cardtitle-shrink`, and
+     `--cardtitle-clamp` exist as indirections so per-card fit
+     buckets (data-title-length="long" / "long-word") and the
+     responsive ladder can compose without duplicating rules.
+     - `--cardtitle-size`: base size at this breakpoint (rem).
+        Fluidly interpolates between the 1019px tight floor
+        (0.73rem) and the wide default (0.8rem) across the
+        1020-1440px container range so type doesn't snap at the
+        old 1199px step.
+     - `--cardtitle-shrink`: unitless multiplier per title length
+        bucket — short titles stay at 1, long ones shrink.
+     - the clamp itself is hard-coded to 2 lines below; keeping
+        this parent to a fixed two-line slot gives us a fallback
+        cap even if line-clamp support changes. */
+  --cardtitle-size: calc(
+    clamp(0.73rem, 0.56rem + 0.0167cqi, 0.8rem) *
+      var(--design-title-scale, 1)
+  );
+  --cardtitle-shrink: 1;
+  font-size: calc(var(--cardtitle-size) * var(--cardtitle-shrink));
+  font-weight: var(--design-title-weight, 650);
   letter-spacing: var(--design-title-tracking, -0.006em);
   text-transform: var(--design-title-transform, none);
   text-align: var(--design-title-align, left);
@@ -681,7 +775,8 @@
      across rows. The slight extra padding in the height calc
      gives room for descenders ("y", "g") and the line-box
      overhead some fonts add on top of `line-height`. */
-  min-height: 2.3rem;
+  block-size: 2.3rem;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -700,18 +795,71 @@
   hyphens: none;
 }
 
-/* "Communication" is the longest single-word title in the deck
-   (13 characters with no wrap point), so at the base font-size
-   it sits hard against the card's left/right padding. Pull the
-   font and tracking in just for this card so the breathing room
-   matches its neighbors. Other long titles wrap onto two lines
-   and don't have this problem.
-   We mirror the breakpoint ladder used by `.cardTitle` so the
-   override scales down alongside it instead of growing larger
-   than the surrounding cards at narrow widths. */
-.card[data-lens-id='communication'] .cardTitle {
-  font-size: 0.69rem;
+/* Inner clamp element — caps the visible line count to 2 so
+   long titles can't overflow the reserved 2.3rem slot and break
+   the row baseline. Use a literal line count instead of a CSS var:
+   older WebKit builds can drop `-webkit-line-clamp: var(...)`,
+   which lets titles like "Second-order effects" spill to 3 lines.
+   Must live on its own element because `display: -webkit-box` is
+   incompatible with the parent's flex layout. */
+.cardTitleClamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  /* Inherit text wrapping behavior from the parent so balance +
+     no-mid-word-break still applies. */
+  text-wrap: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+  hyphens: inherit;
+}
+
+/* ── Per-title fit adjustments ─────────────────────────────────
+   The default title size assumes 1-2 short words. Long titles
+   need help — either shrunk (single long word can't wrap) or
+   given more room (multi-word long titles wrap to 2 lines but
+   each line is still long). The `data-title-length` attribute
+   on the card is set in `cards.tsx` based on the title string;
+   thresholds live there.
+
+   We adjust:
+     - font-size: smallest reduction that fits without making
+       the title visibly smaller than its neighbors. Expressed
+       relative (em) so the responsive ladder propagates.
+     - tracking: tightened slightly to claw back a few % of
+       width without touching size further.
+     - inline padding: cards with long titles get a 2px shave
+       on each side so the wrapped lines don't hug the edge.
+
+   Doing this via data-attr (not lens-id) means new long titles
+   adopt the treatment automatically — no per-lens CSS to
+   maintain. */
+
+/* Long single word ("Communication"): can't wrap, so the only
+   move is shrinking. Bigger reduction than `long` because the
+   word has to fit on a single line at all costs. Setting
+   `--cardtitle-shrink` only — the base size + responsive ladder
+   already provide the right base; we just multiply. The
+   proportion stays constant at every breakpoint. */
+.card[data-title-length='long-word'] .cardTitle {
+  --cardtitle-shrink: 0.88;
+  letter-spacing: -0.018em;
+}
+
+/* Multi-word long titles ("Epistemic pragmatism", "Evolutionary
+   psychology", "Probabilistic thinking", "Second-order effects"):
+   wrap to 2 lines. Modest size shave (93%) + tighter tracking +
+   2px padding shave on the card itself so each line breathes
+   against the edge. */
+.card[data-title-length='long'] .cardTitle {
+  --cardtitle-shrink: 0.93;
   letter-spacing: -0.012em;
+}
+.card[data-title-length='long'] {
+  padding-left: calc(var(--design-card-pad-x, 14px) - 2px);
+  padding-right: calc(var(--design-card-pad-x, 14px) - 2px);
 }
 
 /* ── Design-panel-driven layout flips ──────────────────────────────
@@ -820,26 +968,35 @@
   width: 100%;
   height: 100%;
   /* Allow the card to take its natural cell shape; no aspect-ratio
-     so it follows the grid (which is 2 cells wide × 2 cells tall). */
-  padding: 22px 24px 26px;
-  /* Same surface-gradient treatment as lens cards but stronger,
-     because the center card is darker and bigger so the top
-     highlight reads more clearly. The gradient lifts the top of
-     the card subtly toward the light source. */
+     so it follows the grid (which is 2 cells wide × 2 cells tall).
+     Fluid padding scales between the 1199px tight values and the
+     wide defaults so the focal card doesn't snap at the breakpoint. */
+  padding: clamp(18px, 8.3px + 0.95cqi, 22px)
+    clamp(20px, 10.3px + 0.95cqi, 24px)
+    clamp(22px, 12.3px + 0.95cqi, 26px);
+  /* Match the lens cards' subtler gradient (was 0.05/0.18 — read
+     as a vertical light source rather than ambient). Hierarchy
+     against neighboring cards comes from the larger radius and
+     deeper rest cast shadow, not from a stronger highlight, so
+     the focal card reads as bigger and more grounded without
+     looking like it's lit differently from everything else. */
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0) 30%,
-      rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.18) 100%
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(0, 0, 0, 0) 68%,
+      rgba(0, 0, 0, 0.1) 100%
     ),
     #1a1f2a;
   color: #ede4d1;
-  border: none;
+  border: 0;
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
-  border-radius: var(--design-center-card-radius, 22px);
+  border-radius: var(
+    --design-center-card-radius,
+    clamp(18px, 8.3px + 0.95cqi, 22px)
+  );
   /* Featured-card REST shadow — inset layers + the *resting*
      cast shadow (kept short, ~14px ambient). The deeper hover
      cast shadow lives on .centerCard::before with opacity
@@ -891,13 +1048,17 @@
 }
 
 :global(.dark-mode) .centerCard {
+  /* Dark-mode center card is a beige surface; the previous 0.4
+     top-highlight read as a literal light source streak. Pull
+     it down to match the lens-card ambient treatment so the
+     focal card just feels softly-lit, not stage-lit. */
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.4) 0%,
-      rgba(255, 255, 255, 0) 28%,
-      rgba(0, 0, 0, 0) 72%,
-      rgba(0, 0, 0, 0.08) 100%
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(0, 0, 0, 0) 68%,
+      rgba(0, 0, 0, 0.06) 100%
     ),
     #ede4d1;
   color: #1a1f2a;
@@ -978,7 +1139,10 @@
     --design-sans,
     var(--font-geist, var(--font-sans), system-ui, sans-serif)
   );
-  font-size: calc(2rem * var(--design-title-scale, 1));
+  font-size: calc(
+    clamp(1.05rem, -1.255rem + 0.226cqi, 2rem) *
+      var(--design-title-scale, 1)
+  );
   font-weight: var(--design-title-weight, 700);
   letter-spacing: var(--design-title-tracking, -0.02em);
   text-transform: var(--design-title-transform, none);
@@ -3428,73 +3592,44 @@
  *
  *   We keep the designed 8-column composition (with the center
  *   "Lenses" card spanning the middle 2×2) all the way down to
- *   900px. As the viewport tightens we shave the outer padding
- *   and gap so cards stay readable instead of dropping out of
- *   the centered composition prematurely.
+ *   ~1000px container width. Within that band, deck padding, gap,
+ *   card padding, card-title size, and the focal card's padding +
+ *   radius + title size all interpolate fluidly via clamp(...) +
+ *   `cqi` in the base rules above — so the deck tightens
+ *   smoothly between 1440px (wide ceiling) and 1020px (tight
+ *   floor) instead of snapping at a hard 1199px step.
  *
- *   In the 900–1199px band the grid keeps its 8 columns but with
- *   tighter padding and a smaller gap. Below 900px we finally
- *   throw the explicit placement away: the grid auto-flows at
- *   whatever column count fits, the center card promotes to a
- *   full-width hero pinned to the top, and document order takes
- *   over.
+ *   Below 1000px we finally drop the 8-col composition entirely:
+ *   the grid auto-flows at whatever column count fits (≥130px
+ *   each), the center card promotes to a full-width hero pinned
+ *   to the top, and document order takes over. That transition
+ *   is inherently a layout shift, so it stays a hard step.
  * ================================================================= */
 
-/* Tighten outer padding + gap to keep 8 columns viable at narrower
-   widths. The cards shrink, but the centered composition holds.
-   We measure the *frame*'s inline size so the playground-embedded
-   variant collapses correctly even when the viewport is wide. */
-@container deck (max-width: 1199px) {
-  .cards {
-    padding: var(--design-deck-pad-top, 80px) var(--design-deck-pad-x, 24px)
-      48px;
-    gap: var(--design-card-gap, 22px);
-  }
-
-  .card {
-    padding: 11px 12px 12px;
-  }
-
-  .cardTitle {
-    font-size: 0.74rem;
-  }
-
-  .card[data-lens-id='communication'] .cardTitle {
-    font-size: 0.65rem;
-  }
-
-  .centerCard {
-    padding: 18px 20px 22px;
-    border-radius: 18px;
-  }
-
-  .centerCardTitle {
-    font-size: 1.05rem;
-  }
-}
-
+/* Just below the 8-col floor (1019px), bump the long-bucket title
+   shrinks: cards are at their minimum 8-col width AND titles can't
+   shrink below ~10px without becoming illegible, so long buckets
+   need to pull a bit harder than at wide widths. The size + spacing
+   floors are already enforced by the clamp() fallbacks in the base
+   rules; only the per-bucket shrink ratios are breakpoint-specific. */
 @container deck (max-width: 1019px) {
-  .cards {
-    padding: var(--design-deck-pad-top, 76px) var(--design-deck-pad-x, 18px)
-      44px;
-    gap: var(--design-card-gap, 18px);
+  .card[data-title-length='long-word'] .cardTitle {
+    --cardtitle-shrink: 0.84;
   }
-
-  .cardTitle {
-    font-size: 0.71rem;
-    min-height: 2.2rem;
-  }
-
-  .card[data-lens-id='communication'] .cardTitle {
-    font-size: 0.61rem;
+  .card[data-title-length='long'] .cardTitle {
+    --cardtitle-shrink: 0.9;
   }
 }
 
-/* Below 900px container width: drop the 8-col centered
+/* Below 1000px container width: drop the 8-col centered
    composition. Cards auto-flow at whatever column count fits, and
    the center card promotes to a full-width hero pinned to the top
-   of the grid. */
-@container deck (max-width: 899px) {
+   of the grid. We used to hold 8-col all the way down to 900px,
+   but at that width "Communication" (the longest single word in
+   the deck — can't wrap) overflowed even with the per-card shrink.
+   Promoting to auto-fit at 999px gives every card 130px+ of
+   width, plenty of room for the longest title at full size. */
+@container deck (max-width: 999px) {
   .cards {
     /* auto-fit: as many cards as fit at >=130px wide, equally
        sized, with our fixed pixel gap. The grid grows tall to
@@ -3514,12 +3649,8 @@
   }
 
   .cardTitle {
-    font-size: 0.84rem;
+    --cardtitle-size: 0.86rem;
     min-height: 2.3rem;
-  }
-
-  .card[data-lens-id='communication'] .cardTitle {
-    font-size: 0.74rem;
   }
 
   .card {
@@ -3850,29 +3981,15 @@
 /* ── Magnetic hover ── adds a stronger rotation when the cursor
    is near the card center. Light-touch CSS-only version: scale
    the rotate slightly more on the perimeter cards (first/last
-   in row). Real magnetic motion would need JS. */
-:global(html[data-design-magnetic='on']) .card:hover {
-  transform: translateY(calc(var(--design-hover-lift, 5px) * -1.3))
-    scale(calc(var(--design-hover-scale, 1.025) * 1.01))
-    rotate(calc(var(--design-card-tilt, 0deg) * 1.5));
-}
-
-/* Cursor-lens highlight: when ON, the hovered card gets a soft
-   accent ring so the cursor's "current lens" is unmistakable
-   even before you click. When OFF, hover stays at lift+scale
-   alone. Default is ON. Only fires for fine pointers — touch
-   "hover" is sticky and would leave a stale ring. */
+   in row). Real magnetic motion would need JS. Gated on
+   `(hover: hover) and (pointer: fine)` so iPad/touch-laptop's
+   sticky-hover-after-tap doesn't pin a card in its magnetic
+   state until the next tap elsewhere. */
 @media (hover: hover) and (pointer: fine) {
-  :global(html[data-design-cursor-highlight='on']) .card:hover:not(.cardSelected) {
-    box-shadow:
-      0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
-      0 1px 0 rgba(255, 255, 255, 0.08) inset,
-      0 2px 3px rgba(0, 0, 0, calc(0.1 * var(--design-shadow-strength, 1))),
-      0 calc(var(--design-shadow-y, 14px))
-        calc(var(--design-shadow-blur, 28px)) -10px
-        rgba(20, 14, 8, calc(0.34 * var(--design-shadow-strength, 1))),
-      0 0 0 calc(var(--design-selected-ring, 2px) * 0.75)
-        color-mix(in oklab, var(--card-accent) 70%, transparent);
+  :global(html[data-design-magnetic='on']) .card:hover {
+    transform: translateY(calc(var(--design-hover-lift, 5px) * -1.3))
+      scale(calc(var(--design-hover-scale, 1.025) * 1.01))
+      rotate(calc(var(--design-card-tilt, 0deg) * 1.5));
   }
 }
 

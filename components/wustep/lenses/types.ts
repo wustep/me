@@ -22,12 +22,20 @@ import type * as React from 'react'
  * All timings live in TIMING and DURATION below — no magic
  * numbers in JSX or component bodies.
  * ───────────────────────────────────────────────────────── */
+/* Per-row / per-col stagger ms. Halved from the original
+   90 / 22 because this is a home page — Emil's frequency
+   principle says repeat-viewers shouldn't pay a long stagger.
+   At 4 rows × 8 cols the last card now lands ~276ms after the
+   first instead of ~540ms, so the deck reads as "one motion"
+   rather than a sequence. The very first visit per session
+   still uses these timings; subsequent visits within the same
+   session skip the entrance entirely (see LensesPage.tsx). */
 export const TIMING = {
   canvasIn: 60,
   centerIn: 180,
   cardsInBase: 280,
-  rowStaggerMs: 90,
-  colStaggerMs: 22
+  rowStaggerMs: 45,
+  colStaggerMs: 12
 } as const
 
 export const DURATION = {

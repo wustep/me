@@ -931,13 +931,6 @@ const SECTIONS: Section[] = [
         label: 'Magnetic hover',
         dataAttr: 'magnetic',
         default: false
-      },
-      {
-        kind: 'toggle',
-        id: 'showCursor',
-        label: 'Highlight cursor lens',
-        dataAttr: 'cursor-highlight',
-        default: true
       }
     ]
   },
