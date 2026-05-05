@@ -22,9 +22,27 @@ type SidePanelProps = {
   lens: Lens | null
   onClose: () => void
   onOpenLens: (id: string) => void
+  previewOverride?: {
+    container: HTMLElement
+    palette: {
+      bg: string
+      fg: string
+      accent: string
+    }
+    renderIllustration: (palette: {
+      bg: string
+      fg: string
+      accent: string
+    }) => React.ReactNode
+  }
 }
 
-export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
+export function SidePanel({
+  lens,
+  onClose,
+  onOpenLens,
+  previewOverride
+}: SidePanelProps) {
   const open = !!lens
   const [shown, setShown] = React.useState<Lens | null>(lens)
   const [bodyKey, setBodyKey] = React.useState(0)
@@ -46,6 +64,7 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
      this from React — DesignPanel is dev-only and uses a CSS-only
      selector against this attribute. No-op cost in prod. */
   React.useEffect(() => {
+    if (previewOverride) return undefined
     if (typeof document === 'undefined') return
     const root = document.documentElement
     if (open) {
@@ -55,7 +74,18 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
       }
     }
     return undefined
-  }, [open])
+  }, [open, previewOverride])
+
+  const panelPalette =
+    shown && previewOverride
+      ? previewOverride.palette
+      : shown
+        ? {
+            bg: shown.bg,
+            fg: shown.fg,
+            accent: shown.accent ?? shown.fg
+          }
+        : null
 
   return (
     <DialogPrimitive.Root
@@ -73,9 +103,9 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
          overlay are dropped (we re-render the overlay manually below
          so the dimming/blur treatment still shows). Production stays
          modal. */
-      modal={!isDev}
+      modal={!isDev && !previewOverride}
     >
-      <DialogPrimitive.Portal>
+      <DialogPrimitive.Portal container={previewOverride?.container}>
         {/* Radix only renders <Overlay> in modal mode. In dev (non-
             modal) we paint our own div with identical classes so the
             backdrop blur/dim doesn't disappear. We keep default
@@ -86,7 +116,15 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
             because the browser hit-tests top-down. Clicking the
             overlay itself dismisses, mirroring Radix's modal-mode
             behavior. */}
-        {isDev ? (
+        {previewOverride ? (
+          open ? (
+            <div
+              className={`${styles.panelOverlay} ${styles.panelPreviewOverlay}`}
+              data-state='open'
+              aria-hidden='true'
+            />
+          ) : null
+        ) : isDev ? (
           open ? (
             <div
               className={styles.panelOverlay}
@@ -100,14 +138,16 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
         )}
         <DialogPrimitive.Content
           ref={contentRef}
-          className={styles.panel}
+          className={`${styles.panel} ${
+            previewOverride ? styles.panelPreview : ''
+          }`}
           tabIndex={-1}
           style={
-            shown
+            panelPalette
               ? ({
-                  ['--panel-bg' as string]: shown.bg,
-                  ['--panel-fg' as string]: shown.fg,
-                  ['--panel-accent' as string]: shown.accent ?? shown.fg
+                  ['--panel-bg' as string]: panelPalette.bg,
+                  ['--panel-fg' as string]: panelPalette.fg,
+                  ['--panel-accent' as string]: panelPalette.accent
                 } as React.CSSProperties)
               : undefined
           }
@@ -144,12 +184,16 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
             <>
               <div className={styles.panelHero}>
                 <span className={styles.panelArt} aria-hidden='true'>
-                  <Illustration
-                    id={shown.illustration}
-                    fg={shown.fg}
-                    bg={shown.bg}
-                    accent={shown.accent ?? shown.fg}
-                  />
+                  {previewOverride && panelPalette ? (
+                    previewOverride.renderIllustration(panelPalette)
+                  ) : (
+                    <Illustration
+                      id={shown.illustration}
+                      fg={shown.fg}
+                      bg={shown.bg}
+                      accent={shown.accent ?? shown.fg}
+                    />
+                  )}
                 </span>
                 <div className={styles.panelHeroText}>
                   <span className={styles.panelEyebrow}>{shown.category}</span>

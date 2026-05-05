@@ -616,204 +616,6 @@
   letter-spacing: -0.03em;
 }
 
-.sidePanelMock {
-  --panel-bg: #1f2a5c;
-  --panel-fg: #f5f1e8;
-  --panel-accent: #f2c04a;
-
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  width: min(520px, 72%);
-  min-height: min(760px, 82vh);
-  margin-left: auto;
-  background: #faf7ee;
-  color: #1a1a1a;
-  box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.42);
-}
-
-.lab[data-theme='dark'] .sidePanelMock {
-  background: #1c1d1f;
-  color: #f5f1e8;
-  box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.72);
-}
-
-.sidePanelHero {
-  position: relative;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 16px;
-  padding: 32px 36px 28px;
-  color: var(--panel-fg);
-  background: var(--panel-bg);
-}
-
-.sidePanelArt {
-  display: block;
-  width: 110px;
-  height: 110px;
-}
-
-.sidePanelArt :global(svg) {
-  width: 100%;
-  height: 100%;
-}
-
-.sidePanelHeroText {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sidePanelEyebrow {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.7;
-}
-
-.sidePanelTitle {
-  margin: 0;
-  color: var(--panel-fg);
-  font-size: 1.85rem;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
-}
-
-.sidePanelTagline {
-  max-width: 34ch;
-  margin: 6px 0 0;
-  color: var(--panel-fg);
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 1.05rem;
-  font-style: italic;
-  line-height: 1.45;
-  opacity: 0.85;
-}
-
-.sidePanelControls {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  display: inline-flex;
-  gap: 6px;
-}
-
-.sidePanelControls span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  color: var(--panel-fg);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.sidePanelBody {
-  flex: 1 1 auto;
-  padding: 30px 36px 40px;
-  overflow: hidden;
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 1.08rem;
-  line-height: 1.6;
-}
-
-.sidePanelBodyClamp {
-  max-height: 19.5em;
-  overflow: hidden;
-  mask-image: linear-gradient(180deg, black 74%, transparent);
-}
-
-.sidePanelBody p {
-  max-width: 56ch;
-  margin: 0 0 1em;
-}
-
-.sidePanelBody p:last-child {
-  margin-bottom: 0;
-}
-
-.sidePanelBody em {
-  font-weight: 600;
-  color: #0e0e10;
-  background-image: linear-gradient(
-    to bottom,
-    transparent calc(100% - 2px),
-    color-mix(in srgb, var(--panel-bg) 65%, transparent) calc(100% - 2px)
-  );
-  background-repeat: no-repeat;
-  padding-bottom: 1px;
-}
-
-.lab[data-theme='dark'] .sidePanelBody em {
-  color: #f8f4e8;
-  background-image: linear-gradient(
-    to bottom,
-    transparent calc(100% - 2px),
-    color-mix(in srgb, var(--panel-accent) 80%, transparent) calc(100% - 2px)
-  );
-}
-
-.sidePanelRelated {
-  margin-top: 32px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.lab[data-theme='dark'] .sidePanelRelated {
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-.sidePanelRelatedLabel {
-  display: block;
-  margin-bottom: 12px;
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.55;
-}
-
-.sidePanelRelatedChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.sidePanelRelatedChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 12px 9px 9px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.04);
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
-  font-size: 0.84rem;
-  font-weight: 500;
-}
-
-.lab[data-theme='dark'] .sidePanelRelatedChip {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.sidePanelRelatedChip span {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: var(--chip-bg);
-}
-
-.sidePanelRelatedChip small {
-  opacity: 0.5;
-}
-
 .candidateGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -1046,53 +848,6 @@
   --lab-candidate-scale: 1.06;
 }
 
-:global(
-  svg[data-anim='candidate-expertise-topography'] [data-anim-target='trace']
-) {
-  animation: labCandidateTrace var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-topography'] [data-anim-target='mark']
-),
-:global(
-  svg[data-anim='candidate-expertise-calibration'] [data-anim-target='lock']
-) {
-  animation: labCandidatePulse var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-calibration'] [data-anim-target='scatter']
-) {
-  animation: labCandidateScatter var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-compression'] [data-anim-target='core']
-) {
-  animation: labCandidatePulse var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-compression'] [data-anim-target='beam']
-) {
-  animation: labCandidateBeam var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-deliberate-practice']
-    [data-anim-target='rungs']
-) {
-  animation: labCandidateRungs var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-deliberate-practice']
-    [data-anim-target='step']
-) {
-  animation: labCandidateStep var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
 /* ── Bow ─────────────────────────────────────────────────────────────
    The string snaps forward toward the limb and the arrow shoots out
    along the aim line, then both reset for the next draw. We cap the
@@ -1101,7 +856,7 @@
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='string']) {
   animation: labCandidateBowString var(--lab-candidate-cycle) ease-in-out
     infinite;
-  transform-origin: 36px 50px;
+  transform-origin: 64px 50px;
 }
 
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='arrow']) {
@@ -1141,44 +896,6 @@
     infinite;
 }
 
-/* ── Whetstone ───────────────────────────────────────────────────────
-   The blade slides a short distance along the stone; sparks brighten on
-   the contact stroke. Movement stays tiny so the silhouette never
-   leaves the stone's footprint. */
-:global(svg[data-anim='candidate-expertise-whetstone'] [data-anim-target='blade']) {
-  animation: labCandidateBlade var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-whetstone'] [data-anim-target='sparks']
-) {
-  animation: labCandidateSparks var(--lab-candidate-cycle) ease-in-out infinite;
-  transform-origin: 24px 60px;
-}
-
-/* ── Apprentice & Master ─────────────────────────────────────────────
-   Both travellers ride their respective offset paths. The apprentice is
-   delayed by ~0.18s so the master always reads as a beat ahead. */
-:global(
-  svg[data-anim='candidate-expertise-apprentice']
-    [data-anim-target='master-trace']
-) {
-  animation: labCandidateOffsetTrace var(--lab-candidate-cycle) ease-in-out
-    infinite;
-  offset-rotate: 0deg;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-apprentice']
-    [data-anim-target='apprentice-trace']
-) {
-  animation: labCandidateOffsetTrace var(--lab-candidate-cycle) ease-in-out
-    infinite;
-  animation-delay: 0.22s;
-  offset-rotate: 0deg;
-  opacity: 0.85;
-}
-
 /* ── Mastery score ───────────────────────────────────────────────────
    The playhead sweeps left-to-right and the four climbing notes light
    in turn; the finale holds with a soft pulse on the held note. */
@@ -1190,7 +907,9 @@
   transform-origin: center;
 }
 
-:global(svg[data-anim='candidate-expertise-score'] [data-anim-target^='note-']) {
+:global(
+  svg[data-anim='candidate-expertise-score'] [data-anim-target^='note-']
+) {
   animation: labCandidateNoteFlash var(--lab-candidate-cycle) ease-in-out
     infinite;
   transform-box: fill-box;
@@ -1218,168 +937,42 @@
   animation-delay: 1.25s;
 }
 
-:global(svg[data-anim='candidate-expertise-score'] [data-anim-target='finale']) {
+:global(
+  svg[data-anim='candidate-expertise-score'] [data-anim-target='finale']
+) {
   animation: labCandidateFinale var(--lab-candidate-cycle) ease-in-out infinite;
   animation-delay: 1.55s;
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
 
-/* ── Key turn ──────────────────────────────────────────────────────── */
-:global(svg[data-anim='candidate-expertise-key-turn'] [data-anim-target='turn']) {
-  animation: labCandidateKeyTurn var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-key-turn'] [data-anim-target='click']
-) {
-  animation: labCandidatePinClick var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-/* ── Chisel cut ────────────────────────────────────────────────────── */
-:global(
-  svg[data-anim='candidate-expertise-chisel-cut'] [data-anim-target='strike']
-) {
-  animation: labCandidateChiselStrike var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-chisel-cut'] [data-anim-target='chip']
-) {
-  animation: labCandidateChipPop var(--lab-candidate-cycle) ease-in-out infinite;
-}
-
-/* ── Compass arc ───────────────────────────────────────────────────── */
-:global(
-  svg[data-anim='candidate-expertise-compass-arc'] [data-anim-target='arc']
-) {
-  animation: labCandidateCompassArc var(--lab-candidate-cycle) ease-in-out
-    infinite;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-compass-arc'] [data-anim-target='sweep']
-) {
-  animation: labCandidateCompassSweep var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-/* ── Joinery ───────────────────────────────────────────────────────── */
-:global(svg[data-anim='candidate-expertise-joinery'] [data-anim-target='left']) {
-  animation: labCandidateJoineryLeft var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-:global(svg[data-anim='candidate-expertise-joinery'] [data-anim-target='right']) {
-  animation: labCandidateJoineryRight var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-:global(svg[data-anim='candidate-expertise-joinery'] [data-anim-target='seam']) {
-  animation: labCandidateJoinerySeam var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
 /* ── Belt knot ─────────────────────────────────────────────────────── */
-:global(svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='tails']) {
-  animation: labCandidateBeltTails var(--lab-candidate-cycle) ease-in-out
+:global(
+  svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='left-tail']
+) {
+  animation: labCandidateBeltLeftTail var(--lab-candidate-cycle) ease-in-out
     infinite;
 }
 
-:global(svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='knot']) {
-  animation: labCandidateBeltKnot var(--lab-candidate-cycle) ease-in-out infinite;
+:global(
+  svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='right-tail']
+) {
+  animation: labCandidateBeltRightTail var(--lab-candidate-cycle) ease-in-out
+    infinite;
 }
 
-@keyframes labCandidateTrace {
-  0%,
-  72%,
-  100% {
-    opacity: 0.68;
-    transform: translateY(0);
-  }
-
-  42%,
-  58% {
-    opacity: 1;
-    transform: translateY(calc(var(--lab-candidate-shift) * -0.5));
-  }
+:global(
+  svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='knot']
+) {
+  animation: labCandidateBeltKnot var(--lab-candidate-cycle) ease-in-out
+    infinite;
 }
 
-@keyframes labCandidatePulse {
-  0%,
-  72%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  42%,
-  58% {
-    transform: scale(var(--lab-candidate-scale));
-    opacity: 0.96;
-  }
-}
-
-@keyframes labCandidateScatter {
-  0%,
-  72%,
-  100% {
-    opacity: 0.5;
-    transform: translate(0, 0);
-  }
-
-  42%,
-  58% {
-    opacity: 0.72;
-    transform: translate(var(--lab-candidate-shift), -1px);
-  }
-}
-
-@keyframes labCandidateBeam {
-  0%,
-  72%,
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  42%,
-  58% {
-    transform: translateX(var(--lab-candidate-shift));
-    opacity: 0.92;
-  }
-}
-
-@keyframes labCandidateRungs {
-  0%,
-  72%,
-  100% {
-    opacity: 0.42;
-  }
-
-  42%,
-  58% {
-    opacity: 0.68;
-  }
-}
-
-@keyframes labCandidateStep {
-  0%,
-  72%,
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-
-  42%,
-  58% {
-    transform: translateY(calc(var(--lab-candidate-shift) * -1)) scale(1.04);
-    opacity: 0.96;
-  }
+:global(
+  svg[data-anim='candidate-expertise-belt-knot'] [data-anim-target='cinch']
+) {
+  animation: labCandidateBeltCinch var(--lab-candidate-cycle) ease-in-out
+    infinite;
 }
 
 /* Bow string — rests at full draw, snaps forward on release, holds, then
@@ -1392,7 +985,7 @@
   }
   46%,
   54% {
-    transform: translateX(-10px);
+    transform: translateX(10px);
   }
   72%,
   100% {
@@ -1476,60 +1069,6 @@
   }
 }
 
-/* Whetstone blade — slides a short distance along the stone and
-   returns. Movement is small enough that the blade stays seated. */
-@keyframes labCandidateBlade {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  35% {
-    transform: translateX(6px);
-  }
-  70% {
-    transform: translateX(-3px);
-  }
-}
-
-/* Whetstone sparks — flare on the contact stroke, dim at rest. */
-@keyframes labCandidateSparks {
-  0%,
-  20%,
-  80%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.85);
-  }
-  35%,
-  60% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* Apprentice & master travellers — ride their offset paths over the
-   cycle, then snap back. We end at 100% so each circle sweeps from the
-   start of its arc to the end and the loop reads as one continuous
-   attempt. */
-@keyframes labCandidateOffsetTrace {
-  0% {
-    offset-distance: 0%;
-    opacity: 0.2;
-  }
-  10% {
-    opacity: 1;
-  }
-  85% {
-    offset-distance: 100%;
-    opacity: 1;
-  }
-  92%,
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
 /* Score playhead — sweeps left to right, fades at the end before
    resetting. translateX uses the staff width (76 units) so the line
    travels from the left bar to the right bar. */
@@ -1585,142 +1124,7 @@
   }
 }
 
-@keyframes labCandidateKeyTurn {
-  0%,
-  28%,
-  78%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  42%,
-  62% {
-    transform: rotate(13deg);
-  }
-}
-
-@keyframes labCandidatePinClick {
-  0%,
-  30%,
-  76%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.72;
-  }
-
-  44%,
-  60% {
-    transform: translateY(-4px);
-    opacity: 1;
-  }
-}
-
-@keyframes labCandidateChiselStrike {
-  0%,
-  32%,
-  76%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  46%,
-  58% {
-    transform: translate(5px, 4px);
-  }
-}
-
-@keyframes labCandidateChipPop {
-  0%,
-  34%,
-  100% {
-    transform: translate(0, 0) scale(0.9);
-    opacity: 0.38;
-  }
-
-  48%,
-  62% {
-    transform: translate(5px, -7px) scale(1.08);
-    opacity: 1;
-  }
-}
-
-@keyframes labCandidateCompassArc {
-  0%,
-  20% {
-    stroke-dashoffset: 100;
-    opacity: 0.2;
-  }
-
-  62%,
-  88% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-
-  100% {
-    stroke-dashoffset: 100;
-    opacity: 0.2;
-  }
-}
-
-@keyframes labCandidateCompassSweep {
-  0%,
-  22%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  62%,
-  86% {
-    transform: rotate(28deg);
-  }
-}
-
-@keyframes labCandidateJoineryLeft {
-  0%,
-  30%,
-  82%,
-  100% {
-    transform: translateX(-4px);
-  }
-
-  46%,
-  66% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes labCandidateJoineryRight {
-  0%,
-  30%,
-  82%,
-  100% {
-    transform: translateX(4px);
-  }
-
-  46%,
-  66% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes labCandidateJoinerySeam {
-  0%,
-  32%,
-  82%,
-  100% {
-    opacity: 0.72;
-    transform: scale(1);
-  }
-
-  48%,
-  64% {
-    opacity: 1;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes labCandidateBeltTails {
+@keyframes labCandidateBeltLeftTail {
   0%,
   32%,
   80%,
@@ -1730,7 +1134,21 @@
 
   48%,
   62% {
-    transform: translateX(1.5px);
+    transform: translateX(4px);
+  }
+}
+
+@keyframes labCandidateBeltRightTail {
+  0%,
+  32%,
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+
+  48%,
+  62% {
+    transform: translateX(-4px);
   }
 }
 
@@ -1744,6 +1162,22 @@
 
   48%,
   62% {
+    transform: scale(0.92);
+  }
+}
+
+@keyframes labCandidateBeltCinch {
+  0%,
+  34%,
+  82%,
+  100% {
+    opacity: 0.42;
+    transform: scale(0.92);
+  }
+
+  48%,
+  62% {
+    opacity: 1;
     transform: scale(1.08);
   }
 }
@@ -1807,10 +1241,6 @@
     grid-template-columns: 1fr;
   }
 
-  .sidePanelMock {
-    width: min(560px, 82%);
-  }
-
   .readout dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1853,16 +1283,6 @@
 
   .sidePanelContextCards {
     opacity: 0.42;
-  }
-
-  .sidePanelMock {
-    width: calc(100% - 28px);
-  }
-
-  .sidePanelHero,
-  .sidePanelBody {
-    padding-left: 24px;
-    padding-right: 24px;
   }
 
   .actionRow {

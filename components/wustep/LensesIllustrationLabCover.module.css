@@ -35,10 +35,10 @@
 
 .workbench {
   position: absolute;
-  inset: 16% 12% 18%;
+  inset: 12% 10% 18%;
   z-index: 1;
   display: grid;
-  grid-template-columns: 0.86fr 1fr;
+  grid-template-columns: 1.08fr 0.92fr;
   gap: 14px;
   align-items: center;
   transform: rotate(-2deg);
@@ -52,7 +52,7 @@
   aspect-ratio: 0.8;
   min-width: 0;
   border-radius: 16px;
-  padding: 12px;
+  padding: 14px;
   color: #f5efe0;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 38%), #204a40;
@@ -60,12 +60,15 @@
     0 1px 0 rgba(255, 255, 255, 0.2) inset,
     0 0 0 3px rgba(245, 239, 224, 0.18),
     0 18px 38px rgba(0, 0, 0, 0.32);
+  transition: transform 260ms ease-out;
 }
 
 .illustration {
   flex: 1;
   width: 100%;
   min-height: 0;
+  transform: scale(1.08);
+  transform-origin: center;
 }
 
 .trace {
@@ -82,7 +85,7 @@
 }
 
 .cardLabel {
-  font-size: 0.72rem;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
@@ -151,14 +154,14 @@
 }
 
 .titleLockup span {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   color: rgba(245, 239, 224, 0.72);
 }
 
 .titleLockup strong {
-  font-size: clamp(2.25rem, 8.5vw, 3.7rem);
+  font-size: clamp(2.65rem, 9.8vw, 4.35rem);
   letter-spacing: -0.08em;
 }
 
@@ -166,6 +169,16 @@
   .cover:hover .workbench,
   :global(.group):hover .workbench {
     transform: rotate(0deg) translateY(-2px);
+  }
+
+  .cover:hover .previewCard,
+  :global(.group):hover .previewCard {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+
+  .cover:hover .terrain,
+  :global(.group):hover .terrain {
+    animation: labCoverTerrain 900ms ease-out both;
   }
 
   .cover:hover .activeCell,
@@ -213,6 +226,18 @@
   }
 }
 
+@keyframes labCoverTerrain {
+  0% {
+    transform: translateY(0);
+    opacity: 0.34;
+  }
+
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.56;
+  }
+}
+
 @keyframes labCoverMark {
   0% {
     transform: scale(0.82);
@@ -248,9 +273,13 @@
   }
 
   .cover:hover .activeCell,
+  .cover:hover .previewCard,
+  .cover:hover .terrain,
   .cover:hover .trace,
   .cover:hover .mark,
   .cover:hover .points,
+  :global(.group):hover .previewCard,
+  :global(.group):hover .terrain,
   :global(.group):hover .trace,
   :global(.group):hover .mark,
   :global(.group):hover .points,

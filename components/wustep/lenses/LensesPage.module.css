@@ -1202,6 +1202,24 @@
   animation: slideOutRight 280ms var(--ease-out-quart);
 }
 
+.panelPreviewOverlay {
+  position: absolute;
+  pointer-events: none;
+  animation: none !important;
+}
+
+.panelPreview {
+  position: absolute;
+  width: min(var(--design-panel-width, 480px), 72%);
+  min-width: min(100%, 360px);
+  animation: none !important;
+}
+
+.panelPreview[data-state='open'],
+.panelPreview[data-state='closed'] {
+  animation: none !important;
+}
+
 /* ── Side panel position overrides (design panel only) ──
    Default is right-anchored. The flips below re-anchor the panel
    to the left edge or to the bottom (sheet style), and swap the

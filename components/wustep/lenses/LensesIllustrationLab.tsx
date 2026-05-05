@@ -5,12 +5,12 @@ import * as React from 'react'
 import { usePlaygroundTheme } from '@/components/wustep/PlaygroundLayout'
 
 import type { IllustrationId, Lens } from './types'
-import { ChevronIcon, CloseIcon } from './icons'
 import { Illustration } from './illustrations'
 import { EXPERTISE_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
 import styles from './LensesIllustrationLab.module.css'
 import cardStyles from './LensesPage.module.css'
-import { LENS_BY_ID, LENSES } from './registry'
+import { LENSES } from './registry'
+import { SidePanel } from './SidePanel'
 
 type Palette = {
   bg: string
@@ -408,14 +408,17 @@ export function LensesIllustrationLab() {
     })
   }, [])
 
-  const resetPalette = React.useCallback(() => {
+  const resetPreview = React.useCallback(() => {
+    setLabMode('production')
+    setSelectedKey(selected.illustrationId)
     setPalette(selected.ownerPalette)
-  }, [selected.ownerPalette])
+  }, [selected.illustrationId, selected.ownerPalette])
 
   const palettesMatch =
     palette.bg === selected.ownerPalette.bg &&
     palette.fg === selected.ownerPalette.fg &&
     palette.accent === selected.ownerPalette.accent
+  const isProductionSelection = !selected.candidate
 
   React.useEffect(() => {
     let raf = 0
@@ -462,8 +465,8 @@ export function LensesIllustrationLab() {
     onRandomizeSelection: randomizeSelection,
     canRandomizeSelection: visibleEntries.length > 1,
     onRandomize: randomize,
-    onReset: resetPalette,
-    canReset: !palettesMatch,
+    onReset: resetPreview,
+    canReset: !palettesMatch || !isProductionSelection,
     onUndo: undo,
     canUndo: undoStack.length > 0,
     resetTargetLabel: selected.ownerLens.title
@@ -676,11 +679,10 @@ function SidePanelContextPreview({
   entry,
   palette
 }: SidePanelContextPreviewProps) {
+  const [stageElement, setStageElement] = React.useState<HTMLDivElement | null>(
+    null
+  )
   const lens = entry.ownerLens
-  const related = (lens.related ?? [])
-    .map((id) => LENS_BY_ID[id])
-    .filter(Boolean)
-    .slice(0, 3)
   const contextCards = LENSES.filter((candidate) => candidate.id !== lens.id)
     .slice(0, 7)
     .concat(lens)
@@ -688,15 +690,9 @@ function SidePanelContextPreview({
   return (
     <section className={`${styles.section} ${styles.sidePanelPreviewSection}`}>
       <div className={styles.sectionHeader}>
-        <div>
-          <h2>Side Panel in Context</h2>
-          <p>
-            Preview the selected illustration inside the production panel frame,
-            with neighboring cards still visible behind it.
-          </p>
-        </div>
+        <h2>Preview</h2>
       </div>
-      <div className={styles.sidePanelStage}>
+      <div ref={setStageElement} className={styles.sidePanelStage}>
         <div className={styles.sidePanelContextCards} aria-hidden='true'>
           {contextCards.map((contextLens, index) => {
             const isActive = contextLens.id === lens.id
@@ -724,66 +720,18 @@ function SidePanelContextPreview({
           })}
         </div>
 
-        <article
-          className={styles.sidePanelMock}
-          style={
-            {
-              '--panel-bg': palette.bg,
-              '--panel-fg': palette.fg,
-              '--panel-accent': palette.accent
-            } as React.CSSProperties
-          }
-        >
-          <div className={styles.sidePanelHero}>
-            <span className={styles.sidePanelArt} aria-hidden='true'>
-              {entry.render(palette)}
-            </span>
-            <div className={styles.sidePanelHeroText}>
-              <span className={styles.sidePanelEyebrow}>{lens.category}</span>
-              <h3 className={styles.sidePanelTitle}>{lens.title}</h3>
-              <p className={styles.sidePanelTagline}>{lens.tagline}</p>
-            </div>
-            <div className={styles.sidePanelControls} aria-hidden='true'>
-              <span>
-                <ChevronIcon direction='left' />
-              </span>
-              <span>
-                <ChevronIcon direction='right' />
-              </span>
-              <span>
-                <CloseIcon />
-              </span>
-            </div>
-          </div>
-          <div className={styles.sidePanelBody}>
-            <div className={styles.sidePanelBodyClamp}>{lens.body}</div>
-            {related.length > 0 ? (
-              <div className={styles.sidePanelRelated}>
-                <span className={styles.sidePanelRelatedLabel}>
-                  Related lenses
-                </span>
-                <div className={styles.sidePanelRelatedChips}>
-                  {related.map((relatedLens) => (
-                    <span
-                      key={relatedLens.id}
-                      className={styles.sidePanelRelatedChip}
-                      style={
-                        {
-                          '--chip-bg': relatedLens.bg,
-                          '--chip-fg': relatedLens.fg
-                        } as React.CSSProperties
-                      }
-                    >
-                      <span />
-                      {relatedLens.title}
-                      <small aria-hidden='true'>→</small>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </article>
+        {stageElement ? (
+          <SidePanel
+            lens={lens}
+            onClose={() => undefined}
+            onOpenLens={() => undefined}
+            previewOverride={{
+              container: stageElement,
+              palette,
+              renderIllustration: entry.render
+            }}
+          />
+        ) : null}
       </div>
     </section>
   )
@@ -910,7 +858,7 @@ function LabControls({
           className={styles.buttonSecondary}
           onClick={onReset}
           disabled={!canReset}
-          title={`Reset palette to ${resetTargetLabel}`}
+          title={`Reset to production preview for ${resetTargetLabel}`}
         >
           Reset
         </button>
