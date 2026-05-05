@@ -1592,9 +1592,6 @@ export function DesignPanel() {
         /* ignore */
       })
     }
-    /* Also log so the user can grab it from devtools if clipboard
-       isn't available. */
-    console.info('[DesignPanel] preset:', json)
   }, [values])
 
   return (

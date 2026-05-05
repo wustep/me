@@ -127,12 +127,10 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
 
      Repeat-visit skip: once a user has seen the entrance during this
      browser session, subsequent navigations to the page snap straight
-     to the final stage. Emil's frequency principle — homepage
-     animations are friction on visit #2+. The flag lives in
-     sessionStorage so it resets on a new tab/window but persists
-     across in-session navigation. The dev panel's "Replay" path
-     bypasses the flag (entranceTick > 0) so designers can re-run
-     the storyboard at will. */
+     to the final stage. The flag lives in sessionStorage so it resets
+     on a new tab/window but persists across in-session navigation.
+     The dev panel's "Replay" path bypasses the flag (entranceTick > 0)
+     so designers can re-run the storyboard at will. */
   const [entranceTick, setEntranceTick] = React.useState(0)
 
   React.useEffect(() => {

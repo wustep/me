@@ -378,8 +378,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 4px 0 8px;
-  /* Subtle scrollbar inside the small body — Emil rule allows
-     custom scrollbars in small contained surfaces. */
+  /* Subtle scrollbar inside the small contained body. */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
 }

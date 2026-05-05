@@ -124,10 +124,9 @@ export function SidePanel({ lens, onClose, onOpenLens }: SidePanelProps) {
             contentRef.current?.focus({ preventScroll: true })
           }}
           onKeyDown={(event) => {
-            // Preserve the "Enter closes the panel" affordance that the
-            // focused Close button used to provide. Only when focus is
-            // parked on the container itself — if the user has tabbed
-            // to a real control, let that control handle Enter.
+            // Keep Enter as a close shortcut only while focus is parked
+            // on the container itself. If the user has tabbed to a real
+            // control, let that control handle Enter.
             if (event.key === 'Enter' && event.target === contentRef.current) {
               event.preventDefault()
               onClose()

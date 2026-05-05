@@ -38,9 +38,8 @@
   --ease-out-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 
-/* Shared focus ring — Emil rule: stick to grey/black/white outlines,
-   never custom colors. Outline lives on a fixed scale so the same
-   value applies everywhere a focusable element exists. */
+/* Shared focus ring: neutral outlines only, with consistent sizing
+   everywhere a focusable element exists. */
 .frame button:focus-visible,
 .frame a:focus-visible,
 .panel button:focus-visible,
@@ -420,10 +419,8 @@
     ),
     var(--card-bg);
   color: var(--card-fg);
-  /* `border: 0` instead of `border: none` so a UA stylesheet
-     reset like `button { border: initial }` can't reintroduce a
-     focus-stealing native outline. Width-zero is the same paint
-     cost as none but more defensible against resets — Emil rule. */
+  /* `border: 0` keeps native button borders from resurfacing under
+     broad UA/reset styles. */
   border: 0;
   border-radius: var(--design-card-radius, 18px);
   /* Rest shadow — cheap inset layers only. Cast shadow lives on
@@ -504,13 +501,10 @@
   opacity: 1;
   transform: scale(1);
   /* Entrance uses a one-shot animation rather than a transition
-     so the base `.card` rule keeps owning the `transform`
-     property for subsequent hover/select changes. (A transition
-     here would persist and make every later transform change
-     inherit the bouncy 360ms spring — which made arrow-key
-     de-select feel sluggish.) `forwards` is intentionally
-     omitted so the animation doesn't pin `scale(1)` and block
-     `.cardSelected` / `:hover` transforms from taking over. */
+     so the base `.card` rule keeps owning `transform` for later
+     hover/select changes. `forwards` is intentionally omitted so
+     the animation doesn't pin `scale(1)` and block `.cardSelected`
+     / `:hover` transforms from taking over. */
   transition: opacity var(--design-entrance-dur, 600ms) var(--ease-out-quint)
     var(--card-enter-delay, 0ms);
   animation: cardEnterRise calc(var(--design-entrance-dur, 600ms) * 0.6)
@@ -532,8 +526,7 @@
 /* Selected = the card whose side panel is open. Persistent state
    that sits at the same lift as :hover (so re-entering the card
    isn't disorienting) plus a quiet neutral ring as the unique
-   signal. The ring is a single shared color (Emil rule: focus +
-   selection rings stay grey/black/white, never per-card accent)
+   signal. The ring stays neutral rather than per-card accent,
    and is separated from the card edge by a small transparent
    gap — drawn as a canvas-colored shadow underneath the ring
    shadow — so the ring reads as a halo around the card rather
@@ -709,14 +702,8 @@
 }
 
 .cardArt :global(svg) {
-  /* `width: 100%; height: auto` keeps subpixel rounding stable
-     on retina (the previous `width: calc(92%) + height: calc(92%)`
-     pair produced fractional dimensions that jittered ~0.5px on
-     hover). The visual 92% inset comes from `max-width / max-height`
-     instead, so the SVG is sized by its intrinsic aspect ratio
-     (every illustration uses `viewBox`) rather than independent
-     percentages. The illus-scale slider still works — it scales
-     the inset proportionally. */
+  /* Intrinsic sizing keeps subpixel rounding stable on retina while
+     preserving the visual inset via max-width / max-height. */
   width: 100%;
   height: auto;
   max-width: calc(92% * var(--design-illus-scale, 1));
@@ -744,8 +731,8 @@
      - `--cardtitle-size`: base size at this breakpoint (rem).
         Fluidly interpolates between the 1019px tight floor
         (0.73rem) and the wide default (0.8rem) across the
-        1020-1440px container range so type doesn't snap at the
-        old 1199px step.
+        1020-1440px container range so type doesn't snap at
+        responsive thresholds.
      - `--cardtitle-shrink`: unitless multiplier per title length
         bucket — short titles stay at 1, long ones shrink.
      - the clamp itself is hard-coded to 2 lines below; keeping
@@ -975,12 +962,9 @@
   padding: clamp(18px, 8.3px + 0.95cqi, 22px)
     clamp(20px, 10.3px + 0.95cqi, 24px)
     clamp(22px, 12.3px + 0.95cqi, 26px);
-  /* Match the lens cards' subtler gradient (was 0.05/0.18 — read
-     as a vertical light source rather than ambient). Hierarchy
+  /* Match the lens cards' subtle ambient gradient. Hierarchy
      against neighboring cards comes from the larger radius and
-     deeper rest cast shadow, not from a stronger highlight, so
-     the focal card reads as bigger and more grounded without
-     looking like it's lit differently from everything else. */
+     deeper rest cast shadow, not from a stronger highlight. */
   background:
     linear-gradient(
       180deg,
@@ -1049,10 +1033,8 @@
 }
 
 :global(.dark-mode) .centerCard {
-  /* Dark-mode center card is a beige surface; the previous 0.4
-     top-highlight read as a literal light source streak. Pull
-     it down to match the lens-card ambient treatment so the
-     focal card just feels softly-lit, not stage-lit. */
+  /* Dark-mode center card keeps the same ambient light treatment
+     as the lens cards so it feels softly lit, not stage-lit. */
   background:
     linear-gradient(
       180deg,
@@ -2631,16 +2613,7 @@
   animation: lensGameCell 4s ease-in-out infinite;
   opacity: 0;
 }
-/* The cell delays are shifted by an extra -0.6s relative to the
-   "natural" stagger (0 / -3s / -2s / -1s) so that in the default
-   *paused* state — what users see when they're not hovering —
-   cell 1 (top-left) is frozen at 15 % through its keyframe, i.e.
-   in the middle of its lit plateau (6 %–22 %). Without this
-   offset cell 1 sits at 0 % of its keyframe in the paused state
-   and therefore renders as fully transparent, which made the
-   default illustration look "off" — half-lit on the wrong cell
-   instead of fully lit on the canonical first cell. The relative
-   spacing between cells is preserved, so the walk during the
+/* The paused state should show the first cell lit, while the
    running animation still reads TL → TR → BR → BL clockwise. */
 :global(svg[data-anim='game-theory'] [data-anim-target='1']) {
   animation-delay: -0.6s;
@@ -3527,8 +3500,7 @@
 }
 
 /* ===== Reduced motion =====
-   Per Emil: every animation needs its own reduced-motion fallback.
-   We disable both `animation` and `transition` on every animated
+   Disable both `animation` and `transition` on every animated
    surface so the page snaps to its end state with zero motion. */
 
 @media (prefers-reduced-motion: reduce) {
@@ -3627,11 +3599,8 @@
 /* Below 1000px container width: drop the 8-col centered
    composition. Cards auto-flow at whatever column count fits, and
    the center card promotes to a full-width hero pinned to the top
-   of the grid. We used to hold 8-col all the way down to 900px,
-   but at that width "Communication" (the longest single word in
-   the deck — can't wrap) overflowed even with the per-card shrink.
-   Promoting to auto-fit at 999px gives every card 130px+ of
-   width, plenty of room for the longest title at full size. */
+   of the grid. This keeps "Communication" (the longest single word
+   in the deck) from overflowing. */
 @container deck (max-width: 999px) {
   .cards {
     /* auto-fit: as many cards as fit at >=130px wide, equally
@@ -4044,9 +4013,8 @@
 }
 
 /* Highlight every interactive element with a 44px-equivalent
-   minimum tap target (Emil's accessibility rule). Rendered via
-   outline so the box itself doesn't shift. Anything smaller than
-   44px gets a visible warning ring. */
+   minimum tap target. Rendered via outline so the box itself
+   doesn't shift. */
 :global(html[data-design-show-taps='on']) button,
 :global(html[data-design-show-taps='on']) a {
   outline: 1px dashed rgba(0, 200, 120, 0.55);

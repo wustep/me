@@ -1733,9 +1733,7 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         opacity='0.45'
         strokeDasharray='2 3'
       />
-      {/* Hexagon — replaces the earlier circle so all three primitives
-          have orient-able geometry (a circle's rotation is invisible,
-          which made the trio feel uneven when the others spun). */}
+      {/* Hexagon — all three primitives need visible rotation. */}
       <g
         style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
         data-anim-target='1'
@@ -1773,9 +1771,8 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
  *   lenses on the same axis, look through, and what they reveal
  *   together is more than any one shows alone.
  *
- *   Quieter than the previous trefoil. The three colors persist as
- *   continuity with the deck palette but the composition is just
- *   three horizontal strokes + a vertical axis — almost diagrammatic.
+ *   Three colors preserve continuity with the deck palette, while the
+ *   composition stays diagrammatic: horizontal strokes + a vertical axis.
  *
  *   On hover the three lenses drift left/right by a few pixels,
  *   like an instrument settling into focus.
