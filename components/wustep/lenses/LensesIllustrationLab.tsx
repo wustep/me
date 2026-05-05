@@ -312,6 +312,7 @@ const ILLUSTRATIONS_WITH_CANDIDATES = new Set(
 )
 
 const FLOATING_CONTROLS_TOP_OFFSET = 72
+const FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH = 980
 const RECENT_RANDOM_SELECTION_LIMIT = 10
 
 export function LensesIllustrationLab() {
@@ -452,6 +453,17 @@ export function LensesIllustrationLab() {
       const controlsAnchor = controlsAnchorRef.current
       if (!controlsAnchor) return
 
+      // Don't pin the controls on small / no-hover screens — the
+      // floating panel covers content that's already cramped, and
+      // there's no hover affordance to dismiss it.
+      const viewportTooNarrow =
+        window.innerWidth < FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH
+      const noHover = window.matchMedia('(hover: none)').matches
+      if (viewportTooNarrow || noHover) {
+        setControlsFloating(false)
+        return
+      }
+
       const { top } = controlsAnchor.getBoundingClientRect()
       setControlsFloating(top <= FLOATING_CONTROLS_TOP_OFFSET)
     }
@@ -519,7 +531,31 @@ export function LensesIllustrationLab() {
           <div className={styles.heroTopline}>
             <p className={styles.kicker}>Development</p>
           </div>
-          <h1 className={styles.title}>Illustrations</h1>
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>Illustrations</h1>
+            <button
+              type='button'
+              className={`${styles.iconButton} ${styles.titlePlayButton}`}
+              onClick={() =>
+                setPlayback((state) =>
+                  state === 'playing' ? 'paused' : 'playing'
+                )
+              }
+              aria-label={
+                playback === 'playing'
+                  ? 'Pause all illustrations'
+                  : 'Play all illustrations'
+              }
+              aria-pressed={playback === 'playing'}
+              title={
+                playback === 'playing'
+                  ? 'Pause all illustrations'
+                  : 'Play all illustrations'
+              }
+            >
+              {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
+            </button>
+          </div>
           <p className={styles.intro}>
             Test Lenses illustrations against real card colors, controlled
             palettes, and randomized color directions before moving changes into

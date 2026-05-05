@@ -1029,22 +1029,24 @@
 }
 
 :global(.dark-mode) .centerCard {
-  /* Dark-mode center card keeps the same ambient light treatment
-     as the lens cards so it feels softly lit, not stage-lit. */
+  /* Dark-mode center card lifts to a dusty optical-blue so the focal
+     card separates from the dark canvas instead of dissolving into
+     it. A gentle top-down gradient keeps the card in one hue family
+     (no fade-to-black at the title) while still giving it volume. */
   background:
     linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.08) 0%,
       rgba(255, 255, 255, 0) 32%,
-      rgba(0, 0, 0, 0) 68%,
+      rgba(0, 0, 0, 0) 70%,
       rgba(0, 0, 0, 0.06) 100%
     ),
-    #111827;
+    linear-gradient(180deg, #9a9bb0 0%, #7c7894 100%);
   color: #f6ead8;
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
-    0 1.5px 0 rgba(255, 255, 255, 0.6) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.1) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.7) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.18) inset,
     0 1px 2px rgba(0, 0, 0, 0.42),
     0 14px 26px -14px rgba(0, 0, 0, 0.55);
 }

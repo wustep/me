@@ -132,12 +132,42 @@
   font-size: 1rem;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
 .title {
   margin: 0;
   max-width: 780px;
   font-size: clamp(2.3rem, 6vw, 5.2rem);
   line-height: 0.92;
   letter-spacing: -0.07em;
+}
+
+/* Title-row play button: hover-capable devices already get
+   per-card animation on hover and the toolbar already has a
+   play/pause toggle, so this affordance is only for touch
+   users who can't trigger animations otherwise. */
+.titlePlayButton {
+  display: none;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+}
+
+.titlePlayButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (hover: none) {
+  .titlePlayButton {
+    display: inline-flex;
+  }
 }
 
 .intro {
@@ -172,6 +202,15 @@
   z-index: 40;
   width: min(520px, calc(100vw - 64px));
   animation: controlsFloatIn 180ms ease-out both;
+}
+
+/* Safety net: even if state lags the resize listener, never pin the
+   controls on small or no-hover viewports. The inline panel inside
+   the hero is enough on those screens. */
+@media (max-width: 980px), (hover: none) {
+  .floatingControls {
+    display: none;
+  }
 }
 
 .floatingControls .toolbar {
@@ -1444,13 +1483,6 @@
 @media (max-width: 620px) {
   .lab {
     padding: 18px;
-  }
-
-  .floatingControls {
-    top: auto;
-    right: 14px;
-    bottom: 14px;
-    width: calc(100vw - 28px);
   }
 
   .toolbar,
