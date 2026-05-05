@@ -347,9 +347,14 @@
     clamp(44px, 14.8px + 2.86cqi, 56px);
   gap: var(--design-card-gap, clamp(12px, -26.9px + 3.81cqi, 28px));
   /* Cap the grid width so cards don't stretch absurdly wide on huge
-     monitors — the deck stays card-sized and centers in the
-     viewport. */
-  max-width: var(--design-deck-max-width, 1440px);
+     monitors — and make that cap height-aware so wide-but-short
+     screens fit the 4-row deck vertically. The 1.6 factor mirrors
+     the 8-col geometry: 4 rows at a 0.8 card aspect ratio need
+     roughly 0.625x as much height as deck width before padding/gaps. */
+  max-width: min(
+    var(--design-deck-max-width, 1440px),
+    calc((100dvh - 66px) * 1.6)
+  );
   margin: 0 auto;
 }
 
@@ -470,13 +475,11 @@
 }
 
 /* Cast-shadow layer. Opacity 0 at rest, 1 when lifted.
-   Each shadow tier is tinted with the card's own bg color via
-   `color-mix` so a red card casts a red-warm shadow and a blue
-   card casts a blue-cool one — every card's lift "belongs to it"
-   instead of all 30 cards casting the same neutral brown. The
-   mix is small (15-25% bg into a brown base) so the shadow still
-   reads as shadow, not as a colored aura. Costs nothing — same
-   paint layer that was already here. */
+   Light mode wants a broad, quiet ambient shadow: too much card
+   tint reads like a colored glow on the warm canvas, so the middle
+   tier only borrows a little card color while the outer falloff
+   stays neutral. Costs nothing — same paint layer that was already
+   here. */
 .card::before {
   content: '';
   position: absolute;
@@ -484,26 +487,17 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    0 2px 3px
+    0 2px 3px rgba(44, 32, 18, calc(0.08 * var(--design-shadow-strength, 1))),
+    0 calc(var(--design-shadow-y, 12px))
+      calc(var(--design-shadow-blur, 36px)) -14px
       color-mix(
         in oklab,
-        var(--card-bg) 15%,
-        rgba(20, 14, 8, calc(0.1 * var(--design-shadow-strength, 1)))
+        var(--card-bg) 8%,
+        rgba(44, 32, 18, calc(0.18 * var(--design-shadow-strength, 1)))
       ),
-    0 calc(var(--design-shadow-y, 14px))
-      calc(var(--design-shadow-blur, 28px)) -10px
-      color-mix(
-        in oklab,
-        var(--card-bg) 22%,
-        rgba(20, 14, 8, calc(0.34 * var(--design-shadow-strength, 1)))
-      ),
-    0 calc(var(--design-shadow-y, 14px) * 2.3)
-      calc(var(--design-shadow-blur, 28px) * 2.1) -22px
-      color-mix(
-        in oklab,
-        var(--card-bg) 25%,
-        rgba(20, 14, 8, calc(0.42 * var(--design-shadow-strength, 1)))
-      );
+    0 calc(var(--design-shadow-y, 12px) * 2.2)
+      calc(var(--design-shadow-blur, 36px) * 2) -30px
+      rgba(44, 32, 18, calc(0.16 * var(--design-shadow-strength, 1)));
   opacity: 0;
   transition: opacity var(--design-hover-out, 180ms)
     var(--design-ease, var(--ease-out-snap));
