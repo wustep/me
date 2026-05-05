@@ -3452,23 +3452,278 @@
 }
 
 /* Touch / no-hover devices: there's no hover affordance to invite
-   the SVGs in, so when a side panel is open and the deck is peeking
-   alongside it, run every visible card's animation. The deck reads
-   as quietly alive while the user reads — same intent as the
-   selected-card rule, extended to its neighbors because tap doesn't
-   surface the hover treatment. Pointer-capable devices keep the
+   the SVGs in, so we just run every card's animation unconditionally.
+   The deck reads as quietly alive at rest — the only way for a
+   touch user to discover the motion baked into each illustration
+   without tapping every card. Pointer-capable devices keep the
    stricter hover-only rule above so the deck stays still until
-   invited. */
+   invited. `prefers-reduced-motion` below still wins and pauses
+   everything for users who asked for stillness.
+
+   The side panel hero (`.panelArt`) also animates on touch. On
+   desktop the panel sits next to body copy, so motion in the hero
+   would compete with reading and we deliberately keep it still.
+   On mobile the panel takes the full screen and the illustration
+   IS the focal element while the user is in card view — letting
+   it breathe (at the same slowed cadence) reinforces the lens'
+   identity without competing with anything. The hover path
+   (above) does NOT include `.panelArt` so desktop behavior is
+   unchanged.
+
+   We also slow each per-lens animation by 1.5× on touch (and the
+   matching delay overrides for any animation that uses a negative
+   `animation-delay` to phase-shift a multi-target loop, so the
+   relative phase between targets stays correct after the duration
+   change). The slower cadence reads as ambient drift rather than
+   active motion, which is what we want when the whole deck is
+   alive at once. The pointer-capable hover path keeps the original
+   tighter cadence — there hover is an explicit invitation and a
+   crisper response feels right. */
 @media (hover: none) {
-  .cards:has(.cardSelected)
-    .card
-    .cardArt
-    :global(svg[data-anim] [data-anim-target]),
-  .cards:has(.cardSelected)
-    .centerCard
-    .cardArt
-    :global(svg[data-anim] [data-anim-target]) {
+  .card .cardArt :global(svg[data-anim] [data-anim-target]),
+  .centerCard .cardArt :global(svg[data-anim] [data-anim-target]),
+  .panelArt :global(svg[data-anim] [data-anim-target]) {
     animation-play-state: running;
+  }
+
+  /* Per-lens duration overrides — each value is the original
+     duration × 1.5. Grouped by lens, in the same order as the
+     declarations above, so the two blocks track each other when
+     timings get retuned. */
+  :global(svg[data-anim='second-order'] [data-anim-target]) {
+    animation-duration: 3.6s;
+  }
+  :global(svg[data-anim='second-order'] [data-anim-target='2']) {
+    animation-delay: 1.2s;
+  }
+  :global(svg[data-anim='second-order'] [data-anim-target='3']) {
+    animation-delay: 2.4s;
+  }
+
+  :global(svg[data-anim='evo-psych'] [data-anim-target='1']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='2']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='3']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-r']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-c']) {
+    animation-duration: 5.4s;
+  }
+  :global(svg[data-anim='evo-psych'] [data-anim-target='2']) {
+    animation-delay: 1.35s;
+  }
+  :global(svg[data-anim='evo-psych'] [data-anim-target='3']) {
+    animation-delay: 2.7s;
+  }
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-l']),
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-r']) {
+    animation-delay: 0.675s;
+  }
+  :global(svg[data-anim='evo-psych'] [data-anim-target='trunk-c']) {
+    animation-delay: 2.025s;
+  }
+
+  :global(svg[data-anim='minimalism'] [data-anim-target]) {
+    animation-duration: 4.5s;
+  }
+
+  :global(svg[data-anim='utility'] [data-anim-target='1']) {
+    animation-duration: 4.5s;
+  }
+
+  :global(svg[data-anim='status'] [data-anim-target='gold-block']),
+  :global(svg[data-anim='status'] [data-anim-target='gold-dot']) {
+    animation-duration: 4.5s;
+  }
+  :global(svg[data-anim='status'] [data-anim-target='silver-block']),
+  :global(svg[data-anim='status'] [data-anim-target='silver-dot']) {
+    animation-duration: 5.1s;
+    animation-delay: -1.65s;
+  }
+  :global(svg[data-anim='status'] [data-anim-target='bronze-block']),
+  :global(svg[data-anim='status'] [data-anim-target='bronze-dot']) {
+    animation-duration: 4.05s;
+    animation-delay: -2.7s;
+  }
+  :global(svg[data-anim='status'] [data-anim-target='gold-halo']) {
+    animation-duration: 3.6s;
+  }
+
+  :global(svg[data-anim='incentives'] [data-anim-target]) {
+    animation-duration: 2.4s;
+  }
+
+  :global(svg[data-anim='game-theory'] [data-anim-target='1']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='2']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='3']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='4']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='row']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='col']) {
+    animation-duration: 6s;
+  }
+  :global(svg[data-anim='game-theory'] [data-anim-target='1']) {
+    animation-delay: -0.9s;
+  }
+  :global(svg[data-anim='game-theory'] [data-anim-target='2']) {
+    animation-delay: -5.4s;
+  }
+  :global(svg[data-anim='game-theory'] [data-anim-target='3']) {
+    animation-delay: -3.9s;
+  }
+  :global(svg[data-anim='game-theory'] [data-anim-target='4']) {
+    animation-delay: -2.4s;
+  }
+  :global(svg[data-anim='game-theory'] [data-anim-target='row']),
+  :global(svg[data-anim='game-theory'] [data-anim-target='col']) {
+    animation-delay: -0.9s;
+  }
+
+  :global(svg[data-anim='systems'] [data-anim-target='1']),
+  :global(svg[data-anim='systems'] [data-anim-target='2']),
+  :global(svg[data-anim='systems'] [data-anim-target='3']) {
+    animation-duration: 5.4s;
+  }
+  :global(svg[data-anim='systems'] [data-anim-target='2']) {
+    animation-delay: -3.6s;
+  }
+  :global(svg[data-anim='systems'] [data-anim-target='3']) {
+    animation-delay: -1.8s;
+  }
+  :global(svg[data-anim='systems'] [data-anim-target='flow']) {
+    animation-duration: 2.7s;
+  }
+
+  :global(svg[data-anim='headspace'] [data-anim-target='1']),
+  :global(svg[data-anim='headspace'] [data-anim-target='2']) {
+    animation-duration: 2.7s;
+  }
+  :global(svg[data-anim='headspace'] [data-anim-target='2']) {
+    animation-delay: -0.9s;
+  }
+
+  :global(svg[data-anim='legibility'] [data-anim-target='1']) {
+    animation-duration: 6.6s;
+  }
+
+  :global(svg[data-anim='narrative'] [data-anim-target='line']),
+  :global(svg[data-anim='narrative'] [data-anim-target='1']),
+  :global(svg[data-anim='narrative'] [data-anim-target='2']),
+  :global(svg[data-anim='narrative'] [data-anim-target='3']),
+  :global(svg[data-anim='narrative'] [data-anim-target='4']),
+  :global(svg[data-anim='narrative'] [data-anim-target='5']),
+  :global(svg[data-anim='narrative'] [data-anim-target='halo']) {
+    animation-duration: 6s;
+  }
+  :global(svg[data-anim='narrative'] [data-anim-target='2']) {
+    animation-delay: 0.75s;
+  }
+  :global(svg[data-anim='narrative'] [data-anim-target='3']) {
+    animation-delay: 1.65s;
+  }
+  :global(svg[data-anim='narrative'] [data-anim-target='4']) {
+    animation-delay: 2.55s;
+  }
+  :global(svg[data-anim='narrative'] [data-anim-target='5']) {
+    animation-delay: 3.3s;
+  }
+  :global(svg[data-anim='narrative'] [data-anim-target='halo']) {
+    animation-delay: 1.575s;
+  }
+
+  :global(svg[data-anim='constraint'] [data-anim-target]) {
+    animation-duration: 2.1s;
+  }
+
+  :global(svg[data-anim='interface'] [data-anim-target='1']),
+  :global(svg[data-anim='interface'] [data-anim-target='2']) {
+    animation-duration: 2.4s;
+  }
+
+  :global(svg[data-anim='energy'] [data-anim-target='1']),
+  :global(svg[data-anim='energy'] [data-anim-target='2']) {
+    animation-duration: 3.6s;
+  }
+
+  :global(svg[data-anim='epistemic'] [data-anim-target]) {
+    animation-duration: 2.4s;
+  }
+
+  :global(svg[data-anim='osmosis'] [data-anim-target='1']),
+  :global(svg[data-anim='osmosis'] [data-anim-target='2']) {
+    animation-duration: 4.2s;
+  }
+  :global(svg[data-anim='osmosis'] [data-anim-target='2']) {
+    animation-delay: 0.75s;
+  }
+
+  :global(svg[data-anim='probabilistic'] [data-anim-target='dot']),
+  :global(svg[data-anim='probabilistic'] [data-anim-target='sampler']) {
+    animation-duration: 4.8s;
+  }
+
+  :global(svg[data-anim='communication'] [data-anim-target='1']),
+  :global(svg[data-anim='communication'] [data-anim-target='bubble']) {
+    animation-duration: 3.9s;
+  }
+
+  :global(svg[data-anim='mimetics'] [data-anim-target='0']),
+  :global(svg[data-anim='mimetics'] [data-anim-target='1']),
+  :global(svg[data-anim='mimetics'] [data-anim-target='2']) {
+    animation-duration: 3s;
+  }
+  :global(svg[data-anim='mimetics'] [data-anim-target='1']) {
+    animation-delay: 0.6s;
+  }
+  :global(svg[data-anim='mimetics'] [data-anim-target='2']) {
+    animation-delay: 1.2s;
+  }
+
+  :global(svg[data-anim='primitives'] [data-anim-target]) {
+    animation-duration: 9s;
+  }
+
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']),
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+    animation-duration: 7.2s;
+  }
+
+  :global(svg[data-anim='projection'] [data-anim-target='1']) {
+    animation-duration: 4.5s;
+  }
+
+  :global(svg[data-anim='attention'] [data-anim-target='1']) {
+    animation-duration: 5.4s;
+  }
+
+  :global(svg[data-anim='dopamine'] [data-anim-target='1']) {
+    animation-duration: 4.5s;
+  }
+  :global(svg[data-anim='dopamine'] [data-anim-target='2']) {
+    animation-duration: 2.25s;
+  }
+
+  :global(svg[data-anim='taste'] [data-anim-target='1']) {
+    animation-duration: 6s;
+  }
+
+  :global(svg[data-anim='agency'] [data-anim-target='1']) {
+    animation-duration: 3.6s;
+  }
+
+  :global(svg[data-anim='expertise'] [data-anim-target='1']),
+  :global(svg[data-anim='expertise'] [data-anim-target='2']),
+  :global(svg[data-anim='expertise'] [data-anim-target='3']) {
+    animation-duration: 4.8s;
+  }
+
+  :global(svg[data-anim='momentum'] [data-anim-target='1']) {
+    animation-duration: 2.4s;
+  }
+
+  :global(svg[data-anim='identity'] [data-anim-target='1']) {
+    animation-duration: 5.4s;
+  }
+  :global(svg[data-anim='identity'] [data-anim-target='2']) {
+    animation-duration: 9s;
   }
 }
 
