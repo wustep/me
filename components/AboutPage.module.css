@@ -200,18 +200,18 @@
 .heroPhoto {
   width: 100px;
   height: 100px;
-  border-radius: 16px;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
   transition:
     transform 300ms ease,
-    box-shadow 300ms ease;
+    filter 300ms ease;
 }
 
 @media (hover: hover) {
   .heroPhoto:hover {
     transform: scale(1.05) rotate(1deg);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
   }
 }
 
