@@ -511,15 +511,17 @@
         var(--design-selected-ring-gap, 3px) +
           var(--design-selected-ring, 2px)
       )
-      var(--design-selected-ring-color, #1a1a1a);
+      var(--design-selected-ring-color, rgba(30, 26, 20, 0.85));
   z-index: 3;
-  /* Lift on select uses the snappy hover-in timing so arrow-key
-     navigation feels as immediate as hovering, instead of inheriting
-     the slower hover-out duration from the base `.card` rule. */
+  /* Lift snaps under the cursor (matches :hover timing so arrow-key
+     navigation feels immediate). The ring itself rides a slower,
+     gentler curve so the color doesn't punch in — it breathes in,
+     which kills the "stark switch to black" feeling and reads as
+     a confirmation rather than an alert. */
   transition: transform var(--design-hover-in, 90ms)
       var(--design-ease, var(--ease-out-snap)),
-    box-shadow var(--design-hover-in, 90ms)
-      var(--design-ease, var(--ease-out-snap));
+    box-shadow var(--design-selected-ring-fade, 220ms)
+      var(--ease-out-quart);
 }
 
 .cardSelected::before {
@@ -540,7 +542,7 @@
         var(--design-selected-ring-gap, 3px) +
           var(--design-selected-ring, 2px)
       )
-      var(--design-selected-ring-color-dark, #f5f1e8);
+      var(--design-selected-ring-color-dark, rgba(245, 241, 232, 0.78));
 }
 
 /* ── Alternate selection styles (design panel only) ──
