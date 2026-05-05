@@ -24,7 +24,7 @@
   width: 9px;
   border-radius: 2px 2px 0 0;
   transition: transform 250ms ease-out;
-  animation: bookBob 3.2s ease-in-out infinite;
+  animation: bookBob 5.8s ease-in-out infinite;
 }
 
 @keyframes bookBob {

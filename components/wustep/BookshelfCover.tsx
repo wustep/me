@@ -21,7 +21,7 @@ export function BookshelfCover() {
             style={{
               background: book.color,
               height: book.height,
-              animationDelay: `${i * 0.3}s`
+              animationDelay: `${i * 0.5}s`
             }}
           />
         ))}

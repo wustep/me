@@ -1,6 +1,19 @@
 .cover {
-  --cover-ink: #f5efe0;
+  --cover-ink: #1f1a14;
   --cover-accent: #f2c77a;
+  --cover-bg-top: #faf7f1;
+  --cover-bg-mid: #f3eee5;
+  --cover-bg-bottom: #e6e3dc;
+  --cover-glow-gold: rgba(255, 255, 255, 0.5);
+  --cover-glow-rust: rgba(160, 106, 72, 0.08);
+  --cover-grid: rgba(31, 26, 20, 0.075);
+  --cover-panel-bg: rgba(255, 248, 231, 0.82);
+  --cover-panel-border: rgba(31, 26, 20, 0.16);
+  --cover-panel-shadow: rgba(75, 56, 32, 0.22);
+  --cover-card-outline: rgba(255, 250, 240, 0.62);
+  --cover-title-muted: rgba(31, 26, 20, 0.62);
+  --cover-title-shadow: rgba(255, 250, 240, 0.62);
+  --cover-matrix-cell: rgba(31, 26, 20, 0.12);
 
   position: relative;
   width: 100%;
@@ -11,15 +24,37 @@
   background:
     radial-gradient(
       circle at 76% 18%,
-      rgba(242, 199, 122, 0.26),
+      var(--cover-glow-gold),
       transparent 28%
     ),
     radial-gradient(
       circle at 18% 92%,
-      rgba(180, 58, 46, 0.32),
+      var(--cover-glow-rust),
       transparent 34%
     ),
-    linear-gradient(135deg, #17130f 0%, #252128 48%, #0f151d 100%);
+    linear-gradient(
+      135deg,
+      var(--cover-bg-top) 0%,
+      var(--cover-bg-mid) 48%,
+      var(--cover-bg-bottom) 100%
+    );
+}
+
+:global(.dark-mode) .cover {
+  --cover-ink: #f5efe0;
+  --cover-bg-top: #17130f;
+  --cover-bg-mid: #252128;
+  --cover-bg-bottom: #0f151d;
+  --cover-glow-gold: rgba(242, 199, 122, 0.26);
+  --cover-glow-rust: rgba(180, 58, 46, 0.32);
+  --cover-grid: rgba(245, 239, 224, 0.055);
+  --cover-panel-bg: rgba(20, 20, 23, 0.72);
+  --cover-panel-border: rgba(245, 239, 224, 0.16);
+  --cover-panel-shadow: rgba(0, 0, 0, 0.34);
+  --cover-card-outline: rgba(245, 239, 224, 0.18);
+  --cover-title-muted: rgba(245, 239, 224, 0.72);
+  --cover-title-shadow: rgba(0, 0, 0, 0.45);
+  --cover-matrix-cell: rgba(245, 239, 224, 0.14);
 }
 
 .gridGlow {
@@ -27,8 +62,8 @@
   inset: 0;
   z-index: 0;
   background-image:
-    linear-gradient(rgba(245, 239, 224, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 239, 224, 0.055) 1px, transparent 1px);
+    linear-gradient(var(--cover-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cover-grid) 1px, transparent 1px);
   background-size: 22px 22px;
   mask-image: linear-gradient(180deg, black, transparent 88%);
 }
@@ -58,7 +93,7 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 38%), #204a40;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 0 0 3px rgba(245, 239, 224, 0.18),
+    0 0 0 3px var(--cover-card-outline),
     0 18px 38px rgba(0, 0, 0, 0.32);
   transition: transform 260ms ease-out;
 }
@@ -107,10 +142,10 @@
   gap: 10px;
   min-width: 0;
   padding: 12px;
-  border: 1px solid rgba(245, 239, 224, 0.16);
+  border: 1px solid var(--cover-panel-border);
   border-radius: 18px;
-  background: rgba(20, 20, 23, 0.72);
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.34);
+  background: var(--cover-panel-bg);
+  box-shadow: 0 16px 44px var(--cover-panel-shadow);
   backdrop-filter: blur(12px);
 }
 
@@ -145,7 +180,7 @@
 .matrix span {
   aspect-ratio: 1.1;
   border-radius: 4px;
-  background: rgba(245, 239, 224, 0.14);
+  background: var(--cover-matrix-cell);
 }
 
 .matrix .activeCell {
@@ -162,14 +197,14 @@
   justify-items: end;
   line-height: 0.86;
   text-transform: uppercase;
-  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 8px 24px var(--cover-title-shadow);
 }
 
 .titleLockup span {
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.14em;
-  color: rgba(245, 239, 224, 0.72);
+  color: var(--cover-title-muted);
 }
 
 .titleLockup strong {
