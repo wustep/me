@@ -3336,6 +3336,27 @@
   }
 }
 
+/* Touch / no-hover devices: there's no hover affordance to invite
+   the SVGs in, so when a side panel is open and the deck is peeking
+   alongside it, run every visible card's animation. The deck reads
+   as quietly alive while the user reads — same intent as the
+   selected-card rule, extended to its neighbors because tap doesn't
+   surface the hover treatment. Pointer-capable devices keep the
+   stricter hover-only rule above so the deck stays still until
+   invited. */
+@media (hover: none) {
+  .cards:has(.cardSelected)
+    .card
+    .cardArt
+    :global(svg[data-anim] [data-anim-target]),
+  .cards:has(.cardSelected)
+    .centerCard
+    .cardArt
+    :global(svg[data-anim] [data-anim-target]) {
+    animation-play-state: running;
+  }
+}
+
 /* ===== Reduced motion =====
    Per Emil: every animation needs its own reduced-motion fallback.
    We disable both `animation` and `transition` on every animated
@@ -3602,6 +3623,14 @@
    queries — converting them to container queries would never fire
    in embedded mode (the panel isn't inside the frame container). */
 @media (max-width: 599px) {
+  /* Below the phone breakpoint the 480px panel leaves an awkward
+     sliver of dimmed canvas on the side. Promote the panel to full
+     viewport width so the reading region gets the whole screen and
+     the slide-in still arrives from the anchored edge. */
+  .panel {
+    width: 100vw;
+  }
+
   .panelArt {
     width: 92px;
     height: 92px;
