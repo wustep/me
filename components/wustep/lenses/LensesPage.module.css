@@ -126,6 +126,50 @@
   overflow-y: auto;
 }
 
+/* In embedded mode (e.g. /playground/lenses) the in-frame `.header`
+   is gated behind `!embedded`, so the deck no longer needs ~88px
+   top padding to clear it — the host layout (PlaygroundLayout)
+   already supplies a 55px header above the frame. Without an
+   override the leftover header-clearance padding stacks on top of
+   the playground header and the deck reads as pushed far down.
+   Match top padding to the bottom padding at each breakpoint so
+   the deck's inner whitespace is balanced; vertical auto-centering
+   from `margin-block: auto` (in the `min-width: 1000px` container
+   query) keeps the deck centered in the canvas at desktop.
+   We override only `padding-top` so the x/bottom values from each
+   breakpoint's shorthand are preserved. The container-scoped
+   overrides match the `@container deck (...)` breakpoints used
+   elsewhere in this file. */
+/* Cancel the auto-centering and the header-clearance padding so
+   the deck pins to the top of the embedded frame with balanced
+   inner whitespace — mirroring how every other playground entry
+   top-aligns its content inside a scrollable frame. Without this,
+   `margin-block: auto` (set in the `min-width: 1000px` container
+   query) plus the standalone padding-top stacked on top of the
+   playground header and produced a hollow centered look with
+   ~200px of dead space above and below.
+   We override only `padding-top` so the x/bottom values from each
+   breakpoint's shorthand are preserved. The container-scoped
+   overrides match the `@container deck (...)` breakpoints used
+   elsewhere in this file. Embedded intentionally doesn't honor the
+   design-panel `--design-deck-pad-top` knob — that knob is
+   calibrated for the standalone composition (default 88px to
+   clear the floating header). */
+.frameEmbedded .cards {
+  margin-block: 0;
+  padding-top: clamp(44px, 14.8px + 2.86cqi, 56px);
+}
+@container deck (max-width: 999px) {
+  .frameEmbedded .cards {
+    padding-top: 32px;
+  }
+}
+@container deck (max-width: 599px) {
+  .frameEmbedded .cards {
+    padding-top: 20px;
+  }
+}
+
 /* ===== Header — minimal, edges only ===== */
 
 .header {
@@ -3962,6 +4006,35 @@
      the slide-in still arrives from the anchored edge. */
   .panel {
     width: 100vw;
+  }
+
+  /* The center "Lenses" index dialog mirrors the side panel on
+     phones — full-bleed reading surface, no rounded corners or
+     drop shadow, no centered floating gap. Anchor flush to the
+     edges and swap the centered scale animation for the same
+     slide-in-from-right used by the side panel so the two
+     reading surfaces feel like one motion vocabulary on small
+     screens. */
+  .dialog,
+  :global(.dark-mode) .dialog {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    top: 0;
+    left: auto;
+    right: 0;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .dialog[data-state='open'] {
+    animation: slideInRight 340ms var(--ease-out-quart);
+  }
+
+  .dialog[data-state='closed'] {
+    animation: slideOutRight 280ms var(--ease-out-quart);
   }
 
   .panelArt {
