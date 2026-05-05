@@ -4008,6 +4008,15 @@
     width: 100vw;
   }
 
+  /* Lab previews portal the panel into a framed stage, not the document
+     viewport. Keep phone-width previews full-bleed within that stage
+     instead of inheriting the production 100vw panel width. */
+  .panelPreview {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
   /* The center "Lenses" index dialog mirrors the side panel on
      phones — full-bleed reading surface, no rounded corners or
      drop shadow, no centered floating gap. Anchor flush to the
