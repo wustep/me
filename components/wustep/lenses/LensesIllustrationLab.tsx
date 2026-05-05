@@ -533,28 +533,6 @@ export function LensesIllustrationLab() {
           </div>
           <div className={styles.titleRow}>
             <h1 className={styles.title}>Illustrations</h1>
-            <button
-              type='button'
-              className={`${styles.iconButton} ${styles.titlePlayButton}`}
-              onClick={() =>
-                setPlayback((state) =>
-                  state === 'playing' ? 'paused' : 'playing'
-                )
-              }
-              aria-label={
-                playback === 'playing'
-                  ? 'Pause all illustrations'
-                  : 'Play all illustrations'
-              }
-              aria-pressed={playback === 'playing'}
-              title={
-                playback === 'playing'
-                  ? 'Pause all illustrations'
-                  : 'Play all illustrations'
-              }
-            >
-              {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
-            </button>
           </div>
           <p className={styles.intro}>
             Test Lenses illustrations against real card colors, controlled
