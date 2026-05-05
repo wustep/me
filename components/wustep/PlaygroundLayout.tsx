@@ -32,6 +32,29 @@ type PlaygroundThemeContextValue = {
 const PlaygroundThemeContext =
   React.createContext<PlaygroundThemeContextValue | null>(null)
 
+const PLAYGROUND_SIDEBAR_STORAGE_KEY = 'playground-sidebar-open:v1'
+
+function loadStoredSidebarOpen() {
+  try {
+    const storedValue = window.localStorage.getItem(
+      PLAYGROUND_SIDEBAR_STORAGE_KEY
+    )
+    if (storedValue === 'true') return true
+    if (storedValue === 'false') return false
+    return null
+  } catch {
+    return null
+  }
+}
+
+function storeSidebarOpen(open: boolean) {
+  try {
+    window.localStorage.setItem(PLAYGROUND_SIDEBAR_STORAGE_KEY, String(open))
+  } catch {
+    // localStorage can be disabled or unavailable in private browsing.
+  }
+}
+
 export function usePlaygroundTheme() {
   return React.useContext(PlaygroundThemeContext)
 }
@@ -51,10 +74,20 @@ export function PlaygroundLayout({
   fullFrame = false
 }: PlaygroundLayoutProps) {
   const [hasMounted, setHasMounted] = React.useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true)
   const { isDarkMode, toggleDarkMode } = useDarkMode()
 
   React.useEffect(() => {
     setHasMounted(true)
+    const storedSidebarOpen = loadStoredSidebarOpen()
+    if (storedSidebarOpen !== null) {
+      setIsSidebarOpen(storedSidebarOpen)
+    }
+  }, [])
+
+  const handleSidebarOpenChange = React.useCallback((open: boolean) => {
+    setIsSidebarOpen(open)
+    storeSidebarOpen(open)
   }, [])
 
   const playgroundTheme = React.useMemo(
@@ -65,6 +98,8 @@ export function PlaygroundLayout({
   return (
     <PlaygroundThemeContext.Provider value={playgroundTheme}>
       <SidebarProvider
+        open={isSidebarOpen}
+        onOpenChange={handleSidebarOpenChange}
         style={
           {
             '--sidebar-width': '16rem'

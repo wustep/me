@@ -74,6 +74,7 @@ type LensCardProps = {
   prefersReducedMotion: boolean
   selected: boolean
   onOpen: () => void
+  previewOverride?: Pick<LensPreviewOverride, 'palette' | 'renderIllustration'>
 }
 
 export function LensCard({
@@ -81,7 +82,8 @@ export function LensCard({
   stage,
   prefersReducedMotion,
   selected,
-  onOpen
+  onOpen,
+  previewOverride
 }: LensCardProps) {
   const visible = stage >= STAGE.cards
   const [interactionReady, setInteractionReady] = React.useState(false)
@@ -89,6 +91,11 @@ export function LensCard({
   const colIndex = indexOfClosest(lens.x, GRID.colAnchors)
   const delay = rowIndex * TIMING.rowStaggerMs + colIndex * TIMING.colStaggerMs
   const titleBucket = titleLengthBucket(lens.title)
+  const cardPalette = previewOverride?.palette ?? {
+    bg: lens.bg,
+    fg: lens.fg,
+    accent: lens.accent ?? lens.fg
+  }
 
   React.useEffect(() => {
     if (!visible) {
@@ -108,9 +115,9 @@ export function LensCard({
     // `transition-delay` would win specificity and add 100s of ms
     // of delay to hover-in on every card past the first row.
     ['--card-enter-delay' as string]: `${delay}ms`,
-    ['--card-bg' as string]: lens.bg,
-    ['--card-fg' as string]: lens.fg,
-    ['--card-accent' as string]: lens.accent ?? lens.fg
+    ['--card-bg' as string]: cardPalette.bg,
+    ['--card-fg' as string]: cardPalette.fg,
+    ['--card-accent' as string]: cardPalette.accent
   }
 
   const className = [
@@ -145,12 +152,16 @@ export function LensCard({
         {lens.category}
       </span>
       <span className={styles.cardArt} aria-hidden='true'>
-        <Illustration
-          id={lens.illustration}
-          fg={lens.fg}
-          bg={lens.bg}
-          accent={lens.accent ?? lens.fg}
-        />
+        {previewOverride ? (
+          previewOverride.renderIllustration(previewOverride.palette)
+        ) : (
+          <Illustration
+            id={lens.illustration}
+            fg={lens.fg}
+            bg={lens.bg}
+            accent={lens.accent ?? lens.fg}
+          />
+        )}
       </span>
       <span className={styles.cardTitle}>
         {/* Inner clamp span: the outer .cardTitle owns flex-end
@@ -192,11 +203,19 @@ export function CenterCard({
   previewOverride
 }: CenterCardProps) {
   const visible = stage >= STAGE.center
+  const style = previewOverride
+    ? ({
+        ['--center-card-bg' as string]: previewOverride.palette.bg,
+        ['--center-card-fg' as string]: previewOverride.palette.fg,
+        ['--card-accent' as string]: previewOverride.palette.accent
+      } as React.CSSProperties)
+    : undefined
 
   return (
     <button
       type='button'
       className={`${styles.centerCard} ${visible ? styles.centerCardVisible : ''}`}
+      style={style}
       onClick={onOpen}
       aria-label='Open: Lenses index'
       data-lens-id='__center__'

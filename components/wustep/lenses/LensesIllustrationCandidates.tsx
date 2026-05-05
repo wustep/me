@@ -51,62 +51,60 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
     id: 'expertise-bow',
     lensId: 'expertise',
     label: 'Bow',
-    notes: 'A longbow releases a single accent arrow from a steady draw.',
+    notes: 'A longbow draws back and releases a single accent arrow.',
     render: ({ fg, accent }) => (
       <svg {...SVG_BASE} aria-hidden='true' data-anim='candidate-expertise-bow'>
-        <path
-          d='M 62 18 Q 76 50 62 82'
-          fill='none'
-          stroke={fg}
-          strokeWidth='2.6'
-          strokeLinecap='round'
-          opacity='0.78'
-        />
-        <circle cx='62' cy='18' r='1.6' fill={fg} opacity='0.78' />
-        <circle cx='62' cy='82' r='1.6' fill={fg} opacity='0.78' />
-        <line
-          x1='69'
-          y1='44'
-          x2='69'
-          y2='56'
-          stroke={fg}
-          strokeWidth='3.2'
-          strokeLinecap='round'
-          opacity='0.55'
-        />
-        <line
-          x1='42'
-          y1='50'
-          x2='88'
-          y2='50'
-          stroke={fg}
-          strokeWidth='0.8'
-          opacity='0.22'
-          strokeDasharray='2 3'
-        />
-        <g data-anim-target='string'>
+        <g transform='translate(-22 0)'>
           <path
-            d='M 62 18 L 38 50 L 62 82'
+            d='M 62 18 Q 94 50 62 82'
+            fill='none'
+            stroke={fg}
+            strokeWidth='2.6'
+            strokeLinecap='round'
+            opacity='0.78'
+          />
+          <line
+            x1='62'
+            y1='15.5'
+            x2='62'
+            y2='20.5'
+            stroke={fg}
+            strokeWidth='4'
+            strokeLinecap='round'
+            opacity='0.78'
+          />
+          <line
+            x1='62'
+            y1='79.5'
+            x2='62'
+            y2='84.5'
+            stroke={fg}
+            strokeWidth='4'
+            strokeLinecap='round'
+            opacity='0.78'
+          />
+          <path
+            d='M 62 18 L 62 50 L 62 82'
             fill='none'
             stroke={fg}
             strokeWidth='1'
             strokeLinecap='round'
+            strokeLinejoin='round'
             opacity='0.75'
+            data-anim-target='string'
           />
-        </g>
-        <g data-anim-target='arrow'>
-          <line
-            x1='38'
-            y1='50'
-            x2='72'
-            y2='50'
-            stroke={accent}
-            strokeWidth='2.4'
-            strokeLinecap='round'
-          />
-          <polygon points='80,50 70,45 70,55' fill={accent} />
-          <polygon points='38,50 31,46 31,50' fill={accent} opacity='0.85' />
-          <polygon points='38,50 31,54 31,50' fill={accent} opacity='0.85' />
+          <g data-anim-target='arrow'>
+            <line
+              x1='64'
+              y1='50'
+              x2='99'
+              y2='50'
+              stroke={accent}
+              strokeWidth='2.4'
+              strokeLinecap='round'
+            />
+            <polygon points='107,50 97,45 97,55' fill={accent} />
+          </g>
         </g>
       </svg>
     )

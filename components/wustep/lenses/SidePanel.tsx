@@ -22,6 +22,7 @@ type SidePanelProps = {
   lens: Lens | null
   onClose: () => void
   onOpenLens: (id: string) => void
+  dismissOnOutside?: boolean
   previewOverride?: {
     container: HTMLElement
     palette: {
@@ -41,6 +42,7 @@ export function SidePanel({
   lens,
   onClose,
   onOpenLens,
+  dismissOnOutside = true,
   previewOverride
 }: SidePanelProps) {
   const open = !!lens
@@ -51,6 +53,26 @@ export function SidePanel({
      this hook always returns 'full' (the schema default), which
      renders the full essay — identical to the prior behavior. */
   const bodyDensity = useDesignFlag<string>('bodyDensity', 'full')
+  const ignoreOutsideInteraction = React.useCallback(
+    (event: { target: EventTarget | null; preventDefault: () => void }) => {
+      if (!dismissOnOutside) {
+        event.preventDefault()
+        return
+      }
+
+      const target = event.target as Element | null
+      if (
+        previewOverride &&
+        target?.closest?.('[data-lenses-preview-toggle]')
+      ) {
+        event.preventDefault()
+        return
+      }
+
+      ignoreDesignPanelOutside(event)
+    },
+    [dismissOnOutside, previewOverride]
+  )
 
   React.useEffect(() => {
     if (lens) {
@@ -177,8 +199,8 @@ export function SidePanel({
              `Content` as an "outside" interaction and closes the
              dialog. Tell Radix to ignore design-panel clicks so the
              two surfaces compose. No-op in prod (panel isn't mounted). */
-          onPointerDownOutside={ignoreDesignPanelOutside}
-          onInteractOutside={ignoreDesignPanelOutside}
+          onPointerDownOutside={ignoreOutsideInteraction}
+          onInteractOutside={ignoreOutsideInteraction}
         >
           {shown && (
             <>

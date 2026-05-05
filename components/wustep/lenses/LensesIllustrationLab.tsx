@@ -324,6 +324,7 @@ export function LensesIllustrationLab() {
   const controlsAnchorRef = React.useRef<HTMLDivElement>(null)
   const [playback, setPlayback] = React.useState<Playback>('idle')
   const [controlsFloating, setControlsFloating] = React.useState(false)
+  const [controlsCollapsed, setControlsCollapsed] = React.useState(false)
   const [palette, setPalette] = React.useState<Palette>(() =>
     paletteFromLens(LENSES[0]!)
   )
@@ -506,7 +507,9 @@ export function LensesIllustrationLab() {
     canReset: !palettesMatch || !isProductionSelection,
     onUndo: undo,
     canUndo: undoStack.length > 0,
-    resetTargetLabel: selected.ownerLens.title
+    resetTargetLabel: selected.ownerLens.title,
+    collapsed: controlsCollapsed,
+    onCollapsedChange: setControlsCollapsed
   } satisfies LabControlsProps
 
   const previewLens = selected.ownerLens
@@ -547,7 +550,10 @@ export function LensesIllustrationLab() {
           data-floating={controlsFloating}
           aria-hidden={controlsFloating}
         >
-          <LabControls {...controlProps} />
+          <LabControls
+            {...controlProps}
+            collapsed={controlsFloating ? false : controlsCollapsed}
+          />
         </div>
       </section>
 
@@ -716,22 +722,40 @@ type LensesPagePreviewProps = {
 
 function LensesPagePreview({ entry, palette }: LensesPagePreviewProps) {
   const lens = entry.ownerLens
+  const previewStageId = React.useId()
+  const [panelOpen, setPanelOpen] = React.useState(true)
   const previewOverride = React.useMemo(
     () => ({
       lensId: lens.id,
+      panelOpen,
+      onPanelOpenChange: setPanelOpen,
       palette,
       renderIllustration: entry.render
     }),
-    [entry.render, lens.id, palette]
+    [entry.render, lens.id, palette, panelOpen]
   )
 
   return (
     <section className={`${styles.section} ${styles.sidePanelPreviewSection}`}>
       <div className={styles.sectionHeader}>
         <h2>Preview</h2>
+        <button
+          type='button'
+          className={`${styles.buttonSecondary} ${styles.previewPanelToggle}`}
+          data-lenses-preview-toggle
+          onClick={() => setPanelOpen((open) => !open)}
+          aria-controls={previewStageId}
+          aria-expanded={panelOpen}
+        >
+          {panelOpen ? 'Collapse panel' : 'Show panel'}
+        </button>
       </div>
-      <div className={styles.sidePanelStage}>
-        <LensesPage embedded previewOverride={previewOverride} />
+      <div id={previewStageId} className={styles.sidePanelStage}>
+        <LensesPage
+          embedded
+          dismissPanelOnOutside={false}
+          previewOverride={previewOverride}
+        />
       </div>
     </section>
   )
@@ -761,6 +785,8 @@ type LabControlsProps = {
   onUndo: () => void
   canUndo: boolean
   resetTargetLabel: string
+  collapsed: boolean
+  onCollapsedChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function LabControls({
@@ -780,111 +806,158 @@ function LabControls({
   canReset,
   onUndo,
   canUndo,
-  resetTargetLabel
+  resetTargetLabel,
+  collapsed,
+  onCollapsedChange
 }: LabControlsProps) {
   return (
-    <div className={styles.toolbar} aria-label='Palette controls'>
-      <div className={styles.modeRow}>
-        <SegmentedToggle
-          ariaLabel='Lab mode'
-          value={labMode}
-          onChange={onLabModeChange}
-          options={[
-            { value: 'production', label: 'Production' },
-            { value: 'candidate', label: 'Candidates' }
-          ]}
-        />
+    <div
+      className={styles.toolbar}
+      data-collapsed={collapsed}
+      aria-label='Palette controls'
+    >
+      <div className={styles.toolbarHeader}>
+        <div className={styles.toolbarHeaderText}>
+          <p className={styles.toolbarEyebrow}>Design panel</p>
+          <p
+            className={`${styles.toolbarSummary} ${
+              collapsed ? '' : styles.toolbarSummaryHidden
+            }`}
+            aria-hidden={!collapsed}
+          >
+            {labMode === 'candidate' ? 'Candidates' : 'Production'} ·{' '}
+            <span style={{ color: palette.bg }}>{palette.bg}</span>
+            {' / '}
+            <span style={{ color: palette.fg }}>{palette.fg}</span>
+            {' / '}
+            <span style={{ color: palette.accent }}>{palette.accent}</span>
+          </p>
+        </div>
+        <button
+          type='button'
+          className={`${styles.buttonSecondary} ${styles.toolbarToggle}`}
+          onClick={() => onCollapsedChange((current) => !current)}
+          aria-expanded={!collapsed}
+        >
+          {collapsed ? 'Expand' : 'Collapse'}
+        </button>
       </div>
 
-      <label className={styles.field}>
-        <span>{labMode === 'candidate' ? 'Candidate' : 'Illustration'}</span>
-        <span className={styles.selectActionWrap}>
-          <select
-            value={selectedKey}
-            onChange={(event) => onSelectedKeyChange(event.target.value)}
-          >
-            {visibleEntries.map((entry) => (
-              <option key={entry.key} value={entry.key}>
-                {entry.optionLabel}
-              </option>
-            ))}
-          </select>
-          <button
-            type='button'
-            className={styles.iconButton}
-            onClick={onRandomizeSelection}
-            disabled={!canRandomizeSelection}
-            aria-label={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
-            title={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
-          >
-            <ShuffleIcon />
-          </button>
-        </span>
-      </label>
+      {collapsed ? null : (
+        <>
+          <div className={styles.modeRow}>
+            <SegmentedToggle
+              ariaLabel='Lab mode'
+              value={labMode}
+              onChange={onLabModeChange}
+              options={[
+                { value: 'production', label: 'Production' },
+                { value: 'candidate', label: 'Candidates' }
+              ]}
+            />
+          </div>
 
-      <ColorField
-        label='Background'
-        value={palette.bg}
-        onChange={(bg) => onPaletteChange((current) => ({ ...current, bg }))}
-      />
-      <ColorField
-        label='Foreground'
-        value={palette.fg}
-        onChange={(fg) => onPaletteChange((current) => ({ ...current, fg }))}
-      />
-      <ColorField
-        label='Accent'
-        value={palette.accent}
-        onChange={(accent) =>
-          onPaletteChange((current) => ({ ...current, accent }))
-        }
-      />
+          <label className={styles.field}>
+            <span>
+              {labMode === 'candidate' ? 'Candidate' : 'Illustration'}
+            </span>
+            <span className={styles.selectActionWrap}>
+              <select
+                value={selectedKey}
+                onChange={(event) => onSelectedKeyChange(event.target.value)}
+              >
+                {visibleEntries.map((entry) => (
+                  <option key={entry.key} value={entry.key}>
+                    {entry.optionLabel}
+                  </option>
+                ))}
+              </select>
+              <button
+                type='button'
+                className={styles.iconButton}
+                onClick={onRandomizeSelection}
+                disabled={!canRandomizeSelection}
+                aria-label={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
+                title={`Randomize ${labMode === 'candidate' ? 'candidate' : 'illustration'}`}
+              >
+                <ShuffleIcon />
+              </button>
+            </span>
+          </label>
 
-      <div className={styles.actionRow}>
-        <button type='button' className={styles.button} onClick={onRandomize}>
-          Randomize palette
-        </button>
-        <button
-          type='button'
-          className={styles.buttonSecondary}
-          onClick={onUndo}
-          disabled={!canUndo}
-          title='Undo last randomize or card selection'
-        >
-          Undo
-        </button>
-        <button
-          type='button'
-          className={styles.buttonSecondary}
-          onClick={onReset}
-          disabled={!canReset}
-          title={`Reset to production preview for ${resetTargetLabel}`}
-        >
-          Reset
-        </button>
-        <button
-          type='button'
-          className={styles.iconButton}
-          onClick={() =>
-            onPlaybackChange((state) =>
-              state === 'playing' ? 'paused' : 'playing'
-            )
-          }
-          aria-label={
-            playback === 'playing'
-              ? 'Pause all illustrations'
-              : 'Play all illustrations'
-          }
-          aria-pressed={playback === 'playing'}
-          title={
-            playback === 'playing'
-              ? 'Pause all illustrations'
-              : 'Play all illustrations'
-          }
-        >
-          {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
-        </button>
-      </div>
+          <ColorField
+            label='Background'
+            value={palette.bg}
+            onChange={(bg) =>
+              onPaletteChange((current) => ({ ...current, bg }))
+            }
+          />
+          <ColorField
+            label='Foreground'
+            value={palette.fg}
+            onChange={(fg) =>
+              onPaletteChange((current) => ({ ...current, fg }))
+            }
+          />
+          <ColorField
+            label='Accent'
+            value={palette.accent}
+            onChange={(accent) =>
+              onPaletteChange((current) => ({ ...current, accent }))
+            }
+          />
+
+          <div className={styles.actionRow}>
+            <button
+              type='button'
+              className={styles.button}
+              onClick={onRandomize}
+            >
+              Randomize palette
+            </button>
+            <button
+              type='button'
+              className={styles.buttonSecondary}
+              onClick={onUndo}
+              disabled={!canUndo}
+              title='Undo last randomize or card selection'
+            >
+              Undo
+            </button>
+            <button
+              type='button'
+              className={styles.buttonSecondary}
+              onClick={onReset}
+              disabled={!canReset}
+              title={`Reset to production preview for ${resetTargetLabel}`}
+            >
+              Reset
+            </button>
+            <button
+              type='button'
+              className={styles.iconButton}
+              onClick={() =>
+                onPlaybackChange((state) =>
+                  state === 'playing' ? 'paused' : 'playing'
+                )
+              }
+              aria-label={
+                playback === 'playing'
+                  ? 'Pause all illustrations'
+                  : 'Play all illustrations'
+              }
+              aria-pressed={playback === 'playing'}
+              title={
+                playback === 'playing'
+                  ? 'Pause all illustrations'
+                  : 'Play all illustrations'
+              }
+            >
+              {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -906,6 +979,7 @@ function ColorField({ label, value, onChange }: ColorFieldProps) {
           onChange={(event) => onChange(event.target.value)}
           maxLength={7}
           spellCheck={false}
+          style={{ color: value }}
           aria-label={`${label} hex`}
         />
       </span>

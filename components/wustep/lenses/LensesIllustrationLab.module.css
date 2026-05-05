@@ -167,6 +167,56 @@
   backdrop-filter: blur(16px);
 }
 
+.toolbar[data-collapsed='true'] {
+  grid-template-columns: 1fr;
+}
+
+.toolbarHeader {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolbarHeaderText {
+  min-width: 0;
+}
+
+.toolbarEyebrow,
+.toolbarSummary {
+  margin: 0;
+}
+
+.toolbarEyebrow {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--lab-text-rgb) / 0.58);
+}
+
+.toolbarSummary {
+  margin-top: 3px;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(var(--lab-text-rgb) / 0.72);
+}
+
+.toolbarSummaryHidden {
+  visibility: hidden;
+}
+
+.toolbarToggle {
+  flex: 0 0 auto;
+  min-height: 38px;
+  white-space: nowrap;
+}
+
 .controlsAnchor[data-floating='true'] {
   visibility: hidden;
   pointer-events: none;
@@ -548,7 +598,7 @@
 
 .sectionHeader h2 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.45rem;
   letter-spacing: -0.02em;
 }
 
@@ -557,6 +607,10 @@
   margin: 0;
   font-size: 0.9rem;
   color: rgb(var(--lab-text-rgb) / 0.62);
+}
+
+.previewPanelToggle {
+  white-space: nowrap;
 }
 
 .grid {
@@ -811,14 +865,11 @@
 }
 
 /* ── Bow ─────────────────────────────────────────────────────────────
-   The string snaps forward toward the limb and the arrow shoots out
-   along the aim line, then both reset for the next draw. We cap the
-   travel distance so the arrow stays visible inside the 100×100 frame
-   and the loop reads as one decisive release per cycle. */
+   The string is a single path with one nock point, so the two halves
+   meet cleanly as it draws back with the arrow and releases forward. */
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='string']) {
   animation: labCandidateBowString var(--lab-candidate-cycle) ease-in-out
     infinite;
-  transform-origin: 62px 50px;
 }
 
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='arrow']) {
@@ -1012,44 +1063,55 @@
     ease-in-out infinite;
 }
 
-/* Bow string — rests at full draw, snaps forward toward the limb, then
-   resets to the drawn position while the arrow is invisible. */
+/* Bow string — rests near the limb, pulls back to full draw, then
+   snaps forward. The path commands stay identical so interpolation
+   only moves the shared nock point. */
 @keyframes labCandidateBowString {
   0%,
-  40% {
-    transform: translateX(0);
-  }
-  50%,
-  58% {
-    transform: translateX(18px);
-  }
+  18%,
   70%,
   100% {
-    transform: translateX(0);
+    d: path('M 62 18 L 62 50 L 62 82');
+  }
+
+  44%,
+  54% {
+    d: path('M 62 18 L 38 50 L 62 82');
   }
 }
 
-/* Bow arrow — held at the nock, flies right, disappears, then resets
-   invisibly before the next draw. */
+/* Bow arrow — moves back with the string, releases forward, disappears
+   past the frame edge, then returns invisibly before the next loop. */
 @keyframes labCandidateBowArrow {
   0%,
-  40% {
+  18% {
     transform: translateX(0);
     opacity: 1;
   }
-  56% {
-    transform: translateX(28px);
-    opacity: 0.9;
+
+  44%,
+  54% {
+    transform: translateX(-24px);
+    opacity: 1;
   }
-  64% {
-    transform: translateX(34px);
+
+  63% {
+    transform: translateX(16px);
+    opacity: 0.95;
+  }
+
+  70% {
+    transform: translateX(28px);
     opacity: 0;
   }
-  65% {
+
+  71%,
+  78% {
     transform: translateX(0);
     opacity: 0;
   }
-  76%,
+
+  94%,
   100% {
     transform: translateX(0);
     opacity: 1;

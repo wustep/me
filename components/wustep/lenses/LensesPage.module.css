@@ -1013,8 +1013,8 @@
       rgba(0, 0, 0, 0) 68%,
       rgba(0, 0, 0, 0.1) 100%
     ),
-    #111827;
-  color: #f6ead8;
+    var(--center-card-bg, #111827);
+  color: var(--center-card-fg, #f6ead8);
   border: 0;
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
@@ -3373,47 +3373,60 @@
   }
 }
 
-/* Expertise — a travelled skill curve. The accent segment glides
-   along the populated path, the practice points breathe in response,
-   and the expert marker pulses at the narrow far end. */
-:global(svg[data-anim='expertise'] [data-anim-target='1']) {
-  animation: lensExpertiseTrace 3.2s ease-in-out infinite;
+/* Expertise — a longbow draws with controlled tension, then releases. */
+:global(svg[data-anim='expertise'] [data-anim-target='string']) {
+  animation: lensExpertiseBowString 3.2s ease-in-out infinite;
 }
-@keyframes lensExpertiseTrace {
+@keyframes lensExpertiseBowString {
   0%,
+  18%,
+  70%,
   100% {
-    stroke-dashoffset: 0;
+    d: path('M 62 18 L 62 50 L 62 82');
   }
-  50% {
-    stroke-dashoffset: -82;
+
+  44%,
+  54% {
+    d: path('M 62 18 L 38 50 L 62 82');
   }
 }
 
-:global(svg[data-anim='expertise'] [data-anim-target='2']) {
-  animation: lensExpertiseDots 3.2s ease-in-out infinite;
+:global(svg[data-anim='expertise'] [data-anim-target='arrow']) {
+  animation: lensExpertiseBowArrow 3.2s ease-in-out infinite;
 }
-@keyframes lensExpertiseDots {
+@keyframes lensExpertiseBowArrow {
   0%,
-  100% {
-    opacity: 0.58;
-  }
-  48% {
-    opacity: 0.78;
-  }
-}
-
-:global(svg[data-anim='expertise'] [data-anim-target='3']) {
-  animation: lensExpertiseMarker 3.2s var(--ease-out-snap) infinite;
-}
-@keyframes lensExpertiseMarker {
-  0%,
-  100% {
-    transform: scale(1);
+  18% {
+    transform: translateX(0);
     opacity: 1;
   }
-  50% {
-    transform: scale(1.16);
-    opacity: 0.92;
+
+  44%,
+  54% {
+    transform: translateX(-24px);
+    opacity: 1;
+  }
+
+  63% {
+    transform: translateX(16px);
+    opacity: 0.95;
+  }
+
+  70% {
+    transform: translateX(28px);
+    opacity: 0;
+  }
+
+  71%,
+  78% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  94%,
+  100% {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
@@ -3753,9 +3766,8 @@
     animation-duration: 3.6s;
   }
 
-  :global(svg[data-anim='expertise'] [data-anim-target='1']),
-  :global(svg[data-anim='expertise'] [data-anim-target='2']),
-  :global(svg[data-anim='expertise'] [data-anim-target='3']) {
+  :global(svg[data-anim='expertise'] [data-anim-target='string']),
+  :global(svg[data-anim='expertise'] [data-anim-target='arrow']) {
     animation-duration: 4.8s;
   }
 

@@ -118,6 +118,8 @@ export type Lens = {
 
 export type LensPreviewOverride = {
   lensId: string
+  panelOpen?: boolean
+  onPanelOpenChange?: (open: boolean) => void
   palette: {
     bg: string
     fg: string
@@ -132,6 +134,7 @@ export type LensPreviewOverride = {
 
 export type LensesPageProps = {
   embedded?: boolean
+  dismissPanelOnOutside?: boolean
   previewOverride?: LensPreviewOverride
 }
 

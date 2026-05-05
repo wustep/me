@@ -2041,87 +2041,68 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Expertise — a long skill curve populated by practice points.
- *  The dots are the many people / reps / attempts distributed along
- *  the curve; the accent marker is the narrow expert move at the far
- *  end. The story: expertise is not one block at the top — it is a
- *  dense landscape that gradually bends upward.
+/** Expertise — a longbow at full discipline.
+ *  The bow sits as the practiced frame; the accent arrow and string
+ *  draw back together before releasing. The story: expertise is
+ *  controlled tension, aim, and a clean release.
  *
- *    data-anim-target='1' = travelling highlight along the curve.
- *    data-anim-target='2' = practice dots breathing into view.
- *    data-anim-target='3' = expert marker pulsing at the frontier.
+ *    data-anim-target='string' = the bowstring nock point drawing back.
+ *    data-anim-target='arrow' = the arrow drawing back, then releasing.
  */
 function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='expertise'>
-      {/* Axes — enough structure to read as a curve without becoming
-          a chart. */}
-      <line
-        x1='16'
-        y1='80'
-        x2='86'
-        y2='80'
-        stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.35'
-      />
-      <line
-        x1='16'
-        y1='80'
-        x2='16'
-        y2='22'
-        stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.28'
-      />
-
-      {/* The quiet underlying curve is always present; the animated
-          accent stroke rides over it. */}
-      <path
-        d='M 18 74 C 30 73 33 64 40 58 C 48 51 50 40 58 34 C 65 28 73 25 84 24'
-        fill='none'
-        stroke={fg}
-        strokeWidth='1.4'
-        strokeLinecap='round'
-        opacity='0.42'
-      />
-      <path
-        d='M 18 74 C 30 73 33 64 40 58 C 48 51 50 40 58 34 C 65 28 73 25 84 24'
-        fill='none'
-        stroke={accent}
-        strokeWidth='2'
-        strokeLinecap='round'
-        strokeDasharray='14 92'
-        opacity='0.85'
-        data-anim-target='1'
-      />
-
-      {/* Practice points: the curve is populated, not pristine. */}
-      <g fill={fg} opacity='0.58' data-anim-target='2'>
-        <circle cx='22' cy='73' r='2.2' />
-        <circle cx='29' cy='70' r='1.8' />
-        <circle cx='35' cy='63' r='2' />
-        <circle cx='42' cy='56' r='1.8' />
-        <circle cx='48' cy='48' r='2.1' />
-        <circle cx='54' cy='39' r='1.7' />
-        <circle cx='61' cy='32' r='1.9' />
-        <circle cx='70' cy='27' r='1.7' />
-      </g>
-
-      {/* Expert marker: a tiny target at the far end of the populated
-          curve, precise but not disconnected from the path. */}
-      <g data-anim-target='3' style={{ transformOrigin: '84px 24px' }}>
-        <circle cx='84' cy='24' r='6.5' fill={accent} opacity='0.22' />
-        <circle
-          cx='84'
-          cy='24'
-          r='4'
+      <g transform='translate(-22 0)'>
+        <path
+          d='M 62 18 Q 94 50 62 82'
           fill='none'
-          stroke={accent}
-          strokeWidth='1.4'
-          opacity='0.95'
+          stroke={fg}
+          strokeWidth='2.6'
+          strokeLinecap='round'
+          opacity='0.78'
         />
-        <circle cx='84' cy='24' r='2.1' fill={accent} />
+        <line
+          x1='62'
+          y1='15.5'
+          x2='62'
+          y2='20.5'
+          stroke={fg}
+          strokeWidth='4'
+          strokeLinecap='round'
+          opacity='0.78'
+        />
+        <line
+          x1='62'
+          y1='79.5'
+          x2='62'
+          y2='84.5'
+          stroke={fg}
+          strokeWidth='4'
+          strokeLinecap='round'
+          opacity='0.78'
+        />
+        <path
+          d='M 62 18 L 62 50 L 62 82'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          opacity='0.75'
+          data-anim-target='string'
+        />
+        <g data-anim-target='arrow'>
+          <line
+            x1='64'
+            y1='50'
+            x2='99'
+            y2='50'
+            stroke={accent}
+            strokeWidth='2.4'
+            strokeLinecap='round'
+          />
+          <polygon points='107,50 97,45 97,55' fill={accent} />
+        </g>
       </g>
     </svg>
   )

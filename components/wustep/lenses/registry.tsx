@@ -325,9 +325,9 @@ const LENSES_RAW: Lens[] = [
     tagline: 'Every skill is a long, populated curve.',
     x: 93.75,
     y: 38,
-    bg: '#1F5564',
+    bg: '#4B2E2A',
     fg: '#F5EFE0',
-    accent: '#F2B144',
+    accent: '#E8B15E',
     illustration: 'expertise',
     related: ['taste', 'legibility', 'primitives'],
     body: (

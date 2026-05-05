@@ -62,6 +62,7 @@ function syncUrl(
  */
 export function LensesPage({
   embedded = false,
+  dismissPanelOnOutside = true,
   previewOverride
 }: LensesPageProps = {}) {
   const { isDarkMode, toggleDarkMode } = useDarkMode()
@@ -332,6 +333,7 @@ export function LensesPage({
   /* Selection treatment on the canvas reflects the open panel when
      one is open, otherwise the keyboard cursor. */
   const selectedLensId = previewLensId ?? openLensId ?? cursorLensId
+  const previewPanelOpen = previewOverride?.panelOpen ?? true
 
   const frameClass = embedded
     ? `${styles.frame} ${styles.frameEmbedded}`
@@ -382,22 +384,20 @@ export function LensesPage({
             previewLensId ? () => undefined : () => setCenterOpen(true)
           }
           onOpenLens={previewOverride ? () => undefined : openLens}
-          centerPreviewOverride={
-            previewLensId === 'lenses-deck' && previewOverride
-              ? {
-                  palette: previewOverride.palette,
-                  renderIllustration: previewOverride.renderIllustration
-                }
-              : undefined
-          }
+          previewOverride={previewOverride}
         />
       </div>
 
       {previewOverride && !previewContainer ? null : (
         <SidePanel
-          lens={activeLens}
-          onClose={previewOverride ? () => undefined : closeLens}
+          lens={previewLensId && !previewPanelOpen ? null : activeLens}
+          onClose={
+            previewOverride
+              ? () => previewOverride.onPanelOpenChange?.(false)
+              : closeLens
+          }
           onOpenLens={previewOverride ? () => undefined : openLens}
+          dismissOnOutside={dismissPanelOnOutside}
           previewOverride={
             previewOverride && previewContainer
               ? {

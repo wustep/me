@@ -29,10 +29,7 @@ type CanvasProps = {
   activeLensId: string | null
   onOpenCenter: () => void
   onOpenLens: (id: string) => void
-  centerPreviewOverride?: Pick<
-    LensPreviewOverride,
-    'palette' | 'renderIllustration'
-  >
+  previewOverride?: LensPreviewOverride
 }
 
 export function Canvas({
@@ -41,7 +38,7 @@ export function Canvas({
   activeLensId,
   onOpenCenter,
   onOpenLens,
-  centerPreviewOverride
+  previewOverride
 }: CanvasProps) {
   return (
     <div
@@ -58,13 +55,20 @@ export function Canvas({
             prefersReducedMotion={prefersReducedMotion}
             selected={activeLensId === lens.id}
             onOpen={() => onOpenLens(lens.id)}
+            previewOverride={
+              previewOverride?.lensId === lens.id ? previewOverride : undefined
+            }
           />
         ))}
 
         <CenterCard
           stage={stage}
           onOpen={onOpenCenter}
-          previewOverride={centerPreviewOverride}
+          previewOverride={
+            previewOverride?.lensId === 'lenses-deck'
+              ? previewOverride
+              : undefined
+          }
         />
       </div>
     </div>
