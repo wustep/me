@@ -2111,82 +2111,87 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Expertise — three bricks assemble into a pyramid. Each brick
- *  represents a stage of skill: the broad foundation (fundamentals
- *  you stop noticing), the narrower middle (intermediate fluency),
- *  and the small accent capstone (the rare tip-of-the-spear move
- *  only experts have). Together they read as a composed mastery
- *  rather than a single skill point.
+/** Expertise — a long skill curve populated by practice points.
+ *  The dots are the many people / reps / attempts distributed along
+ *  the curve; the accent marker is the narrow expert move at the far
+ *  end. The story: expertise is not one block at the top — it is a
+ *  dense landscape that gradually bends upward.
  *
- *  Animation
- *  ─────────
- *  On each loop, the three bricks fly in from three different
- *  directions — foundation slides up from below, middle slides in
- *  from the right, capstone drops in from above — and click into
- *  place to assemble the pyramid. The composition is the resting
- *  state; the animation is *the act of composing it*. Reads as
- *  "expertise is many separate competencies snapping together."
- *
- *    data-anim-target='1' = foundation brick (slides up from below).
- *    data-anim-target='2' = middle brick (slides in from the right).
- *    data-anim-target='3' = capstone brick (drops in from above,
- *      accent-coloured, the smallest and most precise piece).
+ *    data-anim-target='1' = travelling highlight along the curve.
+ *    data-anim-target='2' = practice dots breathing into view.
+ *    data-anim-target='3' = expert marker pulsing at the frontier.
  */
 function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='expertise'>
-      {/* Baseline — the ground the pyramid rests on. */}
+      {/* Axes — enough structure to read as a curve without becoming
+          a chart. */}
       <line
-        x1='14'
-        y1='78'
+        x1='16'
+        y1='80'
         x2='86'
-        y2='78'
+        y2='80'
         stroke={fg}
         strokeWidth='0.8'
-        opacity='0.4'
+        opacity='0.35'
+      />
+      <line
+        x1='16'
+        y1='80'
+        x2='16'
+        y2='22'
+        stroke={fg}
+        strokeWidth='0.8'
+        opacity='0.28'
       />
 
-      {/* Foundation brick — the broad base. Centered horizontally
-          and resting on the baseline. */}
-      <g data-anim-target='1'>
-        <rect
-          x='18'
-          y='62'
-          width='64'
-          height='14'
-          rx='2'
-          fill={fg}
-          opacity='0.45'
-        />
+      {/* The quiet underlying curve is always present; the animated
+          accent stroke rides over it. */}
+      <path
+        d='M 18 74 C 30 73 33 64 40 58 C 48 51 50 40 58 34 C 65 28 73 25 84 24'
+        fill='none'
+        stroke={fg}
+        strokeWidth='1.4'
+        strokeLinecap='round'
+        opacity='0.42'
+      />
+      <path
+        d='M 18 74 C 30 73 33 64 40 58 C 48 51 50 40 58 34 C 65 28 73 25 84 24'
+        fill='none'
+        stroke={accent}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeDasharray='14 92'
+        opacity='0.85'
+        data-anim-target='1'
+      />
+
+      {/* Practice points: the curve is populated, not pristine. */}
+      <g fill={fg} opacity='0.58' data-anim-target='2'>
+        <circle cx='22' cy='73' r='2.2' />
+        <circle cx='29' cy='70' r='1.8' />
+        <circle cx='35' cy='63' r='2' />
+        <circle cx='42' cy='56' r='1.8' />
+        <circle cx='48' cy='48' r='2.1' />
+        <circle cx='54' cy='39' r='1.7' />
+        <circle cx='61' cy='32' r='1.9' />
+        <circle cx='70' cy='27' r='1.7' />
       </g>
 
-      {/* Middle brick — narrower, sits cleanly atop the foundation. */}
-      <g data-anim-target='2'>
-        <rect
-          x='28'
-          y='44'
-          width='44'
-          height='14'
-          rx='2'
-          fill={fg}
-          opacity='0.7'
-        />
-      </g>
-
-      {/* Capstone — small accent block on top. The smallest, most
-          precise piece; reads as "the move only the expert can
-          make." Transform origin set to the brick's center so the
-          drop's scale reads as a clean snap-into-place. */}
-      <g data-anim-target='3' style={{ transformOrigin: '50px 33px' }}>
-        <rect
-          x='40'
-          y='26'
-          width='20'
-          height='14'
-          rx='2'
-          fill={accent}
+      {/* Expert marker: a tiny target at the far end of the populated
+          curve, precise but not disconnected from the path. */}
+      <g data-anim-target='3' style={{ transformOrigin: '84px 24px' }}>
+        <circle cx='84' cy='24' r='6.5' fill={accent} opacity='0.22' />
+        <circle
+          cx='84'
+          cy='24'
+          r='4'
+          fill='none'
+          stroke={accent}
+          strokeWidth='1.4'
           opacity='0.95'
         />
+        <circle cx='84' cy='24' r='2.1' fill={accent} />
       </g>
     </svg>
   )

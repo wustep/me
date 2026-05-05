@@ -160,6 +160,34 @@
   backdrop-filter: blur(16px);
 }
 
+.floatingControls {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 40;
+  width: min(520px, calc(100vw - 48px));
+  animation: controlsFloatIn 180ms ease-out both;
+}
+
+.floatingControls .toolbar {
+  border-radius: 22px;
+  box-shadow:
+    0 1px 0 rgb(var(--lab-text-rgb) / 0.04) inset,
+    0 22px 70px var(--lab-shadow-strong);
+}
+
+@keyframes controlsFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .field {
   display: grid;
   gap: 6px;
@@ -231,12 +259,111 @@
 .actionRow {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
+  grid-template-columns: minmax(0, 1fr) auto 42px;
   gap: 10px;
 }
 
 .actionRow .button {
   grid-column: auto;
+}
+
+.buttonSecondary {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--lab-control-border);
+  border-radius: 14px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--lab-text);
+  background: var(--lab-control-bg);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease,
+    opacity 140ms ease;
+}
+
+.buttonSecondary:hover {
+  transform: translateY(-1px);
+  background: var(--lab-stat-bg);
+  border-color: var(--lab-border);
+}
+
+.buttonSecondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+  transform: none;
+}
+
+.modeRow {
+  grid-column: 1 / -1;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--lab-control-border);
+  border-radius: 999px;
+  background: var(--lab-control-bg);
+}
+
+.segmentedOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgb(var(--lab-text-rgb) / 0.64);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background 140ms ease;
+}
+
+.segmentedOption:hover {
+  color: var(--lab-text);
+}
+
+.segmentedOptionActive {
+  color: var(--lab-button-fg);
+  background: var(--lab-button-bg);
+}
+
+.segmentedOptionActive:hover {
+  color: var(--lab-button-fg);
+}
+
+.gridModeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gridModeRow p {
+  flex: 1 1 280px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgb(var(--lab-text-rgb) / 0.62);
+}
+
+.libraryHint {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgb(var(--lab-text-rgb) / 0.7);
 }
 
 .iconButton {
@@ -352,6 +479,18 @@
   background: rgba(214, 129, 74, 0.22);
 }
 
+.lab[data-theme='dark'] .passMessage {
+  color: #bff0d1 !important;
+  background: rgba(74, 166, 112, 0.2);
+  box-shadow: 0 0 0 1px rgba(191, 240, 209, 0.16) inset;
+}
+
+.lab[data-theme='dark'] .warnMessage {
+  color: #ffd0a8 !important;
+  background: rgba(214, 129, 74, 0.22);
+  box-shadow: 0 0 0 1px rgba(255, 208, 168, 0.16) inset;
+}
+
 .section {
   padding: 22px;
 }
@@ -381,6 +520,64 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
   gap: 14px;
+}
+
+.candidateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 18px;
+}
+
+.candidateItem {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.candidateItem p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgb(var(--lab-text-rgb) / 0.62);
+}
+
+.candidateMatrix {
+  display: grid;
+  gap: 18px;
+}
+
+.matrixRow {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.34fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  border-top: 1px solid var(--lab-border);
+  padding-top: 18px;
+}
+
+.matrixRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.matrixLabel h3 {
+  margin: 0;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+}
+
+.matrixLabel p {
+  margin: 7px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgb(var(--lab-text-rgb) / 0.6);
+}
+
+.matrixCards {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 12px;
 }
 
 .card {
@@ -433,9 +630,67 @@
     0 18px 38px rgba(24, 20, 16, 0.2);
 }
 
+/* Selection halo — mirrors the production .cardSelected treatment
+   (canvas-colored gap, then a thin contrast ring around it) but
+   keeps the ring thin enough that surrounding cards remain visible
+   in dense matrix / library grids. The lab's surface + text vars
+   stand in for the page's --design-canvas-bg /
+   --design-selected-ring-color. */
 .cardSelected {
-  outline: 3px solid color-mix(in srgb, var(--lab-card-accent) 70%, white);
-  outline-offset: 3px;
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
+    0 0 0 2px var(--lab-surface),
+    0 0 0 3.5px rgb(var(--lab-text-rgb) / 0.78);
+  transform: translateY(-1px);
+  transition:
+    transform 140ms ease,
+    box-shadow 220ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.lab[data-theme='dark'] .cardSelected {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
+    0 0 0 2px var(--lab-surface),
+    0 0 0 3.5px rgb(var(--lab-text-rgb) / 0.7);
+}
+
+.cardButton.cardSelected:hover {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 0 0 2px var(--lab-surface),
+    0 0 0 3.5px rgb(var(--lab-text-rgb) / 0.78),
+    0 18px 38px rgba(24, 20, 16, 0.2);
+  transform: translateY(-3px);
+}
+
+.lab[data-theme='dark'] .cardButton.cardSelected:hover {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.32) inset,
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 0 0 2px var(--lab-surface),
+    0 0 0 3.5px rgb(var(--lab-text-rgb) / 0.7),
+    0 18px 38px rgba(0, 0, 0, 0.4);
+}
+
+.cardBadge {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lab-card-bg);
+  background: color-mix(in srgb, var(--lab-card-fg) 88%, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset;
+  pointer-events: none;
 }
 
 .cardLarge {
@@ -480,6 +735,158 @@
 
 .cardLarge .cardArt svg {
   max-width: 92%;
+}
+
+/* Lab-only Expertise candidates. These selectors intentionally live here
+   instead of the production page stylesheet so experiments remain isolated.
+
+   Animation storyboard:
+      0%   resting illustration, no motion
+     42%   accent element gently clarifies the concept
+     58%   short hold, still close to resting geometry
+    100%   back at rest before the loop repeats
+
+   The goal is comparison, not entertainment: keep movement tiny, favor
+   opacity over travel, and leave enough stillness to judge silhouettes. */
+:global(svg[data-anim^='candidate-expertise-'] [data-anim-target]) {
+  --lab-candidate-cycle: 3.6s;
+  --lab-candidate-shift: 2px;
+  --lab-candidate-scale: 1.06;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-topography'] [data-anim-target='trace']
+) {
+  animation: labCandidateTrace var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-topography'] [data-anim-target='mark']
+),
+:global(
+  svg[data-anim='candidate-expertise-calibration'] [data-anim-target='lock']
+) {
+  animation: labCandidatePulse var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-calibration'] [data-anim-target='scatter']
+) {
+  animation: labCandidateScatter var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-compression'] [data-anim-target='core']
+) {
+  animation: labCandidatePulse var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-compression'] [data-anim-target='beam']
+) {
+  animation: labCandidateBeam var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-deliberate-practice']
+    [data-anim-target='rungs']
+) {
+  animation: labCandidateRungs var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-expertise-deliberate-practice']
+    [data-anim-target='step']
+) {
+  animation: labCandidateStep var(--lab-candidate-cycle) ease-in-out infinite;
+}
+
+@keyframes labCandidateTrace {
+  0%,
+  72%,
+  100% {
+    opacity: 0.68;
+    transform: translateY(0);
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    transform: translateY(calc(var(--lab-candidate-shift) * -0.5));
+  }
+}
+
+@keyframes labCandidatePulse {
+  0%,
+  72%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  42%,
+  58% {
+    transform: scale(var(--lab-candidate-scale));
+    opacity: 0.96;
+  }
+}
+
+@keyframes labCandidateScatter {
+  0%,
+  72%,
+  100% {
+    opacity: 0.5;
+    transform: translate(0, 0);
+  }
+
+  42%,
+  58% {
+    opacity: 0.72;
+    transform: translate(var(--lab-candidate-shift), -1px);
+  }
+}
+
+@keyframes labCandidateBeam {
+  0%,
+  72%,
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  42%,
+  58% {
+    transform: translateX(var(--lab-candidate-shift));
+    opacity: 0.92;
+  }
+}
+
+@keyframes labCandidateRungs {
+  0%,
+  72%,
+  100% {
+    opacity: 0.42;
+  }
+
+  42%,
+  58% {
+    opacity: 0.68;
+  }
+}
+
+@keyframes labCandidateStep {
+  0%,
+  72%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  42%,
+  58% {
+    transform: translateY(calc(var(--lab-candidate-shift) * -1)) scale(1.04);
+    opacity: 0.96;
+  }
 }
 
 .cardTitle {
@@ -529,6 +936,12 @@
   letter-spacing: -0.012em;
 }
 
+@media (max-width: 1180px) {
+  .matrixCards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 980px) {
   .hero,
   .previewPanel {
@@ -545,6 +958,13 @@
     padding: 18px;
   }
 
+  .floatingControls {
+    top: auto;
+    right: 14px;
+    bottom: 14px;
+    width: calc(100vw - 28px);
+  }
+
   .toolbar,
   .readout dl,
   .sectionHeader {
@@ -554,5 +974,27 @@
   .sectionHeader {
     display: grid;
     align-items: start;
+  }
+
+  .matrixRow {
+    grid-template-columns: 1fr;
+  }
+
+  .matrixCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab,
+  .button,
+  .iconButton,
+  .cardButton {
+    transition: none;
+  }
+
+  .floatingControls,
+  .cardArt :global(svg[data-anim] [data-anim-target]) {
+    animation: none;
   }
 }

@@ -548,8 +548,7 @@
       var(--design-canvas-bg-light, #ece4d0),
     0 0 0
       calc(
-        var(--design-selected-ring-gap, 3px) +
-          var(--design-selected-ring, 2px)
+        var(--design-selected-ring-gap, 3px) + var(--design-selected-ring, 2px)
       )
       var(--design-selected-ring-color, rgba(30, 26, 20, 0.85));
   z-index: 3;
@@ -558,10 +557,10 @@
      gentler curve so the color doesn't punch in — it breathes in,
      which kills the "stark switch to black" feeling and reads as
      a confirmation rather than an alert. */
-  transition: transform var(--design-hover-in, 90ms)
+  transition:
+    transform var(--design-hover-in, 90ms)
       var(--design-ease, var(--ease-out-snap)),
-    box-shadow var(--design-selected-ring-fade, 220ms)
-      var(--ease-out-quart);
+    box-shadow var(--design-selected-ring-fade, 220ms) var(--ease-out-quart);
 }
 
 .cardSelected::before {
@@ -579,8 +578,7 @@
       var(--design-canvas-bg-dark, #16161a),
     0 0 0
       calc(
-        var(--design-selected-ring-gap, 3px) +
-          var(--design-selected-ring, 2px)
+        var(--design-selected-ring-gap, 3px) + var(--design-selected-ring, 2px)
       )
       var(--design-selected-ring-color-dark, rgba(245, 241, 232, 0.78));
 }
@@ -739,8 +737,7 @@
         this parent to a fixed two-line slot gives us a fallback
         cap even if line-clamp support changes. */
   --cardtitle-size: calc(
-    clamp(0.73rem, 0.56rem + 0.0167cqi, 0.8rem) *
-      var(--design-title-scale, 1)
+    clamp(0.73rem, 0.56rem + 0.0167cqi, 0.8rem) * var(--design-title-scale, 1)
   );
   --cardtitle-shrink: 1;
   font-size: calc(var(--cardtitle-size) * var(--cardtitle-shrink));
@@ -960,8 +957,7 @@
      Fluid padding scales between the 1199px tight values and the
      wide defaults so the focal card doesn't snap at the breakpoint. */
   padding: clamp(18px, 8.3px + 0.95cqi, 22px)
-    clamp(20px, 10.3px + 0.95cqi, 24px)
-    clamp(22px, 12.3px + 0.95cqi, 26px);
+    clamp(20px, 10.3px + 0.95cqi, 24px) clamp(22px, 12.3px + 0.95cqi, 26px);
   /* Match the lens cards' subtle ambient gradient. Hierarchy
      against neighboring cards comes from the larger radius and
      deeper rest cast shadow, not from a stronger highlight. */
@@ -1123,8 +1119,7 @@
     var(--font-geist, var(--font-sans), system-ui, sans-serif)
   );
   font-size: calc(
-    clamp(1.05rem, -1.255rem + 0.226cqi, 2rem) *
-      var(--design-title-scale, 1)
+    clamp(1.05rem, -1.255rem + 0.226cqi, 2rem) * var(--design-title-scale, 1)
   );
   font-weight: var(--design-title-weight, 700);
   letter-spacing: var(--design-title-tracking, -0.02em);
@@ -1769,7 +1764,9 @@
     --design-sans,
     var(--font-geist, var(--font-sans), system-ui, sans-serif)
   );
-  font-size: calc(clamp(1.55rem, 2.8vw, 1.95rem) * var(--design-title-scale, 1));
+  font-size: calc(
+    clamp(1.55rem, 2.8vw, 1.95rem) * var(--design-title-scale, 1)
+  );
   font-weight: var(--design-title-weight, 700);
   letter-spacing: var(--design-title-tracking, -0.024em);
   text-transform: var(--design-title-transform, none);
@@ -2483,13 +2480,11 @@
    Top travels: 0%/100% +4.80px, peak (50%) -12.00px. Slightly
    longer cycle than gold so the relative phase keeps drifting. */
 :global(svg[data-anim='status'] [data-anim-target='silver-block']) {
-  animation: lensStatusSilverBlock 3.4s cubic-bezier(0.77, 0, 0.175, 1)
-    infinite;
+  animation: lensStatusSilverBlock 3.4s cubic-bezier(0.77, 0, 0.175, 1) infinite;
   animation-delay: -1.1s;
 }
 :global(svg[data-anim='status'] [data-anim-target='silver-dot']) {
-  animation: lensStatusSilverDot 3.4s cubic-bezier(0.77, 0, 0.175, 1)
-    infinite;
+  animation: lensStatusSilverDot 3.4s cubic-bezier(0.77, 0, 0.175, 1) infinite;
   animation-delay: -1.1s;
 }
 @keyframes lensStatusSilverBlock {
@@ -2521,8 +2516,7 @@
    Top travels: 0%/100% +3.60px, peak (50%) -9.60px. Shortest cycle
    of the three so it's the most nervous bar in the composition. */
 :global(svg[data-anim='status'] [data-anim-target='bronze-block']) {
-  animation: lensStatusBronzeBlock 2.7s cubic-bezier(0.77, 0, 0.175, 1)
-    infinite;
+  animation: lensStatusBronzeBlock 2.7s cubic-bezier(0.77, 0, 0.175, 1) infinite;
   animation-delay: -1.8s;
 }
 :global(svg[data-anim='status'] [data-anim-target='bronze-dot']) {
@@ -3328,75 +3322,47 @@
   }
 }
 
-/* Expertise — the resting state is the complete pyramid (all
-   three bricks visible and assembled). On hover, each brick
-   lifts off in sequence — foundation first, then middle, then
-   capstone — and snaps back into place before the next one
-   lifts. The eye reads bottom-to-top, layer by layer, like
-   walking up through stages of mastery. The whole loop is one
-   continuous wave traveling up the pyramid.
-
-   All three keyframes share the same 3s cycle but stagger
-   their lift moments so the pulse climbs the stack:
-     foundation lifts at 0–25%
-     middle      lifts at 25–55%
-     capstone    lifts at 55–85%
-     full rest   85–100%
-*/
-
-/* Foundation — first to lift. Heaviest piece, smallest hop, like
-   the base shifting under its own weight before settling. */
+/* Expertise — a travelled skill curve. The accent segment glides
+   along the populated path, the practice points breathe in response,
+   and the expert marker pulses at the narrow far end. */
 :global(svg[data-anim='expertise'] [data-anim-target='1']) {
-  animation: lensExpertiseBase 3s cubic-bezier(0.34, 1.5, 0.4, 1) infinite;
+  animation: lensExpertiseTrace 3.2s ease-in-out infinite;
 }
-@keyframes lensExpertiseBase {
-  /* Resting — the assembled pyramid. */
+@keyframes lensExpertiseTrace {
   0%,
-  25%,
   100% {
-    transform: translateY(0);
+    stroke-dashoffset: 0;
   }
-  /* Brief lift early in the cycle. */
-  10% {
-    transform: translateY(-3px);
+  50% {
+    stroke-dashoffset: -82;
   }
 }
 
-/* Middle brick — lifts after the foundation has resettled. A
-   slightly bigger hop than the foundation; the eye is now
-   tracking upward. */
 :global(svg[data-anim='expertise'] [data-anim-target='2']) {
-  animation: lensExpertiseMid 3s cubic-bezier(0.34, 1.5, 0.4, 1) infinite;
+  animation: lensExpertiseDots 3.2s ease-in-out infinite;
 }
-@keyframes lensExpertiseMid {
+@keyframes lensExpertiseDots {
   0%,
-  25%,
-  55%,
   100% {
-    transform: translateY(0);
+    opacity: 0.58;
   }
-  /* Lifts mid-cycle. */
-  38% {
-    transform: translateY(-4px);
+  48% {
+    opacity: 0.78;
   }
 }
 
-/* Capstone — last to lift, biggest jump, with a slight scale-up.
-   The expert's precise move gets the showcase moment at the top
-   of the wave. */
 :global(svg[data-anim='expertise'] [data-anim-target='3']) {
-  animation: lensExpertiseCap 3s cubic-bezier(0.34, 1.6, 0.4, 1) infinite;
+  animation: lensExpertiseMarker 3.2s var(--ease-out-snap) infinite;
 }
-@keyframes lensExpertiseCap {
+@keyframes lensExpertiseMarker {
   0%,
-  55%,
-  85%,
   100% {
-    transform: translateY(0) scale(1);
+    transform: scale(1);
+    opacity: 1;
   }
-  /* Lifts highest of the three, with a slight scale bloom. */
-  68% {
-    transform: translateY(-7px) scale(1.1);
+  50% {
+    transform: scale(1.16);
+    opacity: 0.92;
   }
 }
 

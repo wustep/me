@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 
 import type { IllustrationId, Lens } from './types'
 import { Illustration } from './illustrations'
+import { EXPERTISE_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
 import styles from './LensesIllustrationLab.module.css'
 import cardStyles from './LensesPage.module.css'
 import { LENSES } from './registry'
@@ -14,6 +15,33 @@ type Palette = {
   bg: string
   fg: string
   accent: string
+}
+
+type Playback = 'idle' | 'playing' | 'paused'
+
+type LabMode = 'production' | 'candidate'
+
+type GridMode = 'shared' | 'production'
+
+type LabIllustration = {
+  /** Unique select-key. Production = lens illustration id. Candidate = `${lensId}:${candidateId}`. */
+  key: string
+  /** Underlying lens illustration id (used for animations + mapping back). */
+  illustrationId: IllustrationId
+  /** Short option label shown in the select. */
+  optionLabel: string
+  /** Card label used inside preview cards. */
+  cardLabel: string
+  /** Palette tied to this entry — production lens palette OR the lens that owns the candidate. */
+  ownerPalette: Palette
+  /** Lens that owns this entry (used for tagline/title in the preview readout). */
+  ownerLens: Lens
+  /** Whether this entry comes from the lab-only candidate registry. */
+  candidate: boolean
+  /** Optional notes from the candidate registry. */
+  notes?: string
+  /** Render the SVG body inside a card with the given palette. */
+  render: (palette: Palette) => React.ReactNode
 }
 
 const PRESET_PALETTES: Palette[] = [
@@ -25,9 +53,50 @@ const PRESET_PALETTES: Palette[] = [
   { bg: '#8F3E62', fg: '#F5EFE0', accent: '#F0B8CE' }
 ]
 
+/** Matrix palettes: kept at exactly 12 so the grid is two clean rows of six. */
+const MATRIX_COLOR_CANDIDATES: Array<{ label: string; palette: Palette }> = [
+  { label: 'Agency red', palette: PRESET_PALETTES[0]! },
+  { label: 'Deep blue', palette: PRESET_PALETTES[1]! },
+  { label: 'Forest', palette: PRESET_PALETTES[2]! },
+  { label: 'Warm light', palette: PRESET_PALETTES[3]! },
+  { label: 'Charcoal', palette: PRESET_PALETTES[4]! },
+  { label: 'Berry', palette: PRESET_PALETTES[5]! },
+  {
+    label: 'Ink',
+    palette: { bg: '#10151D', fg: '#F5EFE0', accent: '#F2B144' }
+  },
+  {
+    label: 'Paper',
+    palette: { bg: '#EFE4CC', fg: '#1B2530', accent: '#B85C38' }
+  },
+  {
+    label: 'Moss',
+    palette: { bg: '#1D3B35', fg: '#F5EFE0', accent: '#A9D8B8' }
+  },
+  {
+    label: 'Plum',
+    palette: { bg: '#4A2638', fg: '#F5EFE0', accent: '#F0B8CE' }
+  },
+  {
+    label: 'Ochre',
+    palette: { bg: '#8A5A22', fg: '#F8EED9', accent: '#F7C75A' }
+  },
+  {
+    label: 'Stone',
+    palette: { bg: '#6F6A60', fg: '#F5EFE0', accent: '#F2C77A' }
+  }
+]
+
 const UNIQUE_ILLUSTRATIONS = Array.from(
   new Set(LENSES.map((lens) => lens.illustration))
 ).toSorted((a, b) => a.localeCompare(b))
+
+const FIRST_LENS_FOR_ILLUSTRATION = new Map<IllustrationId, Lens>()
+for (const lens of LENSES) {
+  if (!FIRST_LENS_FOR_ILLUSTRATION.has(lens.illustration)) {
+    FIRST_LENS_FOR_ILLUSTRATION.set(lens.illustration, lens)
+  }
+}
 
 function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
   const words = title.split(/\s+/)
@@ -94,7 +163,12 @@ function hslToHex(h: number, s: number, l: number) {
   return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`.toUpperCase()
 }
 
-function randomPalette(): Palette {
+/** Minimum bg/fg contrast we'll accept from `randomPalette` — matches
+ *  the 4.5:1 threshold the readout already grades against, so the
+ *  randomize button can never produce a card that gets flagged. */
+const MIN_RANDOM_CONTRAST = 4.5
+
+function rollRandomPalette(): Palette {
   const hue = Math.floor(Math.random() * 360)
   const bg = hslToHex(
     hue,
@@ -111,6 +185,27 @@ function randomPalette(): Palette {
   return { bg, fg, accent }
 }
 
+function randomPalette(): Palette {
+  // Resample until the bg/fg pair clears the contrast threshold.
+  // Capped so a pathological luminance window can't loop forever; if
+  // we exhaust the budget, fall back to the highest-contrast roll.
+  const MAX_ATTEMPTS = 24
+  let best = rollRandomPalette()
+  let bestContrast = contrastRatio(best.bg, best.fg)
+  if (bestContrast >= MIN_RANDOM_CONTRAST) return best
+
+  for (let attempt = 1; attempt < MAX_ATTEMPTS; attempt++) {
+    const next = rollRandomPalette()
+    const ratio = contrastRatio(next.bg, next.fg)
+    if (ratio >= MIN_RANDOM_CONTRAST) return next
+    if (ratio > bestContrast) {
+      best = next
+      bestContrast = ratio
+    }
+  }
+  return best
+}
+
 function contrastRatio(a: string, b: string) {
   const l1 = luminance(a)
   const l2 = luminance(b)
@@ -125,36 +220,177 @@ function paletteFromLens(lens: Lens): Palette {
   }
 }
 
+/* ────────────────────────────────────────────────────────────────────
+ * LabIllustration registry
+ *
+ *   Production entries map 1:1 to the IllustrationId switchboard.
+ *   Candidate entries come from LensesIllustrationCandidates and
+ *   share their owner lens's palette + name so they read as concrete
+ *   alternatives to that lens's production art rather than abstract
+ *   sketches.
+ * ─────────────────────────────────────────────────────────────────── */
+const PRODUCTION_LAB_ILLUSTRATIONS: LabIllustration[] =
+  UNIQUE_ILLUSTRATIONS.map((illustrationId) => {
+    const lens = FIRST_LENS_FOR_ILLUSTRATION.get(illustrationId) ?? LENSES[0]!
+    return {
+      key: illustrationId,
+      illustrationId,
+      optionLabel: illustrationId,
+      cardLabel: lens.title,
+      ownerPalette: paletteFromLens(lens),
+      ownerLens: lens,
+      candidate: false,
+      render: (palette: Palette) => (
+        <Illustration
+          id={illustrationId}
+          fg={palette.fg}
+          bg={palette.bg}
+          accent={palette.accent}
+        />
+      )
+    }
+  })
+
+const CANDIDATE_LAB_ILLUSTRATIONS: LabIllustration[] =
+  EXPERTISE_ILLUSTRATION_CANDIDATES.map((candidate) => {
+    const lens = FIRST_LENS_FOR_ILLUSTRATION.get(candidate.lensId) ?? LENSES[0]!
+    return {
+      key: `${candidate.lensId}:${candidate.id}`,
+      illustrationId: candidate.lensId,
+      optionLabel: `${candidate.lensId} · ${candidate.label}`,
+      cardLabel: candidate.label,
+      ownerPalette: paletteFromLens(lens),
+      ownerLens: lens,
+      candidate: true,
+      notes: candidate.notes,
+      render: (palette: Palette) => candidate.render(palette)
+    }
+  })
+
+const ALL_LAB_ILLUSTRATIONS = [
+  ...PRODUCTION_LAB_ILLUSTRATIONS,
+  ...CANDIDATE_LAB_ILLUSTRATIONS
+]
+
+const LAB_ILLUSTRATION_BY_KEY = new Map(
+  ALL_LAB_ILLUSTRATIONS.map((entry) => [entry.key, entry])
+)
+
+const ILLUSTRATIONS_WITH_CANDIDATES = new Set(
+  CANDIDATE_LAB_ILLUSTRATIONS.map((entry) => entry.illustrationId)
+)
+
 export function LensesIllustrationLab() {
-  const [selectedId, setSelectedId] = React.useState<IllustrationId>(
-    LENSES[0]!.illustration
+  const [labMode, setLabMode] = React.useState<LabMode>('production')
+  const [selectedKey, setSelectedKey] = React.useState<string>(
+    PRODUCTION_LAB_ILLUSTRATIONS[0]!.key
   )
   const [canvasTheme, setCanvasTheme] = React.useState<'light' | 'dark'>(
     'light'
   )
-  const [playback, setPlayback] = React.useState<'idle' | 'playing' | 'paused'>(
-    'idle'
-  )
+  const [playback, setPlayback] = React.useState<Playback>('idle')
+  const [controlsFloating, setControlsFloating] = React.useState(false)
   const [palette, setPalette] = React.useState<Palette>(() =>
     paletteFromLens(LENSES[0]!)
   )
+  const [gridMode, setGridMode] = React.useState<GridMode>('production')
 
-  const matchingLens = React.useMemo(
-    () => LENSES.find((lens) => lens.illustration === selectedId) ?? LENSES[0]!,
-    [selectedId]
+  const visibleEntries = React.useMemo(
+    () =>
+      labMode === 'candidate'
+        ? CANDIDATE_LAB_ILLUSTRATIONS
+        : PRODUCTION_LAB_ILLUSTRATIONS,
+    [labMode]
   )
+
+  const matrixCandidates = React.useMemo(() => {
+    if (labMode !== 'candidate') return CANDIDATE_LAB_ILLUSTRATIONS
+    const owner = LAB_ILLUSTRATION_BY_KEY.get(selectedKey)
+    if (!owner) return CANDIDATE_LAB_ILLUSTRATIONS
+    const sameLens = ALL_LAB_ILLUSTRATIONS.filter(
+      (entry) => entry.illustrationId === owner.illustrationId
+    )
+    return sameLens.length > 0 ? sameLens : CANDIDATE_LAB_ILLUSTRATIONS
+  }, [labMode, selectedKey])
+
+  const selected =
+    LAB_ILLUSTRATION_BY_KEY.get(selectedKey) ?? PRODUCTION_LAB_ILLUSTRATIONS[0]!
+
+  React.useEffect(() => {
+    if (!visibleEntries.some((entry) => entry.key === selectedKey)) {
+      setSelectedKey(visibleEntries[0]?.key ?? selected.key)
+    }
+  }, [visibleEntries, selectedKey, selected.key])
 
   const randomize = React.useCallback(() => {
     setPalette(randomPalette())
   }, [])
 
+  const resetPalette = React.useCallback(() => {
+    setPalette(selected.ownerPalette)
+  }, [selected.ownerPalette])
+
+  const palettesMatch =
+    palette.bg === selected.ownerPalette.bg &&
+    palette.fg === selected.ownerPalette.fg &&
+    palette.accent === selected.ownerPalette.accent
+
+  React.useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      setControlsFloating(window.scrollY > 280)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   const selectedContrast = contrastRatio(palette.bg, palette.fg)
+
+  const matrixPalettes = [
+    { label: 'Owner', palette: selected.ownerPalette },
+    { label: 'Current', palette },
+    ...MATRIX_COLOR_CANDIDATES
+  ].slice(0, 12)
+
+  const controlProps = {
+    labMode,
+    onLabModeChange: setLabMode,
+    selectedKey,
+    onSelectedKeyChange: setSelectedKey,
+    visibleEntries,
+    palette,
+    onPaletteChange: setPalette,
+    playback,
+    onPlaybackChange: setPlayback,
+    onRandomize: randomize,
+    onReset: resetPalette,
+    canReset: !palettesMatch,
+    resetTargetLabel: selected.ownerLens.title
+  } satisfies LabControlsProps
+
+  const previewLens = selected.ownerLens
+  const previewTitle = selected.candidate
+    ? `${previewLens.title} · ${selected.cardLabel}`
+    : previewLens.title
+  const previewTagline = selected.candidate
+    ? (selected.notes ?? previewLens.tagline)
+    : previewLens.tagline
 
   return (
     <div
       className={styles.lab}
       data-theme={canvasTheme}
       data-animations={playback}
+      data-mode={labMode}
     >
       <section className={styles.hero}>
         <div>
@@ -181,83 +417,27 @@ export function LensesIllustrationLab() {
           </p>
         </div>
 
-        <div className={styles.toolbar} aria-label='Palette controls'>
-          <label className={styles.field}>
-            <span>Illustration</span>
-            <select
-              value={selectedId}
-              onChange={(event) =>
-                setSelectedId(event.target.value as IllustrationId)
-              }
-            >
-              {UNIQUE_ILLUSTRATIONS.map((id) => (
-                <option key={id} value={id}>
-                  {id}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <ColorField
-            label='Background'
-            value={palette.bg}
-            onChange={(bg) => setPalette((current) => ({ ...current, bg }))}
-          />
-          <ColorField
-            label='Foreground'
-            value={palette.fg}
-            onChange={(fg) => setPalette((current) => ({ ...current, fg }))}
-          />
-          <ColorField
-            label='Accent'
-            value={palette.accent}
-            onChange={(accent) =>
-              setPalette((current) => ({ ...current, accent }))
-            }
-          />
-
-          <div className={styles.actionRow}>
-            <button type='button' className={styles.button} onClick={randomize}>
-              Randomize palette
-            </button>
-            <button
-              type='button'
-              className={styles.iconButton}
-              onClick={() =>
-                setPlayback((state) =>
-                  state === 'playing' ? 'paused' : 'playing'
-                )
-              }
-              aria-label={
-                playback === 'playing'
-                  ? 'Pause all illustrations'
-                  : 'Play all illustrations'
-              }
-              aria-pressed={playback === 'playing'}
-              title={
-                playback === 'playing'
-                  ? 'Pause all illustrations'
-                  : 'Play all illustrations'
-              }
-            >
-              {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
-            </button>
-          </div>
-        </div>
+        <LabControls {...controlProps} />
       </section>
+
+      {controlsFloating ? (
+        <div className={styles.floatingControls}>
+          <LabControls {...controlProps} />
+        </div>
+      ) : null}
 
       <section className={styles.previewPanel}>
         <div className={styles.largeCardWrap}>
           <PreviewCard
-            title={matchingLens.title}
-            illustration={selectedId}
+            title={selected.cardLabel}
             palette={palette}
+            renderIllustration={selected.render}
             large
           />
         </div>
         <div className={styles.readout}>
-          <h2>{matchingLens.title}</h2>
-          <p>{matchingLens.tagline}</p>
+          <h2>{previewTitle}</h2>
+          <p>{previewTagline}</p>
           <dl>
             <div>
               <dt>bg</dt>
@@ -288,18 +468,55 @@ export function LensesIllustrationLab() {
         </div>
       </section>
 
+      {labMode === 'candidate' ? (
+        <section className={`${styles.section} ${styles.matrixSection}`}>
+          <div className={styles.sectionHeader}>
+            <h2>Candidate Matrix · {selected.ownerLens.title}</h2>
+          </div>
+          <div className={styles.candidateMatrix}>
+            {matrixCandidates.map((entry, index) => {
+              const indexLabel = entry.candidate
+                ? `${String.fromCodePoint(64 + index)} · ${entry.cardLabel}`
+                : entry.cardLabel
+              return (
+                <article className={styles.matrixRow} key={entry.key}>
+                  <div className={styles.matrixLabel}>
+                    <h3>{indexLabel}</h3>
+                    <p>
+                      {entry.notes ??
+                        (entry.candidate
+                          ? 'Lab-only candidate.'
+                          : 'Current registered illustration.')}
+                    </p>
+                  </div>
+                  <div className={styles.matrixCards}>
+                    {matrixPalettes.map((column) => (
+                      <PreviewCard
+                        key={`${entry.key}-${column.label}`}
+                        title={column.label}
+                        palette={column.palette}
+                        renderIllustration={entry.render}
+                      />
+                    ))}
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </section>
+      ) : null}
+
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2>Selected Illustration Across Palettes</h2>
-          <p>Useful when designing a new card color before committing it.</p>
+          <h2>Selected Across Palettes</h2>
         </div>
         <div className={styles.grid}>
-          {[palette, ...PRESET_PALETTES].map((candidate, index) => (
+          {[palette, ...PRESET_PALETTES].map((entry, index) => (
             <PreviewCard
-              key={`${candidate.bg}-${candidate.fg}-${candidate.accent}-${index}`}
+              key={`${entry.bg}-${entry.fg}-${entry.accent}-${index}`}
               title={index === 0 ? 'Current' : `Preset ${index}`}
-              illustration={selectedId}
-              palette={candidate}
+              palette={entry}
+              renderIllustration={selected.render}
             />
           ))}
         </div>
@@ -307,42 +524,66 @@ export function LensesIllustrationLab() {
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2>All Illustrations On Current Palette</h2>
-          <p>Checks whether a color idea works across the whole SVG system.</p>
+          <h2>Library</h2>
+          <SegmentedToggle
+            ariaLabel='Library palette mode'
+            value={gridMode}
+            onChange={setGridMode}
+            options={[
+              { value: 'production', label: 'Per-card palette' },
+              { value: 'shared', label: 'Current palette' }
+            ]}
+          />
         </div>
+        {labMode === 'candidate' && selected.candidate ? (
+          <p className={styles.libraryHint}>
+            The {selected.ownerLens.title} card below is rendered with the
+            selected candidate so you can read it next to its real neighbors.
+          </p>
+        ) : null}
         <div className={styles.grid}>
-          {UNIQUE_ILLUSTRATIONS.map((id) => (
-            <PreviewCard
-              key={id}
-              title={id}
-              illustration={id}
-              palette={palette}
-              selected={id === selectedId}
-              onClick={() => setSelectedId(id)}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>Production Cards</h2>
-          <p>Smoke-test the real registry values in one place.</p>
-        </div>
-        <div className={styles.grid}>
-          {LENSES.map((lens) => (
-            <PreviewCard
-              key={lens.id}
-              title={lens.title}
-              illustration={lens.illustration}
-              palette={paletteFromLens(lens)}
-              selected={lens.illustration === selectedId}
-              onClick={() => {
-                setSelectedId(lens.illustration)
-                setPalette(paletteFromLens(lens))
-              }}
-            />
-          ))}
+          {PRODUCTION_LAB_ILLUSTRATIONS.map((entry) => {
+            const useCandidate =
+              labMode === 'candidate' &&
+              selected.candidate &&
+              entry.illustrationId === selected.illustrationId
+            // Library palette: shared mode applies the toolbar palette to
+            // every card; per-card mode uses each entry's own palette,
+            // except for the swapped candidate slot — that one always
+            // honors the toolbar palette so the candidate reflects the
+            // colors you're tuning.
+            const cardPalette =
+              gridMode === 'shared' || useCandidate
+                ? palette
+                : entry.ownerPalette
+            const isSelected = useCandidate ? true : entry.key === selectedKey
+            const renderFn = useCandidate ? selected.render : entry.render
+            const cardTitle = useCandidate
+              ? `${entry.cardLabel} · ${selected.cardLabel}`
+              : entry.cardLabel
+            const badge = useCandidate
+              ? 'Candidate'
+              : ILLUSTRATIONS_WITH_CANDIDATES.has(entry.illustrationId)
+                ? 'Has candidates'
+                : undefined
+            return (
+              <PreviewCard
+                key={entry.key}
+                title={cardTitle}
+                palette={cardPalette}
+                renderIllustration={renderFn}
+                selected={isSelected}
+                badge={badge}
+                onClick={() => {
+                  if (useCandidate) return
+                  setSelectedKey(entry.key)
+                  if (gridMode === 'production') {
+                    setPalette(entry.ownerPalette)
+                  }
+                }}
+              />
+            )
+          })}
         </div>
       </section>
     </div>
@@ -353,6 +594,123 @@ type ColorFieldProps = {
   label: string
   value: string
   onChange: (value: string) => void
+}
+
+type LabControlsProps = {
+  labMode: LabMode
+  onLabModeChange: React.Dispatch<React.SetStateAction<LabMode>>
+  selectedKey: string
+  onSelectedKeyChange: (key: string) => void
+  visibleEntries: LabIllustration[]
+  palette: Palette
+  onPaletteChange: React.Dispatch<React.SetStateAction<Palette>>
+  playback: Playback
+  onPlaybackChange: React.Dispatch<React.SetStateAction<Playback>>
+  onRandomize: () => void
+  onReset: () => void
+  canReset: boolean
+  resetTargetLabel: string
+}
+
+function LabControls({
+  labMode,
+  onLabModeChange,
+  selectedKey,
+  onSelectedKeyChange,
+  visibleEntries,
+  palette,
+  onPaletteChange,
+  playback,
+  onPlaybackChange,
+  onRandomize,
+  onReset,
+  canReset,
+  resetTargetLabel
+}: LabControlsProps) {
+  return (
+    <div className={styles.toolbar} aria-label='Palette controls'>
+      <div className={styles.modeRow}>
+        <SegmentedToggle
+          ariaLabel='Lab mode'
+          value={labMode}
+          onChange={onLabModeChange}
+          options={[
+            { value: 'production', label: 'Production' },
+            { value: 'candidate', label: 'Candidates' }
+          ]}
+        />
+      </div>
+
+      <label className={styles.field}>
+        <span>{labMode === 'candidate' ? 'Candidate' : 'Illustration'}</span>
+        <select
+          value={selectedKey}
+          onChange={(event) => onSelectedKeyChange(event.target.value)}
+        >
+          {visibleEntries.map((entry) => (
+            <option key={entry.key} value={entry.key}>
+              {entry.optionLabel}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <ColorField
+        label='Background'
+        value={palette.bg}
+        onChange={(bg) => onPaletteChange((current) => ({ ...current, bg }))}
+      />
+      <ColorField
+        label='Foreground'
+        value={palette.fg}
+        onChange={(fg) => onPaletteChange((current) => ({ ...current, fg }))}
+      />
+      <ColorField
+        label='Accent'
+        value={palette.accent}
+        onChange={(accent) =>
+          onPaletteChange((current) => ({ ...current, accent }))
+        }
+      />
+
+      <div className={styles.actionRow}>
+        <button type='button' className={styles.button} onClick={onRandomize}>
+          Randomize palette
+        </button>
+        <button
+          type='button'
+          className={styles.buttonSecondary}
+          onClick={onReset}
+          disabled={!canReset}
+          title={`Reset palette to ${resetTargetLabel}`}
+        >
+          Reset
+        </button>
+        <button
+          type='button'
+          className={styles.iconButton}
+          onClick={() =>
+            onPlaybackChange((state) =>
+              state === 'playing' ? 'paused' : 'playing'
+            )
+          }
+          aria-label={
+            playback === 'playing'
+              ? 'Pause all illustrations'
+              : 'Play all illustrations'
+          }
+          aria-pressed={playback === 'playing'}
+          title={
+            playback === 'playing'
+              ? 'Pause all illustrations'
+              : 'Play all illustrations'
+          }
+        >
+          {playback === 'playing' ? <PauseIcon /> : <PlayIcon />}
+        </button>
+      </div>
+    </div>
+  )
 }
 
 function ColorField({ label, value, onChange }: ColorFieldProps) {
@@ -379,6 +737,42 @@ function ColorField({ label, value, onChange }: ColorFieldProps) {
   )
 }
 
+type SegmentedToggleProps<T extends string> = {
+  ariaLabel: string
+  value: T
+  onChange: (next: T) => void
+  options: Array<{ value: T; label: string }>
+}
+
+function SegmentedToggle<T extends string>({
+  ariaLabel,
+  value,
+  onChange,
+  options
+}: SegmentedToggleProps<T>) {
+  return (
+    <div className={styles.segmented} role='radiogroup' aria-label={ariaLabel}>
+      {options.map((option) => {
+        const isActive = option.value === value
+        return (
+          <button
+            key={option.value}
+            type='button'
+            role='radio'
+            aria-checked={isActive}
+            className={`${styles.segmentedOption} ${
+              isActive ? styles.segmentedOptionActive : ''
+            }`}
+            onClick={() => onChange(option.value)}
+          >
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function PlayIcon() {
   return (
     <svg viewBox='0 0 24 24' aria-hidden='true'>
@@ -400,35 +794,44 @@ function PauseIcon() {
 
 type PreviewCardProps = {
   title: string
-  illustration: IllustrationId
+  illustration?: IllustrationId
+  renderIllustration?: (palette: Palette) => React.ReactNode
   palette: Palette
   selected?: boolean
   large?: boolean
+  badge?: string
   onClick?: () => void
 }
 
 function PreviewCard({
   title,
   illustration,
+  renderIllustration,
   palette,
   selected,
   large,
+  badge,
   onClick
 }: PreviewCardProps) {
   const titleBucket = titleLengthBucket(title)
   const content = (
     <>
       <span className={`${styles.cardArt} ${cardStyles.cardArt}`}>
-        <Illustration
-          id={illustration}
-          fg={palette.fg}
-          bg={palette.bg}
-          accent={palette.accent}
-        />
+        {renderIllustration ? (
+          renderIllustration(palette)
+        ) : illustration ? (
+          <Illustration
+            id={illustration}
+            fg={palette.fg}
+            bg={palette.bg}
+            accent={palette.accent}
+          />
+        ) : null}
       </span>
       <span className={styles.cardTitle}>
         <span className={styles.cardTitleClamp}>{title}</span>
       </span>
+      {badge ? <span className={styles.cardBadge}>{badge}</span> : null}
     </>
   )
 
