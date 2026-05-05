@@ -57,18 +57,29 @@ function syncUrl(
  *   When `embedded` is true, the page renders only the canvas + portaled
  *   panels and skips its own header / theme toggle / body classes. Use
  *   this when mounting `<LensesPage embedded />` inside another chrome
- *   (e.g. `PlaygroundLayout`).
+ *   (e.g. `PlaygroundLayout`). `previewOverride` is a lab-only embedding
+ *   path: it opens one lens inside the frame and swaps that panel's art.
  */
-export function LensesPage({ embedded = false }: LensesPageProps = {}) {
+export function LensesPage({
+  embedded = false,
+  previewOverride
+}: LensesPageProps = {}) {
   const { isDarkMode, toggleDarkMode } = useDarkMode()
+  const previewLensId = previewOverride?.lensId
   const [hasMounted, setHasMounted] = React.useState(false)
-  const [stage, setStage] = React.useState<Stage>(STAGE.hidden)
+  const [stage, setStage] = React.useState<Stage>(() =>
+    previewLensId ? STAGE.cards : STAGE.hidden
+  )
   const prefersReducedMotion = usePrefersReducedMotion()
+  const [previewContainer, setPreviewContainer] =
+    React.useState<HTMLDivElement | null>(null)
 
   const router = useRouter()
   const [hydratedFromUrl, setHydratedFromUrl] = React.useState(false)
 
-  const [openLensId, setOpenLensId] = React.useState<string | null>(null)
+  const [openLensId, setOpenLensId] = React.useState<string | null>(
+    previewLensId ?? null
+  )
   const [centerOpen, setCenterOpen] = React.useState(false)
 
   /* Keyboard cursor across the canvas. The cursor is the lens that
@@ -80,7 +91,9 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
      `openLensId` (the open lens is what's "selected"). Rather than
      try to keep two state slots aligned, we derive the canvas
      selection from `openLensId ?? cursorLensId` at render time. */
-  const [cursorLensId, setCursorLensId] = React.useState<string | null>(null)
+  const [cursorLensId, setCursorLensId] = React.useState<string | null>(
+    previewLensId ?? null
+  )
 
   React.useEffect(() => {
     setHasMounted(true)
@@ -92,6 +105,7 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
      and overwrite a real `?lens=…` after hydration, hence this guard.
      We only seed once — the user takes over from there. */
   React.useEffect(() => {
+    if (previewLensId) return
     if (!router.isReady || hydratedFromUrl) return
     const lensRaw =
       typeof router.query.lens === 'string' ? router.query.lens : null
@@ -103,7 +117,13 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
     }
     if (indexRaw === 'open') setCenterOpen(true)
     setHydratedFromUrl(true)
-  }, [router.isReady, router.query.lens, router.query.index, hydratedFromUrl])
+  }, [
+    router.isReady,
+    router.query.lens,
+    router.query.index,
+    hydratedFromUrl,
+    previewLensId
+  ])
 
   /* Push state -> URL whenever the user opens / closes / swaps a panel
      or the index dialog. We use `history.replaceState` rather than
@@ -112,13 +132,14 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
      animation. We never touch `pathname`, so this is safe for both
      standalone (/lenses) and embedded (/playground/lenses) mounts. */
   React.useEffect(() => {
+    if (previewLensId) return
     if (!hydratedFromUrl) return
     const current = new URLSearchParams(window.location.search)
     syncUrl(window.location.pathname, current, {
       lens: openLensId,
       index: centerOpen ? 'open' : null
     })
-  }, [hydratedFromUrl, openLensId, centerOpen])
+  }, [hydratedFromUrl, openLensId, centerOpen, previewLensId])
 
   /* Drive the entrance storyboard. Snap to final stage instantly when
      the user prefers reduced motion.
@@ -135,6 +156,10 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
 
   React.useEffect(() => {
     if (!hasMounted) return
+    if (previewLensId) {
+      setStage(STAGE.cards)
+      return
+    }
 
     const SESSION_KEY = 'lenses:entrance-played'
     const replayRequested = entranceTick > 0
@@ -165,23 +190,31 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
     return () => {
       for (const t of timers) clearTimeout(t)
     }
-  }, [hasMounted, prefersReducedMotion, entranceTick])
+  }, [hasMounted, prefersReducedMotion, entranceTick, previewLensId])
+
+  React.useEffect(() => {
+    if (!previewLensId) return
+    setStage(STAGE.cards)
+    setOpenLensId(previewLensId)
+    setCursorLensId(previewLensId)
+    setCenterOpen(false)
+  }, [previewLensId])
 
   /* Listen for the dev panel's replay event. Only relevant in dev,
      and the listener is cheap when no event is dispatched. */
   React.useEffect(() => {
-    if (!isDev) return
+    if (!isDev || previewLensId) return
     const onReplay = () => setEntranceTick((t) => t + 1)
     window.addEventListener('lenses:replay-entrance', onReplay)
     return () => window.removeEventListener('lenses:replay-entrance', onReplay)
-  }, [])
+  }, [previewLensId])
 
   /* Cursor parallax — sets `--mx` / `--my` on the document root
      so the .cards CSS rule (gated by data-design-parallax) can
      translate the deck. Throttled with rAF, cheap, and only
      active when the design panel turns parallax on. */
   React.useEffect(() => {
-    if (!isDev) return
+    if (!isDev || previewLensId) return
     let raf = 0
     let pendingX = 0
     let pendingY = 0
@@ -200,7 +233,7 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
       window.removeEventListener('mousemove', onMove)
       if (raf) cancelAnimationFrame(raf)
     }
-  }, [])
+  }, [previewLensId])
 
   const openLens = React.useCallback((id: string) => {
     setCenterOpen(false)
@@ -234,7 +267,7 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
      We always skip arrows when the user is typing somewhere
      (input, textarea, contentEditable). */
   React.useEffect(() => {
-    if (centerOpen) return
+    if (centerOpen || previewLensId) return
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null
       const tag = target?.tagName
@@ -288,13 +321,17 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [centerOpen, openLensId, cursorLensId, openLens])
+  }, [centerOpen, openLensId, cursorLensId, openLens, previewLensId])
 
-  const activeLens = openLensId ? (LENS_BY_ID[openLensId] ?? null) : null
+  const activeLens = previewLensId
+    ? (LENS_BY_ID[previewLensId] ?? null)
+    : openLensId
+      ? (LENS_BY_ID[openLensId] ?? null)
+      : null
 
   /* Selection treatment on the canvas reflects the open panel when
      one is open, otherwise the keyboard cursor. */
-  const selectedLensId = openLensId ?? cursorLensId
+  const selectedLensId = previewLensId ?? openLensId ?? cursorLensId
 
   const frameClass = embedded
     ? `${styles.frame} ${styles.frameEmbedded}`
@@ -308,7 +345,10 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
         <BodyClassName className={isDarkMode ? 'notion dark-mode' : 'notion'} />
       )}
 
-      <div className={frameClass}>
+      <div
+        ref={previewOverride ? setPreviewContainer : undefined}
+        className={frameClass}
+      >
         {!embedded && (
           <header className={styles.header}>
             <div className={styles.headerInner}>
@@ -338,22 +378,41 @@ export function LensesPage({ embedded = false }: LensesPageProps = {}) {
           stage={stage}
           prefersReducedMotion={prefersReducedMotion}
           activeLensId={selectedLensId}
-          onOpenCenter={() => setCenterOpen(true)}
-          onOpenLens={openLens}
+          onOpenCenter={
+            previewLensId ? () => undefined : () => setCenterOpen(true)
+          }
+          onOpenLens={previewOverride ? () => undefined : openLens}
         />
       </div>
 
-      <SidePanel lens={activeLens} onClose={closeLens} onOpenLens={openLens} />
+      {previewOverride && !previewContainer ? null : (
+        <SidePanel
+          lens={activeLens}
+          onClose={previewOverride ? () => undefined : closeLens}
+          onOpenLens={previewOverride ? () => undefined : openLens}
+          previewOverride={
+            previewOverride && previewContainer
+              ? {
+                  container: previewContainer,
+                  palette: previewOverride.palette,
+                  renderIllustration: previewOverride.renderIllustration
+                }
+              : undefined
+          }
+        />
+      )}
 
-      <CenterDialog
-        open={centerOpen}
-        onOpenChange={setCenterOpen}
-        onOpenLens={openLens}
-      />
+      {!previewOverride && (
+        <CenterDialog
+          open={centerOpen}
+          onOpenChange={setCenterOpen}
+          onOpenLens={openLens}
+        />
+      )}
 
       {/* Dev-only design panel. Tree-shakes out in production because
           the JSX is gated on a build-time `isDev` constant. */}
-      {isDev && hasMounted && <DesignPanel />}
+      {isDev && hasMounted && !previewOverride && <DesignPanel />}
     </>
   )
 }

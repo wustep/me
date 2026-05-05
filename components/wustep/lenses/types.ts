@@ -116,8 +116,23 @@ export type Lens = {
   readings?: Reading[]
 }
 
+export type LensPreviewOverride = {
+  lensId: string
+  palette: {
+    bg: string
+    fg: string
+    accent: string
+  }
+  renderIllustration: (palette: {
+    bg: string
+    fg: string
+    accent: string
+  }) => React.ReactNode
+}
+
 export type LensesPageProps = {
   embedded?: boolean
+  previewOverride?: LensPreviewOverride
 }
 
 /** Animation stage. A single integer drives the whole entrance — no

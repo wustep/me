@@ -8,9 +8,9 @@ import type { IllustrationId, Lens } from './types'
 import { Illustration } from './illustrations'
 import { EXPERTISE_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
 import styles from './LensesIllustrationLab.module.css'
+import { LensesPage } from './LensesPage'
 import cardStyles from './LensesPage.module.css'
 import { LENSES } from './registry'
-import { SidePanel } from './SidePanel'
 
 type Palette = {
   bg: string
@@ -665,73 +665,34 @@ export function LensesIllustrationLab() {
         </div>
       </section>
 
-      <SidePanelContextPreview entry={selected} palette={palette} />
+      <LensesPagePreview entry={selected} palette={palette} />
     </div>
   )
 }
 
-type SidePanelContextPreviewProps = {
+type LensesPagePreviewProps = {
   entry: LabIllustration
   palette: Palette
 }
 
-function SidePanelContextPreview({
-  entry,
-  palette
-}: SidePanelContextPreviewProps) {
-  const [stageElement, setStageElement] = React.useState<HTMLDivElement | null>(
-    null
-  )
+function LensesPagePreview({ entry, palette }: LensesPagePreviewProps) {
   const lens = entry.ownerLens
-  const contextCards = LENSES.filter((candidate) => candidate.id !== lens.id)
-    .slice(0, 7)
-    .concat(lens)
+  const previewOverride = React.useMemo(
+    () => ({
+      lensId: lens.id,
+      palette,
+      renderIllustration: entry.render
+    }),
+    [entry.render, lens.id, palette]
+  )
 
   return (
     <section className={`${styles.section} ${styles.sidePanelPreviewSection}`}>
       <div className={styles.sectionHeader}>
         <h2>Preview</h2>
       </div>
-      <div ref={setStageElement} className={styles.sidePanelStage}>
-        <div className={styles.sidePanelContextCards} aria-hidden='true'>
-          {contextCards.map((contextLens, index) => {
-            const isActive = contextLens.id === lens.id
-            return (
-              <span
-                key={`${contextLens.id}-${index}`}
-                className={`${styles.contextCard} ${
-                  isActive ? styles.contextCardActive : ''
-                }`}
-                style={
-                  {
-                    '--context-card-bg': isActive ? palette.bg : contextLens.bg,
-                    '--context-card-fg': isActive ? palette.fg : contextLens.fg,
-                    '--context-card-accent': isActive
-                      ? palette.accent
-                      : (contextLens.accent ?? contextLens.fg),
-                    '--context-card-y': `${10 + index * 13}%`,
-                    '--context-card-x': `${index % 2 === 0 ? 4 : 12}%`
-                  } as React.CSSProperties
-                }
-              >
-                <span>{contextLens.title}</span>
-              </span>
-            )
-          })}
-        </div>
-
-        {stageElement ? (
-          <SidePanel
-            lens={lens}
-            onClose={() => undefined}
-            onOpenLens={() => undefined}
-            previewOverride={{
-              container: stageElement,
-              palette,
-              renderIllustration: entry.render
-            }}
-          />
-        ) : null}
+      <div className={styles.sidePanelStage}>
+        <LensesPage embedded previewOverride={previewOverride} />
       </div>
     </section>
   )

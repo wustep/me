@@ -71,17 +71,29 @@
   transform-origin: center;
 }
 
-.trace {
-  stroke-dasharray: 92;
-  stroke-dashoffset: 18;
+.gaugePlate {
+  fill: rgba(245, 239, 224, 0.1);
+  stroke: rgba(245, 239, 224, 0.24);
+  stroke-width: 1.4;
 }
 
-.mark {
-  transform-origin: 82px 22px;
+.gaugeRail {
+  opacity: 0.58;
 }
 
-.points {
-  transform-origin: center;
+.gaugeTicks {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+  opacity: 0.54;
+}
+
+.gaugeProbe {
+  transform-origin: 64px 52px;
+}
+
+.gaugeTarget {
+  transform-origin: 34px 52px;
 }
 
 .cardLabel {
@@ -112,7 +124,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(245, 239, 224, 0.36);
+  background: #a97824;
 }
 
 .swatches span {
@@ -176,29 +188,19 @@
     transform: translateY(-4px) rotate(-1deg);
   }
 
-  .cover:hover .terrain,
-  :global(.group):hover .terrain {
-    animation: labCoverTerrain 900ms ease-out both;
-  }
-
   .cover:hover .activeCell,
   :global(.group):hover .activeCell {
     animation: labCoverPulse 820ms ease-out both;
   }
 
-  .cover:hover .trace,
-  :global(.group):hover .trace {
-    animation: labCoverTrace 900ms ease-out both;
+  .cover:hover .gaugeProbe,
+  :global(.group):hover .gaugeProbe {
+    animation: labCoverGaugeProbe 860ms ease-out both;
   }
 
-  .cover:hover .mark,
-  :global(.group):hover .mark {
-    animation: labCoverMark 900ms ease-out both;
-  }
-
-  .cover:hover .points,
-  :global(.group):hover .points {
-    animation: labCoverPoints 900ms ease-out both;
+  .cover:hover .gaugeTarget,
+  :global(.group):hover .gaugeTarget {
+    animation: labCoverGaugeTarget 860ms ease-out both;
   }
 }
 
@@ -216,54 +218,34 @@
   }
 }
 
-@keyframes labCoverTrace {
+@keyframes labCoverGaugeProbe {
   0% {
-    stroke-dashoffset: 36;
+    transform: translateY(-7px);
+  }
+
+  58% {
+    transform: translateY(1px);
   }
 
   100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes labCoverTerrain {
-  0% {
     transform: translateY(0);
-    opacity: 0.34;
-  }
-
-  100% {
-    transform: translateY(-2px);
-    opacity: 0.56;
   }
 }
 
-@keyframes labCoverMark {
+@keyframes labCoverGaugeTarget {
   0% {
-    transform: scale(0.82);
-    opacity: 0.74;
+    opacity: 0.58;
+    transform: scaleX(0.82);
   }
 
-  48% {
-    transform: scale(1.18);
+  58% {
     opacity: 1;
+    transform: scaleX(1.04);
   }
 
   100% {
-    transform: scale(1);
     opacity: 1;
-  }
-}
-
-@keyframes labCoverPoints {
-  0% {
-    opacity: 0.3;
-    transform: translateY(2px);
-  }
-
-  100% {
-    opacity: 0.5;
-    transform: translateY(0);
+    transform: scaleX(1);
   }
 }
 
@@ -274,15 +256,11 @@
 
   .cover:hover .activeCell,
   .cover:hover .previewCard,
-  .cover:hover .terrain,
-  .cover:hover .trace,
-  .cover:hover .mark,
-  .cover:hover .points,
+  .cover:hover .gaugeProbe,
+  .cover:hover .gaugeTarget,
   :global(.group):hover .previewCard,
-  :global(.group):hover .terrain,
-  :global(.group):hover .trace,
-  :global(.group):hover .mark,
-  :global(.group):hover .points,
+  :global(.group):hover .gaugeProbe,
+  :global(.group):hover .gaugeTarget,
   :global(.group):hover .activeCell {
     animation: none;
   }

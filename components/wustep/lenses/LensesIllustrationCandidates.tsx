@@ -51,27 +51,26 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
     id: 'expertise-bow',
     lensId: 'expertise',
     label: 'Bow',
-    notes:
-      'A longbow at full draw releases a single accent arrow toward its line.',
+    notes: 'A longbow releases a single accent arrow from a steady draw.',
     render: ({ fg, accent }) => (
       <svg {...SVG_BASE} aria-hidden='true' data-anim='candidate-expertise-bow'>
         <path
-          d='M 64 18 Q 78 50 64 82'
+          d='M 62 18 Q 76 50 62 82'
           fill='none'
           stroke={fg}
-          strokeWidth='2.4'
+          strokeWidth='2.6'
           strokeLinecap='round'
           opacity='0.78'
         />
-        <circle cx='64' cy='18' r='1.6' fill={fg} opacity='0.78' />
-        <circle cx='64' cy='82' r='1.6' fill={fg} opacity='0.78' />
+        <circle cx='62' cy='18' r='1.6' fill={fg} opacity='0.78' />
+        <circle cx='62' cy='82' r='1.6' fill={fg} opacity='0.78' />
         <line
-          x1='72'
+          x1='69'
           y1='44'
-          x2='72'
+          x2='69'
           y2='56'
           stroke={fg}
-          strokeWidth='3.6'
+          strokeWidth='3.2'
           strokeLinecap='round'
           opacity='0.55'
         />
@@ -87,7 +86,7 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
         />
         <g data-anim-target='string'>
           <path
-            d='M 64 18 L 46 50 L 64 82'
+            d='M 62 18 L 38 50 L 62 82'
             fill='none'
             stroke={fg}
             strokeWidth='1'
@@ -97,93 +96,85 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
         </g>
         <g data-anim-target='arrow'>
           <line
-            x1='30'
+            x1='38'
             y1='50'
-            x2='70'
+            x2='72'
             y2='50'
             stroke={accent}
             strokeWidth='2.4'
             strokeLinecap='round'
           />
-          <polygon points='78,50 68,45 68,55' fill={accent} />
-          <polygon points='30,50 24,46 24,50' fill={accent} opacity='0.85' />
-          <polygon points='30,50 24,54 24,50' fill={accent} opacity='0.85' />
+          <polygon points='80,50 70,45 70,55' fill={accent} />
+          <polygon points='38,50 31,46 31,50' fill={accent} opacity='0.85' />
+          <polygon points='38,50 31,54 31,50' fill={accent} opacity='0.85' />
         </g>
       </svg>
     )
   },
   {
-    /* Drawing the arrow — expertise as the single clean line a master
-       lays down in three confident strokes: shaft, upper barb, lower
-       barb. The animation literally draws the arrow on, then holds it
-       a beat before resetting. The static read is a finished arrow,
-       so the candidate works even with motion off. */
-    id: 'expertise-drawn-arrow',
+    id: 'expertise-depth-gauge',
     lensId: 'expertise',
-    label: 'Drawn Arrow',
-    notes: 'A master draws a clean accent arrow in three confident strokes.',
+    label: 'Depth Gauge',
+    notes: 'A measuring probe settles on one exact mark.',
     render: ({ fg, accent }) => (
       <svg
         {...SVG_BASE}
         aria-hidden='true'
-        data-anim='candidate-expertise-drawn-arrow'
+        data-anim='candidate-expertise-depth-gauge'
       >
-        {/* Faint guide line — the apprentice's wobbly attempt the
-            master is tracing over. Sits behind the accent arrow so the
-            "expertise" reads as the clean overlay, not the rough draft. */}
+        <rect
+          x='22'
+          y='20'
+          width='56'
+          height='62'
+          rx='6'
+          fill={fg}
+          opacity='0.12'
+        />
         <path
-          d='M 18 78 Q 32 70 44 60 Q 58 48 70 36 Q 76 30 80 26'
+          d='M 34 24 V 78'
           fill='none'
           stroke={fg}
-          strokeWidth='1'
+          strokeWidth='1.4'
           strokeLinecap='round'
-          opacity='0.28'
-          strokeDasharray='2 3'
+          opacity='0.62'
         />
-        {/* Tiny start mark — where the stroke begins. */}
-        <circle cx='20' cy='76' r='1.6' fill={fg} opacity='0.45' />
-
-        {/* The shaft — one long diagonal stroke. Drawn first. We use a
-            stroke-dasharray trick at the CSS layer so the shaft draws
-            from start to end. The path length here is ~78 units, which
-            the keyframe targets via a generous dasharray. */}
-        <path
-          d='M 20 76 L 76 28'
-          fill='none'
-          stroke={accent}
-          strokeWidth='3'
-          strokeLinecap='round'
-          data-anim-target='shaft'
-          pathLength='100'
-        />
-        {/* Upper barb — second stroke of the arrowhead. */}
-        <path
-          d='M 76 28 L 64 30'
-          fill='none'
-          stroke={accent}
-          strokeWidth='3'
-          strokeLinecap='round'
-          data-anim-target='barb-up'
-          pathLength='100'
-        />
-        {/* Lower barb — third stroke of the arrowhead. */}
-        <path
-          d='M 76 28 L 74 40'
-          fill='none'
-          stroke={accent}
-          strokeWidth='3'
-          strokeLinecap='round'
-          data-anim-target='barb-down'
-          pathLength='100'
-        />
+        <g stroke={fg} strokeLinecap='round' opacity='0.56'>
+          <line x1='34' y1='30' x2='48' y2='30' strokeWidth='1.2' />
+          <line x1='34' y1='40' x2='44' y2='40' strokeWidth='1' />
+          <line x1='34' y1='50' x2='48' y2='50' strokeWidth='1.2' />
+          <line x1='34' y1='60' x2='44' y2='60' strokeWidth='1' />
+          <line x1='34' y1='70' x2='48' y2='70' strokeWidth='1.2' />
+        </g>
+        <g data-anim-target='probe'>
+          <line
+            x1='62'
+            y1='24'
+            x2='62'
+            y2='50'
+            stroke={fg}
+            strokeWidth='2.2'
+            strokeLinecap='round'
+          />
+          <polygon points='62,58 56,48 68,48' fill={accent} />
+        </g>
+        <g data-anim-target='target' style={{ transformOrigin: '34px 50px' }}>
+          <line
+            x1='28'
+            y1='50'
+            x2='74'
+            y2='50'
+            stroke={accent}
+            strokeWidth='2'
+            strokeLinecap='round'
+            opacity='0.9'
+          />
+          <circle cx='34' cy='50' r='3.2' fill={accent} />
+        </g>
       </svg>
     )
   },
   {
-    /* Mastery score — five notes climbing a musical staff, the final
-       note an accent fermata held above. Expertise is reading and
-       writing in a notation that the untrained eye treats as decoration.
-       A playhead sweeps the staff; each note lights as it's struck. */
     id: 'expertise-score',
     lensId: 'expertise',
     label: 'Mastery Score',
@@ -201,8 +192,6 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
         { x: 50, y: 48, target: 'note-3' },
         { x: 64, y: 42, target: 'note-4' }
       ] as const
-      // The final accent note sits above the staff with a fermata —
-      // the held mastery beat the rest of the line builds toward.
       const finale = { x: 78, y: 30 }
 
       return (
@@ -270,19 +259,7 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
             </g>
           ))}
 
-          {/* Finale — accent note with a fermata curve above. The held
-              moment of mastery the score has been climbing toward. */}
           <g data-anim-target='finale'>
-            {/* Fermata arc + dot — the symbol for "hold this note". */}
-            <path
-              d={`M ${finale.x - 6} ${finale.y - 8} Q ${finale.x} ${finale.y - 14} ${finale.x + 6} ${finale.y - 8}`}
-              fill='none'
-              stroke={accent}
-              strokeWidth='1.2'
-              strokeLinecap='round'
-              opacity='0.85'
-            />
-            <circle cx={finale.x} cy={finale.y - 10} r='1' fill={accent} />
             <ellipse
               cx={finale.x}
               cy={finale.y}
@@ -322,58 +299,38 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
     id: 'expertise-belt-knot',
     lensId: 'expertise',
     label: 'Belt Knot',
-    notes: 'A belt knot cinches cleanly: rank earned through repeated tying.',
+    notes: 'Two belt ends cinch into a single clean knot.',
     render: ({ fg, accent }) => (
       <svg
         {...SVG_BASE}
         aria-hidden='true'
         data-anim='candidate-expertise-belt-knot'
       >
-        <g data-anim-target='left-tail'>
+        <g fill={fg} opacity='0.64'>
           <rect
-            x='10'
+            x='14'
             y='45'
-            width='36'
+            width='31'
             height='10'
             rx='2'
-            fill={fg}
-            opacity='0.72'
+            data-anim-target='left-tail'
           />
-          <path
-            d='M 42 54 C 36 62 35 72 39 84'
-            fill='none'
-            stroke={fg}
-            strokeWidth='8'
-            strokeLinecap='round'
-            opacity='0.58'
-          />
-        </g>
-        <g data-anim-target='right-tail'>
           <rect
-            x='54'
+            x='55'
             y='45'
-            width='36'
+            width='31'
             height='10'
             rx='2'
-            fill={fg}
-            opacity='0.72'
-          />
-          <path
-            d='M 58 54 C 66 62 67 72 61 84'
-            fill='none'
-            stroke={fg}
-            strokeWidth='8'
-            strokeLinecap='round'
-            opacity='0.5'
+            data-anim-target='right-tail'
           />
         </g>
         <g data-anim-target='knot' style={{ transformOrigin: '50px 50px' }}>
           <rect
-            x='40'
-            y='40'
-            width='20'
-            height='20'
-            rx='3'
+            x='38'
+            y='38'
+            width='24'
+            height='24'
+            rx='4'
             fill={accent}
             transform='rotate(45 50 50)'
           />
@@ -384,13 +341,6 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
             strokeLinecap='round'
             opacity='0.45'
           />
-          <path
-            d='M 50 42 V 58'
-            stroke={fg}
-            strokeWidth='1'
-            strokeLinecap='round'
-            opacity='0.28'
-          />
         </g>
         <g
           data-anim-target='cinch'
@@ -398,10 +348,10 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
           strokeLinecap='round'
           style={{ transformOrigin: '50px 50px' }}
         >
-          <line x1='34' y1='39' x2='42' y2='44' strokeWidth='1.4' />
-          <line x1='66' y1='39' x2='58' y2='44' strokeWidth='1.4' />
-          <line x1='34' y1='61' x2='42' y2='56' strokeWidth='1.4' />
-          <line x1='66' y1='61' x2='58' y2='56' strokeWidth='1.4' />
+          <line x1='37' y1='38' x2='43' y2='44' strokeWidth='1.5' />
+          <line x1='63' y1='38' x2='57' y2='44' strokeWidth='1.5' />
+          <line x1='37' y1='62' x2='43' y2='56' strokeWidth='1.5' />
+          <line x1='63' y1='62' x2='57' y2='56' strokeWidth='1.5' />
         </g>
       </svg>
     )

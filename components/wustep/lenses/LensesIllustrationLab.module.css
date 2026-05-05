@@ -555,65 +555,11 @@
 
 .sidePanelStage {
   position: relative;
-  min-height: min(760px, 82vh);
+  block-size: min(760px, 82vh);
   border: 1px solid var(--lab-border);
   border-radius: 24px;
   overflow: hidden;
-  background:
-    radial-gradient(
-      ellipse at 0% 50%,
-      rgb(var(--lab-text-rgb) / 0.11),
-      transparent 45%
-    ),
-    linear-gradient(90deg, #131417 0%, #17191d 42%, #111215 100%);
-}
-
-.sidePanelContextCards {
-  position: absolute;
-  inset: 0;
-  opacity: 0.72;
-  filter: blur(0.2px);
-}
-
-.contextCard {
-  position: absolute;
-  top: var(--context-card-y);
-  left: var(--context-card-x);
-  display: flex;
-  align-items: flex-end;
-  width: clamp(74px, 10vw, 118px);
-  aspect-ratio: 0.8;
-  border-radius: 14px;
-  padding: 10px;
-  color: var(--context-card-fg);
-  background:
-    radial-gradient(
-      circle at 72% 22%,
-      color-mix(in srgb, var(--context-card-accent) 55%, transparent),
-      transparent 28%
-    ),
-    var(--context-card-bg);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.12) inset,
-    0 14px 28px rgba(0, 0, 0, 0.28);
-}
-
-.contextCard:nth-child(even) {
-  transform: translateX(18px);
-}
-
-.contextCardActive {
-  z-index: 2;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.14) inset,
-    0 0 0 2px rgba(245, 239, 224, 0.4),
-    0 18px 34px rgba(0, 0, 0, 0.36);
-}
-
-.contextCard span {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  background: #ece4d0;
 }
 
 .candidateGrid {
@@ -856,7 +802,7 @@
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='string']) {
   animation: labCandidateBowString var(--lab-candidate-cycle) ease-in-out
     infinite;
-  transform-origin: 64px 50px;
+  transform-origin: 62px 50px;
 }
 
 :global(svg[data-anim='candidate-expertise-bow'] [data-anim-target='arrow']) {
@@ -864,35 +810,17 @@
     infinite;
 }
 
-/* ── Drawn arrow ─────────────────────────────────────────────────────
-   Three strokes draw on in sequence (shaft → upper barb → lower barb)
-   then the finished arrow holds before the next loop wipes and redraws.
-   We use pathLength="100" on each path so a single dasharray rule works
-   regardless of the actual SVG path length. */
-:global(svg[data-anim='candidate-expertise-drawn-arrow'] [data-anim-target]) {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-}
-
 :global(
-  svg[data-anim='candidate-expertise-drawn-arrow'] [data-anim-target='shaft']
+  svg[data-anim='candidate-expertise-depth-gauge'] [data-anim-target='probe']
 ) {
-  animation: labCandidateDrawShaft var(--lab-candidate-cycle) ease-in-out
+  animation: labCandidateGaugeProbe var(--lab-candidate-cycle) ease-in-out
     infinite;
 }
 
 :global(
-  svg[data-anim='candidate-expertise-drawn-arrow'] [data-anim-target='barb-up']
+  svg[data-anim='candidate-expertise-depth-gauge'] [data-anim-target='target']
 ) {
-  animation: labCandidateDrawBarbUp var(--lab-candidate-cycle) ease-in-out
-    infinite;
-}
-
-:global(
-  svg[data-anim='candidate-expertise-drawn-arrow']
-    [data-anim-target='barb-down']
-) {
-  animation: labCandidateDrawBarbDown var(--lab-candidate-cycle) ease-in-out
+  animation: labCandidateGaugeTarget var(--lab-candidate-cycle) ease-in-out
     infinite;
 }
 
@@ -975,97 +903,77 @@
     infinite;
 }
 
-/* Bow string — rests at full draw, snaps forward on release, holds, then
-   the next draw pulls it back. The "snap" is a brief x-translate; the
-   string never visually leaves the bow. */
+/* Bow string — rests at full draw, snaps forward toward the limb, then
+   resets to the drawn position while the arrow is invisible. */
 @keyframes labCandidateBowString {
   0%,
-  38% {
+  40% {
     transform: translateX(0);
   }
-  46%,
-  54% {
-    transform: translateX(10px);
+  50%,
+  58% {
+    transform: translateX(18px);
   }
-  72%,
+  70%,
   100% {
     transform: translateX(0);
   }
 }
 
-/* Bow arrow — held at the anchor through the draw, leaps forward on
-   release, fades briefly to suggest flight, then resets for the next
-   nock. Travel kept inside the frame so the head doesn't clip. */
+/* Bow arrow — held at the nock, flies right, disappears, then resets
+   invisibly before the next draw. */
 @keyframes labCandidateBowArrow {
   0%,
-  38% {
+  40% {
     transform: translateX(0);
     opacity: 1;
   }
-  46% {
-    transform: translateX(0);
-    opacity: 1;
+  56% {
+    transform: translateX(28px);
+    opacity: 0.9;
   }
-  60% {
-    transform: translateX(20px);
-    opacity: 0.6;
+  64% {
+    transform: translateX(34px);
+    opacity: 0;
   }
-  68% {
+  65% {
     transform: translateX(0);
     opacity: 0;
   }
-  78%,
+  76%,
   100% {
     transform: translateX(0);
     opacity: 1;
   }
 }
 
-/* Drawn arrow strokes — each path's dashoffset animates from 100 (fully
-   hidden) to 0 (fully drawn). Sequential delays inside the keyframes
-   produce shaft → upper barb → lower barb. The completed arrow holds
-   for ~30% of the cycle before being wiped and redrawn. */
-@keyframes labCandidateDrawShaft {
-  0% {
-    stroke-dashoffset: 100;
-  }
-  35%,
-  88% {
-    stroke-dashoffset: 0;
-  }
-  92%,
+@keyframes labCandidateGaugeProbe {
+  0%,
+  30%,
+  78%,
   100% {
-    stroke-dashoffset: 100;
+    transform: translateY(-5px);
+  }
+
+  48%,
+  62% {
+    transform: translateY(0);
   }
 }
 
-@keyframes labCandidateDrawBarbUp {
+@keyframes labCandidateGaugeTarget {
   0%,
-  35% {
-    stroke-dashoffset: 100;
-  }
-  55%,
-  88% {
-    stroke-dashoffset: 0;
-  }
-  92%,
+  30%,
+  78%,
   100% {
-    stroke-dashoffset: 100;
+    opacity: 0.72;
+    transform: scaleX(0.92);
   }
-}
 
-@keyframes labCandidateDrawBarbDown {
-  0%,
-  55% {
-    stroke-dashoffset: 100;
-  }
-  72%,
-  88% {
-    stroke-dashoffset: 0;
-  }
-  92%,
-  100% {
-    stroke-dashoffset: 100;
+  48%,
+  62% {
+    opacity: 1;
+    transform: scaleX(1);
   }
 }
 
@@ -1134,7 +1042,7 @@
 
   48%,
   62% {
-    transform: translateX(4px);
+    transform: translateX(3px);
   }
 }
 
@@ -1148,7 +1056,7 @@
 
   48%,
   62% {
-    transform: translateX(-4px);
+    transform: translateX(-3px);
   }
 }
 
@@ -1162,7 +1070,7 @@
 
   48%,
   62% {
-    transform: scale(0.92);
+    transform: scale(0.94);
   }
 }
 
@@ -1178,7 +1086,7 @@
   48%,
   62% {
     opacity: 1;
-    transform: scale(1.08);
+    transform: scale(1);
   }
 }
 
@@ -1278,11 +1186,7 @@
   }
 
   .sidePanelStage {
-    min-height: 680px;
-  }
-
-  .sidePanelContextCards {
-    opacity: 0.42;
+    block-size: 680px;
   }
 
   .actionRow {

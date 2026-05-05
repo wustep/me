@@ -16,67 +16,21 @@ type CoverCard = {
   bg: string
   fg: string
   accent: string
-  glyph: 'eye' | 'arrow' | 'circle' | 'triangle' | 'square' | 'spark'
-  label: string
+  glyph: 'eye' | 'arrow' | 'circle' | 'triangle' | 'square'
 }
 
 const CARDS: CoverCard[] = [
-  {
-    bg: '#1F2A5C',
-    fg: '#F1EFE3',
-    accent: '#F2C04A',
-    glyph: 'eye',
-    label: 'Frame'
-  },
-  {
-    bg: '#C84A2C',
-    fg: '#FAF7EE',
-    accent: '#1F2A5C',
-    glyph: 'arrow',
-    label: 'Agency'
-  },
-  {
-    bg: '#EFE6D2',
-    fg: '#1A1A1A',
-    accent: '#C84A2C',
-    glyph: 'circle',
-    label: 'Focus'
-  },
-  {
-    bg: '#3F8F6A',
-    fg: '#F5F1E8',
-    accent: '#F2C04A',
-    glyph: 'triangle',
-    label: 'Signal'
-  },
-  {
-    bg: '#D4A53A',
-    fg: '#1F2A5C',
-    accent: '#C84A2C',
-    glyph: 'square',
-    label: 'System'
-  },
-  {
-    bg: '#8F3E62',
-    fg: '#F5EFE0',
-    accent: '#F0B8CE',
-    glyph: 'spark',
-    label: 'Taste'
-  },
-  {
-    bg: '#204A40',
-    fg: '#F5EFE0',
-    accent: '#A9D8B8',
-    glyph: 'circle',
-    label: 'Energy'
-  }
+  { bg: '#1F2A5C', fg: '#F1EFE3', accent: '#F2C04A', glyph: 'eye' },
+  { bg: '#C84A2C', fg: '#FAF7EE', accent: '#1F2A5C', glyph: 'arrow' },
+  { bg: '#EFE6D2', fg: '#1A1A1A', accent: '#C84A2C', glyph: 'circle' },
+  { bg: '#3F8F6A', fg: '#F5F1E8', accent: '#F2C04A', glyph: 'triangle' },
+  { bg: '#D4A53A', fg: '#1F2A5C', accent: '#C84A2C', glyph: 'square' }
 ]
 
 export function LensesCover() {
   return (
     <div className={styles.cover}>
       <div className={styles.glow} aria-hidden />
-      <div className={styles.rings} aria-hidden />
       <div className={styles.fan}>
         {CARDS.map((card, i) => (
           <span
@@ -93,13 +47,8 @@ export function LensesCover() {
             }
           >
             <Glyph kind={card.glyph} />
-            <span className={styles.cardLabel}>{card.label}</span>
           </span>
         ))}
-      </div>
-      <div className={styles.titleLockup}>
-        <span>Playground</span>
-        <strong>Lenses</strong>
       </div>
     </div>
   )
@@ -180,19 +129,6 @@ function Glyph({ kind }: { kind: CoverCard['glyph'] }) {
             rx='0.5'
             fill='var(--accent)'
           />
-        </svg>
-      )
-    case 'spark':
-      return (
-        <svg viewBox='0 0 24 24' className={styles.glyph} aria-hidden>
-          <path
-            d='M12 3 L14.4 9.6 L21 12 L14.4 14.4 L12 21 L9.6 14.4 L3 12 L9.6 9.6 Z'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='1.45'
-            strokeLinejoin='round'
-          />
-          <circle cx='12' cy='12' r='2.5' fill='var(--accent)' />
         </svg>
       )
   }
