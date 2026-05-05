@@ -322,8 +322,9 @@ export function LensesIllustrationLab() {
   )
   const playgroundTheme = usePlaygroundTheme()
   const controlsAnchorRef = React.useRef<HTMLDivElement>(null)
-  const [playback, setPlayback] = React.useState<Playback>('idle')
+  const [playback, setPlayback] = React.useState<Playback>('playing')
   const [controlsFloating, setControlsFloating] = React.useState(false)
+  const [controlsCanCollapse, setControlsCanCollapse] = React.useState(true)
   const [controlsCollapsed, setControlsCollapsed] = React.useState(false)
   const [palette, setPalette] = React.useState<Palette>(() =>
     paletteFromLens(LENSES[0]!)
@@ -459,9 +460,16 @@ export function LensesIllustrationLab() {
       // there's no hover affordance to dismiss it.
       const viewportTooNarrow =
         window.innerWidth < FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH
-      const noHover = window.matchMedia('(hover: none)').matches
-      if (viewportTooNarrow || noHover) {
+      const noHover = window.matchMedia(
+        '(hover: none), (pointer: coarse)'
+      ).matches
+      const anchorTooNarrow = controlsAnchor.getBoundingClientRect().width < 760
+      const canCollapse = !viewportTooNarrow && !noHover && !anchorTooNarrow
+
+      setControlsCanCollapse(canCollapse)
+      if (!canCollapse) {
         setControlsFloating(false)
+        setControlsCollapsed(false)
         return
       }
 
@@ -475,9 +483,13 @@ export function LensesIllustrationLab() {
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
+    const resizeObserver = new ResizeObserver(onScroll)
+    const observedAnchor = controlsAnchorRef.current
+    if (observedAnchor) resizeObserver.observe(observedAnchor)
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
+      resizeObserver.disconnect()
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
@@ -508,6 +520,7 @@ export function LensesIllustrationLab() {
     onUndo: undo,
     canUndo: undoStack.length > 0,
     resetTargetLabel: selected.ownerLens.title,
+    canCollapse: controlsCanCollapse,
     collapsed: controlsCollapsed,
     onCollapsedChange: setControlsCollapsed
   } satisfies LabControlsProps
@@ -785,6 +798,7 @@ type LabControlsProps = {
   onUndo: () => void
   canUndo: boolean
   resetTargetLabel: string
+  canCollapse: boolean
   collapsed: boolean
   onCollapsedChange: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -807,13 +821,16 @@ function LabControls({
   onUndo,
   canUndo,
   resetTargetLabel,
+  canCollapse,
   collapsed,
   onCollapsedChange
 }: LabControlsProps) {
+  const isCollapsed = canCollapse && collapsed
+
   return (
     <div
       className={styles.toolbar}
-      data-collapsed={collapsed}
+      data-collapsed={isCollapsed}
       aria-label='Palette controls'
     >
       <div className={styles.toolbarHeader}>
@@ -821,9 +838,9 @@ function LabControls({
           <p className={styles.toolbarEyebrow}>Design panel</p>
           <p
             className={`${styles.toolbarSummary} ${
-              collapsed ? '' : styles.toolbarSummaryHidden
+              isCollapsed ? '' : styles.toolbarSummaryHidden
             }`}
-            aria-hidden={!collapsed}
+            aria-hidden={!isCollapsed}
           >
             {labMode === 'candidate' ? 'Candidates' : 'Production'} ·{' '}
             <span style={{ color: palette.bg }}>{palette.bg}</span>
@@ -833,17 +850,19 @@ function LabControls({
             <span style={{ color: palette.accent }}>{palette.accent}</span>
           </p>
         </div>
-        <button
-          type='button'
-          className={`${styles.buttonSecondary} ${styles.toolbarToggle}`}
-          onClick={() => onCollapsedChange((current) => !current)}
-          aria-expanded={!collapsed}
-        >
-          {collapsed ? 'Expand' : 'Collapse'}
-        </button>
+        {canCollapse ? (
+          <button
+            type='button'
+            className={`${styles.buttonSecondary} ${styles.toolbarToggle}`}
+            onClick={() => onCollapsedChange((current) => !current)}
+            aria-expanded={!isCollapsed}
+          >
+            {isCollapsed ? 'Expand' : 'Collapse'}
+          </button>
+        ) : null}
       </div>
 
-      {collapsed ? null : (
+      {isCollapsed ? null : (
         <>
           <div className={styles.modeRow}>
             <SegmentedToggle

@@ -3536,7 +3536,7 @@
    alive at once. The pointer-capable hover path keeps the original
    tighter cadence — there hover is an explicit invitation and a
    crisper response feels right. */
-@media (hover: none) {
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
   .card .cardArt :global(svg[data-anim] [data-anim-target]),
   .centerCard .cardArt :global(svg[data-anim] [data-anim-target]),
   .panelArt :global(svg[data-anim] [data-anim-target]) {

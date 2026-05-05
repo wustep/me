@@ -203,7 +203,9 @@ function LayoutContent({
         </div>
       </header>
       {fullFrame ? (
-        <div className='flex flex-1 flex-col bg-background'>{children}</div>
+        <div className='flex min-w-0 flex-1 flex-col bg-background'>
+          {children}
+        </div>
       ) : (
         <div className='flex flex-1 flex-col gap-4 p-4 pt-8 bg-background'>
           <div className='w-full max-w-4xl mx-auto'>
