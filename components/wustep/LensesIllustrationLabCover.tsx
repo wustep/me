@@ -1,6 +1,6 @@
 import styles from './LensesIllustrationLabCover.module.css'
 
-const SWATCHES = ['#B43A2E', '#243449', '#204A40', '#EFE4CC', '#8F3E62']
+const SWATCHES = ['#B43A2E', '#243449', '#204A40', '#A75B22', '#8F3E62']
 
 export function LensesIllustrationLabCover() {
   return (

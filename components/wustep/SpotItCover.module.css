@@ -1,0 +1,49 @@
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #050505;
+  isolation: isolate;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.backdrop {
+  fill: #050505;
+}
+
+@media (hover: hover) {
+  .cover:hover .matchRing,
+  :global(.group):hover .matchRing {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+.matchRing {
+  fill: none;
+  stroke: #ffec4a;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+  transition:
+    opacity 450ms ease-out,
+    stroke-dashoffset 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, stroke-dashoffset;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matchRing {
+    transition: none;
+    will-change: auto;
+  }
+}

@@ -969,8 +969,8 @@
       rgba(0, 0, 0, 0) 68%,
       rgba(0, 0, 0, 0.1) 100%
     ),
-    #1a1f2a;
-  color: #ede4d1;
+    #111827;
+  color: #f6ead8;
   border: 0;
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
@@ -1039,8 +1039,8 @@
       rgba(0, 0, 0, 0) 68%,
       rgba(0, 0, 0, 0.06) 100%
     ),
-    #ede4d1;
-  color: #1a1f2a;
+    #111827;
+  color: #f6ead8;
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.6) inset,
@@ -3198,44 +3198,31 @@
   animation-direction: reverse;
 }
 
-/* Lenses deck — three discs drift a few pixels left/right with a
-   staggered offset, like an instrument settling into focus. */
-:global(svg[data-anim='lenses-deck'] [data-anim-target='1']) {
-  animation: lensSettle1 5.4s ease-in-out infinite;
+/* Lenses deck — the center eye opens a touch wider and focuses. */
+:global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+  animation: lensDeckEyeLid 4.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
 }
-:global(svg[data-anim='lenses-deck'] [data-anim-target='2']) {
-  animation: lensSettle2 5.4s ease-in-out infinite;
-  animation-delay: -1.6s;
+:global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+  animation: lensDeckEyePupil 4.8s ease-in-out infinite;
 }
-:global(svg[data-anim='lenses-deck'] [data-anim-target='3']) {
-  animation: lensSettle3 5.4s ease-in-out infinite;
-  animation-delay: -3.2s;
-}
-@keyframes lensSettle1 {
+@keyframes lensDeckEyeLid {
   0%,
   100% {
-    transform: translateX(0) scale(1);
+    transform: scaleY(0.86);
   }
   50% {
-    transform: translateX(7px) scale(1.04);
+    transform: scaleY(1.03);
   }
 }
-@keyframes lensSettle2 {
+@keyframes lensDeckEyePupil {
   0%,
   100% {
-    transform: translateX(0) scale(1);
+    transform: scale(1);
   }
   50% {
-    transform: translateX(-7px) scale(1.04);
-  }
-}
-@keyframes lensSettle3 {
-  0%,
-  100% {
-    transform: translateX(0) scale(1);
-  }
-  50% {
-    transform: translateX(6px) scale(1.04);
+    transform: scale(1.12);
   }
 }
 

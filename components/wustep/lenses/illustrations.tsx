@@ -1760,99 +1760,39 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Center "Lenses" card: three lenses seen edge-on, stacked.
+/** Center "Lenses" card: one calm eye.
  *
- *   Side view of three discs of optical glass — the kind you'd pull
- *   from a kit and place in front of the eye, one at a time. Each
- *   ellipse is a different lens (amber, teal, rose) drawn slim so
- *   they read as *the edges* of physical lenses rather than as
- *   filled circles. A single thin sight-line passes through their
- *   centers — this is where the metaphor lives: line up three
- *   lenses on the same axis, look through, and what they reveal
- *   together is more than any one shows alone.
+ *   The whole deck starts from a simple act: choosing how to look.
+ *   The eye keeps the index card direct and iconic, with the accent
+ *   reserved for the pupil so the viewer's gaze lands in the center.
  *
- *   Three colors preserve continuity with the deck palette, while the
- *   composition stays diagrammatic: horizontal strokes + a vertical axis.
- *
- *   On hover the three lenses drift left/right by a few pixels,
- *   like an instrument settling into focus.
+ *   On hover the eyelid opens a touch wider and the pupil gently
+ *   focuses. The motion stays restrained because the center card is
+ *   always visible and should feel like an instrument, not a mascot.
  */
 function ArtLensesDeck({
   accent,
-  bg
+  fg
 }: {
   fg: string
   accent: string
   bg: string
 }) {
-  const LENS_AMBER = '#F2C04A'
-  const LENS_TEAL = '#5CB8C8'
-  const LENS_ROSE = '#E55A8E'
-
-  const lenses = [
-    { cy: 28, fill: LENS_AMBER, target: '1' },
-    { cy: 50, fill: LENS_TEAL, target: '2' },
-    { cy: 72, fill: LENS_ROSE, target: '3' }
-  ] as const
-
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='lenses-deck'>
-      {/* The optical axis — a single hairline that all three lenses
-          align to. Reads as "you look down this line." */}
-      <line
-        x1='50'
-        y1='14'
-        x2='50'
-        y2='86'
-        stroke='currentColor'
-        strokeWidth='0.4'
-        opacity='0.22'
+      <path
+        data-anim-target='lid'
+        d='M 14 50 C 24 31 76 31 86 50 C 76 69 24 69 14 50 Z'
+        fill='none'
+        stroke={fg}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
-
-      {/* Each lens is rendered as a thin ellipse (the edge profile of
-          a glass disc) plus two short lines for the meridians, so it
-          reads as a 3D lens rather than a filled oval. */}
-      {lenses.map((l) => (
-        <g
-          key={`lens-${l.target}`}
-          style={{ transformOrigin: `50px ${l.cy}px` }}
-          data-anim-target={l.target}
-        >
-          <ellipse
-            cx='50'
-            cy={l.cy}
-            rx='28'
-            ry='6'
-            fill={l.fill}
-            opacity='0.85'
-          />
-          <ellipse
-            cx='50'
-            cy={l.cy}
-            rx='28'
-            ry='6'
-            fill='none'
-            stroke={l.fill}
-            strokeWidth='0.8'
-          />
-          {/* A tiny inner highlight on the upper edge — pure white at
-              low alpha so it reads as polished glass, not paint. */}
-          <ellipse
-            cx='42'
-            cy={l.cy - 2}
-            rx='6'
-            ry='1.2'
-            fill='#FFFFFF'
-            opacity='0.32'
-          />
-        </g>
-      ))}
-
-      {/* Suppress 'unused' warnings from the bg/accent props — we
-          deliberately don't render them here, but the prop contract
-          is shared with the regular cards. */}
-      <rect x='0' y='0' width='0' height='0' fill={bg} />
-      <rect x='0' y='0' width='0' height='0' fill={accent} />
+      <g data-anim-target='pupil' style={{ transformOrigin: '50px 50px' }}>
+        <circle cx='50' cy='50' r='12' fill={fg} opacity='0.14' />
+        <circle cx='50' cy='50' r='5' fill={accent} />
+      </g>
     </svg>
   )
 }

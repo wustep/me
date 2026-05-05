@@ -357,3 +357,310 @@ export const EXPERTISE_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
     )
   }
 ]
+
+export const LENSES_DECK_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
+  {
+    id: 'lenses-deck-stack',
+    lensId: 'lenses-deck',
+    label: 'Lens Stack',
+    notes: 'Three glass discs slide into one shared optical axis.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-lenses-deck-stack'
+      >
+        <line
+          x1='50'
+          y1='14'
+          x2='50'
+          y2='86'
+          stroke={fg}
+          strokeWidth='0.8'
+          opacity='0.28'
+        />
+        {[
+          { cy: 28, target: 'disc-1', opacity: 0.72 },
+          { cy: 50, target: 'disc-2', opacity: 0.9 },
+          { cy: 72, target: 'disc-3', opacity: 0.72 }
+        ].map((disc) => (
+          <g
+            key={disc.target}
+            data-anim-target={disc.target}
+            style={{ transformOrigin: `50px ${disc.cy}px` }}
+          >
+            <ellipse
+              cx='50'
+              cy={disc.cy}
+              rx='29'
+              ry='7'
+              fill={disc.target === 'disc-2' ? accent : fg}
+              opacity={disc.opacity}
+            />
+            <ellipse
+              cx='50'
+              cy={disc.cy}
+              rx='29'
+              ry='7'
+              fill='none'
+              stroke={fg}
+              strokeWidth='1'
+              opacity='0.54'
+            />
+            <ellipse
+              cx='41'
+              cy={disc.cy - 2}
+              rx='6'
+              ry='1.1'
+              fill={fg}
+              opacity='0.22'
+            />
+          </g>
+        ))}
+      </svg>
+    )
+  },
+  {
+    id: 'lenses-deck-aperture',
+    lensId: 'lenses-deck',
+    label: 'Aperture',
+    notes: 'An aperture tightens around the view until it snaps into focus.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-lenses-deck-aperture'
+      >
+        <circle
+          cx='50'
+          cy='50'
+          r='31'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.2'
+          opacity='0.34'
+        />
+        <g data-anim-target='iris' style={{ transformOrigin: '50px 50px' }}>
+          {Array.from({ length: 6 }, (_, index) => (
+            <path
+              key={index}
+              d='M 50 22 L 62 48 L 50 56 L 38 48 Z'
+              fill={fg}
+              opacity='0.22'
+              transform={`rotate(${index * 60} 50 50)`}
+            />
+          ))}
+        </g>
+        <g data-anim-target='focus' style={{ transformOrigin: '50px 50px' }}>
+          <circle cx='50' cy='50' r='9' fill={accent} opacity='0.2' />
+          <circle cx='50' cy='50' r='4' fill={accent} />
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'lenses-deck-contact-sheet',
+    lensId: 'lenses-deck',
+    label: 'Contact Sheet',
+    notes: 'A sheet of possible lenses highlights one chosen frame.',
+    render: ({ fg, accent }) => {
+      const cells = [
+        [22, 28],
+        [40, 28],
+        [58, 28],
+        [76, 28],
+        [22, 50],
+        [40, 50],
+        [58, 50],
+        [76, 50],
+        [22, 72],
+        [40, 72],
+        [58, 72],
+        [76, 72]
+      ] as const
+
+      return (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-lenses-deck-contact-sheet'
+        >
+          {cells.map(([x, y], index) => (
+            <rect
+              key={`${x}-${y}`}
+              x={x - 6}
+              y={y - 8}
+              width='12'
+              height='16'
+              rx='2'
+              fill={fg}
+              opacity={index === 6 ? 0.2 : 0.12}
+            />
+          ))}
+          <g data-anim-target='active' style={{ transformOrigin: '58px 50px' }}>
+            <rect
+              x='50'
+              y='40'
+              width='16'
+              height='20'
+              rx='3'
+              fill='none'
+              stroke={accent}
+              strokeWidth='2'
+            />
+            <circle cx='58' cy='50' r='3.2' fill={accent} />
+          </g>
+          <line
+            x1='16'
+            y1='86'
+            x2='84'
+            y2='86'
+            stroke={fg}
+            strokeWidth='1'
+            strokeLinecap='round'
+            opacity='0.28'
+          />
+        </svg>
+      )
+    }
+  },
+  {
+    id: 'lenses-deck-prism',
+    lensId: 'lenses-deck',
+    label: 'Prism Split',
+    notes: 'One incoming view refracts into several useful ways of seeing.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-lenses-deck-prism'
+      >
+        <line
+          x1='12'
+          y1='50'
+          x2='39'
+          y2='50'
+          stroke={fg}
+          strokeWidth='2.2'
+          strokeLinecap='round'
+          opacity='0.58'
+        />
+        <path d='M 42 24 L 68 50 L 42 76 Z' fill={fg} opacity='0.14' />
+        <path
+          d='M 42 24 L 68 50 L 42 76 Z'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.4'
+          strokeLinejoin='round'
+          opacity='0.52'
+        />
+        <g data-anim-target='split'>
+          <line
+            x1='68'
+            y1='50'
+            x2='88'
+            y2='32'
+            stroke={accent}
+            strokeWidth='2'
+            strokeLinecap='round'
+          />
+          <line
+            x1='68'
+            y1='50'
+            x2='91'
+            y2='50'
+            stroke={fg}
+            strokeWidth='1.7'
+            strokeLinecap='round'
+            opacity='0.78'
+          />
+          <line
+            x1='68'
+            y1='50'
+            x2='88'
+            y2='68'
+            stroke={accent}
+            strokeWidth='2'
+            strokeLinecap='round'
+            opacity='0.72'
+          />
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'lenses-deck-overlap',
+    lensId: 'lenses-deck',
+    label: 'Overlap',
+    notes: 'Several lenses overlap to reveal the shared center.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-lenses-deck-overlap'
+      >
+        <g fill='none' stroke={fg} strokeWidth='2' opacity='0.58'>
+          <circle data-anim-target='left' cx='38' cy='50' r='20' />
+          <circle data-anim-target='right' cx='62' cy='50' r='20' />
+          <circle data-anim-target='top' cx='50' cy='38' r='20' />
+        </g>
+        <g data-anim-target='center' style={{ transformOrigin: '50px 50px' }}>
+          <circle cx='50' cy='50' r='8' fill={accent} opacity='0.24' />
+          <circle cx='50' cy='50' r='3.6' fill={accent} />
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'lenses-deck-viewfinder',
+    lensId: 'lenses-deck',
+    label: 'Viewfinder',
+    notes: 'A focus frame locks onto one point of view.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-lenses-deck-viewfinder'
+      >
+        <g
+          data-anim-target='frame'
+          stroke={fg}
+          strokeWidth='2'
+          strokeLinecap='round'
+          opacity='0.72'
+        >
+          <path d='M 24 40 V 24 H 40' fill='none' />
+          <path d='M 60 24 H 76 V 40' fill='none' />
+          <path d='M 76 60 V 76 H 60' fill='none' />
+          <path d='M 40 76 H 24 V 60' fill='none' />
+        </g>
+        <g data-anim-target='focus' style={{ transformOrigin: '50px 50px' }}>
+          <line
+            x1='34'
+            y1='50'
+            x2='66'
+            y2='50'
+            stroke={accent}
+            strokeWidth='1.6'
+            strokeLinecap='round'
+          />
+          <line
+            x1='50'
+            y1='34'
+            x2='50'
+            y2='66'
+            stroke={accent}
+            strokeWidth='1.6'
+            strokeLinecap='round'
+          />
+          <circle cx='50' cy='50' r='4' fill={accent} />
+        </g>
+      </svg>
+    )
+  }
+]
+
+export const LAB_ILLUSTRATION_CANDIDATES = [
+  ...EXPERTISE_ILLUSTRATION_CANDIDATES,
+  ...LENSES_DECK_ILLUSTRATION_CANDIDATES
+]

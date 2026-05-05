@@ -5,6 +5,7 @@ import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
+import { SpotItCover } from '@/components/wustep/SpotItCover'
 
 export type PlaygroundEntry = {
   title: string
@@ -103,7 +104,8 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2025',
         source: 'https://github.com/wustep/spot-it',
         gradient: 'from-amber-400 to-pink-500',
-        image: '/playground/covers/spot-it.png'
+        image: '/playground/covers/spot-it.png',
+        CoverComponent: SpotItCover
       },
       {
         title: 'Bomberman',

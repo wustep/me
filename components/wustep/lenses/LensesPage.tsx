@@ -382,6 +382,14 @@ export function LensesPage({
             previewLensId ? () => undefined : () => setCenterOpen(true)
           }
           onOpenLens={previewOverride ? () => undefined : openLens}
+          centerPreviewOverride={
+            previewLensId === 'lenses-deck' && previewOverride
+              ? {
+                  palette: previewOverride.palette,
+                  renderIllustration: previewOverride.renderIllustration
+                }
+              : undefined
+          }
         />
       </div>
 

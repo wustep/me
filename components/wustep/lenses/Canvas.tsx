@@ -3,7 +3,7 @@ import * as React from 'react'
 import { CenterCard, LensCard } from './cards'
 import styles from './LensesPage.module.css'
 import { LENSES } from './registry'
-import { STAGE, type Stage } from './types'
+import { type LensPreviewOverride, STAGE, type Stage } from './types'
 
 /* ─────────────────────────────────────────────────────────
  * Canvas — host for the cards grid + background field.
@@ -29,6 +29,10 @@ type CanvasProps = {
   activeLensId: string | null
   onOpenCenter: () => void
   onOpenLens: (id: string) => void
+  centerPreviewOverride?: Pick<
+    LensPreviewOverride,
+    'palette' | 'renderIllustration'
+  >
 }
 
 export function Canvas({
@@ -36,7 +40,8 @@ export function Canvas({
   prefersReducedMotion,
   activeLensId,
   onOpenCenter,
-  onOpenLens
+  onOpenLens,
+  centerPreviewOverride
 }: CanvasProps) {
   return (
     <div
@@ -56,7 +61,11 @@ export function Canvas({
           />
         ))}
 
-        <CenterCard stage={stage} onOpen={onOpenCenter} />
+        <CenterCard
+          stage={stage}
+          onOpen={onOpenCenter}
+          previewOverride={centerPreviewOverride}
+        />
       </div>
     </div>
   )

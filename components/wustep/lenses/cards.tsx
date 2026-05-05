@@ -2,7 +2,14 @@ import * as React from 'react'
 
 import { Illustration } from './illustrations'
 import styles from './LensesPage.module.css'
-import { GRID, type Lens, STAGE, type Stage, TIMING } from './types'
+import {
+  GRID,
+  type Lens,
+  type LensPreviewOverride,
+  STAGE,
+  type Stage,
+  TIMING
+} from './types'
 
 /* ─────────────────────────────────────────────────────────
  * Cards — placed by row/col in the .cards CSS grid.
@@ -166,6 +173,7 @@ export function LensCard({
 type CenterCardProps = {
   stage: Stage
   onOpen: () => void
+  previewOverride?: Pick<LensPreviewOverride, 'palette' | 'renderIllustration'>
 }
 
 /**
@@ -178,7 +186,11 @@ type CenterCardProps = {
  *   right. The tagline is hidden in 2×2 mode via CSS so the
  *   markup is the same in both states.
  */
-export function CenterCard({ stage, onOpen }: CenterCardProps) {
+export function CenterCard({
+  stage,
+  onOpen,
+  previewOverride
+}: CenterCardProps) {
   const visible = stage >= STAGE.center
 
   return (
@@ -190,12 +202,16 @@ export function CenterCard({ stage, onOpen }: CenterCardProps) {
       data-lens-id='__center__'
     >
       <span className={styles.cardArt} aria-hidden='true'>
-        <Illustration
-          id='lenses-deck'
-          fg='#EDE4D1'
-          bg='#1A1F2A'
-          accent='#C99E5B'
-        />
+        {previewOverride ? (
+          previewOverride.renderIllustration(previewOverride.palette)
+        ) : (
+          <Illustration
+            id='lenses-deck'
+            fg='#F6EAD8'
+            bg='#111827'
+            accent='#D98C45'
+          />
+        )}
       </span>
       <span className={styles.centerCardTextWrap}>
         <span className={styles.centerCardTitle}>Lenses</span>

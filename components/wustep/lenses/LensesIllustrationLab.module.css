@@ -777,7 +777,7 @@
   max-width: 92%;
 }
 
-/* Lab-only Expertise candidates. These selectors intentionally live here
+/* Lab-only illustration candidates. These selectors intentionally live here
    instead of the production page stylesheet so experiments remain isolated.
 
    Animation storyboard:
@@ -788,7 +788,7 @@
 
    The goal is comparison, not entertainment: keep movement tiny, favor
    opacity over travel, and leave enough stillness to judge silhouettes. */
-:global(svg[data-anim^='candidate-expertise-'] [data-anim-target]) {
+:global(svg[data-anim^='candidate-'] [data-anim-target]) {
   --lab-candidate-cycle: 3.6s;
   --lab-candidate-shift: 2px;
   --lab-candidate-scale: 1.06;
@@ -901,6 +901,99 @@
 ) {
   animation: labCandidateBeltCinch var(--lab-candidate-cycle) ease-in-out
     infinite;
+}
+
+/* ── Lenses deck ───────────────────────────────────────────────────── */
+:global(
+  svg[data-anim='candidate-lenses-deck-stack'] [data-anim-target='disc-1']
+) {
+  animation: labCandidateLensStackTop var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-stack'] [data-anim-target='disc-2']
+) {
+  animation: labCandidateLensStackMiddle var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-stack'] [data-anim-target='disc-3']
+) {
+  animation: labCandidateLensStackBottom var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-aperture'] [data-anim-target='iris']
+) {
+  animation: labCandidateLensIris var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-aperture'] [data-anim-target='focus']
+) {
+  animation: labCandidateLensFocus var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-contact-sheet']
+    [data-anim-target='active']
+) {
+  animation: labCandidateLensActiveFrame var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-prism'] [data-anim-target='split']
+) {
+  animation: labCandidateLensPrismSplit var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-overlap'] [data-anim-target='left']
+) {
+  animation: labCandidateLensOverlapLeft var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-overlap'] [data-anim-target='right']
+) {
+  animation: labCandidateLensOverlapRight var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-overlap'] [data-anim-target='top']
+) {
+  animation: labCandidateLensOverlapTop var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-overlap'] [data-anim-target='center']
+) {
+  animation: labCandidateLensOverlapCenter var(--lab-candidate-cycle)
+    ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-viewfinder'] [data-anim-target='frame']
+) {
+  animation: labCandidateLensViewfinderFrame var(--lab-candidate-cycle)
+    ease-in-out infinite;
+}
+
+:global(
+  svg[data-anim='candidate-lenses-deck-viewfinder'] [data-anim-target='focus']
+) {
+  animation: labCandidateLensViewfinderFocus var(--lab-candidate-cycle)
+    ease-in-out infinite;
 }
 
 /* Bow string — rests at full draw, snaps forward toward the limb, then
@@ -1087,6 +1180,200 @@
   62% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes labCandidateLensStackTop {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateX(-5px) scale(1);
+  }
+
+  48%,
+  62% {
+    transform: translateX(0) scale(1.04);
+  }
+}
+
+@keyframes labCandidateLensStackMiddle {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: scale(1);
+  }
+
+  48%,
+  62% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes labCandidateLensStackBottom {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateX(5px) scale(1);
+  }
+
+  48%,
+  62% {
+    transform: translateX(0) scale(1.04);
+  }
+}
+
+@keyframes labCandidateLensIris {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  48%,
+  62% {
+    transform: rotate(14deg) scale(0.92);
+  }
+}
+
+@keyframes labCandidateLensFocus {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+
+  48%,
+  62% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
+}
+
+@keyframes labCandidateLensActiveFrame {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translate(-18px, 0) scale(0.96);
+    opacity: 0.72;
+  }
+
+  48%,
+  62% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes labCandidateLensPrismSplit {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.72;
+  }
+
+  48%,
+  62% {
+    transform: translateX(3px);
+    opacity: 1;
+  }
+}
+
+@keyframes labCandidateLensOverlapLeft {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateX(-3px);
+  }
+
+  48%,
+  62% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes labCandidateLensOverlapRight {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateX(3px);
+  }
+
+  48%,
+  62% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes labCandidateLensOverlapTop {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: translateY(-3px);
+  }
+
+  48%,
+  62% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes labCandidateLensOverlapCenter {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.86;
+  }
+
+  48%,
+  62% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes labCandidateLensViewfinderFrame {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: scale(1.06);
+    opacity: 0.62;
+  }
+
+  48%,
+  62% {
+    transform: scale(1);
+    opacity: 0.82;
+  }
+}
+
+@keyframes labCandidateLensViewfinderFocus {
+  0%,
+  32%,
+  82%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.72;
+  }
+
+  48%,
+  62% {
+    transform: scale(1.04);
+    opacity: 1;
   }
 }
 

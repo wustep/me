@@ -6,7 +6,7 @@ import { usePlaygroundTheme } from '@/components/wustep/PlaygroundLayout'
 
 import type { IllustrationId, Lens } from './types'
 import { Illustration } from './illustrations'
-import { EXPERTISE_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
+import { LAB_ILLUSTRATION_CANDIDATES } from './LensesIllustrationCandidates'
 import styles from './LensesIllustrationLab.module.css'
 import { LensesPage } from './LensesPage'
 import cardStyles from './LensesPage.module.css'
@@ -93,8 +93,32 @@ const MATRIX_COLOR_CANDIDATES: Array<{ label: string; palette: Palette }> = [
   }
 ]
 
-const UNIQUE_ILLUSTRATIONS = Array.from(
-  new Set(LENSES.map((lens) => lens.illustration))
+const LENSES_DECK_ILLUSTRATION_ID = 'lenses-deck' satisfies IllustrationId
+
+const LENSES_DECK_LENS: Lens = {
+  id: 'lenses-deck',
+  category: 'Index',
+  title: 'Lenses',
+  tagline: 'A way of looking. Pick one. Try it on.',
+  x: 50,
+  y: 50,
+  bg: '#111827',
+  fg: '#F6EAD8',
+  accent: '#D98C45',
+  illustration: LENSES_DECK_ILLUSTRATION_ID,
+  body: (
+    <p>
+      The center card is the index for the whole deck: a compact visual system
+      for choosing how to look at a question.
+    </p>
+  )
+}
+
+const UNIQUE_ILLUSTRATIONS: IllustrationId[] = Array.from(
+  new Set<IllustrationId>([
+    ...LENSES.map((lens) => lens.illustration),
+    LENSES_DECK_ILLUSTRATION_ID
+  ])
 ).toSorted((a, b) => a.localeCompare(b))
 
 const FIRST_LENS_FOR_ILLUSTRATION = new Map<IllustrationId, Lens>()
@@ -103,6 +127,7 @@ for (const lens of LENSES) {
     FIRST_LENS_FOR_ILLUSTRATION.set(lens.illustration, lens)
   }
 }
+FIRST_LENS_FOR_ILLUSTRATION.set(LENSES_DECK_ILLUSTRATION_ID, LENSES_DECK_LENS)
 
 function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
   const words = title.split(/\s+/)
@@ -258,7 +283,7 @@ const PRODUCTION_LAB_ILLUSTRATIONS: LabIllustration[] =
   })
 
 const CANDIDATE_LAB_ILLUSTRATIONS: LabIllustration[] =
-  EXPERTISE_ILLUSTRATION_CANDIDATES.map((candidate) => {
+  LAB_ILLUSTRATION_CANDIDATES.map((candidate) => {
     const lens = FIRST_LENS_FOR_ILLUSTRATION.get(candidate.lensId) ?? LENSES[0]!
     return {
       key: `${candidate.lensId}:${candidate.id}`,
