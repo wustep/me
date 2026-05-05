@@ -3390,8 +3390,9 @@
    variant collapses correctly even when the viewport is wide. */
 @container deck (max-width: 1199px) {
   .cards {
-    padding: 80px 24px 48px;
-    gap: 22px;
+    padding: var(--design-deck-pad-top, 80px) var(--design-deck-pad-x, 24px)
+      48px;
+    gap: var(--design-card-gap, 22px);
   }
 
   .card {
@@ -3418,8 +3419,9 @@
 
 @container deck (max-width: 1019px) {
   .cards {
-    padding: 76px 18px 44px;
-    gap: 18px;
+    padding: var(--design-deck-pad-top, 76px) var(--design-deck-pad-x, 18px)
+      44px;
+    gap: var(--design-card-gap, 18px);
   }
 
   .cardTitle {
@@ -3442,8 +3444,9 @@
        sized, with our fixed pixel gap. The grid grows tall to
        hold them all and the page scrolls. */
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    padding: 80px 28px 48px;
-    gap: 22px;
+    padding: var(--design-deck-pad-top, 80px) var(--design-deck-pad-x, 28px)
+      48px;
+    gap: var(--design-card-gap, 22px);
   }
 
   /* Restore card chrome to the regular size at this stage — the
@@ -3530,8 +3533,9 @@
    spacing. Container-scoped because this is canvas chrome. */
 @container deck (max-width: 599px) {
   .cards {
-    gap: 16px;
-    padding: 72px 16px max(28px, env(safe-area-inset-bottom));
+    gap: var(--design-card-gap, 16px);
+    padding: var(--design-deck-pad-top, 72px) var(--design-deck-pad-x, 16px)
+      max(28px, env(safe-area-inset-bottom));
   }
 
   /* Tighten the hero on phones — the illustration shrinks and the
