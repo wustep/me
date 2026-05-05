@@ -478,9 +478,9 @@ const LENSES_RAW: Lens[] = [
     tagline: 'Show me what gets rewarded.',
     x: 43.75,
     y: 88,
-    bg: '#CC9A2E',
-    fg: '#1B2754',
-    accent: '#1B2754',
+    bg: '#E8C36B',
+    fg: '#2B1A14',
+    accent: '#C8362B',
     illustration: 'incentives',
     related: ['utility', 'game-theory', 'probabilistic'],
     body: (

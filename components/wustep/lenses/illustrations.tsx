@@ -702,21 +702,11 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
 
 /** Incentives — the arrow slides toward the target.
  *
- *  The arrow uses a distinct hot-crimson rather than the lens's
- *  accent so it pops off the bullseye instead of melting into it.
- *  The bullseye rings + center are the lens's `fg`, so the arrow is
- *  the one foreign object in the composition — visually answering
- *  "show me the incentive."
+ *  The bullseye rings + center are the lens's `fg`, so the arrow —
+ *  rendered in `accent` — is the one foreign object in the
+ *  composition, visually answering "show me the incentive."
  */
-function ArtIncentives({ fg }: { fg: string; accent: string }) {
-  // A vivid arrow color picked to stand out against both the gold
-  // card background and the navy bullseye. Hard-coded because the
-  // lens's `accent` would render the arrow invisible on the target.
-  // Vivid teal: distinct in hue from both the warm gold card and the
-  // cool navy bullseye, with enough saturation to pop off either
-  // without resorting to generic red or hot pink.
-  const ARROW = '#19C8B0'
-
+function ArtIncentives({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='incentives'>
       <circle cx='58' cy='50' r='30' fill={fg} opacity='0.16' />
@@ -729,11 +719,11 @@ function ArtIncentives({ fg }: { fg: string; accent: string }) {
           y1='50'
           x2='46'
           y2='50'
-          stroke={ARROW}
+          stroke={accent}
           strokeWidth='3.4'
           strokeLinecap='round'
         />
-        <polygon points='42,43 54,50 42,57' fill={ARROW} />
+        <polygon points='42,43 54,50 42,57' fill={accent} />
       </g>
     </svg>
   )
