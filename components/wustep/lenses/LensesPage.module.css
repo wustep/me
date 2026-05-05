@@ -1383,18 +1383,18 @@
    buttons themselves are flow elements within. */
 .panelControls {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 20px;
+  right: 20px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .panelNavBtn,
 .panelClose {
   position: relative;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1408,12 +1408,18 @@
     transform 150ms var(--ease-spring-snap);
 }
 
-/* 44px hit area via pseudo-element so visual size stays 32px. */
+.panelNavBtn :global(svg),
+.panelClose :global(svg) {
+  width: 16px;
+  height: 16px;
+}
+
+/* 48px hit area via pseudo-element so controls stay easy to tap. */
 .panelNavBtn::before,
 .panelClose::before {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -4px;
   border-radius: inherit;
 }
 

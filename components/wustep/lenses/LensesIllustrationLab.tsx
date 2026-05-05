@@ -243,6 +243,28 @@ function contrastRatio(a: string, b: string) {
   return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
 }
 
+const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i
+const COLOR_INPUT_LIGHT_BG = '#F5EFE0'
+const COLOR_INPUT_DARK_BG = '#1B2530'
+const MIN_COLOR_INPUT_CONTRAST = 4.5
+
+function colorInputTone(value: string): 'light' | 'dark' | undefined {
+  if (!HEX_COLOR_PATTERN.test(value)) return undefined
+
+  const lightContrast = contrastRatio(value, COLOR_INPUT_LIGHT_BG)
+  const darkContrast = contrastRatio(value, COLOR_INPUT_DARK_BG)
+
+  if (
+    lightContrast >= MIN_COLOR_INPUT_CONTRAST &&
+    lightContrast >= darkContrast
+  ) {
+    return 'light'
+  }
+
+  if (darkContrast >= MIN_COLOR_INPUT_CONTRAST) return 'dark'
+  return lightContrast > darkContrast ? 'light' : 'dark'
+}
+
 function paletteFromLens(lens: Lens): Palette {
   return {
     bg: lens.bg,
@@ -311,9 +333,18 @@ const ILLUSTRATIONS_WITH_CANDIDATES = new Set(
   CANDIDATE_LAB_ILLUSTRATIONS.map((entry) => entry.illustrationId)
 )
 
-const FLOATING_CONTROLS_TOP_OFFSET = 72
+const FLOATING_CONTROLS_TOP_OFFSET = 24
 const FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH = 980
+const LAB_CONTROLS_COMPACT_WIDTH = 760
 const RECENT_RANDOM_SELECTION_LIMIT = 10
+
+function contentBoxWidth(element: HTMLElement) {
+  const styles = window.getComputedStyle(element)
+  const padding =
+    Number.parseFloat(styles.paddingLeft) +
+    Number.parseFloat(styles.paddingRight)
+  return element.getBoundingClientRect().width - padding
+}
 
 export function LensesIllustrationLab() {
   const [labMode, setLabMode] = React.useState<LabMode>('production')
@@ -321,10 +352,12 @@ export function LensesIllustrationLab() {
     PRODUCTION_LAB_ILLUSTRATIONS[0]!.key
   )
   const playgroundTheme = usePlaygroundTheme()
+  const labRef = React.useRef<HTMLDivElement>(null)
   const controlsAnchorRef = React.useRef<HTMLDivElement>(null)
   const [playback, setPlayback] = React.useState<Playback>('playing')
   const [controlsFloating, setControlsFloating] = React.useState(false)
-  const [controlsCanCollapse, setControlsCanCollapse] = React.useState(true)
+  const [controlsStickyEnabled, setControlsStickyEnabled] =
+    React.useState(false)
   const [controlsCollapsed, setControlsCollapsed] = React.useState(false)
   const [palette, setPalette] = React.useState<Palette>(() =>
     paletteFromLens(LENSES[0]!)
@@ -452,22 +485,23 @@ export function LensesIllustrationLab() {
     let raf = 0
     const update = () => {
       raf = 0
+      const lab = labRef.current
       const controlsAnchor = controlsAnchorRef.current
-      if (!controlsAnchor) return
+      if (!lab || !controlsAnchor) return
 
       // Don't pin the controls on small / no-hover screens — the
       // floating panel covers content that's already cramped, and
       // there's no hover affordance to dismiss it.
       const viewportTooNarrow =
-        window.innerWidth < FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH
+        window.innerWidth <= FLOATING_CONTROLS_MIN_VIEWPORT_WIDTH
       const noHover = window.matchMedia(
         '(hover: none), (pointer: coarse)'
       ).matches
-      const anchorTooNarrow = controlsAnchor.getBoundingClientRect().width < 760
-      const canCollapse = !viewportTooNarrow && !noHover && !anchorTooNarrow
+      const labTooNarrow = contentBoxWidth(lab) <= LAB_CONTROLS_COMPACT_WIDTH
+      const stickyEnabled = !viewportTooNarrow && !noHover && !labTooNarrow
 
-      setControlsCanCollapse(canCollapse)
-      if (!canCollapse) {
+      setControlsStickyEnabled(stickyEnabled)
+      if (!stickyEnabled) {
         setControlsFloating(false)
         setControlsCollapsed(false)
         return
@@ -484,7 +518,9 @@ export function LensesIllustrationLab() {
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     const resizeObserver = new ResizeObserver(onScroll)
+    const observedLab = labRef.current
     const observedAnchor = controlsAnchorRef.current
+    if (observedLab) resizeObserver.observe(observedLab)
     if (observedAnchor) resizeObserver.observe(observedAnchor)
     return () => {
       window.removeEventListener('scroll', onScroll)
@@ -520,7 +556,8 @@ export function LensesIllustrationLab() {
     onUndo: undo,
     canUndo: undoStack.length > 0,
     resetTargetLabel: selected.ownerLens.title,
-    canCollapse: controlsCanCollapse,
+    showHeader: controlsStickyEnabled,
+    canCollapse: controlsStickyEnabled,
     collapsed: controlsCollapsed,
     onCollapsedChange: setControlsCollapsed
   } satisfies LabControlsProps
@@ -537,6 +574,7 @@ export function LensesIllustrationLab() {
 
   return (
     <div
+      ref={labRef}
       className={styles.lab}
       data-theme={canvasTheme}
       data-animations={playback}
@@ -798,6 +836,7 @@ type LabControlsProps = {
   onUndo: () => void
   canUndo: boolean
   resetTargetLabel: string
+  showHeader: boolean
   canCollapse: boolean
   collapsed: boolean
   onCollapsedChange: React.Dispatch<React.SetStateAction<boolean>>
@@ -821,6 +860,7 @@ function LabControls({
   onUndo,
   canUndo,
   resetTargetLabel,
+  showHeader,
   canCollapse,
   collapsed,
   onCollapsedChange
@@ -833,34 +873,36 @@ function LabControls({
       data-collapsed={isCollapsed}
       aria-label='Palette controls'
     >
-      <div className={styles.toolbarHeader}>
-        <div className={styles.toolbarHeaderText}>
-          <p className={styles.toolbarEyebrow}>Design panel</p>
-          <p
-            className={`${styles.toolbarSummary} ${
-              isCollapsed ? '' : styles.toolbarSummaryHidden
-            }`}
-            aria-hidden={!isCollapsed}
-          >
-            {labMode === 'candidate' ? 'Candidates' : 'Production'} ·{' '}
-            <span style={{ color: palette.bg }}>{palette.bg}</span>
-            {' / '}
-            <span style={{ color: palette.fg }}>{palette.fg}</span>
-            {' / '}
-            <span style={{ color: palette.accent }}>{palette.accent}</span>
-          </p>
+      {showHeader ? (
+        <div className={styles.toolbarHeader}>
+          <div className={styles.toolbarHeaderText}>
+            <p className={styles.toolbarEyebrow}>Design panel</p>
+            <p
+              className={`${styles.toolbarSummary} ${
+                isCollapsed ? '' : styles.toolbarSummaryHidden
+              }`}
+              aria-hidden={!isCollapsed}
+            >
+              {labMode === 'candidate' ? 'Candidates' : 'Production'} ·{' '}
+              <span style={{ color: palette.bg }}>{palette.bg}</span>
+              {' / '}
+              <span style={{ color: palette.fg }}>{palette.fg}</span>
+              {' / '}
+              <span style={{ color: palette.accent }}>{palette.accent}</span>
+            </p>
+          </div>
+          {canCollapse ? (
+            <button
+              type='button'
+              className={`${styles.buttonSecondary} ${styles.toolbarToggle}`}
+              onClick={() => onCollapsedChange((current) => !current)}
+              aria-expanded={!isCollapsed}
+            >
+              {isCollapsed ? 'Expand' : 'Collapse'}
+            </button>
+          ) : null}
         </div>
-        {canCollapse ? (
-          <button
-            type='button'
-            className={`${styles.buttonSecondary} ${styles.toolbarToggle}`}
-            onClick={() => onCollapsedChange((current) => !current)}
-            aria-expanded={!isCollapsed}
-          >
-            {isCollapsed ? 'Expand' : 'Collapse'}
-          </button>
-        ) : null}
-      </div>
+      ) : null}
 
       {isCollapsed ? null : (
         <>
@@ -982,6 +1024,8 @@ function LabControls({
 }
 
 function ColorField({ label, value, onChange }: ColorFieldProps) {
+  const inputTone = colorInputTone(value)
+
   return (
     <label className={styles.field}>
       <span>{label}</span>
@@ -999,6 +1043,7 @@ function ColorField({ label, value, onChange }: ColorFieldProps) {
           maxLength={7}
           spellCheck={false}
           style={{ color: value }}
+          data-input-tone={inputTone}
           aria-label={`${label} hex`}
         />
       </span>
