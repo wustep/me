@@ -486,16 +486,32 @@
 
 /* Selected = the card whose side panel is open. Persistent state
    that sits at the same lift as :hover (so re-entering the card
-   isn't disorienting) plus a quiet accent ring as the unique
-   signal. */
+   isn't disorienting) plus a quiet neutral ring as the unique
+   signal. The ring is a single shared color (Emil rule: focus +
+   selection rings stay grey/black/white, never per-card accent)
+   and is separated from the card edge by a small transparent
+   gap — drawn as a canvas-colored shadow underneath the ring
+   shadow — so the ring reads as a halo around the card rather
+   than a border baked onto it. */
 .cardSelected {
+  /* Slightly smaller scale than :hover — the new ring + gap add
+     visual footprint, so we shrink the card itself a touch to keep
+     the overall selected silhouette in line with the hover lift
+     and avoid a "puffed up" feeling next to neighbors. */
   transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
-    scale(var(--design-hover-scale, 1.025));
+    scale(var(--design-selected-scale, 1.005));
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
     0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
-    0 0 0 var(--design-selected-ring, 2px) var(--card-accent);
+    0 0 0 var(--design-selected-ring-gap, 3px)
+      var(--design-canvas-bg-light, #ece4d0),
+    0 0 0
+      calc(
+        var(--design-selected-ring-gap, 3px) +
+          var(--design-selected-ring, 2px)
+      )
+      var(--design-selected-ring-color, #1a1a1a);
   z-index: 3;
   /* Lift on select uses the snappy hover-in timing so arrow-key
      navigation feels as immediate as hovering, instead of inheriting
@@ -508,6 +524,23 @@
 
 .cardSelected::before {
   opacity: 1;
+}
+
+/* Dark-mode: flip the ring + gap colors to match the dark canvas
+   and stay legible on dark cards. Same structure as above. */
+:global(.dark-mode) .cardSelected {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
+    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
+    0 0 0 var(--design-selected-ring-gap, 3px)
+      var(--design-canvas-bg-dark, #16161a),
+    0 0 0
+      calc(
+        var(--design-selected-ring-gap, 3px) +
+          var(--design-selected-ring, 2px)
+      )
+      var(--design-selected-ring-color-dark, #f5f1e8);
 }
 
 /* ── Alternate selection styles (design panel only) ──
@@ -630,7 +663,7 @@
      card edge. Sits a little smaller than the playground/hero
      scale because the cards are dense and the illustration is
      the primary read — the title is the label. */
-  font-size: calc(0.84rem * var(--design-title-scale, 1));
+  font-size: calc(0.78rem * var(--design-title-scale, 1));
   font-weight: var(--design-title-weight, 600);
   letter-spacing: var(--design-title-tracking, -0.006em);
   text-transform: var(--design-title-transform, none);
@@ -675,7 +708,7 @@
    override scales down alongside it instead of growing larger
    than the surrounding cards at narrow widths. */
 .card[data-lens-id='communication'] .cardTitle {
-  font-size: 0.74rem;
+  font-size: 0.69rem;
   letter-spacing: -0.012em;
 }
 
@@ -3400,11 +3433,11 @@
   }
 
   .cardTitle {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
   }
 
   .card[data-lens-id='communication'] .cardTitle {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 
   .centerCard {
@@ -3425,12 +3458,12 @@
   }
 
   .cardTitle {
-    font-size: 0.76rem;
+    font-size: 0.71rem;
     min-height: 2.2rem;
   }
 
   .card[data-lens-id='communication'] .cardTitle {
-    font-size: 0.66rem;
+    font-size: 0.61rem;
   }
 }
 
