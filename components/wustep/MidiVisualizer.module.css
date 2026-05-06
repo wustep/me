@@ -1,0 +1,806 @@
+/* MIDI Visualizer — styled in the spirit of midi.to:
+   - Bulma-ish dark navbar at the bottom for transport
+   - Clean records list on the left, like the original RecordsList
+   - Centered piano with rising note bars over the playfield
+*/
+
+.root {
+  /* Mirror midi.to's CSS variables for direct visual parity. */
+  --piano-height: clamp(110px, 14vh, 160px);
+  --transport-height: 56px;
+  --primary: #00d4b1;
+  --primary-soft: rgba(0, 212, 177, 0.16);
+  --primary-glow: rgba(0, 212, 177, 0.4);
+  --primary-dark: #018470;
+  --primary-darker: #01483e;
+  --grey-darker: #0a0c0d;
+  --grey-dark: #14171a;
+  --grey: #1f2326;
+  --grey-light: #4a4f54;
+  --grey-lighter: #b5bcc4;
+  --text: #f5f5f5;
+  --text-muted: rgba(245, 245, 245, 0.62);
+  --text-subtle: rgba(245, 245, 245, 0.38);
+  --accent-pink: #ff4fb3;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --bulma-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.35),
+    0 0px 0 1px rgba(0, 0, 0, 0.02);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  overflow: hidden;
+  background: var(--grey-darker);
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: 1fr var(--transport-height);
+  grid-template-areas:
+    'library stage'
+    'transport transport';
+  font-family:
+    'Inter', 'BlinkMacSystemFont', -apple-system, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ---------- Library (left sidebar) ---------- */
+
+.library {
+  grid-area: library;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--grey-dark);
+  min-height: 0;
+}
+
+.libraryHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.libraryTitle {
+  flex: 1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.uploadButton {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-soft);
+  border: 1px solid rgba(0, 212, 177, 0.35);
+  color: var(--primary);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 120ms ease;
+}
+
+.uploadButton svg {
+  display: block;
+}
+
+.uploadButton:hover {
+  background: rgba(0, 212, 177, 0.28);
+}
+
+.libraryList {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.libraryGroup {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding: 10px 16px 6px;
+}
+
+.trackItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 80ms ease;
+  border: none;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.trackItem:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.trackItemActive {
+  background: rgba(0, 212, 177, 0.08);
+  border-left-color: var(--primary);
+}
+
+.trackItemActive:hover {
+  background: rgba(0, 212, 177, 0.12);
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.trackName {
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.trackOwner {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+
+.trackDuration {
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.libraryFooter {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+}
+
+/* ---------- Stage (center) ---------- */
+
+.stage {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+}
+
+.stageHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--grey-dark);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.stageTitle {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.stageTitleName {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stageTitleOwner {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+/* Bulma .tag look */
+.midiPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: 4px;
+  background: var(--grey);
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.midiPill:hover {
+  background: #2a2f33;
+  color: var(--text);
+}
+
+.midiPill:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.midiPillActive {
+  background: var(--primary-soft);
+  border-color: rgba(0, 212, 177, 0.4);
+  color: var(--primary);
+}
+
+.midiPillActive:hover {
+  background: rgba(0, 212, 177, 0.22);
+  color: var(--primary);
+}
+
+.midiDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-subtle);
+}
+
+.midiDotActive {
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary-glow);
+}
+
+.midiSelect {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-family: inherit;
+  cursor: pointer;
+  max-width: 160px;
+}
+
+/* ---------- Playfield + piano ---------- */
+
+.playfieldWrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--grey-darker);
+}
+
+.playfield {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bar {
+  position: absolute;
+  bottom: 0;
+  /* While pressed: rounded at the top, flat at the bottom (still emerging
+     from the key). On release, .barReleased rounds the bottom too. */
+  border-radius: 999px 999px 0 0;
+  background: var(--primary);
+  box-shadow:
+    0 0 6px rgba(0, 212, 177, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  will-change: transform, height;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.barBlack {
+  background: var(--primary-dark);
+  box-shadow:
+    0 0 6px rgba(1, 132, 112, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.barReleased {
+  border-radius: 999px;
+  transition: border-radius 220ms ease;
+}
+
+.dropOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 14, 13, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  pointer-events: none;
+  animation: dropFade 160ms ease-out;
+}
+
+.dropOverlayCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px 44px;
+  border: 2px dashed rgba(0, 212, 177, 0.55);
+  border-radius: 14px;
+  background: rgba(0, 212, 177, 0.04);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 24px 60px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.dropIllustration {
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 4px 14px rgba(0, 212, 177, 0.4));
+  animation: dropFloat 2.2s ease-in-out infinite;
+}
+
+.dropTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.dropSub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+@keyframes dropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dropFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---------- Volume control ---------- */
+
+.volumeWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.volumePopover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 10px 10px;
+  background: #1f2326;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 12px 28px rgba(0, 0, 0, 0.5);
+  z-index: 60;
+  animation: popoverIn 120ms ease-out;
+}
+
+@keyframes popoverIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.volumeMuteButton {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: inherit;
+}
+
+.volumeMuteButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.volumeTrack {
+  position: relative;
+  width: 6px;
+  height: 110px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.volumeTrack:hover,
+.volumeTrackDragging {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.volumeFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+.volumeThumb {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 2px var(--primary),
+    0 1px 4px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, 50%);
+  pointer-events: none;
+}
+
+.volumeValue {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 18px;
+  text-align: center;
+}
+
+.error {
+  position: absolute;
+  bottom: calc(var(--piano-height) + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 79, 79, 0.15);
+  border: 1px solid rgba(255, 79, 79, 0.4);
+  color: #ffb0b0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  z-index: 20;
+}
+
+.piano {
+  position: relative;
+  flex: 0 0 auto;
+  height: var(--piano-height);
+  width: 100%;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+  border-top: 1px solid var(--border);
+  user-select: none;
+}
+
+.whiteRow {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.whiteKey {
+  flex: 1 1 0;
+  height: 100%;
+  background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
+  border-left: 1px solid rgba(0, 0, 0, 0.18);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  cursor: pointer;
+  transition: background 60ms ease;
+}
+
+.whiteKey:first-child {
+  border-left: none;
+}
+
+.whiteKeyPressed {
+  background: linear-gradient(180deg, var(--primary) 0%, #33ffe0 100%);
+  border-bottom-color: rgba(0, 0, 0, 0.4);
+  box-shadow:
+    inset 0 6px 12px rgba(0, 0, 0, 0.15),
+    0 0 18px var(--primary-glow);
+}
+
+.whiteKeyLabel {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.32);
+  pointer-events: none;
+}
+
+.blackKey {
+  position: absolute;
+  top: 0;
+  height: 62%;
+  background: linear-gradient(180deg, #2a2a2a 0%, #555 100%);
+  border: 1px solid #000;
+  border-top: none;
+  box-shadow:
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6),
+    0 2px 3px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: 2;
+  transition: background 60ms ease;
+}
+
+.blackKeyPressed {
+  background: linear-gradient(
+    180deg,
+    var(--primary-dark) 0%,
+    var(--primary-darker) 100%
+  );
+  box-shadow:
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 0 12px var(--primary-glow);
+}
+
+/* ---------- Transport (bottom navbar) ---------- */
+
+/* Bulma .navbar.is-fixed-bottom.is-dark vibe */
+.transport {
+  grid-area: transport;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 14px;
+  background: #1a1c1f;
+  border-top: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.04) inset;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+/* Time labels — give them breathing room from the buttons + scrubber */
+.transport .transportTime {
+  margin-left: 10px;
+}
+
+.transport .transportTime + .scrubber {
+  margin-left: 8px;
+}
+
+.transport .scrubber + .transportTime {
+  margin-left: 8px;
+  margin-right: 10px;
+}
+
+/* Generous space before the volume button + song name block */
+.transport .iconButton + .transportTrack,
+.transport .transportTime + .iconButton {
+  margin-left: 4px;
+}
+
+/* Plain icon-only transport buttons */
+.iconButton {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+  font-family: inherit;
+  padding: 0;
+}
+
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.iconButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 212, 177, 0.4);
+}
+
+.iconButton:disabled {
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}
+
+.iconButton:disabled:hover {
+  background: transparent;
+}
+
+.transportTime {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 38px;
+  text-align: right;
+}
+
+.transportTimeRight {
+  text-align: left;
+}
+
+/* Bulma .progress.is-link.is-small equivalent — but draggable */
+.scrubber {
+  flex: 1 1 auto;
+  position: relative;
+  height: 18px; /* generous hit area */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.scrubber:focus-visible {
+  outline: none;
+}
+
+.scrubberTrack {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 290486px;
+  overflow: hidden;
+  transition: height 120ms ease;
+}
+
+.scrubber:hover .scrubberTrack,
+.scrubberDragging .scrubberTrack,
+.scrubber:focus-visible .scrubberTrack {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.scrubberFill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 290486px;
+}
+
+.scrubberThumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 2px var(--primary),
+    0 1px 4px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.scrubber:hover .scrubberThumb,
+.scrubber:focus-visible .scrubberThumb,
+.scrubberDragging .scrubberThumb {
+  opacity: 1;
+}
+
+.scrubberDragging .scrubberThumb {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.transportTrack {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 320px;
+  flex-shrink: 0;
+  margin-left: 16px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+
+.transportTrackName {
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .root {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(120px, 28%) 1fr var(--transport-height);
+    grid-template-areas:
+      'library'
+      'stage'
+      'transport';
+  }
+  .library {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .stageHeader {
+    padding: 10px 14px;
+  }
+  .transportTrack {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    will-change: auto;
+  }
+}

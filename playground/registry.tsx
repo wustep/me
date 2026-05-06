@@ -4,6 +4,7 @@ import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
+import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 import { SpotItCover } from '@/components/wustep/SpotItCover'
 
@@ -125,6 +126,17 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Visualizations',
     items: [
+      {
+        title: 'MIDI Visualizer',
+        url: '/playground/midi-visualizer',
+        description:
+          'A Synthesia-style MIDI visualizer. Connect a MIDI device, drop in a MIDI file, or play with your keyboard.',
+        summary: 'Synthesia-inspired music visualizer',
+        date: 'Jan 2021',
+        year: '2021',
+        gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
+        CoverComponent: MidiVisualizerCover
+      },
       {
         title: 'Starry Night Sequencer',
         url: '/playground/starry-sequencer',

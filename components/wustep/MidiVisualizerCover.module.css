@@ -1,0 +1,200 @@
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 90% 60% at 50% -10%,
+      rgba(0, 212, 177, 0.18) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0d1413 0%, #080a0a 100%);
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* ---------- Bars (rising notes) ---------- */
+
+.bars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bar {
+  position: absolute;
+  bottom: 38%; /* matches piano height */
+  background: linear-gradient(
+    180deg,
+    rgba(0, 212, 177, 0.95) 0%,
+    rgba(0, 212, 177, 0.7) 100%
+  );
+  transform-origin: bottom;
+  transform: scaleY(0);
+  opacity: 0;
+  /* Rounded at top while held; animation morphs to fully rounded after release. */
+  border-radius: 999px 999px 0 0;
+  will-change: transform, opacity, border-radius;
+}
+
+.barAccent {
+  background: linear-gradient(
+    180deg,
+    rgba(1, 132, 112, 0.95) 0%,
+    rgba(1, 72, 62, 0.85) 100%
+  );
+}
+
+/* Per-bar heights — vary so the chord reads as natural */
+.bar:nth-child(1) { height: 56%; }
+.bar:nth-child(2) { height: 68%; }
+.bar:nth-child(3) { height: 60%; }
+
+@media (hover: hover) {
+  :global(.group):hover .bar,
+  .cover:hover .bar {
+    animation: rise 2.6s linear infinite;
+  }
+  :global(.group):hover .bar:nth-child(1),
+  .cover:hover .bar:nth-child(1) { animation-delay: 0s; }
+  :global(.group):hover .bar:nth-child(2),
+  .cover:hover .bar:nth-child(2) { animation-delay: 0.05s; }
+  :global(.group):hover .bar:nth-child(3),
+  .cover:hover .bar:nth-child(3) { animation-delay: 0.1s; }
+
+  /* Animate the pressed state of the chord keys in sync */
+  :global(.group):hover .whitePressed,
+  .cover:hover .whitePressed {
+    animation: whiteKeyPress 2.6s linear infinite;
+  }
+  :global(.group):hover .blackPressed,
+  .cover:hover .blackPressed {
+    animation: blackKeyPress 2.6s linear infinite;
+  }
+}
+
+/* Phase 1 (0%–35%): note is pressed — bar grows, square corners.
+   Phase 2 (35%–100%): note ended — bar travels up, morphs to pill. */
+/* Two phases at constant velocity:
+   0%–35%   = key held: bar grows in place at constant rate (scaleY 0→1)
+   35%–100% = key released: bar travels up at constant rate (translateY 0→-115%)
+   Border-radius snaps to fully rounded right at release. */
+@keyframes rise {
+  0% {
+    transform: translateY(0%) scaleY(0);
+    opacity: 0;
+    border-radius: 999px 999px 0 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  35% {
+    transform: translateY(0%) scaleY(1);
+    opacity: 1;
+    border-radius: 999px 999px 0 0;
+  }
+  36% {
+    border-radius: 999px;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-115%) scaleY(1);
+    opacity: 0;
+    border-radius: 999px;
+  }
+}
+
+/* Pressed key sync — fully pressed during phase 1, released during phase 2 */
+@keyframes whiteKeyPress {
+  0%, 35% {
+    background: linear-gradient(180deg, #00d4b1 0%, #33ffe0 100%);
+    box-shadow:
+      inset 0 8px 14px rgba(0, 0, 0, 0.18),
+      0 0 18px rgba(0, 212, 177, 0.4);
+    border-bottom-width: 1px;
+    transform: translateY(1px);
+  }
+  45%, 100% {
+    background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
+    box-shadow: none;
+    border-bottom-width: 3px;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blackKeyPress {
+  0%, 35% {
+    background: linear-gradient(180deg, #018470 0%, #01483e 100%);
+    box-shadow:
+      inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+      0 0 12px rgba(0, 212, 177, 0.45);
+    transform: translateY(1px);
+  }
+  45%, 100% {
+    background: linear-gradient(180deg, #2a2a2a 0%, #444 100%);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.55);
+    transform: translateY(0);
+  }
+}
+
+/* .whitePressed / .blackPressed are markers for which keys belong to the chord.
+   Pressed visuals are applied only during the hover animation — at rest the
+   keyboard looks idle. */
+
+/* ---------- Piano ---------- */
+
+.piano {
+  position: relative;
+  height: 38%;
+  width: 100%;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.whiteRow {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.white {
+  flex: 1 1 0;
+  background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
+  border-left: 1px solid rgba(0, 0, 0, 0.18);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+  transition: transform 60ms ease;
+}
+
+.white:first-child {
+  border-left: none;
+}
+
+.black {
+  position: absolute;
+  top: 0;
+  height: 62%;
+  background: linear-gradient(180deg, #2a2a2a 0%, #444 100%);
+  border: 1px solid #000;
+  border-top: none;
+  z-index: 2;
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.55);
+  transition: transform 60ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none !important;
+    opacity: 0.85;
+    transform: translateY(0%) scaleY(1);
+    border-radius: 0;
+  }
+  .whitePressed,
+  .blackPressed {
+    animation: none !important;
+  }
+}
