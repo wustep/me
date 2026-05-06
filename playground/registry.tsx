@@ -132,8 +132,8 @@ export const playgroundSections: PlaygroundSection[] = [
         description:
           'A Synthesia-style MIDI visualizer. Connect a MIDI device, drop in a MIDI file, or play with your keyboard.',
         summary: 'Synthesia-inspired music visualizer',
-        date: 'Jan 2021',
-        year: '2021',
+        date: 'Dec 2020',
+        year: '2020',
         gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
         CoverComponent: MidiVisualizerCover
       },
