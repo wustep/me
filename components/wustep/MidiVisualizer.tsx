@@ -21,7 +21,7 @@ import {
 } from 'react'
 
 import { parseMidiFile } from '@/lib/midi-parser'
-import { builtInTracks, type Track } from '@/lib/midi-tracks'
+import { BUILTIN_MANIFEST, type Track } from '@/lib/midi-tracks'
 
 import styles from './MidiVisualizer.module.css'
 
@@ -157,10 +157,9 @@ export function MidiVisualizer({ className }: Props) {
     'idle' | 'connecting' | 'connected' | 'unsupported' | 'denied'
   >('idle')
 
-  const [tracks, setTracks] = useState<Track[]>(builtInTracks)
-  const [selectedTrackId, setSelectedTrackId] = useState<string>(
-    builtInTracks[0]!.id
-  )
+  const [tracks, setTracks] = useState<Track[]>([])
+  const [selectedTrackId, setSelectedTrackId] = useState<string>('')
+  const [isLoadingTracks, setIsLoadingTracks] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackTime, setPlaybackTime] = useState(0)
   const [isDragOver, setIsDragOver] = useState(false)
@@ -647,6 +646,43 @@ export function MidiVisualizer({ className }: Props) {
     }
   }
 
+  // Fetch + parse all built-in MIDI files on mount.
+  useEffect(() => {
+    let cancelled = false
+    setIsLoadingTracks(true)
+    Promise.all(
+      BUILTIN_MANIFEST.map(async (meta) => {
+        const res = await fetch(meta.url)
+        if (!res.ok) throw new Error(`Failed to load ${meta.url}`)
+        const buf = await res.arrayBuffer()
+        const parsed = parseMidiFile(buf)
+        return {
+          id: meta.id,
+          name: meta.name,
+          composer: meta.composer,
+          source: 'builtin' as const,
+          parsed
+        }
+      })
+    )
+      .then((loaded) => {
+        if (cancelled) return
+        setTracks(loaded)
+        setSelectedTrackId(loaded[0]?.id ?? '')
+        setIsLoadingTracks(false)
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return
+        setErrorMessage(
+          `Could not load built-in tracks: ${(err as Error).message}`
+        )
+        setIsLoadingTracks(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   // Observe piano width to compute visible key range with a minimum key size
   useEffect(() => {
     if (!pianoRef.current) return
@@ -746,14 +782,18 @@ export function MidiVisualizer({ className }: Props) {
             </>
           )}
           <li className={styles.libraryGroup}>Featured</li>
-          {builtinTracks.map((t) => (
-            <TrackRow
-              key={t.id}
-              track={t}
-              active={t.id === selectedTrackId}
-              onSelect={selectTrack}
-            />
-          ))}
+          {isLoadingTracks ? (
+            <li className={styles.libraryEmpty}>Loading recordings…</li>
+          ) : (
+            builtinTracks.map((t) => (
+              <TrackRow
+                key={t.id}
+                track={t}
+                active={t.id === selectedTrackId}
+                onSelect={selectTrack}
+              />
+            ))
+          )}
         </ul>
       </aside>
 

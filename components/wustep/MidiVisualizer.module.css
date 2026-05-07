@@ -112,6 +112,13 @@
   flex: 1 1 auto;
 }
 
+.libraryEmpty {
+  padding: 12px 16px;
+  font-size: 0.78rem;
+  color: var(--text-subtle);
+  font-style: italic;
+}
+
 .libraryGroup {
   font-size: 0.66rem;
   font-weight: 700;
