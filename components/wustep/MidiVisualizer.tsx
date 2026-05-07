@@ -19,6 +19,7 @@ import {
   useRef,
   useState
 } from 'react'
+import * as Tone from 'tone'
 
 import { parseMidiFile } from '@/lib/midi-parser'
 import { BUILTIN_MANIFEST, type Track } from '@/lib/midi-tracks'
@@ -185,6 +186,8 @@ export function MidiVisualizer({ className }: Props) {
   const heldKeysRef = useRef<Set<string>>(new Set())
   const clickedNoteRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
+  const synthRef = useRef<Tone.PolySynth | null>(null)
+  const synthVolumeRef = useRef<Tone.Volume | null>(null)
 
   const playbackRef = useRef<{
     track: Track | null
@@ -202,9 +205,48 @@ export function MidiVisualizer({ className }: Props) {
 
   const selectedTrack = tracks.find((t) => t.id === selectedTrackId) ?? null
 
+  // Lazy synth init. Tone needs a user gesture to start its AudioContext, so
+  // construction is cheap but Tone.start() is called from noteOn / togglePlay.
+  useEffect(() => {
+    const vol = new Tone.Volume(0).toDestination()
+    const synth = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.005, decay: 0.15, sustain: 0.3, release: 0.9 }
+    }).connect(vol)
+    synth.maxPolyphony = 64
+    synthVolumeRef.current = vol
+    synthRef.current = synth
+    return () => {
+      synth.releaseAll()
+      synth.dispose()
+      vol.dispose()
+      synthRef.current = null
+      synthVolumeRef.current = null
+    }
+  }, [])
+
+  // Push volume / mute into the synth's Volume node.
+  useEffect(() => {
+    const vol = synthVolumeRef.current
+    if (!vol) return
+    if (isMuted || volume <= 0) {
+      vol.mute = true
+    } else {
+      vol.mute = false
+      vol.volume.value = Tone.gainToDb(volume)
+    }
+  }, [volume, isMuted])
+
   const noteOn = useCallback(
-    (note: number) => {
+    (note: number, velocity = 96) => {
       if (note < MIN_NOTE || note > MAX_NOTE) return
+      const synth = synthRef.current
+      if (synth) {
+        if (Tone.getContext().state !== 'running') void Tone.start()
+        const freq = Tone.Frequency(note, 'midi').toFrequency()
+        const v = Math.max(0, Math.min(1, velocity / 127))
+        synth.triggerAttack(freq, undefined, v)
+      }
       setPressed((p) => (p[note] ? p : { ...p, [note]: true }))
       const id = ++barIdRef.current
       const isBlack = BLACK_KEY_SEMITONES.has(note % 12)
@@ -257,6 +299,11 @@ export function MidiVisualizer({ className }: Props) {
       if (bar && bar.releasedAt == null) bar.releasedAt = performance.now()
       activeNoteBarRef.current.delete(note)
     }
+    const synth = synthRef.current
+    if (synth) {
+      const freq = Tone.Frequency(note, 'midi').toFrequency()
+      synth.triggerRelease(freq)
+    }
   }, [])
 
   // rAF for bar animation + playback scheduling
@@ -307,7 +354,7 @@ export function MidiVisualizer({ className }: Props) {
         while (pb.nextEventIdx < notes.length) {
           const ev = notes[pb.nextEventIdx]
           if (!ev || ev.time > elapsed + LOOKAHEAD_S) break
-          noteOn(ev.note)
+          noteOn(ev.note, ev.velocity)
           pb.scheduledOffs.push({
             note: ev.note,
             offTime: ev.time + ev.duration
@@ -377,6 +424,7 @@ export function MidiVisualizer({ className }: Props) {
 
   const togglePlay = useCallback(() => {
     if (!selectedTrack) return
+    if (Tone.getContext().state !== 'running') void Tone.start()
     if (isPlaying) {
       // Pause
       const pb = playbackRef.current

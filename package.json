@@ -72,7 +72,8 @@
     "react-tweet": "^3.3.0",
     "react-use": "^17.6.0",
     "rss": "^1.2.2",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "tone": "^15.1.22"
   },
   "devDependencies": {
     "@fisch0920/config": "^1.4.0",
