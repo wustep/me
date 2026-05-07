@@ -240,11 +240,24 @@ export function MidiVisualizer({ className }: Props) {
   const noteOn = useCallback(
     (note: number, velocity = 96) => {
       if (note < MIN_NOTE || note > MAX_NOTE) return
+      // If this note is already sounding, release the prior instance first.
+      // PolySynth.triggerRelease(freq) drops every voice at that pitch, so
+      // without this a same-pitch retrigger would orphan the previous bar
+      // (its id gets overwritten in activeNoteBarRef) and leak its voice.
+      if (activeNoteBarRef.current.has(note)) {
+        const prevId = activeNoteBarRef.current.get(note)!
+        const prevBar = barsRef.current.get(prevId)
+        if (prevBar && prevBar.releasedAt == null) {
+          prevBar.releasedAt = performance.now()
+        }
+      }
       const synth = synthRef.current
       if (synth) {
         if (Tone.getContext().state !== 'running') void Tone.start()
         const freq = Tone.Frequency(note, 'midi').toFrequency()
         const v = Math.max(0, Math.min(1, velocity / 127))
+        // Release any prior voice at this pitch before attacking again.
+        if (activeNoteBarRef.current.has(note)) synth.triggerRelease(freq)
         synth.triggerAttack(freq, undefined, v)
       }
       setPressed((p) => (p[note] ? p : { ...p, [note]: true }))
@@ -396,6 +409,9 @@ export function MidiVisualizer({ className }: Props) {
       for (const s of pb.scheduledOffs) noteOff(s.note)
       pb.scheduledOffs = []
       for (const note of activeNoteBarRef.current.keys()) noteOff(note)
+      // Catch-all in case a synth voice slipped past per-note release tracking
+      // (e.g. tab-throttled rAF backed up beyond the release tail).
+      synthRef.current?.releaseAll()
       pb.startedAt = 0
       pb.pausedAt = 0
       pb.nextEventIdx = 0
@@ -432,6 +448,7 @@ export function MidiVisualizer({ className }: Props) {
       pb.startedAt = 0
       for (const s of pb.scheduledOffs) noteOff(s.note)
       pb.scheduledOffs = []
+      synthRef.current?.releaseAll()
       setIsPlaying(false)
     } else {
       const pb = playbackRef.current
@@ -583,11 +600,22 @@ export function MidiVisualizer({ className }: Props) {
         noteOff(note)
       }
     }
+    // If the window loses focus while a key is held, keyup never fires —
+    // release everything so the synth voice doesn't hang.
+    const onBlur = () => {
+      for (const key of heldKeysRef.current) {
+        const note = KEYBOARD_NOTES_MAP[key]
+        if (note != null) noteOff(note)
+      }
+      heldKeysRef.current.clear()
+    }
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('blur', onBlur)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('blur', onBlur)
     }
   }, [noteOn, noteOff, togglePlay])
 
