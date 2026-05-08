@@ -2244,59 +2244,42 @@
  *   element where it matters, so each animation rotates/scales around
  *   its own anchor instead of the SVG's top-left corner.
  *
- *   How they run: each animation is declared with
- *   `animation-play-state: paused` by default, and a single rule
- *   below toggles it to `running` in three contexts:
+ *   How they run: each animation is declared with the `animation`
+ *   shorthand, which leaves `animation-play-state` at its implicit
+ *   `running`. On hover-capable devices a single rule below pauses
+ *   them by default and four contexts flip them back to `running`:
  *
- *     1. The side-panel hero — always running while the panel is open
- *        (every device, every modality).
- *     2. Hovering a canvas card — pointer-capable devices only.
- *     3. Hovering a dialog index row — pointer-capable devices only.
+ *     1. Hovering a canvas card.
+ *     2. Hovering a dialog index row.
+ *     3. `.cardSelected` — the canvas card paired with the open panel.
+ *     4. Touch / no-hover / narrow-viewport surfaces — these never
+ *        get paused by the cursor-only override, so the deck reads
+ *        as quietly alive at rest. iOS Safari was unreliable about
+ *        applying a touch-side override back to `running`, so we
+ *        invert: default is alive, pause is the cursor opt-in.
  *
- *   Paused animations have effectively zero runtime cost, so this is
- *   cheap on every other surface.
+ *   The side panel hero deliberately does NOT animate on hover-
+ *   capable devices: reading body copy is a calm, focused activity
+ *   and a constantly looping illustration would compete with the
+ *   text. On touch the panel takes the full screen and the
+ *   illustration IS the focal element while the user is in card
+ *   view, so the default `running` is what we want.
+ *
+ *   Performance: paused animations have effectively zero runtime
+ *   cost; the animation timeline simply doesn't advance. We still
+ *   only animate `transform`, `opacity`, and (for one case) the
+ *   SVG `stroke-dashoffset` property, so the GPU does the work.
+ *
+ *   Reduced motion: the bottom of this file globally kills all
+ *   animations under `prefers-reduced-motion: reduce`.
  * ========================================================================== */
 
-/*
- * ── Animations are declared *unconditionally* on each SVG target,
- *    but with `animation-play-state: paused` so they sit dormant
- *    until something on the page invites them in. We then flip the
- *    play-state to `running` in three contexts:
- *
- *      1. `.card:hover .cardArt`           — hovering a canvas card.
- *      2. `.cardSelected .cardArt`         — the canvas card whose
- *         side panel is currently open (selection treatment).
- *      3. `.dialogJumpBtn:hover .dialogJumpArt`
- *                                          — hovering an index row
- *         in the central "Lenses" dialog.
- *
- *    The side panel hero deliberately does NOT animate. Reading
- *    body copy is a calm, focused activity — a constantly looping
- *    illustration in the same view competes with the text. We let
- *    the canvas card behind the panel keep its selection animation
- *    so the surface is never *entirely* still while the lens is
- *    open, just not in the reading region itself.
- *
- *    Doing it this way means each animation is described once, and
- *    every place a lens illustration appears benefits — without
- *    selectors growing 3× in size.
- *
- *    Performance: paused animations have effectively zero runtime
- *    cost; the animation timeline simply doesn't advance. We still
- *    only animate `transform`, `opacity`, and (for one case) the
- *    SVG `stroke-dashoffset` property, so the GPU does the work.
- *
- *    Reduced motion: the bottom of this file globally kills all
- *    animations under `prefers-reduced-motion: reduce`.
- */
-
 /* ── Per-lens animation declarations.
-      Each rule below uses the `animation` shorthand, which resets
-      `animation-play-state` to its default (`running`). We override
-      that to `paused` in a single global rule placed *after* all
-      per-lens declarations (see "Default state" further down) and
-      then flip it back to `running` in the three contexts at the
-      very bottom of this section. */
+      Each rule below uses the `animation` shorthand, which leaves
+      `animation-play-state` at its implicit `running`. The default
+      state rule further down pauses everything ON HOVER-CAPABLE
+      DEVICES; the four "running" contexts override it. Touch
+      surfaces inherit the implicit `running` from the shorthand. */
 
 /* Second-order effects — concentric rings expand outward from the
    center dot and fade as they grow, staggered so the emission reads
@@ -3476,13 +3459,29 @@
 }
 
 /*
- * ── Default state: pause everything. This rule comes *after* the
- *    per-lens `animation` shorthand declarations so it wins the
- *    cascade and overrides the implicit `animation-play-state:
- *    running` that the shorthand sets.
+ * ── Default state: animations run. The pause-by-default rule below
+ *    only fires on hover-capable devices, so phones / tablets / any
+ *    no-hover surface inherit the implicit `running` from each
+ *    per-lens `animation` shorthand. We previously paused everything
+ *    here and relied on a touch @media query to override back to
+ *    `running`; iOS Safari was unreliable about applying that
+ *    override (the canvas cards stayed paused on iPhones), so we
+ *    invert the logic — default is alive, pause is the explicit
+ *    opt-in for cursor users.
+ *
+ *    The `var()` keeps the dev panel's "Always animate" preset
+ *    working: setting `--design-illus-anim` to `running` from the
+ *    panel forces motion even on hover-capable devices (its only
+ *    practical effect now, since touch already runs by default).
  */
 :global(svg[data-anim] [data-anim-target]) {
-  animation-play-state: var(--design-illus-anim, paused);
+  animation-play-state: var(--design-illus-anim, running);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :global(svg[data-anim] [data-anim-target]) {
+    animation-play-state: var(--design-illus-anim, paused);
+  }
 }
 
 /*
@@ -3514,39 +3513,22 @@
   }
 }
 
-/* Touch / no-hover devices: there's no hover affordance to invite
-   the SVGs in, so we just run every illustration's animation
-   unconditionally. The deck reads as quietly alive at rest — the
-   only way for a touch user to discover the motion baked into each
-   illustration without tapping every card. Pointer-capable devices
-   keep the stricter hover-only rule above so the deck stays still
-   until invited. `prefers-reduced-motion` below still wins and
-   pauses everything for users who asked for stillness.
+/* Touch / no-hover devices: every illustration runs by default
+   (see the inverted default-state rule above). The deck reads as
+   quietly alive at rest — the only way for a touch user to discover
+   the motion baked into each illustration without tapping every
+   card. `prefers-reduced-motion` below still wins and pauses
+   everything for users who asked for stillness.
 
-   We target `[data-anim-target]` directly (no ancestor scope) so
-   every surface that hosts a lens illustration animates: canvas
-   cards, the center "Lenses" card, the side panel hero, AND the
-   index dialog rows. On desktop the hover rule above already
-   includes the canvas cards and dialog rows, and the panel hero
-   stays still beside body copy — so this single selector also
-   serves as the mobile counterpart to those three surfaces plus
-   the panel hero (which on phones takes the full screen and IS
-   the focal element while reading).
-
-   We also slow each per-lens animation by 1.5× on touch (and the
-   matching delay overrides for any animation that uses a negative
-   `animation-delay` to phase-shift a multi-target loop, so the
-   relative phase between targets stays correct after the duration
-   change). The slower cadence reads as ambient drift rather than
-   active motion, which is what we want when the whole deck is
-   alive at once. The pointer-capable hover path keeps the original
-   tighter cadence — there hover is an explicit invitation and a
-   crisper response feels right. */
+   Here we just slow each per-lens animation by 1.5× on touch (and
+   override any negative `animation-delay` that phase-shifts a
+   multi-target loop, so the relative phase between targets stays
+   correct after the duration change). The slower cadence reads as
+   ambient drift rather than active motion, which is what we want
+   when the whole deck is alive at once. The pointer-capable hover
+   path keeps the original tighter cadence — there hover is an
+   explicit invitation and a crisper response feels right. */
 @media (hover: none), (pointer: coarse), (max-width: 767px) {
-  :global(svg[data-anim] [data-anim-target]) {
-    animation-play-state: var(--design-illus-anim, running);
-  }
-
   /* Per-lens duration overrides — each value is the original
      duration × 1.5. Grouped by lens, in the same order as the
      declarations above, so the two blocks track each other when
