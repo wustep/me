@@ -3515,23 +3515,23 @@
 }
 
 /* Touch / no-hover devices: there's no hover affordance to invite
-   the SVGs in, so we just run every card's animation unconditionally.
-   The deck reads as quietly alive at rest — the only way for a
-   touch user to discover the motion baked into each illustration
-   without tapping every card. Pointer-capable devices keep the
-   stricter hover-only rule above so the deck stays still until
-   invited. `prefers-reduced-motion` below still wins and pauses
-   everything for users who asked for stillness.
+   the SVGs in, so we just run every illustration's animation
+   unconditionally. The deck reads as quietly alive at rest — the
+   only way for a touch user to discover the motion baked into each
+   illustration without tapping every card. Pointer-capable devices
+   keep the stricter hover-only rule above so the deck stays still
+   until invited. `prefers-reduced-motion` below still wins and
+   pauses everything for users who asked for stillness.
 
-   The side panel hero (`.panelArt`) also animates on touch. On
-   desktop the panel sits next to body copy, so motion in the hero
-   would compete with reading and we deliberately keep it still.
-   On mobile the panel takes the full screen and the illustration
-   IS the focal element while the user is in card view — letting
-   it breathe (at the same slowed cadence) reinforces the lens'
-   identity without competing with anything. The hover path
-   (above) does NOT include `.panelArt` so desktop behavior is
-   unchanged.
+   We target `[data-anim-target]` directly (no ancestor scope) so
+   every surface that hosts a lens illustration animates: canvas
+   cards, the center "Lenses" card, the side panel hero, AND the
+   index dialog rows. On desktop the hover rule above already
+   includes the canvas cards and dialog rows, and the panel hero
+   stays still beside body copy — so this single selector also
+   serves as the mobile counterpart to those three surfaces plus
+   the panel hero (which on phones takes the full screen and IS
+   the focal element while reading).
 
    We also slow each per-lens animation by 1.5× on touch (and the
    matching delay overrides for any animation that uses a negative
@@ -3543,10 +3543,8 @@
    tighter cadence — there hover is an explicit invitation and a
    crisper response feels right. */
 @media (hover: none), (pointer: coarse), (max-width: 767px) {
-  .card .cardArt :global(svg[data-anim] [data-anim-target]),
-  .centerCard .cardArt :global(svg[data-anim] [data-anim-target]),
-  .panelArt :global(svg[data-anim] [data-anim-target]) {
-    animation-play-state: running;
+  :global(svg[data-anim] [data-anim-target]) {
+    animation-play-state: var(--design-illus-anim, running);
   }
 
   /* Per-lens duration overrides — each value is the original
