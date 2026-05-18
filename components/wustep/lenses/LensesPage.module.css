@@ -1013,7 +1013,7 @@
       rgba(0, 0, 0, 0) 68%,
       rgba(0, 0, 0, 0.1) 100%
     ),
-    var(--center-card-bg, #1e272f);
+    var(--center-card-bg, #172a3a);
   color: var(--center-card-fg, #f6ead8);
   border: 0;
   /* Generous radius matches the lens-card scale-up; the focal

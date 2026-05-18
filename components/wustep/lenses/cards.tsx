@@ -227,8 +227,8 @@ export function CenterCard({
           <Illustration
             id='lenses-deck'
             fg='#F6EAD8'
-            bg='#1E272F'
-            accent='#DDA85D'
+            bg='#172A3A'
+            accent='#F0A85A'
           />
         )}
       </span>

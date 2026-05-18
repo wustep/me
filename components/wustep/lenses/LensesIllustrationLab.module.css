@@ -3,17 +3,17 @@
   --lab-text-rgb: 27 37 48;
   --lab-surface: color-mix(
     in srgb,
-    var(--design-canvas-bg-light, #ece4d0) 88%,
+    var(--design-canvas-bg-light, #ead9b5) 88%,
     white
   );
   --lab-surface-strong: color-mix(
     in srgb,
-    var(--design-canvas-bg-light, #ece4d0) 82%,
+    var(--design-canvas-bg-light, #ead9b5) 82%,
     white
   );
   --lab-control-bg: color-mix(
     in srgb,
-    var(--design-canvas-bg-light, #ece4d0) 72%,
+    var(--design-canvas-bg-light, #ead9b5) 72%,
     white
   );
   --lab-border: rgba(27, 37, 48, 0.14);
@@ -23,7 +23,7 @@
   --lab-stat-bg: rgba(27, 37, 48, 0.06);
   --lab-button-bg: #1b2530;
   --lab-button-bg-hover: #293646;
-  --lab-button-fg: #f5efe0;
+  --lab-button-fg: #f6ead8;
 
   container-type: inline-size;
   container-name: illustration-lab;
@@ -46,7 +46,7 @@
       rgba(0, 0, 0, 0.08) 0%,
       rgba(0, 0, 0, 0) 60%
     ),
-    var(--design-canvas-bg-light, #ece4d0);
+    var(--design-canvas-bg-light, #ead9b5);
   transition:
     background 180ms ease,
     color 180ms ease;
@@ -59,8 +59,8 @@
 }
 
 .lab[data-theme='dark'] {
-  --lab-text: #f5f1e8;
-  --lab-text-rgb: 245 241 232;
+  --lab-text: #f6ead8;
+  --lab-text-rgb: 246 234 216;
   --lab-surface: rgba(28, 28, 32, 0.76);
   --lab-surface-strong: rgba(32, 32, 37, 0.82);
   --lab-control-bg: rgba(255, 255, 255, 0.07);
@@ -69,8 +69,8 @@
   --lab-shadow: rgba(0, 0, 0, 0.22);
   --lab-shadow-strong: rgba(0, 0, 0, 0.3);
   --lab-stat-bg: rgba(245, 241, 232, 0.07);
-  --lab-button-bg: #f5f1e8;
-  --lab-button-bg-hover: #fff8e8;
+  --lab-button-bg: #f6ead8;
+  --lab-button-bg-hover: #fff3dc;
   --lab-button-fg: #16161a;
 
   background:
@@ -84,7 +84,7 @@
       rgba(255, 255, 255, 0.03) 0%,
       rgba(0, 0, 0, 0) 55%
     ),
-    var(--design-canvas-bg-dark, #16161a);
+    var(--design-canvas-bg-dark, #141923);
 }
 
 .hero {
@@ -312,15 +312,15 @@
 }
 
 .field input[type='text'][data-input-tone='light'] {
-  background: #f5efe0;
+  background: #f6ead8;
   border-color: rgba(27, 37, 48, 0.18);
   box-shadow: 0 0 0 1px rgba(27, 37, 48, 0.04) inset;
 }
 
 .field input[type='text'][data-input-tone='dark'] {
-  background: #1b2530;
-  border-color: rgba(245, 239, 224, 0.18);
-  box-shadow: 0 0 0 1px rgba(245, 239, 224, 0.04) inset;
+  background: #172a3a;
+  border-color: rgba(246, 234, 216, 0.18);
+  box-shadow: 0 0 0 1px rgba(246, 234, 216, 0.04) inset;
 }
 
 .field select {
@@ -617,24 +617,24 @@
 
 .passMessage {
   color: #174631 !important;
-  background: rgba(74, 166, 112, 0.18);
+  background: rgba(36, 112, 74, 0.18);
 }
 
 .warnMessage {
   color: #6f351d !important;
-  background: rgba(214, 129, 74, 0.22);
+  background: rgba(168, 72, 43, 0.2);
 }
 
 .lab[data-theme='dark'] .passMessage {
-  color: #bff0d1 !important;
-  background: rgba(74, 166, 112, 0.2);
-  box-shadow: 0 0 0 1px rgba(191, 240, 209, 0.16) inset;
+  color: #bde08e !important;
+  background: rgba(36, 112, 74, 0.24);
+  box-shadow: 0 0 0 1px rgba(189, 224, 142, 0.18) inset;
 }
 
 .lab[data-theme='dark'] .warnMessage {
-  color: #ffd0a8 !important;
-  background: rgba(214, 129, 74, 0.22);
-  box-shadow: 0 0 0 1px rgba(255, 208, 168, 0.16) inset;
+  color: #f0b85f !important;
+  background: rgba(168, 72, 43, 0.24);
+  box-shadow: 0 0 0 1px rgba(240, 184, 95, 0.18) inset;
 }
 
 .section {
@@ -682,7 +682,7 @@
   border: 1px solid var(--lab-border);
   border-radius: 24px;
   overflow: hidden;
-  background: #ece4d0;
+  background: #ead9b5;
 }
 
 .candidateGrid {
@@ -744,9 +744,9 @@
 }
 
 .card {
-  --lab-card-bg: #243449;
-  --lab-card-fg: #f5efe0;
-  --lab-card-accent: #e8b547;
+  --lab-card-bg: #24496a;
+  --lab-card-fg: #f6ead8;
+  --lab-card-accent: #e6b64e;
   --cardtitle-size: 0.8rem;
   --cardtitle-shrink: 1;
 

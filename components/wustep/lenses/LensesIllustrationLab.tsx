@@ -51,12 +51,12 @@ type LabIllustration = {
 }
 
 const PRESET_PALETTES: Palette[] = [
-  { bg: '#B43A2E', fg: '#F5EFE0', accent: '#F2C77A' },
-  { bg: '#243449', fg: '#F5EFE0', accent: '#E8B547' },
-  { bg: '#204A40', fg: '#F5EFE0', accent: '#A9D8B8' },
-  { bg: '#D8CDB8', fg: '#1B2530', accent: '#9A4D32' },
-  { bg: '#2F3138', fg: '#F5EFE0', accent: '#D9A23A' },
-  { bg: '#8F3E62', fg: '#F5EFE0', accent: '#F0B8CE' }
+  { bg: '#B83D31', fg: '#F6EAD8', accent: '#F3C35F' },
+  { bg: '#24496A', fg: '#F6EAD8', accent: '#E6B64E' },
+  { bg: '#24704A', fg: '#F6EAD8', accent: '#BDE08E' },
+  { bg: '#EAD9B5', fg: '#1B2530', accent: '#B83D31' },
+  { bg: '#2F333E', fg: '#F6EAD8', accent: '#E2AB3F' },
+  { bg: '#5146A6', fg: '#F6EAD8', accent: '#F07064' }
 ]
 
 /** Matrix palettes: kept at exactly 12 so the grid is two clean rows of six. */
@@ -66,30 +66,30 @@ const MATRIX_COLOR_CANDIDATES: Array<{ label: string; palette: Palette }> = [
   { label: 'Forest', palette: PRESET_PALETTES[2]! },
   { label: 'Warm light', palette: PRESET_PALETTES[3]! },
   { label: 'Charcoal', palette: PRESET_PALETTES[4]! },
-  { label: 'Berry', palette: PRESET_PALETTES[5]! },
+  { label: 'Identity violet', palette: PRESET_PALETTES[5]! },
   {
     label: 'Ink',
-    palette: { bg: '#10151D', fg: '#F5EFE0', accent: '#F2B144' }
+    palette: { bg: '#172A3A', fg: '#F6EAD8', accent: '#F0A85A' }
   },
   {
     label: 'Paper',
-    palette: { bg: '#EFE4CC', fg: '#1B2530', accent: '#B85C38' }
+    palette: { bg: '#EAD9B5', fg: '#1B2530', accent: '#B83D31' }
   },
   {
     label: 'Moss',
-    palette: { bg: '#1D3B35', fg: '#F5EFE0', accent: '#A9D8B8' }
+    palette: { bg: '#227449', fg: '#F6EAD8', accent: '#BDE08E' }
   },
   {
     label: 'Plum',
-    palette: { bg: '#4A2638', fg: '#F5EFE0', accent: '#F0B8CE' }
+    palette: { bg: '#60407A', fg: '#F6EAD8', accent: '#F0A86B' }
   },
   {
     label: 'Ochre',
-    palette: { bg: '#8A5A22', fg: '#F8EED9', accent: '#F7C75A' }
+    palette: { bg: '#E5C052', fg: '#1B2530', accent: '#C73B2D' }
   },
   {
     label: 'Stone',
-    palette: { bg: '#6F6A60', fg: '#F5EFE0', accent: '#F2C77A' }
+    palette: { bg: '#596B81', fg: '#F6EAD8', accent: '#E6B64E' }
   }
 ]
 
@@ -102,9 +102,9 @@ const LENSES_DECK_LENS: Lens = {
   tagline: 'A way of looking. Pick one. Try it on.',
   x: 50,
   y: 50,
-  bg: '#1E272F',
+  bg: '#172A3A',
   fg: '#F6EAD8',
-  accent: '#DDA85D',
+  accent: '#F0A85A',
   illustration: LENSES_DECK_ILLUSTRATION_ID,
   body: (
     <p>
@@ -166,7 +166,7 @@ function luminance(hex: string) {
 }
 
 function readableFg(bg: string) {
-  return luminance(bg) > 0.48 ? '#1B2530' : '#F5EFE0'
+  return luminance(bg) > 0.48 ? '#1B2530' : '#F6EAD8'
 }
 
 function hslToHex(h: number, s: number, l: number) {
@@ -210,7 +210,7 @@ function rollRandomPalette(): Palette {
   const accent = hslToHex(
     (hue + 55 + Math.random() * 95) % 360,
     0.55 + Math.random() * 0.22,
-    fg === '#F5EFE0' ? 0.66 + Math.random() * 0.14 : 0.38 + Math.random() * 0.16
+    fg === '#F6EAD8' ? 0.66 + Math.random() * 0.14 : 0.38 + Math.random() * 0.16
   )
 
   return { bg, fg, accent }
@@ -244,7 +244,7 @@ function contrastRatio(a: string, b: string) {
 }
 
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i
-const COLOR_INPUT_LIGHT_BG = '#F5EFE0'
+const COLOR_INPUT_LIGHT_BG = '#F6EAD8'
 const COLOR_INPUT_DARK_BG = '#1B2530'
 const MIN_COLOR_INPUT_CONTRAST = 4.5
 
