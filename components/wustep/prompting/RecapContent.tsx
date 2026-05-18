@@ -9,8 +9,8 @@ export function RecapContent() {
   return (
     <ChapterBody>
       <p>
-        Five reminders before you go. Skim this on the way out, or save it for
-        later when something feels off.
+        Six reminders before you go. Skim on the way out, or come back when
+        something feels off.
       </p>
 
       <RecapItem
@@ -30,7 +30,7 @@ export function RecapContent() {
         <RecapEquationViz />
         <p>
           When the output disappoints, walk the four levers. Better tool. Better
-          model. Better prompt. Better context. The biggest unlock is almost
+          model. Better prompt. Better context. The biggest lever is almost
           always context.
         </p>
       </RecapItem>
@@ -94,9 +94,8 @@ export function RecapContent() {
         </h3>
         <p>
           We&apos;re all early in this. Three years in. Maybe 1200 ELO. The next
-          1200 is wide open &mdash; and the most useful thing you can do is keep
-          paying attention while everyone else assumes they&apos;ve figured it
-          out.
+          1200 is wide open &mdash; and the most useful move is paying attention
+          while everyone else assumes they&apos;ve figured it out.
         </p>
         <p>Thanks for reading. Go talk to a machine.</p>
       </div>

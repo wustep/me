@@ -79,6 +79,14 @@ export function EquationContent() {
         </div>
 
         <p>
+          Models also have distinct styles &mdash; how they structure code, what
+          explanations they reach for, where they cut corners under ambiguity.
+          If you&apos;re newer to AI coding, you&apos;ll attune faster by
+          staying with one model for a while and learning its tics. Hopping
+          between models before you have a feel for any of them mostly trains
+          you to blame the model when half the issue is unfamiliarity.
+        </p>
+        <p>
           The biggest trap is <strong>&quot;Auto&quot;</strong> mode. Tools love
           offering it because it sounds helpful. In practice, &quot;Auto&quot;
           is usually optimized for the platform&apos;s margin, not your output
@@ -139,8 +147,7 @@ export function EquationContent() {
       >
         <p>
           The prompt is the smallest of the four levers, but it&apos;s the one
-          people obsess over. The patterns that consistently move the needle are
-          unsexy:
+          people obsess over. The patterns that consistently help are unsexy:
         </p>
         <ul className={styles.axisList}>
           <li>
@@ -184,7 +191,7 @@ export function EquationContent() {
 
       <Lever
         name='CONTEXT'
-        tagline='The biggest unlock. Load what the agent needs to see.'
+        tagline='The biggest lever. Load what the agent needs to see.'
       >
         <p>
           Most &quot;the model is dumb today&quot; moments are actually

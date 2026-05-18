@@ -76,11 +76,11 @@ export function MindsetContent() {
 
       <p>
         Most of the time, the model isn&apos;t the limit. Your brief is. Your
-        context is. Your model choice is. Your patience is. With the
-        bottleneck-is-me stance, the same frustrating moment turns into a small
-        lab &mdash; which lever, pulled differently, would have changed the
-        result? Each answer is a piece of edge other people aren&apos;t
-        collecting, because they&apos;ve already decided the tool is bad.
+        context is. Your patience is. With the bottleneck-is-me stance, the same
+        frustrating moment turns into a small lab: which lever would have
+        changed the result? Each answer is a piece of edge other people
+        aren&apos;t collecting &mdash; they&apos;ve already decided the tool is
+        bad.
       </p>
 
       <p>
@@ -104,8 +104,8 @@ export function MindsetContent() {
           We&apos;re all beginners
         </h3>
         <p>
-          Closed minds blame the model. Open minds ask what they missed. The
-          first stops you learning; the second compounds.
+          Closed minds blame the model. Open minds ask what they missed. Only
+          one of those is still gaining ELO a year from now.
         </p>
       </div>
     </ChapterBody>

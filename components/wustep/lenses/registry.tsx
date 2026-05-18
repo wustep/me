@@ -37,26 +37,33 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          A surprising amount of what feels like a wall is actually a social
+          A surprising amount of what feels like a wall turns out to be a social
           convention, an unexamined assumption, or a story the person carrying
-          it tells themselves. Real walls exist — but they&rsquo;re rarer than
-          they feel, and most ceilings give if you push them on purpose.
+          it tells themselves. Real walls exist. They&rsquo;re rarer than they
+          feel, and most ceilings give if you push them on purpose.
         </p>
         <p>
-          Through this lens, the question stops being{' '}
-          <em>am I allowed to do this?</em> and becomes{' '}
+          Adopt the frame and the question stops being{' '}
+          <em>am I allowed to do this?</em> It becomes{' '}
           <em>
-            who exactly is stopping me, and what would actually happen if I
-            tried?
+            who, specifically, is stopping me — and what would actually happen
+            if I tried?
           </em>{' '}
-          Many of the people who change their lives are not unusually talented;
-          they are unusually unwilling to treat the default as the limit.
+          The people who change their lives are rarely the most talented.
+          They&rsquo;re the ones least willing to treat the default as the
+          limit.
         </p>
         <p>
-          Weaknesses: leaning too hard on agency curdles into a contempt for
-          structural reality — some walls really are made of stone, and
-          pretending otherwise hurts people. But walls are far easier to find
-          than doors, so the default error is to under-try.
+          The other half of agency is the cost of restraint. Every quiet{' '}
+          <em>I shouldn&rsquo;t</em> compounds. You don&rsquo;t get the decision
+          back later in a different form; you get a smaller version of the life
+          you would have lived. Pushing is a habit, and so is not pushing.
+        </p>
+        <p>
+          Lean too hard on this and it curdles into contempt for structural
+          reality — some walls really are stone, and pretending otherwise hurts
+          people. But walls are easier to find than doors, so the standing error
+          is to under-try.
         </p>
       </>
     )
@@ -78,21 +85,28 @@ const LENSES_RAW: Lens[] = [
         <p>
           Attention is the most concentrated form of energy a person spends, and
           it&rsquo;s spent constantly — on phones, conversations, worries,
-          screens, faces, ideas. What you keep looking at trains the rest of
-          you: your taste, your reactions, your sense of what counts as normal,
-          your idea of what is even possible.
+          screens, faces, ideas. Whatever you keep looking at trains the rest of
+          you: taste, reactions, sense of what counts as normal, sense of
+          what&rsquo;s even possible.
         </p>
         <p>
-          Through this lens, the question stops being{' '}
-          <em>what should I do with my time?</em> and becomes{' '}
+          The useful question isn&rsquo;t{' '}
+          <em>what should I do with my time?</em> The useful question is{' '}
           <em>what is allowed to occupy my attention, and what isn&rsquo;t?</em>{' '}
-          Most regrets, on inspection, are not failures of effort — they are
-          failures of attention. The wrong things were given the air.
+          Time gets spent by default. Attention gets stolen.
         </p>
         <p>
-          Weaknesses: rigid attention can become tunnel vision, and life rewards
-          a certain amount of wandering. But unattended attention is the
-          cheapest possession to lose without noticing.
+          Most regrets, on inspection, trace back to attention more than effort.
+          The wrong things were given the air, and the right ones starved for
+          lack of it. You can recover lost hours. You can&rsquo;t easily recover
+          the version of yourself that would have grown if you&rsquo;d looked
+          elsewhere.
+        </p>
+        <p>
+          The failure mode is tunnel vision. Life rewards a certain amount of
+          wandering, and locking attention down too hard makes you efficient at
+          the wrong thing. But unattended attention is the cheapest possession
+          to lose without noticing.
         </p>
       </>
     )
@@ -112,22 +126,29 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Almost every problem between two people is, at root, a communication
+          Almost every problem between two people is, at root, a translation
           problem. Different vocabularies, different unsaid assumptions,
-          different stakes — and the gap quietly grows until it surfaces as
-          conflict, drift, or a bad outcome neither wanted.
+          different stakes — the gap quietly grows until it surfaces as
+          conflict, drift, or a bad outcome neither person wanted.
         </p>
         <p>
-          Through this lens, &ldquo;they&rsquo;re wrong&rdquo; and &ldquo;they
-          don&rsquo;t care&rdquo; almost always rephrase as{' '}
+          Held up against most disagreements, &ldquo;they&rsquo;re wrong&rdquo;
+          and &ldquo;they don&rsquo;t care&rdquo; almost always rephrase as{' '}
           <em>we are not in the same conversation</em>. The fix is rarely a
-          stronger argument; it is a slower, more patient transfer of model —
-          what you mean by the words, what you fear, what you actually want.
+          stronger argument. The fix is a slower, more patient transfer of model
+          — what you mean by the words, what you fear, what you actually want.
         </p>
         <p>
-          Weaknesses: not every disagreement is a misunderstanding; some are
-          real conflicts of interest dressed in misunderstanding&rsquo;s
-          clothes. But assume translation first, war second.
+          Practically, this raises the price of vague language. &ldquo;Soon,
+          &rdquo; &ldquo;fine,&rdquo; &ldquo;I&rsquo;m not mad&rdquo; — these
+          are the sentences that build the gap. Specificity is expensive in the
+          moment and cheap over a year.
+        </p>
+        <p>
+          Not every disagreement is a misunderstanding. Some are real conflicts
+          of interest dressed in misunderstanding&rsquo;s clothes, and assuming
+          translation can be a way to avoid the harder fight. But assume
+          translation first, war second.
         </p>
       </>
     )
@@ -149,20 +170,27 @@ const LENSES_RAW: Lens[] = [
         <p>
           Freedom is not the absence of structure. The right constraint creates
           expression, focus, improvisation, and agency. Sonnets, haiku, jazz
-          standards, and four-bar phrases are not cages — they are the trellis
-          the work climbs.
+          standards, four-bar phrases — every one of them a trellis the work
+          climbs.
         </p>
         <p>
-          Through this lens, an overwhelming choice is often a missing
-          constraint. The blank page is the enemy; the assignment is the friend.
-          &ldquo;Build anything&rdquo; is paralysis;{' '}
-          <em>build this in a week with these three tools</em> is a generative
-          engine.
+          An overwhelming choice is often a missing constraint. The blank page
+          paralyzes. The assignment generates. &ldquo;Build anything&rdquo;
+          yields nothing in particular;{' '}
+          <em>build this in a week with these three tools</em> runs as a
+          generative engine.
         </p>
         <p>
-          Weaknesses: the wrong constraint suffocates rather than shapes, and
-          constraints adopted out of fear masquerade as discipline. But most
-          creative blocks are calls for tighter, not looser, walls.
+          The interesting move is choosing constraints on purpose. Self-imposed
+          deadlines, fixed budgets, a smaller toolkit than you can afford —
+          these don&rsquo;t shrink you. They give your taste somewhere to push
+          against. Most ambitious work happens inside walls that someone chose
+          to build.
+        </p>
+        <p>
+          The wrong constraint suffocates instead of shaping, and limits adopted
+          out of fear masquerade as discipline. But most creative blocks are
+          calls for tighter, not looser, walls.
         </p>
       </>
     )
@@ -188,25 +216,31 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          A surprising amount of human behavior makes more sense as{' '}
-          <em>internal state regulation</em> than as goal-pursuit. People are
+          A lot of human behavior makes more sense as{' '}
+          <em>internal-state regulation</em> than as goal-pursuit. People are
           seeking novelty, reward, relief, control, connection, or a sense of
           meaning — and the brain&rsquo;s dopamine system is quietly
           orchestrating most of it underneath the conscious story.
         </p>
         <p>
-          Through this lens, scrolling, snacking, gambling, refreshing email,
-          picking fights, falling in love, doomscrolling, and even starting a
-          new project all start to look like flavors of the same loop:{' '}
-          <em>I felt off; this promised to make it less off.</em> The fix
-          isn&rsquo;t shame — it&rsquo;s noticing the loop and changing the
-          inputs.
+          Look at it this way and scrolling, snacking, gambling, refreshing
+          email, picking fights, falling in love, doomscrolling, and starting a
+          new project all start to resemble flavors of the same loop:{' '}
+          <em>I felt off; this promised to make it less off.</em> The reach for
+          the phone is the same reach as the reach for the fridge or the breakup
+          text.
         </p>
         <p>
-          Weaknesses: reducing all behavior to neurotransmitters flattens
-          meaning that is genuinely there, and &ldquo;your dopamine made you do
-          it&rdquo; can become a way to dodge responsibility. But most failures
-          of self-control are state-regulation problems mislabeled as character
+          Shame doesn&rsquo;t fix it. Shame is itself a state, and a costly one
+          — it hides the loop without changing it. The real move is upstream:
+          change what&rsquo;s available to reach for, what the room rewards,
+          what the day looks like before the urge arrives.
+        </p>
+        <p>
+          Reducing all behavior to neurotransmitters flattens meaning that
+          really is there, and &ldquo;your dopamine made you do it&rdquo; can
+          become a way to dodge responsibility. But most failures of
+          self-control are state-regulation problems mislabeled as character
           problems.
         </p>
       </>
@@ -227,23 +261,32 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Motivation is not purely moral; it is biochemical, environmental,
-          social, and narrative. Sleep, food, light, exercise, social contact,
-          and recent wins all rewrite what is and isn&rsquo;t possible today.
-          Design around energy rather than pretending willpower is infinite.
+          Motivation isn&rsquo;t purely moral. It&rsquo;s biochemical,
+          environmental, social, and narrative. Sleep, food, light, exercise,
+          recent wins, who you saw yesterday — all of it rewrites what&rsquo;s
+          possible today. Willpower runs on a battery, and the battery
+          isn&rsquo;t infinite.
         </p>
         <p>
-          Through this lens, &ldquo;why am I being lazy?&rdquo; is the wrong
-          question. The right one is{' '}
+          Apply the lens and &ldquo;why am I being lazy?&rdquo; stops being the
+          right question. The right one is{' '}
           <em>
-            where in my day did the fuel run out, and what would refill it?
+            where in the day did the fuel run out, and what would refill it?
           </em>{' '}
-          Most discipline failures are really battery failures.
+          Most discipline failures are battery failures wearing a moral costume.
         </p>
         <p>
-          Weaknesses: this lens can become an excuse for endless
-          self-management. But ignoring it produces shame instead of insight,
-          and shame is the most expensive fuel of all.
+          This changes what counts as serious work. Going to bed on time is
+          serious work. Eating before the meeting is serious work. The walk
+          after lunch isn&rsquo;t a break from the project; it&rsquo;s part of
+          how the project gets done. Designing around energy beats negotiating
+          with it.
+        </p>
+        <p>
+          The trap is endless self-management — turning every day into a tuning
+          exercise where the tuning itself burns the battery. But ignoring
+          energy produces shame instead of insight, and shame is the most
+          expensive fuel of all.
         </p>
       </>
     )
@@ -268,19 +311,27 @@ const LENSES_RAW: Lens[] = [
           <em>
             what does believing this help me predict, build, notice, or become?
           </em>{' '}
-          A belief that cashes out in better decisions earns its place; one that
-          doesn&rsquo;t, regardless of how impressive, is a souvenir.
+          A belief that pays out in better decisions earns its place. One that
+          doesn&rsquo;t — however impressive — is a souvenir.
         </p>
         <p>
-          Through this lens, you become less precious about being correct and
-          more interested in being <em>useful-correct</em>. Two beliefs can be
+          Carry it around and you become less precious about being correct, more
+          interested in being <em>useful-correct</em>. Two beliefs can be
           equally defensible; the one that gives you traction in the world is
-          the one to keep on the workbench.
+          the one to keep on the workbench. The rest go in a drawer, not the
+          trash — beliefs that are useless today are sometimes load-bearing
+          tomorrow.
         </p>
         <p>
-          Weaknesses: pragmatism without honesty curdles into self-serving
-          belief. But truth without traction is theology, and most of us already
-          have plenty.
+          It also reframes disagreement. You stop trying to win at <em>true</em>{' '}
+          and start asking which model lets the other person do their next thing
+          better. Sometimes that&rsquo;s yours. Often it isn&rsquo;t.
+        </p>
+        <p>
+          Pragmatism without honesty curdles into self-serving belief — you keep
+          what flatters and discard what doesn&rsquo;t, and call it traction.
+          But truth without traction is theology, and most of us already have
+          plenty of that.
         </p>
       </>
     )
@@ -300,20 +351,30 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Behavior as the residue of selection pressures from the ancestral
+          Behavior is the residue of selection pressures from the ancestral
           environment. Why we crave sugar, fear snakes more than cars, gossip,
           form coalitions, find symmetry beautiful, and feel the sting of low
-          status more than the warmth of moderate gain.
+          status more sharply than the warmth of moderate gain. Old hardware
+          running new software, badly.
         </p>
         <p>
-          Through this lens, modern life is a thin veneer over a Pleistocene
-          chassis. Dating apps, social feeds, and open-plan offices all become
-          legible as new arenas for very old games.
+          Worn as a lens, modern life looks like a thin veneer over a
+          Pleistocene chassis. Dating apps, social feeds, open-plan offices —
+          all become legible as new arenas for very old games. The interface
+          changed; the players didn&rsquo;t.
         </p>
         <p>
-          Weaknesses: just-so stories are easy to invent and hard to falsify.
-          But used carefully, it explains the shape of our wants in a way no
-          other lens does.
+          It also explains the asymmetries. A bad day at work feels like exile
+          from the tribe because, to some part of you, it still is. A
+          stranger&rsquo;s compliment online produces a real chemical reward
+          because your brain can&rsquo;t tell that the audience isn&rsquo;t
+          standing in front of you. The mismatch is the point.
+        </p>
+        <p>
+          Just-so stories are easy to invent and hard to falsify, and the lens
+          can flatter whatever you already believed about human nature. Used
+          carefully, though, it explains the shape of our wants in a way nothing
+          else does.
         </p>
       </>
     )
@@ -333,28 +394,34 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Every skill is a long curve, and people sit all over it. This is
-          obvious for cooking or chess — but it&rsquo;s also true for the things
-          we don&rsquo;t usually call skills: patience, listening, taste,
-          charisma, attention, knowing when to stop. The world becomes much more
-          legible the moment you start treating these as{' '}
-          <em>practiced abilities</em> rather than fixed traits.
+          Every skill is a long curve, and people sit all over it. Obvious for
+          cooking or chess — but it&rsquo;s also true for the things we
+          don&rsquo;t usually call skills: patience, listening, taste, charisma,
+          attention, knowing when to stop. The world becomes much more legible
+          the moment you treat these as <em>practiced abilities</em> rather than
+          fixed traits.
         </p>
         <p>
-          Through this lens, &ldquo;I&rsquo;m not good at conflict&rdquo;
+          Used as a frame, &ldquo;I&rsquo;m not good at conflict&rdquo;
           rephrases as <em>I&rsquo;m on the early part of that curve.</em> The
           annoying coworker becomes someone with a different skill mix, not a
-          different species. And the genuinely impressive person stops being a
+          different species. The genuinely impressive person stops being a
           wonder and becomes a question:{' '}
           <em>
             which curve are they very far along, and how did they get there?
           </em>
         </p>
         <p>
-          Weaknesses: reducing every quality to a skill flattens temperament and
-          circumstance, and some abilities are genuinely gated by talent. But
-          treating &ldquo;trait&rdquo; as the default explanation for behavior
-          is one of the most common ways to misread a person.
+          It also reorders who you take seriously. The loudest person in a room
+          is often early-stage at the curve they keep talking about — confidence
+          climbs faster than competence at the start. The quiet ones, ten years
+          in, give you the real information if you ask.
+        </p>
+        <p>
+          Treating every quality as a skill flattens temperament and
+          circumstance, and some abilities are genuinely gated by talent. But{' '}
+          <em>trait</em> as the default explanation for behavior is one of the
+          most common ways to misread a person.
         </p>
       </>
     )
@@ -374,22 +441,29 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Life, products, and organizations are shaped by rules, rewards,
+          Life, products, and organizations get shaped by their rules, rewards,
           feedback loops, and affordances. The best of them make the right
           behavior <em>feel playable</em> — clear objective, visible progress,
           fair odds, meaningful choice at every turn.
         </p>
         <p>
-          Through this lens, you stop asking{' '}
-          <em>how do I make people behave?</em> and start asking{' '}
+          Take the frame and you stop asking{' '}
+          <em>how do I make people behave?</em> You start asking{' '}
           <em>what game am I putting them in?</em> Bad games punish the right
           move and reward the easy one. Good games line up effort, skill, and
           reward so that doing the right thing is also the most engaging thing.
         </p>
         <p>
-          Weaknesses: not everything should be gamified, and over-designed games
-          crowd out intrinsic motivation. But the best designers, coaches, and
-          managers are quietly thinking in payoffs and moves.
+          This is what good managers, teachers, and product designers are
+          quietly doing. They&rsquo;re rarely heroic motivators. They&rsquo;re
+          game-makers — adjusting the payoff matrix until the move they want is
+          also the move people want to make.
+        </p>
+        <p>
+          Not everything should be gamified, and over-designed games crowd out
+          intrinsic motivation. A team that only moves for points stops moving
+          when the points go away. But the best designers, coaches, and managers
+          are quietly thinking in payoffs and moves.
         </p>
       </>
     )
@@ -416,16 +490,24 @@ const LENSES_RAW: Lens[] = [
           headspace first.
         </p>
         <p>
-          Through this lens, &ldquo;why are they doing this?&rdquo; becomes{' '}
+          Carry the lens into a confusing interaction and &ldquo;why are they
+          doing this?&rdquo; becomes{' '}
           <em>what would a person have to believe, feel, and be afraid of</em>{' '}
-          for this to be the obvious move? Most disagreements are not about
-          facts — they are about which facts feel real, urgent, and
+          for this to be the obvious move? Most disagreements aren&rsquo;t about
+          facts. They&rsquo;re about which facts feel real, urgent, and
           self-relevant.
         </p>
         <p>
-          Weaknesses: it can collapse into endless empathy at the expense of
-          decision. But ignoring headspace makes you efficient at solving the
-          wrong problem.
+          The skill is provisional empathy — building someone&rsquo;s headspace
+          well enough to predict their next sentence, without committing to live
+          there. You don&rsquo;t have to agree with the model. You do have to be
+          able to run it.
+        </p>
+        <p>
+          The failure mode is collapsing into endless empathy at the expense of
+          decision — understanding everyone so thoroughly that you can&rsquo;t
+          act against anyone. But ignoring headspace makes you efficient at
+          solving the wrong problem.
         </p>
       </>
     )
@@ -455,18 +537,25 @@ const LENSES_RAW: Lens[] = [
           rewritten.
         </p>
         <p>
-          Through this lens, behavior follows identity more reliably than it
-          follows goals. <em>I&rsquo;m the kind of person who…</em> is a
-          stronger engine than <em>I&rsquo;m trying to…</em> Loosening the grip
-          on a fixed self — sometimes called ego death — opens up headspaces you
-          previously couldn&rsquo;t inhabit, and makes you more resilient to
-          ego-challenges, since fewer things feel like attacks on who you are.
+          Held up to behavior, identity turns out to be a stronger engine than
+          goals. <em>I&rsquo;m the kind of person who…</em> outperforms{' '}
+          <em>I&rsquo;m trying to…</em> over almost any time horizon. Habits
+          stick when they&rsquo;re downstream of who you think you are, and fall
+          apart when they&rsquo;re not.
         </p>
         <p>
-          Weaknesses: too much detachment becomes drift, and identities do real
-          coordinating work — they tell other people what to expect from you.
-          But treating your identity as fixed is the fastest way to mistake your
-          current configuration for your permanent one.
+          Loosening the grip on a fixed self — sometimes called ego death —
+          opens up headspaces you previously couldn&rsquo;t inhabit. It also
+          makes you more resilient to challenge: fewer things land as attacks on
+          who you are when &ldquo;who you are&rdquo; isn&rsquo;t a thing
+          you&rsquo;re defending.
+        </p>
+        <p>
+          Too much detachment becomes drift, and identities do real coordinating
+          work — they tell other people what to expect from you, and they tell
+          you what to expect from yourself. But treating your identity as fixed
+          is the fastest way to mistake your current configuration for your
+          permanent one.
         </p>
       </>
     )
@@ -489,19 +578,27 @@ const LENSES_RAW: Lens[] = [
           Charlie Munger:{' '}
           <em>show me the incentive and I&rsquo;ll show you the outcome.</em>{' '}
           People, organizations, and entire systems drift toward whatever they
-          are paid — in money, attention, or social approval — to do.
+          get paid — in money, attention, or social approval — to do. The drift
+          is rarely visible while it&rsquo;s happening.
         </p>
         <p>
-          Through this lens, &ldquo;why does this keep happening?&rdquo; almost
+          Used as a frame, &ldquo;why does this keep happening?&rdquo; almost
           always resolves into <em>who benefits when it does?</em> Bureaucracies
           grow because growing is rewarded. Newsrooms publish outrage because
-          outrage gets clicks. The cure is rarely exhortation; it is rewiring
-          the rewards.
+          outrage gets clicks. The cure is rarely exhortation; the cure is
+          rewiring the rewards.
         </p>
         <p>
-          Weaknesses: not every incentive is legible, and human behavior is not
-          perfectly responsive to them. But ignoring incentives is the surest
-          way to be perpetually surprised.
+          It also predicts where the gaps will be. A team measured on tickets
+          closed will close tickets. A team measured on customer love will hear
+          from customers. Whatever you don&rsquo;t put on the scoreboard quietly
+          gets cut.
+        </p>
+        <p>
+          Not every incentive is legible, and human behavior isn&rsquo;t
+          perfectly responsive to them — people leave money on the table all the
+          time for status, identity, or simple inertia. But ignoring incentives
+          is the surest way to be perpetually surprised.
         </p>
       </>
     )
@@ -528,20 +625,28 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           Everything has a UX — tools, teams, calendars, meetings, habits,
-          philosophies. Bad interfaces make good intentions expensive: they add
+          philosophies. Bad interfaces make good intentions expensive. They add
           friction in exactly the places that compound, and remove it where you
           wish there were more.
         </p>
         <p>
-          Through this lens, a stuck team often does not have a strategy
-          problem; it has a meeting problem. A slipping habit does not need more
-          willpower; it needs to be one tap away. A confusing decision is often
-          a missing form.
+          Read the world this way and a stuck team often doesn&rsquo;t have a
+          strategy problem; it has a meeting problem. A slipping habit
+          doesn&rsquo;t need more willpower; it needs to be one tap away. A
+          confusing decision is often a missing form.
         </p>
         <p>
-          Weaknesses: not every problem is interface; some are values or
-          incentives wearing a UX disguise. But the right surface change often
-          unlocks behavior that exhortation could not.
+          The corollary is that small surface changes do disproportionate work.
+          Move the gym bag to the door. Move the Slack notification off the home
+          screen. Move the agenda to before the meeting instead of during. Each
+          one works on the surface the person meets every day. The person comes
+          along.
+        </p>
+        <p>
+          Not every problem is interface. Some are values or incentives wearing
+          a UX disguise, and re-skinning the meeting won&rsquo;t fix a team that
+          doesn&rsquo;t agree on what it&rsquo;s for. But the right surface
+          change often unlocks behavior that exhortation could not.
         </p>
       </>
     )
@@ -561,13 +666,13 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          A thing that cannot be named, explained, or made visible is hard to
-          improve. Writing, diagrams, dashboards, and frameworks convert fog
-          into handles — they turn a vague unease into a problem you can point
-          at.
+          A thing that can&rsquo;t be named, explained, or made visible is hard
+          to improve. Writing, diagrams, dashboards, frameworks — these convert
+          fog into handles. They turn a vague unease into a problem you can
+          point at.
         </p>
         <p>
-          Through this lens, the act of articulation <em>is</em> half the work.
+          Looked at this way, the act of articulation <em>is</em> half the work.
           The team that writes its values down lives them more clearly than the
           team that just &ldquo;has them.&rdquo; The bug you can reproduce is
           already half-fixed. The dashboard reshapes the decisions even when no
@@ -580,12 +685,14 @@ const LENSES_RAW: Lens[] = [
           quietly excellent engineer and the loudly mediocre one often trade
           places in the org&rsquo;s memory because one shipped legibility and
           the other did not. Making your work, your reasoning, and your
-          standards readable to others isn&rsquo;t self-promotion; it&rsquo;s
-          giving people the surface area they need to back you.
+          standards readable to others is how people back you in the first
+          place. Calling it self-promotion misses what&rsquo;s actually being
+          exchanged.
         </p>
         <p>
-          Weaknesses: legibility can flatten what matters into what fits in a
-          chart, and metrics get gamed. But darkness is rarely an upgrade.
+          Legibility can flatten what matters into what fits in a chart, and
+          metrics get gamed the moment they start to count. But darkness is
+          rarely an upgrade.
         </p>
       </>
     )
@@ -606,25 +713,31 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           Ideas, beliefs, formats, and aesthetics compete to spread, the way
-          organisms compete to reproduce. The ones you see most are not
-          necessarily the truest or the most useful — they are the most{' '}
-          <em>transmissible</em>. Catchy beats correct; sticky beats subtle;
-          shareable beats nuanced, almost every time.
+          organisms compete to reproduce. The ones you see most owe their
+          visibility to transmissibility, not truth. Catchy beats correct;
+          sticky beats subtle; shareable beats nuanced, almost every time.
         </p>
         <p>
-          Through this lens, the question stops being{' '}
-          <em>is this idea right?</em> and becomes{' '}
+          Hold the lens up to a viral take and the question stops being{' '}
+          <em>is this idea right?</em> It becomes{' '}
           <em>
-            why is this idea winning right now, and what does it offer the
-            people carrying it?
+            why is this winning right now, and what does it offer the people
+            carrying it?
           </em>{' '}
           Most movements, fashions, and opinions are legible this way long
           before they make sense any other way.
         </p>
         <p>
-          Weaknesses: not every popular idea is empty, and not every obscure one
-          is profound. But if you mistake virality for validity, you will be a
-          passenger in your own beliefs.
+          It also clarifies your own taste. A surprising amount of what you{' '}
+          <em>believe</em> is what your information diet kept feeding you,
+          slightly adapted. Notice the meme structure under an opinion and you
+          can decide, separately, whether you still want to hold it.
+        </p>
+        <p>
+          Not every popular idea is empty, and not every obscure one is profound
+          — sometimes the mainstream is right and the contrarian is simply
+          lonely. But mistake virality for validity and you become a passenger
+          in your own beliefs.
         </p>
       </>
     )
@@ -652,30 +765,29 @@ const LENSES_RAW: Lens[] = [
           then making that thing exceptional.
         </p>
         <p>
-          Through this lens, complexity is a tax. Every feature, possession,
-          obligation, abstraction, and relationship has a hidden cost —
-          cognitive, maintenance, emotional, financial. The cost is rarely
-          visible at the moment of acquisition; it shows up later, as friction,
-          clutter, and the slow erosion of attention. Subtraction is creative
-          work, and often the harder half of it.
+          Carry the discipline and complexity reveals itself as a tax. Every
+          feature, possession, obligation, abstraction, and relationship has a
+          hidden cost — cognitive, maintenance, emotional, financial. The cost
+          is rarely visible at the moment of acquisition; it shows up later, as
+          friction, clutter, and the slow erosion of attention. Subtraction is
+          creative work, and often the harder half of it.
         </p>
         <p>
           The lens applies as much to a life as to a product. What you make, but
           also what you own, what you commit to, who you say yes to, what you
           let onto your calendar, what you allow into your head. A clean surface
-          is downstream of a hundred small refusals. The minimalist isn&rsquo;t
-          the person with nothing; they&rsquo;re the person whose remaining
-          things — projects, possessions, people, beliefs — have all earned
-          their place. Default accumulation runs the other direction
+          is downstream of a hundred small refusals. The minimalist&rsquo;s
+          remaining things — projects, possessions, people, beliefs — have all
+          earned their place. Default accumulation runs the other direction
           automatically; staying lean takes intent.
         </p>
         <p>
-          Weaknesses: the world is genuinely complicated, and over-pruned
-          systems are brittle. Aestheticized minimalism can curdle into
-          performance — empty rooms, empty calendars, empty work — where the
-          subtraction becomes the point instead of the means. But as a
-          counterweight to default accumulation, the lens is nearly always
-          corrective: less, but better, applied to almost anything.
+          The world is genuinely complicated, and over-pruned systems are
+          brittle. Aestheticized minimalism can curdle into performance — empty
+          rooms, empty calendars, empty work, where the subtraction becomes the
+          point instead of the means. But as a counterweight to default
+          accumulation, the lens is nearly always corrective: less, but better,
+          applied to almost anything.
         </p>
       </>
     )
@@ -696,30 +808,33 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           Most people think about effort as a single push: how hard, in what
-          direction, right now. Momentum is the idea that what you can do today
-          depends on what you&rsquo;ve been doing. Effort compounds into mass —
-          trust, reputation, shipping cadence, a team that expects to win — and
-          that mass is what makes the hard moves possible later. The unpopular
-          call, the risky bet, the honest conversation: all of them are easier
-          to land when you&rsquo;ve built the credibility to spend.
+          direction, right now. Momentum says that what you can do today depends
+          on what you&rsquo;ve been doing. Effort compounds into mass — trust,
+          reputation, shipping cadence, a team that expects to win. That mass is
+          what makes the hard moves possible later. The unpopular call, the
+          risky bet, the honest conversation — each one lands more easily when
+          you&rsquo;ve built the credibility to spend.
         </p>
         <p>
-          Through this lens, the question is rarely{' '}
-          <em>should I do this now?</em> but{' '}
+          Apply the frame and the question is rarely{' '}
+          <em>should I do this now?</em> It&rsquo;s{' '}
           <em>
             am I building the momentum I&rsquo;ll need, and spending it on the
             right things?
           </em>{' '}
-          Early wins aren&rsquo;t vanity; they&rsquo;re mass you&rsquo;ll cash
-          in later. Consistency isn&rsquo;t conservatism; it&rsquo;s the
-          currency that buys the right to be bold. And you rarely stop momentum
-          head-on — you nudge its vector. A small push on something already
-          moving beats a big push against something that&rsquo;s going to win
-          regardless.
+          Early wins compound into permission. Consistency compounds into the
+          room. Both look like overhead until you need them.
         </p>
         <p>
-          Weaknesses: the lens romanticizes motion and underrates the deliberate
-          halt — sometimes the highest-value move is stopping a thing that
+          You also rarely stop momentum head-on. You nudge its vector. A small
+          push on something already moving beats a big push against something
+          that&rsquo;s going to win regardless. Most strategic wins, in a career
+          or in a company, look like that — a small redirect, applied early,
+          while the mass was still moving.
+        </p>
+        <p>
+          The lens romanticizes motion and underrates the deliberate halt —
+          sometimes the highest-value move is stopping a thing that
           shouldn&rsquo;t continue, and <em>we have momentum here</em> is how
           bad projects survive. It also flatters incumbents, who confuse
           inherited mass with earned mass. But ignoring momentum is how smart
@@ -744,21 +859,30 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Humans do not just optimize; they story-tell. A good frame can change
-          what people perceive as possible, admirable, embarrassing, or
-          inevitable — without changing a single underlying fact.
+          Humans don&rsquo;t just optimize; they story-tell. A good frame can
+          change what people perceive as possible, admirable, embarrassing, or
+          inevitable — without changing a single underlying fact. The story does
+          the work the data never could.
         </p>
         <p>
-          Through this lens, you notice that movements run on narrative,
-          companies run on narrative, and most personal change starts with a new
-          story you tell about yourself. The same career pivot is a &ldquo;brave
-          leap&rdquo; or a &ldquo;reckless mistake&rdquo; depending entirely on
-          the surrounding tale.
+          Read movements, companies, and personal change through this and the
+          narrative becomes the leading indicator, not the trailing one. The
+          same career pivot is a &ldquo;brave leap&rdquo; or a &ldquo;reckless
+          mistake&rdquo; depending entirely on the surrounding tale. The shift
+          in framing precedes the shift in behavior, every time.
         </p>
         <p>
-          Weaknesses: stories can outrun reality, and good narratives have
-          buried bad decisions. But trying to operate without one is its own
-          kind of story — usually a thinner one.
+          Practically, this raises the price of the words you use about
+          yourself. The throwaway sentence — <em>I&rsquo;m bad at this</em>,{' '}
+          <em>we don&rsquo;t do that here</em>,{' '}
+          <em>I&rsquo;m not the kind of person who…</em> — quietly sets the
+          ceiling for what comes next. Edit the narrative and behavior follows.
+        </p>
+        <p>
+          Stories can outrun reality, and good narratives have buried bad
+          decisions for as long as there have been stories to tell. But
+          operating without one is its own kind of story — usually a thinner
+          one, and rarely the one you&rsquo;d have chosen.
         </p>
       </>
     )
@@ -779,21 +903,29 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           People absorb culture, standards, vocabulary, and taste from their
-          environment. Most growth is not effortful self-improvement — it is
-          steady proximity to better defaults. Put yourself near high-signal
-          people and artifacts and you become what you repeatedly notice.
+          environment. Most growth happens through proximity, not effort —
+          steady exposure to better defaults, day after day, until what used to
+          seem impressive feels normal and what used to feel normal feels
+          embarrassing.
         </p>
         <p>
-          Through this lens, who you spend time with, what you read, where you
+          Looked at this way, who you spend time with, what you read, where you
           work, and what you stare at on a phone screen are all training data.
-          The slow upgrade compounds: you start producing the kind of work,
+          The slow upgrade compounds. You start producing the kind of work,
           holding the kind of opinions, having the kind of instincts of the
           people you keep around you.
         </p>
         <p>
-          Weaknesses: osmosis works in both directions and absorbs the mediocre
-          as readily as the great. The lens warns as much as it encourages:
-          choose the room.
+          It also explains a frustrating thing about advice. Telling someone to
+          &ldquo;have higher standards&rdquo; rarely works — standards
+          aren&rsquo;t moved by exhortation, they&rsquo;re moved by exposure.
+          The fastest way to raise yours is to spend a month around people whose
+          floor is your ceiling.
+        </p>
+        <p>
+          Osmosis runs in both directions and absorbs the mediocre as readily as
+          the great. A bad room is contagious in exactly the way a good one is.
+          The lens warns as much as it encourages: choose the room.
         </p>
       </>
     )
@@ -814,13 +946,13 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           Composable units live beneath complex systems. Many things that look
-          different are fundamentally the same underlying thing wearing
-          different clothes. Identify and solve the primitive problem and you
-          solve the more complex problems for free.
+          different are the same underlying thing wearing different clothes.
+          Identify and solve the primitive problem and you solve the more
+          complex problems for free.
         </p>
         <p>
-          Through this lens, ten features collapse into three building blocks;
-          five competing tools collapse into one missing abstraction; a tangle
+          Used as a frame, ten features collapse into three building blocks.
+          Five competing tools collapse into one missing abstraction. A tangle
           of edge cases collapses into one rule generating them. The work is
           mostly noticing:{' '}
           <em>
@@ -828,10 +960,17 @@ const LENSES_RAW: Lens[] = [
           </em>
         </p>
         <p>
-          Weaknesses: chasing primitives can become procrastination dressed as
-          architecture, and reality sometimes refuses to factor cleanly. But
-          almost every elegant system is one good primitive away from being ten
-          times simpler.
+          It changes what good design looks like. The impressive system has
+          fewer knobs than expected, and the knobs it has all derive from a
+          smaller, cleaner core. Most things — in software, in writing, in
+          organizations — get better the moment someone finds the primitive the
+          surface was hiding.
+        </p>
+        <p>
+          Chasing primitives can become procrastination dressed as architecture,
+          and reality sometimes refuses to factor cleanly — some domains are
+          genuinely messy underneath. But almost every elegant system is one
+          good primitive away from being ten times simpler.
         </p>
       </>
     )
@@ -851,23 +990,31 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          The world does not deliver outcomes; it delivers{' '}
-          <em>distributions</em> of outcomes. Most events are not certain or
-          impossible — they are a shape, a range, a tail. Treating uncertain
-          things as binary (will/won&rsquo;t, true/false, safe/risky) is the
-          most common and most expensive cognitive error.
+          The world doesn&rsquo;t deliver outcomes; it delivers{' '}
+          <em>distributions</em> of outcomes. Most events aren&rsquo;t certain
+          or impossible — they&rsquo;re a shape, a range, a tail. Treating
+          uncertain things as binary (will/won&rsquo;t, true/false, safe/risky)
+          is the most common and most expensive cognitive error.
         </p>
         <p>
-          Through this lens, you stop asking <em>what will happen?</em> and
-          start asking{' '}
+          Apply the lens and <em>what will happen?</em> gives way to{' '}
           <em>what&rsquo;s the spread, and where&rsquo;s my edge?</em> Plans
-          become ranges. Confidence becomes calibration. A 70% chance is not a
-          promise; it is a posture.
+          become ranges. Confidence becomes calibration. A 70% chance lives in
+          the world as a posture — lean toward action, stay ready to be wrong,
+          update as evidence arrives. Updating is half the skill.
         </p>
         <p>
-          Weaknesses: not every situation rewards probability over conviction,
-          and life is partly self-fulfilling. But anyone who mistakes the
-          average for the outcome will be mugged by variance eventually.
+          It also reorders which bets count as smart. A move that wins 80% of
+          the time and loses everything the other 20% is worse than one that
+          wins 55% with bounded losses. People who only see outcomes call the
+          first one bold and the second one timid. People who see distributions
+          call them what they are.
+        </p>
+        <p>
+          Not every situation rewards probability over conviction — sometimes
+          the move is to commit hard to a thin chance and self-fulfill it. But
+          anyone who mistakes the average for the outcome will be mugged by
+          variance eventually.
         </p>
       </>
     )
@@ -893,18 +1040,25 @@ const LENSES_RAW: Lens[] = [
           them, refracted onto whoever happens to be standing in front of them.
         </p>
         <p>
-          Through this lens, listening changes. When someone says{' '}
-          <em>people in this industry are all so insecure,</em> ask{' '}
-          <em>what about me right now made that line feel important to say?</em>{' '}
+          Once you can see it, listening changes. When someone says{' '}
+          <em>people in this industry are all so insecure,</em> the useful
+          question is{' '}
+          <em>
+            what about me, right now, made that line feel important to say?
+          </em>{' '}
           The same goes for praise: what someone admires reveals what they wish
           were more true of themselves.
         </p>
         <p>
-          Weaknesses: not everything is projection — sometimes a sharp
-          observation is just a sharp observation, and dismissing critique as
-          &ldquo;they&rsquo;re just projecting&rdquo; is its own ugly move. But
-          the part of the message that&rsquo;s about <em>them</em> is almost
-          always the louder signal.
+          It changes how you take criticism too. The cruelest readings of you
+          usually tell you more about the reader than about you. Not always —
+          but often enough that you should ask before flinching.
+        </p>
+        <p>
+          Not everything is projection. Sometimes a sharp observation is a sharp
+          observation, and dismissing critique as &ldquo;they&rsquo;re just
+          projecting&rdquo; is its own ugly move. But the part of the message
+          that&rsquo;s about <em>them</em> is almost always the louder signal.
         </p>
       </>
     )
@@ -928,15 +1082,14 @@ const LENSES_RAW: Lens[] = [
           from it. The direct effect is what you intended; the ripples are what
           actually shape the world. Price a thing lower, and usage goes up, and
           the people using it change, and the culture around it shifts, and the
-          thing itself becomes something different — all of which happens after
-          the decision is made and none of which shows up in the pitch deck.
-          Most of history&rsquo;s biggest surprises, scandals, and own-goals are
-          second-order effects that someone could have seen but didn&rsquo;t
-          bother to.
+          thing itself becomes something different — none of which shows up in
+          the pitch deck. Most of history&rsquo;s biggest surprises, scandals,
+          and own-goals are second-order effects that someone could have seen
+          but didn&rsquo;t bother to.
         </p>
         <p>
-          Through this lens, the honest question is rarely{' '}
-          <em>does this solve the problem?</em> but{' '}
+          Held up to a decision, the honest question is rarely{' '}
+          <em>does this solve the problem?</em> It&rsquo;s{' '}
           <em>what does this produce downstream?</em> Rent control reduces rent,
           then reduces housing supply. A metric rewards a behavior, then
           corrupts it. A feature adds a capability, then reshapes how people use
@@ -945,11 +1098,17 @@ const LENSES_RAW: Lens[] = [
           that matters.
         </p>
         <p>
-          Weaknesses: taken too far, it becomes paralysis — every move has an
-          infinite downstream, and you can always invent a scary second-order
-          story for any change. It also favors the status quo by default,
-          because the consequences of <em>not acting</em> are less legible than
-          the consequences of acting. But people who only think in first-order
+          The skill is forcing yourself to ask <em>and then what?</em> three
+          times in a row. The first answer is usually the goal. The second is
+          usually plausible. The third is where the surprises live — and where
+          most of the value, or most of the damage, of a decision actually sits.
+        </p>
+        <p>
+          Taken too far, it becomes paralysis. Every move has an infinite
+          downstream, and you can always invent a scary second-order story for
+          any change. The lens also favors the status quo, because the
+          consequences of <em>not acting</em> are less legible than the
+          consequences of acting. But people who think only in first-order
           effects build systems that solve the visible problem and create three
           invisible ones, over and over, for decades.
         </p>
@@ -974,18 +1133,28 @@ const LENSES_RAW: Lens[] = [
           A surprising amount of human behavior is about status — relative
           standing within the groups we care about. Not money, not power
           directly, but where you sit in the local pecking order, and the
-          movement of that position over time.
+          movement of that position over time. The local part is the trick.
+          People will burn months of comfort for a half-step inside a group of
+          forty.
         </p>
         <p>
-          Through this lens, you notice why people pick the cars they pick, why
-          the office layout matters, why a small slight outrages and a large
-          compliment soothes. Why entire industries — luxury, fashion, academia
-          — exist primarily to allocate position.
+          Read behavior this way and you notice why people pick the cars they
+          pick, why office layouts matter, why a small slight outrages and a
+          large compliment soothes. Why whole industries — luxury, fashion,
+          academia, much of social media — exist mostly to allocate position.
         </p>
         <p>
-          Weaknesses: not everything is status. Love, curiosity, craft, and play
-          are real and irreducible. But ignore status and you will be confused
-          by half of what people do.
+          It also explains the silent ones. People who appear modest about money
+          or career often have a status game running somewhere else: a scene, a
+          craft, a friend group, a way of dressing that signals to the right
+          thirty people. Everyone&rsquo;s playing. The interesting question is
+          on which board.
+        </p>
+        <p>
+          Not everything is status. Love, curiosity, craft, and play are real
+          and irreducible, and reducing them all to position-jockeying is its
+          own kind of poverty. But ignore status entirely and you&rsquo;ll be
+          confused by half of what people do.
         </p>
       </>
     )
@@ -1017,15 +1186,22 @@ const LENSES_RAW: Lens[] = [
           producing it, again and again.
         </p>
         <p>
-          Through this lens, blame becomes less interesting than{' '}
-          <em>structure</em>. Why does this team keep missing deadlines? Why do
-          diets fail? Why does the same kind of meeting keep getting scheduled?
-          Look at the loop, the lag, the limit — not the last person who acted.
+          Used as a lens, blame becomes less interesting than <em>structure</em>
+          . Why does this team keep missing deadlines? Why do diets fail? Why
+          does the same kind of meeting keep getting scheduled? Look at the
+          loop, the lag, the limit — not the last person who acted.
         </p>
         <p>
-          Weaknesses: it can become an excuse (&ldquo;the system did it&rdquo;).
-          But used well, it surfaces leverage points where a small intervention
-          changes everything downstream.
+          The most useful move is finding leverage points: the one valve that,
+          turned slightly, changes everything downstream. They&rsquo;re rarely
+          the obvious ones. The biggest lever is often a delay no one notices, a
+          goal no one wrote down, or a feedback signal that arrives too late to
+          matter.
+        </p>
+        <p>
+          The lens can become an excuse — &ldquo;the system did it&rdquo; — and
+          absolve individuals who genuinely chose badly. But used well, it shows
+          you the few places where small effort produces outsized change.
         </p>
       </>
     )
@@ -1047,23 +1223,29 @@ const LENSES_RAW: Lens[] = [
         <p>
           Taste is a refined sense of what&rsquo;s meaningful and worth pursuing
           — a filter built from aesthetic, moral, and cultural values that helps
-          you predict what will resonate. Useful for everything from movies and
-          furniture to product decisions and who you spend time with.
+          you predict what will resonate. Useful for movies and furniture. Also
+          for product decisions, hires, and who you spend time with.
         </p>
         <p>
-          Through this lens, taste behaves like a loss function. Good taste is
-          the combination of three things: <em>resonance</em> (others find your
-          vector appealing — your friends like the books you recommend),{' '}
-          <em>articulation</em> (you can clearly state what you&rsquo;re
-          optimizing for and why), and <em>execution</em> (you can consistently
-          make decisions that optimize for that vector in context). All three
-          are trainable; most people are uneven across them.
+          Looked at as a function, good taste has three components:{' '}
+          <em>resonance</em> (others find your vector appealing — your friends
+          like the books you recommend), <em>articulation</em> (you can state
+          what you&rsquo;re optimizing for and why), and <em>execution</em> (you
+          can consistently make decisions that optimize for that vector in
+          context). All three are trainable; most people are uneven across them.
         </p>
         <p>
-          Weaknesses: taste decays into snobbery when articulation runs ahead of
-          resonance, and it ossifies when execution stops being tested against
-          the world. But undefended taste collapses into whatever is loudest in
-          the room, which is almost always worse than your own honest filter.
+          The interesting practice is noticing which one is your bottleneck.
+          Resonance without articulation is intuition you can&rsquo;t share.
+          Articulation without execution is a manifesto with nothing behind it.
+          Execution without resonance is a closed loop — you make what you want,
+          and no one else cares. Each one demands a different kind of work.
+        </p>
+        <p>
+          Taste decays into snobbery when articulation runs ahead of resonance,
+          and it ossifies when execution stops being tested against the world.
+          But undefended taste collapses into whatever&rsquo;s loudest in the
+          room, which is almost always worse than your own honest filter.
         </p>
       </>
     )
@@ -1083,35 +1265,36 @@ const LENSES_RAW: Lens[] = [
     body: (
       <>
         <p>
-          Through this lens, every person behaves <em>exactly</em> according to
-          a function — a private utility function — that they are quietly
-          maximizing in every choice. Not approximately, not most of the time:
-          the model assumes the function fully describes them, and the
-          interesting question is what the function actually contains.
+          Every person behaves <em>exactly</em> according to a function — a
+          private utility function — that they&rsquo;re quietly maximizing in
+          every choice. Not approximately, not most of the time. The model
+          assumes the function fully describes them, and the interesting
+          question is what the function actually contains.
         </p>
         <p>
-          And it contains far more than the utilitarian&rsquo;s ledger of pain
-          and pleasure. People also pay for identity, status, belonging,
-          coherence, dignity, the feeling of being right, the feeling of having
-          chosen. Costs that look irrational on a spreadsheet — staying in a bad
-          job for the title, picking the harder gym, refusing the cheap win —
-          make sense the moment you allow the function to weigh those terms.
+          It contains far more than the utilitarian&rsquo;s ledger of pain and
+          pleasure. People also pay for identity, status, belonging, coherence,
+          dignity, the feeling of being right, the feeling of having chosen.
+          Costs that look irrational on a spreadsheet — staying in a bad job for
+          the title, picking the harder gym, refusing the cheap win — make sense
+          the moment you allow the function to weigh those terms.
         </p>
         <p>
           Used this way, &ldquo;they&rsquo;re being irrational&rdquo; almost
           always rephrases as{' '}
           <em>their function has terms mine doesn&rsquo;t</em>. The middle
-          manager isn&rsquo;t confused; she&rsquo;s pricing risk to her
-          standing. The friend who&rsquo;d rather be right than agree
-          isn&rsquo;t broken; identity is in the function. Once you can write
-          down even a rough version of someone&rsquo;s utility function — yours
+          manager is pricing risk to her standing, not failing to think clearly.
+          The friend who&rsquo;d rather be right than agree has identity in the
+          function, and the function is doing its job. Once you can write down
+          even a rough version of someone&rsquo;s utility function — yours
           included — strange behavior turns ordinary.
         </p>
         <p>
-          Weaknesses: humans aren&rsquo;t fully coherent maximizers, and
-          shoehorning every motive into a single scalar can flatten things that
-          deserve their own dimension. But as a first cut on strange behavior,
-          it cuts deep.
+          Humans aren&rsquo;t fully coherent maximizers, and shoehorning every
+          motive into a single scalar can flatten things that deserve their own
+          dimension. The function also drifts over time and under stress, and
+          assuming stability when it doesn&rsquo;t hold is its own error. But as
+          a first cut on strange behavior, it cuts deep.
         </p>
       </>
     )
