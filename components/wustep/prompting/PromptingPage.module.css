@@ -655,6 +655,75 @@
   transform: translateX(3px);
 }
 
+/* Restart pill — used on the Recap page in place of the prominent
+   Next button. Smaller, inline, with a continuously-rotating icon so
+   it reads as "loop back" rather than "next chapter". */
+.chapterNavRestart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  text-decoration: none !important;
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.12)) !important;
+  background: transparent !important;
+  background-image: none !important;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.chapterNavRestart:hover {
+  color: var(--fg-color, rgb(55, 53, 47));
+  background: var(--fg-color-0, rgba(55, 53, 47, 0.05)) !important;
+  border-color: var(--fg-color-2, rgba(55, 53, 47, 0.18)) !important;
+}
+
+:global(.dark-mode) .chapterNavRestart {
+  color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+:global(.dark-mode) .chapterNavRestart:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.chapterNavRestartLabel {
+  display: inline-block;
+}
+
+.chapterNavRestartIcon {
+  flex-shrink: 0;
+  transform-origin: 50% 50%;
+  animation: chapterNavRestartSpin 8s linear infinite;
+  transition: animation-duration 220ms ease;
+}
+
+.chapterNavRestart:hover .chapterNavRestartIcon {
+  animation-duration: 1.6s;
+}
+
+@keyframes chapterNavRestartSpin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapterNavRestartIcon {
+    animation: none;
+  }
+}
+
 /* prefers-reduced-motion override */
 @media (prefers-reduced-motion: reduce) {
   .chapterBody {

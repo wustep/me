@@ -9,7 +9,7 @@ import {
   TITLE,
   TITLE_WORDS
 } from './constants'
-import { SparkleIcon } from './icons'
+import { DotMatrixIcon } from './DotMatrixIcon'
 import styles from './PromptingPage.module.css'
 import { PromptInputDemo } from './PromptInputDemo'
 import { bodyDelay } from './types'
@@ -30,7 +30,18 @@ export function IntroContent() {
       setRevealed(true)
       return
     }
-    const id = window.setTimeout(() => setRevealed(true), THINKING_DURATION_MS)
+    // On the first visit per session, let the dot-matrix animation
+    // complete a full cycle (~5s covers the slowest pattern's tail).
+    // After that, snap to the short duration so revisits stay snappy.
+    let firstLoad = false
+    try {
+      firstLoad = !window.sessionStorage.getItem('prompting:intro:seen')
+      window.sessionStorage.setItem('prompting:intro:seen', '1')
+    } catch {
+      /* ignore */
+    }
+    const wait = firstLoad ? 5000 : THINKING_DURATION_MS
+    const id = window.setTimeout(() => setRevealed(true), wait)
     return () => window.clearTimeout(id)
   }, [prefersReducedMotion])
 
@@ -41,7 +52,7 @@ export function IntroContent() {
           className={`${styles.thinking} ${revealed ? styles.thinkingHidden : ''}`}
           aria-hidden={revealed}
         >
-          <SparkleIcon />
+          <DotMatrixIcon className={styles.sparkle} />
           <span className={styles.thinkingText}>Thinking</span>
         </span>
 

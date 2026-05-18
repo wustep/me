@@ -914,7 +914,7 @@ export const SECTIONS: Section[] = [
         cssVar: '--design-panel-width',
         cssUnit: 'px',
         min: 320,
-        max: 720,
+        max: 880,
         step: 10,
         default: 540
       },

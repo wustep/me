@@ -9,6 +9,12 @@ export type ChapterMeta = {
   prevLabel?: string
   nextHref?: string
   nextLabel?: string
+  /**
+   * `'restart'` swaps the prominent Next button for a compact rotating
+   * "↻ Restart" pill — used on the Recap page so readers don't tap
+   * "Back to start" thinking it's the next chapter.
+   */
+  nextKind?: 'next' | 'restart'
 }
 
 /**

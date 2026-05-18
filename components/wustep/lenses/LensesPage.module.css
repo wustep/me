@@ -1222,7 +1222,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(var(--design-panel-width, 480px), 100vw);
+  width: min(var(--design-panel-width, 540px), 100vw);
   background: #faf7ee;
   display: flex;
   flex-direction: column;
@@ -1256,7 +1256,7 @@
 
 .panelPreview {
   position: absolute;
-  width: min(var(--design-panel-width, 480px), 72%);
+  width: min(var(--design-panel-width, 540px), 72%);
   min-width: min(100%, 360px);
   animation: none !important;
 }

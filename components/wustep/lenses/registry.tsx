@@ -128,8 +128,8 @@ const LENSES_RAW: Lens[] = [
         <p>
           Almost every problem between two people is, at root, a translation
           problem. Different vocabularies, different unsaid assumptions,
-          different stakes — the gap quietly grows until it surfaces as
-          conflict, drift, or a bad outcome neither person wanted.
+          different stakes — the gap widens until it surfaces as conflict,
+          drift, or a bad outcome neither person wanted.
         </p>
         <p>
           Held up against most disagreements, &ldquo;they&rsquo;re wrong&rdquo;
@@ -219,8 +219,8 @@ const LENSES_RAW: Lens[] = [
           A lot of human behavior makes more sense as{' '}
           <em>internal-state regulation</em> than as goal-pursuit. People are
           seeking novelty, reward, relief, control, connection, or a sense of
-          meaning — and the brain&rsquo;s dopamine system is quietly
-          orchestrating most of it underneath the conscious story.
+          meaning — and the brain&rsquo;s dopamine system is orchestrating most
+          of it underneath the conscious story.
         </p>
         <p>
           Look at it this way and scrolling, snacking, gambling, refreshing
@@ -454,8 +454,8 @@ const LENSES_RAW: Lens[] = [
           reward so that doing the right thing is also the most engaging thing.
         </p>
         <p>
-          This is what good managers, teachers, and product designers are
-          quietly doing. They&rsquo;re rarely heroic motivators. They&rsquo;re
+          This is the real work of good managers, teachers, and product
+          designers. They&rsquo;re rarely heroic motivators. They&rsquo;re
           game-makers — adjusting the payoff matrix until the move they want is
           also the move people want to make.
         </p>
@@ -463,7 +463,7 @@ const LENSES_RAW: Lens[] = [
           Not everything should be gamified, and over-designed games crowd out
           intrinsic motivation. A team that only moves for points stops moving
           when the points go away. But the best designers, coaches, and managers
-          are quietly thinking in payoffs and moves.
+          are thinking in payoffs and moves, all the way down.
         </p>
       </>
     )
@@ -591,8 +591,8 @@ const LENSES_RAW: Lens[] = [
         <p>
           It also predicts where the gaps will be. A team measured on tickets
           closed will close tickets. A team measured on customer love will hear
-          from customers. Whatever you don&rsquo;t put on the scoreboard quietly
-          gets cut.
+          from customers. Whatever you don&rsquo;t put on the scoreboard gets
+          cut, slowly and without anyone deciding to cut it.
         </p>
         <p>
           Not every incentive is legible, and human behavior isn&rsquo;t
@@ -682,7 +682,7 @@ const LENSES_RAW: Lens[] = [
           Legibility is also how others come to know you. Reputation,
           credibility, and rewards accrue to what is <em>visible</em> — people
           can only judge, trust, or champion what they can actually see. The
-          quietly excellent engineer and the loudly mediocre one often trade
+          unshowy excellent engineer and the loud mediocre one often trade
           places in the org&rsquo;s memory because one shipped legibility and
           the other did not. Making your work, your reasoning, and your
           standards readable to others is how people back you in the first
@@ -875,8 +875,8 @@ const LENSES_RAW: Lens[] = [
           Practically, this raises the price of the words you use about
           yourself. The throwaway sentence — <em>I&rsquo;m bad at this</em>,{' '}
           <em>we don&rsquo;t do that here</em>,{' '}
-          <em>I&rsquo;m not the kind of person who…</em> — quietly sets the
-          ceiling for what comes next. Edit the narrative and behavior follows.
+          <em>I&rsquo;m not the kind of person who…</em> — sets the ceiling for
+          what comes next. Edit the narrative and behavior follows.
         </p>
         <p>
           Stories can outrun reality, and good narratives have buried bad
@@ -1266,10 +1266,10 @@ const LENSES_RAW: Lens[] = [
       <>
         <p>
           Every person behaves <em>exactly</em> according to a function — a
-          private utility function — that they&rsquo;re quietly maximizing in
-          every choice. Not approximately, not most of the time. The model
-          assumes the function fully describes them, and the interesting
-          question is what the function actually contains.
+          private utility function — that they&rsquo;re maximizing in every
+          choice. Not approximately, not most of the time. The model assumes the
+          function fully describes them, and the interesting question is what
+          the function actually contains.
         </p>
         <p>
           It contains far more than the utilitarian&rsquo;s ledger of pain and
