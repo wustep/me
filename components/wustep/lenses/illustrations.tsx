@@ -94,6 +94,32 @@ const SVG_BASE: React.SVGProps<SVGSVGElement> = {
   xmlns: 'http://www.w3.org/2000/svg'
 }
 
+const ART_STROKE = {
+  hairline: 1,
+  fine: 1.2,
+  regular: 1.6,
+  medium: 2,
+  bold: 2.4,
+  heavy: 2.8
+} as const
+
+const ART_OPACITY = {
+  wash: 0.12,
+  ghost: 0.2,
+  quiet: 0.32,
+  soft: 0.45,
+  base: 0.56,
+  strong: 0.72,
+  solid: 0.84
+} as const
+
+const ART_DOT = {
+  tiny: 2.4,
+  small: 3.2,
+  medium: 4,
+  large: 5
+} as const
+
 /** Second-order effects — a stone dropped in still water sends rings
  *  outward, and the rings grow bigger as they travel. The accent dot
  *  at center is the direct action; the three concentric rings are
@@ -118,8 +144,8 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='18'
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
-        opacity='0.5'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
       <circle
         cx='50'
@@ -127,8 +153,8 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='28'
         fill='none'
         stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.32'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.quiet}
       />
       <circle
         cx='50'
@@ -136,12 +162,12 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='38'
         fill='none'
         stroke={fg}
-        strokeWidth='1'
-        opacity='0.18'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.ghost}
       />
 
       {/* Centered solid dot: the triggering action. */}
-      <circle cx='50' cy='50' r='4' fill={accent} />
+      <circle cx='50' cy='50' r={ART_DOT.medium} fill={accent} />
 
       {/* Three animated rings. Start radii are tight around the
           center; the keyframes scale them outward and fade them off,
@@ -153,8 +179,8 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='10'
         fill='none'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.85'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.solid}
         data-anim-target='1'
         style={{ transformOrigin: '50px 50px' }}
       />
@@ -164,8 +190,8 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='10'
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
-        opacity='0.6'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.strong}
         data-anim-target='2'
         style={{ transformOrigin: '50px 50px' }}
       />
@@ -175,8 +201,8 @@ function ArtSecondOrder({ fg, accent }: { fg: string; accent: string }) {
         r='10'
         fill='none'
         stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.4'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.soft}
         data-anim-target='3'
         style={{ transformOrigin: '50px 50px' }}
       />
@@ -248,9 +274,9 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
         }
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
+        strokeWidth={ART_STROKE.regular}
         strokeLinecap='round'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='trunk-l'
       />
       <path
@@ -261,9 +287,9 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
         }
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
+        strokeWidth={ART_STROKE.regular}
         strokeLinecap='round'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='trunk-r'
       />
 
@@ -278,9 +304,9 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
         }
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
+        strokeWidth={ART_STROKE.regular}
         strokeLinecap='round'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='trunk-c'
       />
 
@@ -292,9 +318,9 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
           key={`gp-${i}`}
           cx={x}
           cy={Y_GP}
-          r='3'
+          r={ART_DOT.small}
           fill={fg}
-          opacity='0.7'
+          opacity={ART_OPACITY.strong}
           data-anim-target='1'
           style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
         />
@@ -308,9 +334,9 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
           key={`p-${i}`}
           cx={x}
           cy={Y_P}
-          r='3.4'
+          r={ART_DOT.small}
           fill={fg}
-          opacity='0.85'
+          opacity={ART_OPACITY.solid}
           data-anim-target='2'
           style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
         />
@@ -322,7 +348,7 @@ function ArtEvoPsych({ fg, accent }: { fg: string; accent: string }) {
       <circle
         cx={C_X}
         cy={Y_C}
-        r='4.2'
+        r={ART_DOT.medium}
         fill={accent}
         data-anim-target='3'
         style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
@@ -342,8 +368,8 @@ function ArtMinimalism({ fg, accent }: { fg: string; accent: string }) {
         height='84'
         fill='none'
         stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.32'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.quiet}
       />
       {/* Group with transform-origin centered for a calm scale-breath. */}
       <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
@@ -397,7 +423,7 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 30 86 Q 30 80 38 80 L 62 80 Q 70 80 70 86 Z'
         fill={fg}
-        opacity='0.7'
+        opacity={ART_OPACITY.strong}
       />
       {/* Thin shadow line under the base so it reads as resting on
           a surface. */}
@@ -407,8 +433,8 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
         x2='74'
         y2='87'
         stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.35'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
         strokeLinecap='round'
       />
 
@@ -421,7 +447,7 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
         width='5.2'
         height={80 - PIVOT.y}
         fill={fg}
-        opacity='0.7'
+        opacity={ART_OPACITY.strong}
       />
 
       {/* Pivot peak — a small triangle at the very top of the post,
@@ -430,7 +456,7 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
       <polygon
         points={`${PIVOT.x - 4},${PIVOT.y + 1} ${PIVOT.x + 4},${PIVOT.y + 1} ${PIVOT.x},${PIVOT.y - 5}`}
         fill={fg}
-        opacity='0.85'
+        opacity={ART_OPACITY.solid}
       />
 
       {/* ── Tilting group: beam, pan struts, pans, weights. All
@@ -449,16 +475,28 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
           x2={RIGHT_X}
           y2={BEAM_Y}
           stroke={fg}
-          strokeWidth='3'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
-          opacity='0.85'
+          opacity={ART_OPACITY.solid}
         />
 
         {/* Beam-end caps — small dots at each end of the beam where
             the pan struts attach. Subtle visual grace note that
             tells the eye "this is where the pan hangs from." */}
-        <circle cx={LEFT_X} cy={BEAM_Y} r='1.4' fill={fg} opacity='0.85' />
-        <circle cx={RIGHT_X} cy={BEAM_Y} r='1.4' fill={fg} opacity='0.85' />
+        <circle
+          cx={LEFT_X}
+          cy={BEAM_Y}
+          r='1.4'
+          fill={fg}
+          opacity={ART_OPACITY.solid}
+        />
+        <circle
+          cx={RIGHT_X}
+          cy={BEAM_Y}
+          r='1.4'
+          fill={fg}
+          opacity={ART_OPACITY.solid}
+        />
 
         {/* ── Left pan: V-strut + bowl + weight. */}
         {/* Strut: two thin lines V-ing from the beam end down to
@@ -466,9 +504,9 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
             chains/wires holding the pan. */}
         <g
           stroke={fg}
-          strokeWidth='1'
+          strokeWidth={ART_STROKE.hairline}
           strokeLinecap='round'
-          opacity='0.6'
+          opacity={ART_OPACITY.base}
           fill='none'
         >
           <line x1={LEFT_X} y1={BEAM_Y} x2={LEFT_X - PAN_HALF} y2={RIM_Y} />
@@ -479,17 +517,23 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
         <path
           d={`M ${LEFT_X - PAN_HALF} ${RIM_Y} L ${LEFT_X + PAN_HALF} ${RIM_Y} Q ${LEFT_X} ${RIM_Y + 6} ${LEFT_X - PAN_HALF} ${RIM_Y} Z`}
           fill={fg}
-          opacity='0.65'
+          opacity={ART_OPACITY.base}
         />
         {/* Lighter option — small weight in the bowl. */}
-        <circle cx={LEFT_X} cy={RIM_Y - 1.2} r='2.2' fill={fg} opacity='0.85' />
+        <circle
+          cx={LEFT_X}
+          cy={RIM_Y - 1.2}
+          r={ART_DOT.tiny}
+          fill={fg}
+          opacity={ART_OPACITY.solid}
+        />
 
         {/* ── Right pan: V-strut + bowl + heavier (accent) weight. */}
         <g
           stroke={fg}
-          strokeWidth='1'
+          strokeWidth={ART_STROKE.hairline}
           strokeLinecap='round'
-          opacity='0.6'
+          opacity={ART_OPACITY.base}
           fill='none'
         >
           <line x1={RIGHT_X} y1={BEAM_Y} x2={RIGHT_X - PAN_HALF} y2={RIM_Y} />
@@ -498,11 +542,11 @@ function ArtUtility({ fg, accent }: { fg: string; accent: string }) {
         <path
           d={`M ${RIGHT_X - PAN_HALF} ${RIM_Y} L ${RIGHT_X + PAN_HALF} ${RIM_Y} Q ${RIGHT_X} ${RIM_Y + 6} ${RIGHT_X - PAN_HALF} ${RIM_Y} Z`}
           fill={fg}
-          opacity='0.65'
+          opacity={ART_OPACITY.base}
         />
         {/* The chosen option — bigger, accent-coloured weight. The
             heavier this pan is, the more the beam tilts toward it. */}
-        <circle cx={RIGHT_X} cy={RIM_Y - 2} r='4' fill={accent} />
+        <circle cx={RIGHT_X} cy={RIM_Y - 2} r={ART_DOT.medium} fill={accent} />
       </g>
     </svg>
   )
@@ -583,8 +627,8 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
         x2='86'
         y2={GROUND_Y}
         stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.4'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.soft}
       />
 
       {/* The three podium blocks. Drawn before the figures so the
@@ -605,7 +649,7 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
         height={SILVER.h}
         rx='1.5'
         fill={fg}
-        opacity='0.5'
+        opacity={ART_OPACITY.base}
         data-anim-target='silver-block'
         style={{
           transformBox: 'fill-box',
@@ -619,7 +663,7 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
         height={GOLD.h}
         rx='1.5'
         fill={fg}
-        opacity='0.85'
+        opacity={ART_OPACITY.solid}
         data-anim-target='gold-block'
         style={{
           transformBox: 'fill-box',
@@ -633,7 +677,7 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
         height={BRONZE.h}
         rx='1.5'
         fill={fg}
-        opacity='0.36'
+        opacity={ART_OPACITY.soft}
         data-anim-target='bronze-block'
         style={{
           transformBox: 'fill-box',
@@ -651,7 +695,7 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
         cy={silverTop - 3.6}
         r='3.6'
         fill={fg}
-        opacity='0.9'
+        opacity={ART_OPACITY.solid}
         data-anim-target='silver-dot'
       />
 
@@ -659,9 +703,9 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
       <circle
         cx={bronzeCx}
         cy={bronzeTop - 3.2}
-        r='3.2'
+        r={ART_DOT.small}
         fill={fg}
-        opacity='0.72'
+        opacity={ART_OPACITY.strong}
         data-anim-target='bronze-dot'
       />
 
@@ -684,17 +728,17 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
             cy={goldTop - 5}
             r='14'
             fill={accent}
-            opacity='0.12'
+            opacity={ART_OPACITY.wash}
           />
           <circle
             cx={goldCx}
             cy={goldTop - 5}
             r='8.5'
             fill={accent}
-            opacity='0.22'
+            opacity={ART_OPACITY.ghost}
           />
         </g>
-        <circle cx={goldCx} cy={goldTop - 5} r='5' fill={accent} />
+        <circle cx={goldCx} cy={goldTop - 5} r={ART_DOT.large} fill={accent} />
       </g>
     </svg>
   )
@@ -709,10 +753,10 @@ function ArtStatus({ fg, accent }: { fg: string; accent: string }) {
 function ArtIncentives({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='incentives'>
-      <circle cx='58' cy='50' r='30' fill={fg} opacity='0.16' />
-      <circle cx='58' cy='50' r='20' fill={fg} opacity='0.3' />
-      <circle cx='58' cy='50' r='10' fill={fg} opacity='0.55' />
-      <circle cx='58' cy='50' r='4' fill={fg} />
+      <circle cx='58' cy='50' r='30' fill={fg} opacity={ART_OPACITY.ghost} />
+      <circle cx='58' cy='50' r='20' fill={fg} opacity={ART_OPACITY.quiet} />
+      <circle cx='58' cy='50' r='10' fill={fg} opacity={ART_OPACITY.base} />
+      <circle cx='58' cy='50' r={ART_DOT.medium} fill={fg} />
       <g data-anim-target='1'>
         <line
           x1='6'
@@ -720,7 +764,7 @@ function ArtIncentives({ fg, accent }: { fg: string; accent: string }) {
           x2='46'
           y2='50'
           stroke={accent}
-          strokeWidth='3.4'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
         />
         <polygon points='42,43 54,50 42,57' fill={accent} />
@@ -768,7 +812,12 @@ function ArtGameTheory({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='game-theory'>
       {/* The payoff matrix grid. */}
-      <g stroke={fg} strokeWidth='1.4' fill='none' opacity='0.5'>
+      <g
+        stroke={fg}
+        strokeWidth={ART_STROKE.regular}
+        fill='none'
+        opacity={ART_OPACITY.base}
+      >
         <rect x='24' y='24' width='52' height='52' />
         <line x1='50' y1='24' x2='50' y2='76' />
         <line x1='24' y1='50' x2='76' y2='50' />
@@ -822,13 +871,21 @@ function ArtGameTheory({ fg, accent }: { fg: string; accent: string }) {
       {/* Player 1 (rows) — a small triangle marker outside the left
           edge. Walks vertically between row 1 and row 2. */}
       <g data-anim-target='row'>
-        <polygon points='18,33 14,37 18,41' fill={fg} opacity='0.75' />
+        <polygon
+          points='18,33 14,37 18,41'
+          fill={fg}
+          opacity={ART_OPACITY.strong}
+        />
       </g>
 
       {/* Player 2 (columns) — small triangle marker above the top
           edge. Walks horizontally between column 1 and column 2. */}
       <g data-anim-target='col'>
-        <polygon points='33,18 37,14 41,18' fill={fg} opacity='0.75' />
+        <polygon
+          points='33,18 37,14 41,18'
+          fill={fg}
+          opacity={ART_OPACITY.strong}
+        />
       </g>
     </svg>
   )
@@ -876,7 +933,7 @@ function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
     <svg {...SVG_BASE} aria-hidden='true' data-anim='systems'>
       {/* Soft halo behind the loop — gives the composition some
           weight on light card backgrounds without hard chrome. */}
-      <circle cx='50' cy='50' r='34' fill={fg} opacity='0.05' />
+      <circle cx='50' cy='50' r='34' fill={fg} opacity={ART_OPACITY.wash} />
 
       {/* Three directed arcs, each from one node to the next. The
           control points pull each arc outward so the three together
@@ -889,9 +946,9 @@ function ArtSystems({ fg, accent }: { fg: string; accent: string }) {
           arrives at the next. */}
       <g
         stroke={fg}
-        strokeWidth='1.6'
+        strokeWidth={ART_STROKE.regular}
         fill='none'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         strokeLinecap='round'
         strokeDasharray='4 4'
         data-anim-target='flow'
@@ -955,13 +1012,13 @@ function ArtHeadspace({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 32 80 L 32 48 Q 32 24 56 24 Q 76 24 76 44 Q 76 52 70 56 L 70 68 Q 70 74 64 74 L 56 74 L 56 80 Z'
         fill={fg}
-        opacity='0.32'
+        opacity={ART_OPACITY.quiet}
       />
       <g style={{ transformOrigin: '56px 46px' }} data-anim-target='2'>
-        <circle cx='56' cy='46' r='12' fill={fg} opacity='0.55' />
+        <circle cx='56' cy='46' r='12' fill={fg} opacity={ART_OPACITY.base} />
       </g>
       <g style={{ transformOrigin: '56px 46px' }} data-anim-target='1'>
-        <circle cx='56' cy='46' r='5' fill={accent} />
+        <circle cx='56' cy='46' r={ART_DOT.large} fill={accent} />
       </g>
     </svg>
   )
@@ -1034,7 +1091,7 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
           height={l.h}
           rx={l.h / 2}
           fill={fg}
-          opacity={0.22}
+          opacity={ART_OPACITY.ghost}
         />
       ))}
 
@@ -1051,7 +1108,7 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
             height={l.h}
             rx={l.h / 2}
             fill={l.color}
-            opacity={l.isHead ? 1 : 0.85}
+            opacity={l.isHead ? 1 : ART_OPACITY.solid}
           />
         ))}
       </g>
@@ -1067,7 +1124,7 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
           cy={LENS_CY}
           r={LENS_R - 1.5}
           fill={fg}
-          opacity={0.06}
+          opacity={ART_OPACITY.wash}
         />
         {/* Lens rim. */}
         <circle
@@ -1076,8 +1133,8 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
           r={LENS_R}
           fill='none'
           stroke={fg}
-          strokeWidth='2.2'
-          opacity='0.85'
+          strokeWidth={ART_STROKE.bold}
+          opacity={ART_OPACITY.solid}
         />
         {/* Handle — a short stub at the lower-right of the rim. */}
         <line
@@ -1086,9 +1143,9 @@ function ArtLegibility({ fg, accent }: { fg: string; accent: string }) {
           x2={LENS_CX + LENS_R * 0.71 + 7}
           y2={LENS_CY + LENS_R * 0.71 + 7}
           stroke={fg}
-          strokeWidth='3'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
-          opacity='0.85'
+          opacity={ART_OPACITY.solid}
         />
       </g>
     </svg>
@@ -1142,15 +1199,20 @@ function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
         x2='90'
         y2={BASE_Y}
         stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.32'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
       />
 
       {/* Drop-lines from each beat to the baseline — the "altitude"
           of each story moment. Faint dashed strokes so they sit
           quietly behind the main arc but still anchor the beats
           spatially. */}
-      <g stroke={fg} strokeWidth='0.8' opacity='0.28' strokeDasharray='1 2'>
+      <g
+        stroke={fg}
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
+        strokeDasharray='1 2'
+      >
         {beats.map((b) => (
           <line key={`drop-${b.x}`} x1={b.x} y1={b.y} x2={b.x} y2={BASE_Y} />
         ))}
@@ -1164,7 +1226,7 @@ function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
         cy='22'
         r='10'
         fill={accent}
-        opacity='0.22'
+        opacity={ART_OPACITY.ghost}
         data-anim-target='halo'
         style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
       />
@@ -1176,9 +1238,9 @@ function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 14 70 Q 22 62 32 54 Q 41 42 50 22 Q 59 42 68 54 Q 78 62 86 70'
         stroke={fg}
-        strokeWidth='1.8'
+        strokeWidth={ART_STROKE.regular}
         fill='none'
-        opacity='0.7'
+        opacity={ART_OPACITY.strong}
         strokeLinecap='round'
         data-anim-target='line'
       />
@@ -1199,8 +1261,8 @@ function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
                 r={b.r + 2.4}
                 fill='none'
                 stroke={accent}
-                strokeWidth='1.2'
-                opacity='0.6'
+                strokeWidth={ART_STROKE.fine}
+                opacity={ART_OPACITY.base}
               />
             )}
             <circle
@@ -1208,7 +1270,7 @@ function ArtNarrative({ fg, accent }: { fg: string; accent: string }) {
               cy={b.y}
               r={b.r}
               fill={isClimax ? accent : fg}
-              opacity={isClimax ? 1 : 0.8}
+              opacity={isClimax ? 1 : ART_OPACITY.solid}
               data-anim-target={String(i + 1)}
               style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
             />
@@ -1226,17 +1288,17 @@ function ArtConstraint({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 22 18 L 14 18 L 14 82 L 22 82'
         stroke={fg}
-        strokeWidth='2.2'
+        strokeWidth={ART_STROKE.bold}
         fill='none'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         strokeLinejoin='miter'
       />
       <path
         d='M 78 18 L 86 18 L 86 82 L 78 82'
         stroke={fg}
-        strokeWidth='2.2'
+        strokeWidth={ART_STROKE.bold}
         fill='none'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         strokeLinejoin='miter'
       />
       <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
@@ -1246,11 +1308,11 @@ function ArtConstraint({ fg, accent }: { fg: string; accent: string }) {
           x2='72'
           y2='30'
           stroke={accent}
-          strokeWidth='3'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
         />
-        <circle cx='28' cy='70' r='3' fill={accent} />
-        <circle cx='72' cy='30' r='3' fill={accent} />
+        <circle cx='28' cy='70' r={ART_DOT.small} fill={accent} />
+        <circle cx='72' cy='30' r={ART_DOT.small} fill={accent} />
       </g>
     </svg>
   )
@@ -1268,8 +1330,8 @@ function ArtInterface({ fg, accent }: { fg: string; accent: string }) {
         rx='4'
         fill='none'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.5'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
       <line
         x1='14'
@@ -1277,8 +1339,8 @@ function ArtInterface({ fg, accent }: { fg: string; accent: string }) {
         x2='86'
         y2='32'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.5'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
       <g style={{ transformOrigin: '42px 52px' }} data-anim-target='2'>
         <rect
@@ -1288,7 +1350,7 @@ function ArtInterface({ fg, accent }: { fg: string; accent: string }) {
           height='12'
           rx='3'
           fill={fg}
-          opacity='0.55'
+          opacity={ART_OPACITY.base}
         />
       </g>
       <g style={{ transformOrigin: '54px 60px' }} data-anim-target='1'>
@@ -1321,8 +1383,8 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
         rx='4'
         fill='none'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.55'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
       {/* Positive terminal nub. */}
       <rect
@@ -1332,7 +1394,7 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
         height='16'
         rx='1'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
       />
       {/* The yellow fill bar. We anchor scaleX at the left edge of
           the battery interior so the bar grows toward the positive
@@ -1347,7 +1409,7 @@ function ArtEnergy({ fg, accent }: { fg: string; accent: string }) {
       <polygon
         points='52,38 42,52 48,52 44,62 54,48 48,48 52,38'
         fill={fg}
-        opacity='0.78'
+        opacity={ART_OPACITY.solid}
         data-anim-target='2'
       />
     </svg>
@@ -1361,10 +1423,10 @@ function ArtEpistemic({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 14 26 L 38 22 L 62 28 L 86 24 L 86 76 L 62 80 L 38 74 L 14 78 Z'
         fill={fg}
-        opacity='0.18'
+        opacity={ART_OPACITY.ghost}
         stroke={fg}
-        strokeWidth='1.2'
-        strokeOpacity='0.5'
+        strokeWidth={ART_STROKE.fine}
+        strokeOpacity={ART_OPACITY.base}
       />
       <line
         x1='38'
@@ -1372,8 +1434,8 @@ function ArtEpistemic({ fg, accent }: { fg: string; accent: string }) {
         x2='38'
         y2='74'
         stroke={fg}
-        strokeWidth='1'
-        opacity='0.35'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
       />
       <line
         x1='62'
@@ -1381,20 +1443,20 @@ function ArtEpistemic({ fg, accent }: { fg: string; accent: string }) {
         x2='62'
         y2='80'
         stroke={fg}
-        strokeWidth='1'
-        opacity='0.35'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
       />
       <path
         d='M 22 64 Q 36 48 50 54 T 80 38'
         stroke={accent}
-        strokeWidth='2.2'
+        strokeWidth={ART_STROKE.bold}
         fill='none'
         strokeLinecap='round'
         strokeDasharray='3 3'
         data-anim-target='1'
       />
-      <circle cx='22' cy='64' r='3.2' fill={accent} />
-      <circle cx='80' cy='38' r='3.2' fill={accent} />
+      <circle cx='22' cy='64' r={ART_DOT.small} fill={accent} />
+      <circle cx='80' cy='38' r={ART_DOT.small} fill={accent} />
     </svg>
   )
 }
@@ -1421,26 +1483,74 @@ function ArtOsmosis({ fg, accent }: { fg: string; accent: string }) {
         x2='50'
         y2='86'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.4'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.soft}
         strokeDasharray='3.5 4.5'
       />
 
       {/* Left cluster — three fixed dots sitting at the left edge. */}
-      <circle cx='22' cy='30' r='3.45' fill={fg} opacity='0.55' />
-      <circle cx='16' cy='50' r='3.45' fill={fg} opacity='0.55' />
-      <circle cx='24' cy='70' r='3.45' fill={fg} opacity='0.55' />
+      <circle
+        cx='22'
+        cy='30'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
+      <circle
+        cx='16'
+        cy='50'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
+      <circle
+        cx='24'
+        cy='70'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
 
       {/* Right cluster — three fixed dots sitting at the right edge. */}
-      <circle cx='78' cy='30' r='3.45' fill={fg} opacity='0.55' />
-      <circle cx='84' cy='50' r='3.45' fill={fg} opacity='0.55' />
-      <circle cx='76' cy='70' r='3.45' fill={fg} opacity='0.55' />
+      <circle
+        cx='78'
+        cy='30'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
+      <circle
+        cx='84'
+        cy='50'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
+      <circle
+        cx='76'
+        cy='70'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.base}
+      />
 
       {/* The two travellers — accent dots sitting just inside the
           midline on opposite halves. Each drifts outward into the
           cluster on its own side. */}
-      <circle cx='40' cy='38' r='3.7' fill={accent} data-anim-target='1' />
-      <circle cx='60' cy='62' r='3.7' fill={accent} data-anim-target='2' />
+      <circle
+        cx='40'
+        cy='38'
+        r={ART_DOT.medium}
+        fill={accent}
+        data-anim-target='1'
+      />
+      <circle
+        cx='60'
+        cy='62'
+        r={ART_DOT.medium}
+        fill={accent}
+        data-anim-target='2'
+      />
     </svg>
   )
 }
@@ -1502,8 +1612,8 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
         x2='90'
         y2='76'
         stroke={fg}
-        strokeWidth='1'
-        opacity='0.35'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
       />
 
       {/* Bell curve (static, drawn slightly thicker so it reads as
@@ -1511,9 +1621,9 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
       <path
         d='M 12 76 C 26 76, 32 76, 38 60 C 44 36, 56 36, 62 60 C 68 76, 74 76, 88 76'
         stroke={fg}
-        strokeWidth='2'
+        strokeWidth={ART_STROKE.medium}
         fill='none'
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         strokeLinecap='round'
       />
 
@@ -1527,8 +1637,8 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
           x2={c.x}
           y2='77'
           stroke={fg}
-          strokeWidth='1'
-          opacity='0.3'
+          strokeWidth={ART_STROKE.hairline}
+          opacity={ART_OPACITY.quiet}
         />
       ))}
 
@@ -1539,9 +1649,9 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
           key={`dot-${c.x}`}
           cx={c.x}
           cy='80'
-          r={i === 3 ? 2.8 : 2.2}
+          r={i === 3 ? ART_DOT.small : ART_DOT.tiny}
           fill={i === 3 ? accent : fg}
-          opacity={i === 3 ? 1 : 0.55}
+          opacity={i === 3 ? 1 : ART_OPACITY.base}
           data-anim-target='dot'
           style={
             {
@@ -1557,15 +1667,15 @@ function ArtProbabilistic({ fg, accent }: { fg: string; accent: string }) {
           Sits hidden at left, sweeps across, fades. transformOrigin
           centred so its subtle scale pulse stays put. */}
       <g data-anim-target='sampler' style={{ transformOrigin: '14px 40px' }}>
-        <circle cx='14' cy='40' r='2.6' fill={accent} />
+        <circle cx='14' cy='40' r={ART_DOT.tiny} fill={accent} />
         <line
           x1='14'
           y1='42'
           x2='14'
           y2='74'
           stroke={accent}
-          strokeWidth='1'
-          opacity='0.45'
+          strokeWidth={ART_STROKE.hairline}
+          opacity={ART_OPACITY.soft}
         />
       </g>
     </svg>
@@ -1586,12 +1696,12 @@ function ArtCommunication({ fg }: { fg: string; accent: string }) {
       <path
         d='M 26 78 L 26 50 Q 26 36 36 36 Q 44 36 44 46 Q 44 50 40 52 L 40 60 Q 40 64 36 64 L 32 64 L 32 78 Z'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
       />
       <path
         d='M 74 78 L 74 50 Q 74 36 64 36 Q 56 36 56 46 Q 56 50 60 52 L 60 60 Q 60 64 64 64 L 68 64 L 68 78 Z'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
       />
       <g style={{ transformOrigin: '50px 28px' }} data-anim-target='1'>
         <ellipse cx='50' cy='28' rx='13' ry='7.5' data-anim-target='bubble' />
@@ -1608,8 +1718,8 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
     <svg {...SVG_BASE} aria-hidden='true' data-anim='mimetics'>
       <g
         stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.45'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.soft}
         fill='none'
         strokeLinecap='round'
       >
@@ -1621,13 +1731,13 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         <line x1='52' y1='72' x2='78' y2='62' />
         <line x1='52' y1='72' x2='78' y2='82' />
       </g>
-      <circle cx='30' cy='50' r='8' fill={accent} data-anim-target='0' />
+      <circle cx='30' cy='50' r='7' fill={accent} data-anim-target='0' />
       <circle
         cx='52'
         cy='28'
         r='5'
         fill={fg}
-        opacity='0.75'
+        opacity={ART_OPACITY.strong}
         data-anim-target='1'
       />
       <circle
@@ -1635,7 +1745,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='50'
         r='5'
         fill={fg}
-        opacity='0.6'
+        opacity={ART_OPACITY.base}
         data-anim-target='1'
       />
       <circle
@@ -1643,7 +1753,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='72'
         r='5'
         fill={fg}
-        opacity='0.75'
+        opacity={ART_OPACITY.strong}
         data-anim-target='1'
       />
       <circle
@@ -1651,7 +1761,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='18'
         r='3.5'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='2'
       />
       <circle
@@ -1659,7 +1769,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='38'
         r='3.5'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='2'
       />
       <circle
@@ -1667,7 +1777,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='62'
         r='3.5'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='2'
       />
       <circle
@@ -1675,7 +1785,7 @@ function ArtMimetics({ fg, accent }: { fg: string; accent: string }) {
         cy='82'
         r='3.5'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
         data-anim-target='2'
       />
     </svg>
@@ -1693,7 +1803,7 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         height='10'
         rx='2'
         fill={fg}
-        opacity='0.55'
+        opacity={ART_OPACITY.base}
       />
       <rect
         x='28'
@@ -1702,7 +1812,7 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         height='10'
         rx='2'
         fill={fg}
-        opacity='0.7'
+        opacity={ART_OPACITY.strong}
       />
       <rect
         x='52'
@@ -1711,7 +1821,7 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         height='10'
         rx='2'
         fill={fg}
-        opacity='0.4'
+        opacity={ART_OPACITY.soft}
       />
       <line
         x1='50'
@@ -1719,8 +1829,8 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         x2='50'
         y2='58'
         stroke={fg}
-        strokeWidth='1.2'
-        opacity='0.45'
+        strokeWidth={ART_STROKE.fine}
+        opacity={ART_OPACITY.soft}
         strokeDasharray='2 3'
       />
       {/* Hexagon — all three primitives need visible rotation. */}
@@ -1731,7 +1841,7 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         <polygon
           points='28,64 35,68 35,76 28,80 21,76 21,68'
           fill={fg}
-          opacity='0.7'
+          opacity={ART_OPACITY.strong}
         />
       </g>
       <g
@@ -1744,7 +1854,11 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
         style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
         data-anim-target='3'
       >
-        <polygon points='72,80 80,66 64,66' fill={fg} opacity='0.7' />
+        <polygon
+          points='72,80 80,66 64,66'
+          fill={fg}
+          opacity={ART_OPACITY.strong}
+        />
       </g>
     </svg>
   )
@@ -1775,13 +1889,13 @@ function ArtLensesDeck({
         d='M 14 50 C 24 31 76 31 86 50 C 76 69 24 69 14 50 Z'
         fill='none'
         stroke={fg}
-        strokeWidth='2'
+        strokeWidth={ART_STROKE.medium}
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <g data-anim-target='pupil' style={{ transformOrigin: '50px 50px' }}>
-        <circle cx='50' cy='50' r='12' fill={fg} opacity='0.14' />
-        <circle cx='50' cy='50' r='5' fill={accent} />
+        <circle cx='50' cy='50' r='12' fill={fg} opacity={ART_OPACITY.wash} />
+        <circle cx='50' cy='50' r={ART_DOT.large} fill={accent} />
       </g>
     </svg>
   )
@@ -1820,7 +1934,7 @@ function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
         <path
           d={`M ${ANCHOR_X - 32} ${ANCHOR_Y} A 32 32 0 0 1 ${ANCHOR_X + 32} ${ANCHOR_Y} Z`}
           fill={accent}
-          opacity='0.55'
+          opacity={ART_OPACITY.base}
         />
         {/* A second concentric arc adds depth — slightly smaller, a
             touch more saturated, so the projection reads as
@@ -1828,7 +1942,7 @@ function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
         <path
           d={`M ${ANCHOR_X - 22} ${ANCHOR_Y} A 22 22 0 0 1 ${ANCHOR_X + 22} ${ANCHOR_Y} Z`}
           fill={accent}
-          opacity='0.45'
+          opacity={ART_OPACITY.soft}
         />
       </g>
 
@@ -1840,17 +1954,23 @@ function ArtProjection({ fg, accent }: { fg: string; accent: string }) {
         x2='86'
         y2={ANCHOR_Y}
         stroke={fg}
-        strokeWidth='1'
-        opacity='0.45'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.soft}
       />
 
       {/* The figure (head + torso) — drawn last so it sits in front
           of the projection. */}
-      <circle cx={ANCHOR_X} cy='42' r='6.5' fill={fg} opacity='0.85' />
+      <circle
+        cx={ANCHOR_X}
+        cy='42'
+        r='6.5'
+        fill={fg}
+        opacity={ART_OPACITY.solid}
+      />
       <path
         d={`M ${ANCHOR_X - 9} ${ANCHOR_Y} Q ${ANCHOR_X - 9} 54 ${ANCHOR_X} 54 Q ${ANCHOR_X + 9} 54 ${ANCHOR_X + 9} ${ANCHOR_Y} Z`}
         fill={fg}
-        opacity='0.85'
+        opacity={ART_OPACITY.solid}
       />
     </svg>
   )
@@ -1866,7 +1986,7 @@ function ArtAttention({ fg, accent }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='attention'>
       {/* The unattended field — small dim dots scattered. */}
-      <g fill={fg} opacity='0.28'>
+      <g fill={fg} opacity={ART_OPACITY.quiet}>
         <circle cx='22' cy='70' r='2.4' />
         <circle cx='34' cy='78' r='2.4' />
         <circle cx='66' cy='78' r='2.4' />
@@ -1875,20 +1995,30 @@ function ArtAttention({ fg, accent }: { fg: string; accent: string }) {
 
       {/* The cone of attention, hinged at apex (50, 22). */}
       <g style={{ transformOrigin: '50px 22px' }} data-anim-target='1'>
-        <path d='M 50 22 L 30 76 L 70 76 Z' fill={accent} opacity='0.45' />
+        <path
+          d='M 50 22 L 30 76 L 70 76 Z'
+          fill={accent}
+          opacity={ART_OPACITY.soft}
+        />
         <path
           d='M 50 22 L 30 76 L 70 76 Z'
           fill='none'
           stroke={accent}
-          strokeWidth='0.8'
-          opacity='0.85'
+          strokeWidth={ART_STROKE.hairline}
+          opacity={ART_OPACITY.solid}
         />
         {/* The illuminated dot under the cone. */}
-        <circle cx='50' cy='74' r='3.4' fill={accent} />
+        <circle cx='50' cy='74' r={ART_DOT.small} fill={accent} />
       </g>
 
       {/* The eye / source at the apex. */}
-      <circle cx='50' cy='22' r='3' fill={fg} opacity='0.7' />
+      <circle
+        cx='50'
+        cy='22'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.strong}
+      />
     </svg>
   )
 }
@@ -1910,9 +2040,9 @@ function ArtDopamine({ fg, accent }: { fg: string; accent: string }) {
         r='24'
         fill='none'
         stroke={fg}
-        strokeWidth='0.8'
+        strokeWidth={ART_STROKE.hairline}
         strokeDasharray='2 3'
-        opacity='0.35'
+        opacity={ART_OPACITY.quiet}
       />
 
       {/* The reward / attractor. */}
@@ -1924,15 +2054,21 @@ function ArtDopamine({ fg, accent }: { fg: string; accent: string }) {
           r='8'
           fill='none'
           stroke={accent}
-          strokeWidth='1.2'
-          opacity='0.5'
+          strokeWidth={ART_STROKE.fine}
+          opacity={ART_OPACITY.base}
         />
       </g>
 
       {/* The chasing dot, sits at 12 o'clock of the orbit ring. The
           group rotates around the center to drag it around the loop. */}
       <g style={{ transformOrigin: '50px 50px' }} data-anim-target='1'>
-        <circle cx='50' cy='26' r='3.6' fill={fg} opacity='0.85' />
+        <circle
+          cx='50'
+          cy='26'
+          r={ART_DOT.small}
+          fill={fg}
+          opacity={ART_OPACITY.solid}
+        />
       </g>
     </svg>
   )
@@ -1959,11 +2095,46 @@ function ArtTaste({ fg, accent }: { fg: string; accent: string }) {
       {/* Five swatch tiles in a row. Slightly varied opacity reads
           as a curated palette rather than a gradient. */}
       <g fill={fg}>
-        <rect x='14' y='44' width='12' height='16' opacity='0.5' rx='1.6' />
-        <rect x='30' y='44' width='12' height='16' opacity='0.65' rx='1.6' />
-        <rect x='46' y='44' width='12' height='16' opacity='0.45' rx='1.6' />
-        <rect x='62' y='44' width='12' height='16' opacity='0.55' rx='1.6' />
-        <rect x='78' y='44' width='12' height='16' opacity='0.4' rx='1.6' />
+        <rect
+          x='14'
+          y='44'
+          width='12'
+          height='16'
+          opacity={ART_OPACITY.base}
+          rx='1.6'
+        />
+        <rect
+          x='30'
+          y='44'
+          width='12'
+          height='16'
+          opacity={ART_OPACITY.strong}
+          rx='1.6'
+        />
+        <rect
+          x='46'
+          y='44'
+          width='12'
+          height='16'
+          opacity={ART_OPACITY.soft}
+          rx='1.6'
+        />
+        <rect
+          x='62'
+          y='44'
+          width='12'
+          height='16'
+          opacity={ART_OPACITY.base}
+          rx='1.6'
+        />
+        <rect
+          x='78'
+          y='44'
+          width='12'
+          height='16'
+          opacity={ART_OPACITY.soft}
+          rx='1.6'
+        />
       </g>
 
       {/* A baseline — the ground of comparison. Subtle, just enough
@@ -1974,15 +2145,15 @@ function ArtTaste({ fg, accent }: { fg: string; accent: string }) {
         x2='94'
         y2='66'
         stroke={fg}
-        strokeWidth='0.8'
-        opacity='0.32'
+        strokeWidth={ART_STROKE.hairline}
+        opacity={ART_OPACITY.quiet}
       />
 
       {/* The chosen-marker. Sits above the second swatch at rest;
           on hover it walks the row and lands on its real pick. */}
       <g data-anim-target='1'>
         <polygon points='36,32 30,38 42,38' fill={accent} />
-        <circle cx='36' cy='28' r='3.2' fill={accent} />
+        <circle cx='36' cy='28' r={ART_DOT.small} fill={accent} />
       </g>
     </svg>
   )
@@ -2013,8 +2184,8 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
         height='52'
         fill='none'
         stroke={fg}
-        strokeWidth='1.4'
-        opacity='0.55'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
 
       {/* The breakout arrow — tail starts at the frame's center, head
@@ -2028,7 +2199,7 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
           x2='78'
           y2='52'
           stroke={accent}
-          strokeWidth='3.2'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
         />
         <polygon points='86,52 74,45 74,59' fill={accent} />
@@ -2036,7 +2207,13 @@ function ArtAgency({ fg, accent }: { fg: string; accent: string }) {
 
       {/* The seat of choice — sits at the geometric center of the
           frame. */}
-      <circle cx='46' cy='52' r='3.4' fill={fg} opacity='0.7' />
+      <circle
+        cx='46'
+        cy='52'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.strong}
+      />
     </svg>
   )
 }
@@ -2057,9 +2234,9 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
           d='M 62 18 Q 94 50 62 82'
           fill='none'
           stroke={fg}
-          strokeWidth='2.6'
+          strokeWidth={ART_STROKE.bold}
           strokeLinecap='round'
-          opacity='0.78'
+          opacity={ART_OPACITY.solid}
         />
         <line
           x1='62'
@@ -2067,9 +2244,9 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
           x2='62'
           y2='20.5'
           stroke={fg}
-          strokeWidth='4'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
-          opacity='0.78'
+          opacity={ART_OPACITY.solid}
         />
         <line
           x1='62'
@@ -2077,18 +2254,18 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
           x2='62'
           y2='84.5'
           stroke={fg}
-          strokeWidth='4'
+          strokeWidth={ART_STROKE.heavy}
           strokeLinecap='round'
-          opacity='0.78'
+          opacity={ART_OPACITY.solid}
         />
         <path
           d='M 62 18 L 62 50 L 62 82'
           fill='none'
           stroke={fg}
-          strokeWidth='1'
+          strokeWidth={ART_STROKE.hairline}
           strokeLinecap='round'
           strokeLinejoin='round'
-          opacity='0.75'
+          opacity={ART_OPACITY.strong}
           data-anim-target='string'
         />
         <g data-anim-target='arrow'>
@@ -2098,7 +2275,7 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
             x2='99'
             y2='50'
             stroke={accent}
-            strokeWidth='2.4'
+            strokeWidth={ART_STROKE.bold}
             strokeLinecap='round'
           />
           <polygon points='107,50 97,45 97,55' fill={accent} />
@@ -2123,12 +2300,18 @@ function ArtMomentum({ fg, accent }: { fg: string; accent: string }) {
         points='50,18 28,82 72,82'
         fill='none'
         stroke={fg}
-        strokeWidth='1.6'
-        opacity='0.55'
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
       />
 
       {/* Pivot dot at the bottom-center of the triangle. */}
-      <circle cx='50' cy='80' r='2.6' fill={fg} opacity='0.7' />
+      <circle
+        cx='50'
+        cy='80'
+        r={ART_DOT.tiny}
+        fill={fg}
+        opacity={ART_OPACITY.strong}
+      />
 
       {/* The pendulum — arm + weight bob — anchored at the pivot so it
           swings around it on hover. The bob sits ~1/3 of the way down
@@ -2141,10 +2324,10 @@ function ArtMomentum({ fg, accent }: { fg: string; accent: string }) {
           x2='50'
           y2='28'
           stroke={accent}
-          strokeWidth='1.8'
+          strokeWidth={ART_STROKE.regular}
           strokeLinecap='round'
         />
-        <circle cx='50' cy='44' r='4.6' fill={accent} />
+        <circle cx='50' cy='44' r={ART_DOT.medium} fill={accent} />
       </g>
     </svg>
   )
@@ -2173,9 +2356,9 @@ function ArtIdentity({ fg, accent }: { fg: string; accent: string }) {
           r='30'
           fill='none'
           stroke={fg}
-          strokeWidth='1.4'
+          strokeWidth={ART_STROKE.regular}
           strokeDasharray='3 4'
-          opacity='0.6'
+          opacity={ART_OPACITY.base}
         />
       </g>
 
@@ -2189,13 +2372,19 @@ function ArtIdentity({ fg, accent }: { fg: string; accent: string }) {
           width='32'
           height='32'
           fill={accent}
-          opacity='0.85'
+          opacity={ART_OPACITY.solid}
           transform='rotate(45 50 50)'
         />
       </g>
 
       {/* A small fixed core — the part that persists across edits. */}
-      <circle cx='50' cy='50' r='3' fill={fg} opacity='0.75' />
+      <circle
+        cx='50'
+        cy='50'
+        r={ART_DOT.small}
+        fill={fg}
+        opacity={ART_OPACITY.strong}
+      />
     </svg>
   )
 }
