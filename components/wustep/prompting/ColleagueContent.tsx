@@ -1,39 +1,34 @@
 import { ChapterBody } from './ChapterBody'
 import { ColleagueDemo } from './ColleagueDemo'
 import { Lever } from './parts'
-
 import styles from './PromptingPage.module.css'
 
 export function ColleagueContent() {
   return (
     <ChapterBody>
       <p>
-        The most useful mental shift I&apos;ve found is treating the agent as
-        a <em>colleague</em> &mdash; specifically, a fast, knowledgeable,
-        infinitely patient junior who has only seen what you&apos;ve shown
-        them and forgets between sessions.
+        The most useful mental shift I&apos;ve found is treating the agent as a{' '}
+        <em>colleague</em> &mdash; specifically, a fast, knowledgeable,
+        infinitely patient junior who has only seen what you&apos;ve shown them
+        and forgets between sessions.
       </p>
 
       <p>
-        Once you internalize that, a lot of what looks like prompt
-        engineering starts looking like the things you&apos;d already do for
-        a teammate: onboard them with the right docs, brief them before each
-        task, pair through ambiguity, review their work before merging.
+        Once you internalize that, a lot of what looks like prompt engineering
+        starts looking like the things you&apos;d already do for a teammate:
+        onboard them with the right docs, brief them before each task, pair
+        through ambiguity, review their work before merging.
       </p>
 
       <ColleagueDemo />
 
       <p>
-        Same task, same model &mdash; what changes is how much the colleague
-        was set up to succeed. The asymmetry between what <em>you</em> can
-        see and what <em>they</em> can see is where most of the leverage
-        lives.
+        Same task, same model &mdash; what changes is how much the colleague was
+        set up to succeed. The asymmetry between what <em>you</em> can see and
+        what <em>they</em> can see is where most of the leverage lives.
       </p>
 
-      <Lever
-        name='ONBOARDING'
-        tagline='Set them up before the work starts.'
-      >
+      <Lever name='ONBOARDING' tagline='Set them up before the work starts.'>
         <p>
           Skills, project rules, conventions, examples &mdash; the same
           materials a new hire gets. What to use, what not to, where things
@@ -48,8 +43,8 @@ export function ColleagueContent() {
         <ul className={styles.axisList}>
           <li>Use Tailwind classes; don&apos;t inline styles.</li>
           <li>
-            Tests go next to source files, not in a{' '}
-            <code>__tests__/</code> folder.
+            Tests go next to source files, not in a <code>__tests__/</code>{' '}
+            folder.
           </li>
           <li>
             No <code>any</code>. Use the narrow types from{' '}
@@ -68,15 +63,14 @@ export function ColleagueContent() {
 
       <Lever name='BRIEFING' tagline='Every task starts with context.'>
         <p>
-          Onboarding is general. Briefing is per-task &mdash; what this
-          specific piece of work is, which files matter, what good looks
-          like, what to avoid.
+          Onboarding is general. Briefing is per-task &mdash; what this specific
+          piece of work is, which files matter, what good looks like, what to
+          avoid.
         </p>
         <p>
-          The mistake is starting cold every time: &quot;fix the auth
-          bug.&quot; A colleague would ask &quot;which auth bug? where? what
-          changed recently?&quot; and you&apos;d answer. Just include the
-          answers up front.
+          The mistake is starting cold every time: &quot;fix the auth bug.&quot;
+          A colleague would ask &quot;which auth bug? where? what changed
+          recently?&quot; and you&apos;d answer. Include the answers up front.
         </p>
         <p>
           The longer the task, the more the briefing pays back. Five extra
@@ -84,25 +78,22 @@ export function ColleagueContent() {
         </p>
       </Lever>
 
-      <Lever
-        name='REVIEWING'
-        tagline='The diff is a proposal, not an answer.'
-      >
+      <Lever name='REVIEWING' tagline='The diff is a proposal, not an answer.'>
         <p>
           The output is a proposal. Same as a colleague&apos;s PR &mdash; not
-          the final answer, your job to evaluate. Read the diff. Run the
-          code. Check the cases you&apos;d check on a junior&apos;s PR.
+          the final answer, your job to evaluate. Read the diff. Run the code.
+          Check the cases you&apos;d check on a junior&apos;s PR.
         </p>
         <p>
-          Don&apos;t accept what you can&apos;t verify. If you can&apos;t
-          tell whether the result is right, that&apos;s a signal that the
-          task needed to be smaller, or that the agent needed more context.
+          Don&apos;t accept what you can&apos;t verify. If you can&apos;t tell
+          whether the result is right, that&apos;s a signal that the task needed
+          to be smaller, or that the agent needed more context.
         </p>
         <p>
-          The &quot;rubber-stamp&quot; failure mode &mdash; clicking accept
-          on long diffs &mdash; is where mistakes compound. Treat agent
-          output the way you&apos;d treat a teammate&apos;s: assume something
-          subtle is probably wrong, and look for it before merging.
+          The &quot;rubber-stamp&quot; failure mode &mdash; clicking accept on
+          long diffs &mdash; is where mistakes compound. Treat agent output the
+          way you&apos;d treat a teammate&apos;s: assume something subtle is
+          probably wrong, and look for it before merging.
         </p>
       </Lever>
 
@@ -115,22 +106,21 @@ export function ColleagueContent() {
         </h3>
         <p>
           There&apos;s a difference between treating the agent as a tool you
-          operate (input, output, hope) and a colleague you work with (set
-          up, brief, pair, review). The first scales until it doesn&apos;t.
-          The second compounds.
+          operate (input, output, hope) and a colleague you work with (set up,
+          brief, pair, review). The tool frame scales until it doesn&apos;t. The
+          colleague frame compounds.
         </p>
         <p>
-          The first frame asks <em>&quot;what should I prompt?&quot;</em> The
-          second asks{' '}
-          <em>&quot;what does this person need to be successful?&quot;</em>{' '}
-          Most of the time, that second question is the better one to be
-          asking.
+          The tool frame asks <em>&quot;what should I prompt?&quot;</em> The
+          colleague frame asks{' '}
+          <em>&quot;what does this person need to be successful?&quot;</em> Most
+          of the time, the second is the better question.
         </p>
         <p>
-          The discipline gets <em>more</em> important, not less, as the
-          models get smarter. As the agent&apos;s ceiling rises, the gap
-          between people who treat it as a colleague and people who treat it
-          as a tool widens. Better to start practicing now.
+          The discipline gets <em>more</em> important, not less, as the models
+          get smarter. As the agent&apos;s ceiling rises, the gap between people
+          who treat it as a colleague and people who treat it as a tool widens.
+          Better to start practicing now.
         </p>
       </div>
     </ChapterBody>

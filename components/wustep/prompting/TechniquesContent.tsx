@@ -13,11 +13,10 @@ export function TechniquesContent() {
       </p>
 
       <p>
-        Chess players don&apos;t just play games &mdash; they build a
-        repertoire. Openings, tactical patterns (forks, pins, skewers,
-        discovered attacks), endgame studies. None of it magic; all of it
-        learnable, mostly from other players. The same vocabulary is forming for
-        prompting. Here are some moves worth adding to yours.
+        Chess players build a repertoire &mdash; openings, tactical patterns
+        (forks, pins, skewers, discovered attacks), endgame studies. Most of it
+        learned from other players, none of it secret. The same vocabulary is
+        forming for prompting. Here are some moves worth adding to yours.
       </p>
 
       <TechniqueGroup heading='Before you start'>
@@ -164,9 +163,9 @@ export function TechniquesContent() {
           Keep climbing
         </h3>
         <p>
-          None of these are hard. All of them compound. The point isn&apos;t to
-          memorize a checklist &mdash; it&apos;s to recognize there&apos;s a
-          craft here, the craft has shape, and the shape is still being mapped.
+          None of these are hard. Used regularly, they compound. Don&apos;t
+          memorize them as a checklist &mdash; notice there&apos;s a craft here,
+          and the shape is still being mapped.
         </p>
         <p>
           We&apos;re all early at this. The next thousand ELO points are wide

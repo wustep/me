@@ -18,9 +18,9 @@ export function OrchestrationContent() {
       <PingPongDiagram />
 
       <p>
-        Orchestration is the move from typist to conductor. Less back-and-
-        forth, more briefing. Less sequential, more parallel. Stop optimizing
-        the next message and start optimizing the next <em>hour</em>.
+        Orchestration is the move from typist to conductor &mdash; from
+        messaging the agent to briefing it, from one thread to several. Stop
+        tuning the next prompt and start tuning the next <em>hour</em>.
       </p>
 
       <h3 className={styles.orchSectionHeading}>Chain, don&apos;t ping</h3>
@@ -67,28 +67,27 @@ export function OrchestrationContent() {
       <p>
         Rule of thumb:{' '}
         <strong>
-          if you already know the next prompt, it&apos;s not a prompt &mdash;
-          it&apos;s part of the brief.
+          if you already know the next prompt, write it into the brief instead.
         </strong>
       </p>
 
       <h3 className={styles.orchSectionHeading}>Stagger and overlap</h3>
 
       <p>
-        You can only write one brief at a time. The agents can&apos;t actually
-        all start in parallel &mdash; you start them in a cascade. Brief thread
-        one, kick it off. While it runs, brief thread two. Then three. By the
-        time you&apos;ve sent the third, the first is delivering. You step in,
+        You can only write one brief at a time. The agents don&apos;t all start
+        in parallel &mdash; you start them in a cascade. Brief thread one, kick
+        it off. While it runs, brief thread two. Then three. By the time
+        you&apos;ve sent the third, the first is delivering. You step in,
         glance, send a follow-up, and the cycle continues.
       </p>
 
       <StaggerDiagram />
 
       <p>
-        Two things to notice. The purple bars never overlap &mdash; that&apos;s
-        your hands, and there&apos;s only one of you. The pink bars do, freely;
-        the agents don&apos;t wait for each other. And after every agent
-        finishes, there&apos;s a small grey gap before you come back: real
+        Three things to notice. The purple bars never overlap &mdash;
+        that&apos;s your hands, and there&apos;s only one of you. The pink bars
+        do, freely; the agents don&apos;t wait for each other. And after every
+        agent finishes, there&apos;s a small grey gap before you come back: real
         attention costs, and you can only spend it on one thread at a time.
       </p>
 
@@ -131,11 +130,11 @@ export function OrchestrationContent() {
       <h3 className={styles.orchSectionHeading}>Run long, check less</h3>
 
       <p>
-        The biggest unlocks of the last year have been long-horizon tasks
-        &mdash; jobs that run for thirty, sixty, ninety minutes while you do
-        something else. Whole-repo refactors. Migrations. Test backfills. The
-        instinct is to babysit. Resist it; babysitting collapses long jobs back
-        into ping-pong.
+        The biggest leaps of the last year have been long-horizon tasks &mdash;
+        jobs that run for thirty, sixty, ninety minutes while you do something
+        else. Whole-repo refactors. Migrations. Test backfills. The instinct is
+        to babysit. Resist it; babysitting collapses long jobs back into
+        ping-pong.
       </p>
 
       <p>
@@ -167,9 +166,8 @@ export function OrchestrationContent() {
         <p>
           One agent makes you faster. The shift in orchestration is bigger than
           that: suddenly you have access to a whole team &mdash; cheap, fast,
-          and always available. The bottleneck isn&apos;t how quickly any one of
-          them can work. It&apos;s how well <em>you</em> can brief them, unblock
-          them, and keep several of them moving at the same time.
+          and always available. The bottleneck is <em>you</em> &mdash; how well
+          you brief them, unblock them, and keep several moving at once.
         </p>
         <p>
           That&apos;s the skill to invest in. Optimize the hour, not the
