@@ -5,14 +5,14 @@
  */
 .frame button:focus-visible,
 .frame a:focus-visible {
-  outline: 2px solid rgba(180, 57, 223, 0.65);
+  outline: 2px solid rgba(193, 74, 48, 0.65);
   outline-offset: 2px;
   border-radius: inherit;
 }
 
 :global(.dark-mode) .frame button:focus-visible,
 :global(.dark-mode) .frame a:focus-visible {
-  outline-color: rgba(213, 109, 240, 0.75);
+  outline-color: rgba(232, 144, 66, 0.75);
 }
 
 /* ===== Frame & layout ===== */
@@ -900,21 +900,21 @@
   border-radius: 7px;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border: 1px solid rgba(180, 57, 223, 0.22);
-  color: #b439df;
+  border: 1px solid rgba(193, 74, 48, 0.22);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .leverHeadingName {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.14) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.14) 100%
   );
-  border-color: rgba(180, 57, 223, 0.3);
+  border-color: rgba(193, 74, 48, 0.3);
 }
 
 .leverHeadingDivider {
@@ -1101,30 +1101,30 @@
 .colleagueChipOn {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.12) 0%,
-    rgba(229, 51, 126, 0.12) 100%
+    rgba(193, 74, 48, 0.12) 0%,
+    rgba(232, 144, 66, 0.12) 100%
   );
-  border-color: rgba(180, 57, 223, 0.4);
-  color: #b439df;
+  border-color: rgba(193, 74, 48, 0.4);
+  color: #c14a30;
   transform: translateY(-1px);
 }
 
 :global(.dark-mode) .colleagueChipOn {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.2) 0%,
-    rgba(229, 51, 126, 0.16) 100%
+    rgba(193, 74, 48, 0.2) 0%,
+    rgba(232, 144, 66, 0.16) 100%
   );
-  border-color: rgba(180, 57, 223, 0.45);
-  color: #d56df0;
+  border-color: rgba(193, 74, 48, 0.45);
+  color: #e89042;
 }
 
 .colleagueChipOn:hover {
-  color: #b439df;
+  color: #c14a30;
 }
 
 :global(.dark-mode) .colleagueChipOn:hover {
-  color: #d56df0;
+  color: #e89042;
 }
 
 .colleagueChipIcon {
@@ -1322,11 +1322,11 @@
 
 /* You marker — gradient color */
 .eloChartMarkerYou {
-  color: #b439df;
+  color: #c14a30;
 }
 
 .eloChartMarkerYou circle {
-  filter: drop-shadow(0 0 6px rgba(180, 57, 223, 0.45));
+  filter: drop-shadow(0 0 6px rgba(193, 74, 48, 0.45));
 }
 
 .eloChartVisible .eloChartMarkerYou {
@@ -1336,11 +1336,11 @@
 
 /* Magnus marker — pinker end of the gradient */
 .eloChartMarkerMagnus {
-  color: #e5337e;
+  color: #e89042;
 }
 
 .eloChartMarkerMagnus circle {
-  filter: drop-shadow(0 0 6px rgba(229, 51, 126, 0.45));
+  filter: drop-shadow(0 0 6px rgba(232, 144, 66, 0.45));
 }
 
 .eloChartVisible .eloChartMarkerMagnus {
@@ -1446,7 +1446,7 @@
   width: 14px;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(90deg, #c14a30 0%, #e89042 100%);
 }
 
 .techniqueGroupBody {
@@ -1620,21 +1620,21 @@
 .recapTokenLever {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border: 1px solid rgba(180, 57, 223, 0.22);
-  color: #b439df;
+  border: 1px solid rgba(193, 74, 48, 0.22);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .recapTokenLever {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.14) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.14) 100%
   );
-  border-color: rgba(180, 57, 223, 0.28);
+  border-color: rgba(193, 74, 48, 0.28);
 }
 
 .recapTokenOutput {
@@ -1707,11 +1707,11 @@
 }
 
 .recapTreeCellOnAxis {
-  background: rgba(180, 57, 223, 0.18);
+  background: rgba(193, 74, 48, 0.18);
 }
 
 .recapTreeCellActive {
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   box-shadow: 0 0 0 3px rgba(228, 51, 126, 0.18);
 }
 
@@ -1731,11 +1731,11 @@
 
 .recapTreeMovesActive {
   font-weight: 600;
-  color: #b439df;
+  color: #c14a30;
 }
 
 :global(.dark-mode) .recapTreeMovesActive {
-  color: #d56df0;
+  color: #e89042;
 }
 
 /* Colleague viz — three steps in a row */
@@ -1775,21 +1775,21 @@
   border-radius: 7px;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border: 1px solid rgba(180, 57, 223, 0.22);
-  color: #b439df;
+  border: 1px solid rgba(193, 74, 48, 0.22);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .recapColleagueStep {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.14) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.14) 100%
   );
-  border-color: rgba(180, 57, 223, 0.28);
+  border-color: rgba(193, 74, 48, 0.28);
 }
 
 .recapColleagueArrow {
@@ -1907,7 +1907,7 @@
 }
 
 .skillsLink:hover {
-  border-color: rgba(180, 57, 223, 0.45) !important;
+  border-color: rgba(193, 74, 48, 0.45) !important;
   transform: translateY(-1px);
 }
 
@@ -1918,7 +1918,7 @@
 }
 
 :global(.dark-mode) .skillsLink:hover {
-  border-color: rgba(180, 57, 223, 0.5) !important;
+  border-color: rgba(193, 74, 48, 0.5) !important;
 }
 
 .skillsLinkArrow {
@@ -1962,14 +1962,14 @@
   border-radius: 12px;
   background: var(--bg-color, #fff);
   border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
-  border-left: 3px solid rgba(180, 57, 223, 0.5);
+  border-left: 3px solid rgba(193, 74, 48, 0.5);
   box-shadow: 0 1px 2px rgba(15, 15, 15, 0.03);
 }
 
 :global(.dark-mode) .examplePromptCard {
   background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.06);
-  border-left-color: rgba(180, 57, 223, 0.55);
+  border-left-color: rgba(193, 74, 48, 0.55);
 }
 
 .examplePromptLabel {
@@ -2060,7 +2060,7 @@
   height: 26px;
   border-radius: 8px;
   font-size: 0.95rem;
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   color: #fff;
   flex-shrink: 0;
 }
@@ -2098,13 +2098,13 @@
 }
 
 .debugItemOpen {
-  border-color: rgba(180, 57, 223, 0.35);
-  box-shadow: 0 6px 20px -10px rgba(180, 57, 223, 0.25);
+  border-color: rgba(193, 74, 48, 0.35);
+  box-shadow: 0 6px 20px -10px rgba(193, 74, 48, 0.25);
 }
 
 :global(.dark-mode) .debugItemOpen {
-  border-color: rgba(180, 57, 223, 0.4);
-  box-shadow: 0 6px 20px -10px rgba(180, 57, 223, 0.35);
+  border-color: rgba(193, 74, 48, 0.4);
+  box-shadow: 0 6px 20px -10px rgba(193, 74, 48, 0.35);
 }
 
 .debugQuestion {
@@ -2158,21 +2158,21 @@
   border-radius: 5px;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border: 1px solid rgba(180, 57, 223, 0.2);
-  color: #b439df;
+  border: 1px solid rgba(193, 74, 48, 0.2);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .debugLever {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.14) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.14) 100%
   );
-  border-color: rgba(180, 57, 223, 0.28);
+  border-color: rgba(193, 74, 48, 0.28);
 }
 
 .debugChevron {
@@ -2387,22 +2387,22 @@
 .token_input {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border-color: rgba(180, 57, 223, 0.2);
-  color: #b439df;
+  border-color: rgba(193, 74, 48, 0.2);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .token_agent,
 :global(.dark-mode) .token_input {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.14) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.14) 100%
   );
-  border-color: rgba(180, 57, 223, 0.28);
+  border-color: rgba(193, 74, 48, 0.28);
 }
 
 .token_output {
@@ -2703,7 +2703,7 @@
 }
 
 .treeActionActive .treeActionIcon {
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   color: #fff;
 }
 
@@ -2790,7 +2790,7 @@
   width: 18px;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(90deg, #c14a30 0%, #e89042 100%);
 }
 
 .treeRowLabel.treeAxisActive {
@@ -2806,7 +2806,7 @@
   width: 2px;
   height: 18px;
   border-radius: 2px;
-  background: linear-gradient(180deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(180deg, #c14a30 0%, #e89042 100%);
 }
 
 .treeRowLabel {
@@ -2872,13 +2872,13 @@
 
 .treeCellOnAxis {
   background: var(--fg-color-0, rgba(55, 53, 47, 0.03));
-  border-color: rgba(180, 57, 223, 0.18);
+  border-color: rgba(193, 74, 48, 0.18);
   border-style: solid;
 }
 
 :global(.dark-mode) .treeCellOnAxis {
   background: rgba(255, 255, 255, 0.025);
-  border-color: rgba(180, 57, 223, 0.22);
+  border-color: rgba(193, 74, 48, 0.22);
 }
 
 .treeCellActive {
@@ -2886,20 +2886,20 @@
   border-color: transparent;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.15) 0%,
-    rgba(229, 51, 126, 0.15) 100%
+    rgba(193, 74, 48, 0.15) 0%,
+    rgba(232, 144, 66, 0.15) 100%
   );
   transform: scale(1.02);
   box-shadow:
-    0 0 0 1px rgba(180, 57, 223, 0.4),
-    0 4px 14px -6px rgba(180, 57, 223, 0.4);
+    0 0 0 1px rgba(193, 74, 48, 0.4),
+    0 4px 14px -6px rgba(193, 74, 48, 0.4);
 }
 
 :global(.dark-mode) .treeCellActive {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.22) 0%,
-    rgba(229, 51, 126, 0.22) 100%
+    rgba(193, 74, 48, 0.22) 0%,
+    rgba(232, 144, 66, 0.22) 100%
   );
 }
 
@@ -2925,7 +2925,7 @@
 .treeCellActive .treeCellDot {
   width: 9px;
   height: 9px;
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   box-shadow: 0 0 0 4px rgba(228, 51, 126, 0.18);
   transform: none;
 }
@@ -3059,21 +3059,21 @@
 .treeTourActive {
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.1) 0%,
-    rgba(229, 51, 126, 0.1) 100%
+    rgba(193, 74, 48, 0.1) 0%,
+    rgba(232, 144, 66, 0.1) 100%
   );
-  border-color: rgba(180, 57, 223, 0.3);
-  color: #b439df;
+  border-color: rgba(193, 74, 48, 0.3);
+  color: #c14a30;
 }
 
 :global(.dark-mode) .treeTourActive {
-  color: #d56df0;
+  color: #e89042;
   background: linear-gradient(
     135deg,
-    rgba(180, 57, 223, 0.18) 0%,
-    rgba(229, 51, 126, 0.16) 100%
+    rgba(193, 74, 48, 0.18) 0%,
+    rgba(232, 144, 66, 0.16) 100%
   );
-  border-color: rgba(180, 57, 223, 0.4);
+  border-color: rgba(193, 74, 48, 0.4);
 }
 
 /* ===== Prompt input demo ===== */
@@ -3282,7 +3282,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   box-shadow: 0 0 0 0 rgba(228, 51, 126, 0.5);
   animation: dotPulse 2.4s ease-in-out infinite;
 }
@@ -3544,11 +3544,11 @@
 }
 
 .mindsetCardClosed {
-  border-top: 2px solid rgba(180, 57, 223, 0.45);
+  border-top: 2px solid rgba(193, 74, 48, 0.45);
 }
 
 .mindsetCardOpen {
-  border-top: 2px solid rgba(229, 51, 126, 0.55);
+  border-top: 2px solid rgba(232, 144, 66, 0.55);
 }
 
 .mindsetCardLabel {
@@ -3566,11 +3566,11 @@
 }
 
 .mindsetCardClosed .mindsetCardLabel {
-  color: #b439df;
+  color: #c14a30;
 }
 
 .mindsetCardOpen .mindsetCardLabel {
-  color: #e5337e;
+  color: #e89042;
 }
 
 .mindsetCardHeading {
@@ -3639,8 +3639,8 @@
 }
 
 .orchCardGood {
-  border-color: rgba(180, 57, 223, 0.35);
-  box-shadow: 0 0 0 1px rgba(180, 57, 223, 0.08);
+  border-color: rgba(193, 74, 48, 0.35);
+  box-shadow: 0 0 0 1px rgba(193, 74, 48, 0.08);
 }
 
 .orchCardLabel {
@@ -3655,7 +3655,7 @@
 }
 
 .orchCardGood .orchCardLabel {
-  color: #b439df;
+  color: #c14a30;
 }
 
 :global(.dark-mode) .orchCardLabel {
@@ -3899,7 +3899,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

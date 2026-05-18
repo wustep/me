@@ -157,12 +157,12 @@ function EloChart() {
       >
         <defs>
           <linearGradient id='eloFill' x1='0' x2='0' y1='0' y2='1'>
-            <stop offset='0%' stopColor='#b439df' stopOpacity='0.35' />
-            <stop offset='100%' stopColor='#e5337e' stopOpacity='0.04' />
+            <stop offset='0%' stopColor='#c14a30' stopOpacity='0.35' />
+            <stop offset='100%' stopColor='#e89042' stopOpacity='0.04' />
           </linearGradient>
           <linearGradient id='eloStroke' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#b439df' />
-            <stop offset='100%' stopColor='#e5337e' />
+            <stop offset='0%' stopColor='#c14a30' />
+            <stop offset='100%' stopColor='#e89042' />
           </linearGradient>
         </defs>
 
