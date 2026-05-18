@@ -17,17 +17,16 @@ export function MindsetContent() {
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
-        of chess might get you to 1200 ELO &mdash; past most casual players, but
-        a long way short of anyone you&apos;d call expert. The frontier of the
-        curve is somewhere out around 2800. That&apos;s where we all are with
-        this skill.
+        of chess might get you to 1200 ELO &mdash; past most casual players,
+        nowhere near expert. The frontier sits around 2800. That&apos;s where we
+        all are with this.
       </p>
 
       <p>
         The danger of feeling expert too early is that your curve flattens. You
         stop reading tutorials, skip the bootcamp, ignore the patterns the model
-        just enabled last week. Look at where your workflow was twelve months
-        ago, then project that forward &mdash; most of the meta hasn&apos;t been
+        enabled last week. Look at where your workflow was twelve months ago,
+        then project that forward &mdash; most of the meta hasn&apos;t been
         uncovered yet.
       </p>
 
@@ -37,7 +36,7 @@ export function MindsetContent() {
         Sooner or later the model will let you down. It writes the wrong code.
         Picks the wrong abstraction. Hallucinates an API. Confidently does the
         opposite of what you asked. In that moment you face a small, quiet
-        choice that ends up shaping your entire trajectory.
+        choice that shapes everything that follows.
       </p>
 
       <div className={styles.mindsetPair}>
@@ -50,8 +49,7 @@ export function MindsetContent() {
             &ldquo;The model is bad.&rdquo; &ldquo;It&apos;s overhyped.&rdquo;
             &ldquo;It can&apos;t do real work.&rdquo; Comforting, easy, and a
             dead end &mdash; the verdict shuts the door before you check what
-            actually happened. Tomorrow&apos;s task goes the same way as
-            today&apos;s.
+            happened. Tomorrow&apos;s task goes the same way as today&apos;s.
           </p>
         </section>
 
@@ -61,46 +59,41 @@ export function MindsetContent() {
             Ask what you could have done differently.
           </h4>
           <p>
-            Was the prompt actually clear, or could it be read two ways? What
-            context was missing? Each failure becomes a rep &mdash; often the
-            fix is just writing what you meant more plainly. That&apos;s how the
-            curve keeps climbing.
+            Was the prompt clear, or could it be read two ways? What context was
+            missing? Each failure becomes a rep &mdash; often the fix is writing
+            what you meant, more plainly. That&apos;s how the curve climbs.
           </p>
         </section>
       </div>
 
       <p>
-        There&apos;s a useful little phrase that lives in gaming culture:{' '}
-        <em>skill issue</em>. When your character keeps dying, the level
-        isn&apos;t broken &mdash; you&apos;re missing something. It sounds
-        flippant, but the move underneath it is serious: assume, provisionally,
-        that the bottleneck is you. Not because it always is, but because
-        that&apos;s the assumption that produces growth.
+        Gaming culture has a useful phrase for this: <em>skill issue</em>. When
+        your character keeps dying, the level isn&apos;t broken &mdash;
+        you&apos;re missing something. It sounds flippant, but the move
+        underneath is serious: assume, provisionally, that the bottleneck is
+        you. It isn&apos;t always true. It&apos;s the assumption that grows you.
       </p>
 
       <p>
-        Most of the time, the model isn&apos;t the limit; your brief is, your
-        context is, your model choice is, your patience is. Once you adopt the
-        bottleneck-is-me stance by default, the same frustrating moment turns
-        into a small lab. Why did it go sideways? What signal did I miss? Which
-        lever, pulled differently, would have changed the result? Each one is a
-        piece of edge other people aren&apos;t collecting because they&apos;ve
-        already decided the tool is bad.
+        Most of the time, the model isn&apos;t the limit. Your brief is. Your
+        context is. Your model choice is. Your patience is. With the
+        bottleneck-is-me stance, the same frustrating moment turns into a small
+        lab &mdash; which lever, pulled differently, would have changed the
+        result? Each answer is a piece of edge other people aren&apos;t
+        collecting, because they&apos;ve already decided the tool is bad.
       </p>
 
       <p>
         The beginner&apos;s mindset isn&apos;t humility for its own sake.
         It&apos;s the faster path. Three years in, the people pulling away are
         the ones still treating themselves like beginners &mdash; still reading,
-        still experimenting, still updating their priors when the model
-        surprises them.
+        still experimenting, still updating when the model surprises them.
       </p>
 
       <p>
-        The rest of this guide is what the next 1200 points of ELO look like, at
-        least from where I&apos;m standing right now. A few mental models, then
-        a small repertoire of moves. None of it is magic; all of it is
-        learnable. Stay curious.
+        The rest of this guide is what the next 1200 points look like from where
+        I&apos;m standing. A few mental models, then a handful of moves to
+        practice. Stay curious.
       </p>
 
       <div className={styles.synthesis}>

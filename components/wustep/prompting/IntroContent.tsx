@@ -78,13 +78,13 @@ export function IntroContent() {
 
         <p className={styles.bodyItem} style={bodyDelay(2)}>
           You don&apos;t write code so much as describe what you want and watch
-          it appear. Less typing semicolons; more describing intent.
-          Engineering, increasingly, is the act of talking to machines.
+          it appear. The job is shifting from typing semicolons to describing
+          intent. More and more, engineering is talking to machines.
         </p>
 
         <p className={styles.bodyItem} style={bodyDelay(3)}>
           So here&apos;s the question: what does it mean to be good at talking
-          to Claude, Codex, or whatever tool or model comes next?
+          to Claude, Codex, or whatever comes next?
         </p>
 
         <div className={styles.bodyItem} style={bodyDelay(5)}>
