@@ -88,10 +88,26 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
   }
 }
 
+/**
+ * All Art* SVGs spread these base props.
+ *
+ * a11y note: every illustration is decorative — the meaning lives in
+ * the card's title + tagline, and every parent wrapper sets
+ * `aria-hidden='true'`. We belt-and-brace it on the <svg> too:
+ *
+ *   - `aria-hidden='true'`   — assistive tech ignores the SVG even if
+ *                              a future caller forgets to wrap it.
+ *   - `role='presentation'`  — explicit decorative role.
+ *   - `focusable={false}`    — prevents tab focus on legacy Edge/IE,
+ *                              which still treat SVGs as focusable.
+ */
 const SVG_BASE: React.SVGProps<SVGSVGElement> = {
   viewBox: '0 0 100 100',
   preserveAspectRatio: 'xMidYMid meet',
-  xmlns: 'http://www.w3.org/2000/svg'
+  xmlns: 'http://www.w3.org/2000/svg',
+  'aria-hidden': true,
+  role: 'presentation',
+  focusable: false
 }
 
 const ART_STROKE = {

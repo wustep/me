@@ -77,7 +77,7 @@ type LensCardProps = {
   previewOverride?: Pick<LensPreviewOverride, 'palette' | 'renderIllustration'>
 }
 
-export function LensCard({
+function LensCardImpl({
   lens,
   stage,
   prefersReducedMotion,
@@ -96,6 +96,14 @@ export function LensCard({
     fg: lens.fg,
     accent: lens.accent ?? lens.fg
   }
+
+  // Hold onOpen in a ref so React.memo can skip re-renders when only
+  // the inline closure identity changes. The latest handler is
+  // always invoked on click.
+  const onOpenRef = React.useRef(onOpen)
+  React.useEffect(() => {
+    onOpenRef.current = onOpen
+  })
 
   React.useEffect(() => {
     if (!visible) {
@@ -137,7 +145,7 @@ export function LensCard({
       onAnimationEnd={(event) => {
         if (event.currentTarget === event.target) setInteractionReady(true)
       }}
-      onClick={onOpen}
+      onClick={() => onOpenRef.current()}
       aria-label={`Open lens: ${lens.title}`}
       aria-pressed={selected}
       data-lens-id={lens.id}
@@ -181,6 +189,21 @@ export function LensCard({
   )
 }
 
+/**
+ * Skip re-renders when only the (inline) onOpen identity changes.
+ * The Canvas creates a fresh closure per render; without this memo
+ * boundary, every keystroke / cursor move re-renders all ~32 cards.
+ */
+export const LensCard = React.memo(
+  LensCardImpl,
+  (prev, next) =>
+    prev.lens === next.lens &&
+    prev.stage === next.stage &&
+    prev.prefersReducedMotion === next.prefersReducedMotion &&
+    prev.selected === next.selected &&
+    prev.previewOverride === next.previewOverride
+)
+
 type CenterCardProps = {
   stage: Stage
   onOpen: () => void
@@ -197,11 +220,7 @@ type CenterCardProps = {
  *   right. The tagline is hidden in 2×2 mode via CSS so the
  *   markup is the same in both states.
  */
-export function CenterCard({
-  stage,
-  onOpen,
-  previewOverride
-}: CenterCardProps) {
+function CenterCardImpl({ stage, onOpen, previewOverride }: CenterCardProps) {
   const visible = stage >= STAGE.center
   const style = previewOverride
     ? ({
@@ -211,12 +230,17 @@ export function CenterCard({
       } as React.CSSProperties)
     : undefined
 
+  const onOpenRef = React.useRef(onOpen)
+  React.useEffect(() => {
+    onOpenRef.current = onOpen
+  })
+
   return (
     <button
       type='button'
       className={`${styles.centerCard} ${visible ? styles.centerCardVisible : ''}`}
       style={style}
-      onClick={onOpen}
+      onClick={() => onOpenRef.current()}
       aria-label='Open: Lenses index'
       data-lens-id='__center__'
     >
@@ -241,3 +265,9 @@ export function CenterCard({
     </button>
   )
 }
+
+export const CenterCard = React.memo(
+  CenterCardImpl,
+  (prev, next) =>
+    prev.stage === next.stage && prev.previewOverride === next.previewOverride
+)
