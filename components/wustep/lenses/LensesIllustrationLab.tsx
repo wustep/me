@@ -102,9 +102,9 @@ const LENSES_DECK_LENS: Lens = {
   tagline: 'A way of looking. Pick one. Try it on.',
   x: 50,
   y: 50,
-  bg: '#111827',
+  bg: '#1E272F',
   fg: '#F6EAD8',
-  accent: '#D98C45',
+  accent: '#DDA85D',
   illustration: LENSES_DECK_ILLUSTRATION_ID,
   body: (
     <p>
