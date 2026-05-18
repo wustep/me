@@ -33,12 +33,12 @@ export default function PromptingColleaguePage() {
       </Head>
       <PromptingLayout
         chapter={{
-          index: 3,
+          index: 5,
           title: chapterTitle,
           prevHref: '/prompting/tree',
           prevLabel: 'The tree',
-          nextHref: '/prompting/techniques',
-          nextLabel: 'Techniques'
+          nextHref: '/prompting/orchestration',
+          nextLabel: 'Orchestration'
         }}
       >
         <ColleagueContent />

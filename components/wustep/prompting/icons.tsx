@@ -46,6 +46,29 @@ export function ChevronIcon({ className }: { className?: string }) {
 }
 
 /**
+ * TocIcon — three stacked horizontal lines used as the
+ * table-of-contents affordance in the page chrome.
+ */
+export function TocIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='1.75'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M4 7h12' />
+      <path d='M4 12h16' />
+      <path d='M4 17h10' />
+    </svg>
+  )
+}
+
+/**
  * ReplayIcon — circular arrow used to re-run a demo (PromptInput
  * auto-type, EquationDemo replay).
  */

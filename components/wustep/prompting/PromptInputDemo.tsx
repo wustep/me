@@ -11,7 +11,6 @@ import {
   FAKE_MODELS
 } from './constants'
 import { ChevronIcon, ReplayIcon } from './icons'
-
 import styles from './PromptingPage.module.css'
 
 /* ─────────────────────────────────────────────────────────
@@ -194,7 +193,6 @@ export function PromptInputDemo({ start }: { start: boolean }) {
             onClick={() => setOpen((o) => !o)}
             aria-haspopup='listbox'
             aria-expanded={open}
-            disabled={!!error}
           >
             <span className={styles.modelDot} aria-hidden='true' />
             <span className={styles.modelName}>{model.name}</span>
@@ -215,6 +213,7 @@ export function PromptInputDemo({ start }: { start: boolean }) {
                     onClick={() => {
                       setModel(m)
                       setOpen(false)
+                      if (error) setError(null)
                     }}
                   >
                     <span className={styles.modelOptionName}>{m.name}</span>

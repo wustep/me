@@ -4,13 +4,9 @@ import { useInView } from '@/lib/use-in-view'
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
 
 import { ChevronIcon, ReplayIcon } from './icons'
-
 import styles from './PromptingPage.module.css'
 
-const LEVER_DETAILS: Record<
-  string,
-  { label: string; examples: string }
-> = {
+const LEVER_DETAILS: Record<string, { label: string; examples: string }> = {
   TOOL: {
     label: 'Tool',
     examples: 'Cursor, Codex, Claude Code, your editor, the terminal.'
@@ -59,7 +55,7 @@ export function EquationDemo() {
       setExpanded(true)
       return
     }
-    const id = window.setTimeout(() => setExpanded(true), 750)
+    const id = window.setTimeout(() => setExpanded(true), 1500)
     return () => window.clearTimeout(id)
   }, [inView, prefersReducedMotion])
 
@@ -80,7 +76,7 @@ export function EquationDemo() {
     setFullyExpanded(false)
     // Collapse runs fast (~500ms) — small pause on the centered simple
     // equation before the slow re-expansion plays.
-    window.setTimeout(() => setExpanded(true), 750)
+    window.setTimeout(() => setExpanded(true), 1300)
   }
 
   return (
@@ -164,12 +160,25 @@ export function Token({
   children: React.ReactNode
   kind?: 'agent' | 'input' | 'output'
 }) {
-  return <span className={`${styles.token} ${styles[`token_${kind}`] ?? ''}`}>{children}</span>
+  return (
+    <span className={`${styles.token} ${styles[`token_${kind}`] ?? ''}`}>
+      {children}
+    </span>
+  )
 }
 
-export function Op({ children, subtle }: { children?: React.ReactNode; subtle?: boolean }) {
+export function Op({
+  children,
+  subtle
+}: {
+  children?: React.ReactNode
+  subtle?: boolean
+}) {
   return (
-    <span className={`${styles.op} ${subtle ? styles.opSubtle : ''}`} aria-hidden='true'>
+    <span
+      className={`${styles.op} ${subtle ? styles.opSubtle : ''}`}
+      aria-hidden='true'
+    >
       {children ?? ''}
     </span>
   )

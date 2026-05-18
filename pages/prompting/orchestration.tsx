@@ -1,17 +1,20 @@
 import Head from 'next/head'
 
-import { PromptingLayout, RecapContent } from '@/components/wustep/prompting'
+import {
+  OrchestrationContent,
+  PromptingLayout
+} from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
 
 const parentTitle = 'How to talk to coding agents'
-const chapterTitle = 'Recap'
+const chapterTitle = 'Orchestration'
 const title = `${chapterTitle} — ${parentTitle}`
 const description =
-  'Five reminders before you go. The four mental models on one page, plus the techniques worth practicing.'
-const canonicalUrl = `${host}/prompting/recap`
+  'Chapter 06: stop optimizing the next message and start optimizing the next hour. Chain steps, fan out, specialize roles, run long. Conduct the fleet.'
+const canonicalUrl = `${host}/prompting/orchestration`
 const previewImage = `${host}/favicon-512x512.png`
 
-export default function PromptingRecapPage() {
+export default function PromptingOrchestrationPage() {
   return (
     <>
       <Head>
@@ -30,15 +33,15 @@ export default function PromptingRecapPage() {
       </Head>
       <PromptingLayout
         chapter={{
-          index: 7,
+          index: 6,
           title: chapterTitle,
-          prevHref: '/prompting/orchestration',
-          prevLabel: 'Orchestration',
-          nextHref: '/prompting',
-          nextLabel: 'Back to start'
+          prevHref: '/prompting/colleague',
+          prevLabel: 'The colleague',
+          nextHref: '/prompting/recap',
+          nextLabel: 'Recap'
         }}
       >
-        <RecapContent />
+        <OrchestrationContent />
       </PromptingLayout>
     </>
   )

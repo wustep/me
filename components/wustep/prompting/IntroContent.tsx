@@ -10,10 +10,9 @@ import {
   TITLE_WORDS
 } from './constants'
 import { SparkleIcon } from './icons'
+import styles from './PromptingPage.module.css'
 import { PromptInputDemo } from './PromptInputDemo'
 import { bodyDelay } from './types'
-
-import styles from './PromptingPage.module.css'
 
 /**
  * IntroContent — chapter-zero animated title + body intro + Begin CTA.
@@ -68,9 +67,7 @@ export function IntroContent() {
         </span>
       </h1>
 
-      <div
-        className={`${styles.prose} ${revealed ? styles.bodyVisible : ''}`}
-      >
+      <div className={`${styles.prose} ${revealed ? styles.bodyVisible : ''}`}>
         <p className={styles.bodyItem} style={bodyDelay(0)}>
           It&apos;s 2026, and more and more of coding looks like this:
         </p>
@@ -87,17 +84,12 @@ export function IntroContent() {
 
         <p className={styles.bodyItem} style={bodyDelay(3)}>
           So here&apos;s the question: what does it mean to be good at talking
-          to Claude, Codex, or whatever model comes next?
-        </p>
-
-        <p className={styles.bodyItem} style={bodyDelay(4)}>
-          Here are three mental models I keep coming back to, plus a small
-          repertoire of techniques worth practicing.
+          to Claude, Codex, or whatever tool or model comes next?
         </p>
 
         <div className={styles.bodyItem} style={bodyDelay(5)}>
-          <Link href='/prompting/equation' className={styles.beginCta}>
-            <span>Begin: The equation</span>
+          <Link href='/prompting/mindset' className={styles.beginCta}>
+            <span>Begin: The beginner&rsquo;s mindset</span>
             <span className={styles.beginCtaArrow} aria-hidden='true'>
               →
             </span>

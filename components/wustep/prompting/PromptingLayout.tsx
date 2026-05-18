@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import * as React from 'react'
 import BodyClassName from 'react-body-classname'
 
@@ -6,9 +7,9 @@ import { LabsButton } from '@/components/wustep/LabsButton'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
-import { TOTAL_CHAPTERS } from './constants'
 import type { ChapterMeta } from './types'
-
+import { CHAPTERS, TOTAL_CHAPTERS } from './constants'
+import { TocIcon } from './icons'
 import styles from './PromptingPage.module.css'
 
 /**
@@ -63,8 +64,59 @@ export function PromptingLayout({
           {children}
           {chapter && <ChapterNav chapter={chapter} />}
         </main>
+
+        <TableOfContents />
       </div>
     </>
+  )
+}
+
+/**
+ * TableOfContents — fixed-position icon in the upper-right of the
+ * viewport that reveals a chapter list on hover/focus. Hidden on
+ * narrower viewports via CSS (no room beside the centered page).
+ */
+function TableOfContents() {
+  const router = useRouter()
+  const currentPath = router.asPath.split(/[?#]/)[0]
+
+  return (
+    <div className={styles.toc}>
+      <button
+        type='button'
+        className={styles.tocTrigger}
+        aria-label='Table of contents'
+        aria-haspopup='true'
+      >
+        <TocIcon className={styles.tocIcon} />
+      </button>
+      <div className={styles.tocPanel} role='menu'>
+        <div className={styles.tocPanelHeader}>Chapters</div>
+        <ol className={styles.tocList}>
+          {CHAPTERS.map((c) => {
+            const isCurrent = c.href === currentPath
+            return (
+              <li key={c.href} className={styles.tocItem}>
+                <Link
+                  href={c.href}
+                  className={
+                    isCurrent
+                      ? `${styles.tocLink} ${styles.tocLinkCurrent}`
+                      : styles.tocLink
+                  }
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  <span className={styles.tocIndex}>
+                    {String(c.index).padStart(2, '0')}
+                  </span>
+                  <span className={styles.tocTitle}>{c.title}</span>
+                </Link>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+    </div>
   )
 }
 

@@ -1,9 +1,6 @@
 import Head from 'next/head'
 
-import {
-  PromptingLayout,
-  TreeContent
-} from '@/components/wustep/prompting'
+import { PromptingLayout, TreeContent } from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
 
 const parentTitle = 'How to talk to coding agents'
@@ -33,10 +30,10 @@ export default function PromptingTreePage() {
       </Head>
       <PromptingLayout
         chapter={{
-          index: 2,
+          index: 4,
           title: chapterTitle,
-          prevHref: '/prompting/equation',
-          prevLabel: 'The equation',
+          prevHref: '/prompting/techniques',
+          prevLabel: 'Techniques',
           nextHref: '/prompting/colleague',
           nextLabel: 'The colleague'
         }}

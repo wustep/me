@@ -411,6 +411,194 @@
   border-top-color: rgba(255, 255, 255, 0.08);
 }
 
+/* ===== Table of contents (floating, hover-reveal) ===== */
+
+.toc {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .toc {
+    display: block;
+    position: fixed;
+    top: 88px;
+    right: 28px;
+    z-index: 40;
+  }
+}
+
+.tocTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fg-color, rgb(55, 53, 47));
+  opacity: 0.45;
+  cursor: pointer;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
+}
+
+.tocTrigger:hover,
+.toc:hover .tocTrigger,
+.toc:focus-within .tocTrigger {
+  opacity: 1;
+  background: var(--fg-color-1, rgba(55, 53, 47, 0.06));
+}
+
+:global(.dark-mode) .tocTrigger:hover,
+:global(.dark-mode) .toc:hover .tocTrigger,
+:global(.dark-mode) .toc:focus-within .tocTrigger {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tocIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.tocPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 260px;
+  padding: 10px 8px 12px;
+  border-radius: 10px;
+  background: var(--bg-color, #fff);
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  box-shadow:
+    0 1px 2px rgba(15, 15, 15, 0.06),
+    0 8px 28px rgba(15, 15, 15, 0.12);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Invisible bridge spanning the gap between the trigger and the
+   panel so a diagonal cursor path doesn't drop :hover mid-traverse. */
+.tocPanel::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
+:global(.dark-mode) .tocPanel {
+  background: var(--bg-color, #2f3437);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 28px rgba(0, 0, 0, 0.4);
+}
+
+.toc:hover .tocPanel,
+.toc:focus-within .tocPanel {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.tocPanelHeader {
+  padding: 4px 10px 6px;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tocItem {
+  margin: 0;
+}
+
+.tocLink {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  color: var(--fg-color-2, rgba(55, 53, 47, 0.75));
+  text-decoration: none !important;
+  border: none !important;
+  background: none !important;
+  background-image: none !important;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.tocLink:hover {
+  color: var(--fg-color, rgb(55, 53, 47));
+  background: var(--fg-color-1, rgba(55, 53, 47, 0.05));
+}
+
+:global(.dark-mode) .tocLink {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:global(.dark-mode) .tocLink:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tocLinkCurrent {
+  color: var(--fg-color, rgb(55, 53, 47));
+  font-weight: 600;
+}
+
+:global(.dark-mode) .tocLinkCurrent {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.tocIndex {
+  flex-shrink: 0;
+  width: 1.6em;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.45));
+}
+
+:global(.dark-mode) .tocIndex {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tocLinkCurrent .tocIndex {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.tocTitle {
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tocPanel,
+  .tocTrigger {
+    transition: none;
+  }
+}
+
 .chapterNavSlot {
   display: flex;
 }
@@ -3311,5 +3499,467 @@
   }
   .treeOutputText {
     animation: none;
+  }
+}
+
+/* ===== Mindset chapter — closed vs open fork ===== */
+
+.mindsetForkHeading {
+  margin: 2.2em 0 0.5em;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .mindsetForkHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.mindsetPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 1.4em 0 1.2em;
+}
+
+@media (max-width: 640px) {
+  .mindsetPair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mindsetCard {
+  position: relative;
+  padding: 1.2em 1.25em 1.1em;
+  border-radius: 14px;
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  background: var(--bg-color, #fff);
+}
+
+:global(.dark-mode) .mindsetCard {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.mindsetCardClosed {
+  border-top: 2px solid rgba(180, 57, 223, 0.45);
+}
+
+.mindsetCardOpen {
+  border-top: 2px solid rgba(229, 51, 126, 0.55);
+}
+
+.mindsetCardLabel {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  margin-bottom: 0.5em;
+}
+
+:global(.dark-mode) .mindsetCardLabel {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mindsetCardClosed .mindsetCardLabel {
+  color: #b439df;
+}
+
+.mindsetCardOpen .mindsetCardLabel {
+  color: #e5337e;
+}
+
+.mindsetCardHeading {
+  margin: 0 0 0.55em;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .mindsetCardHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.mindsetCard p {
+  margin: 0;
+  font-size: 0.97rem;
+  line-height: 1.55;
+  color: var(--fg-color-2, rgba(55, 53, 47, 0.75));
+}
+
+:global(.dark-mode) .mindsetCard p {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ===== Orchestration chapter ===== */
+
+.orchSectionHeading {
+  margin: 2.4em 0 0.6em;
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .orchSectionHeading {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.orchPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 1.2em 0;
+}
+
+@media (max-width: 640px) {
+  .orchPair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.orchCard {
+  position: relative;
+  padding: 1em 1.1em;
+  border-radius: 12px;
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  background: var(--bg-color, #fff);
+}
+
+:global(.dark-mode) .orchCard {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.orchCardGood {
+  border-color: rgba(180, 57, 223, 0.35);
+  box-shadow: 0 0 0 1px rgba(180, 57, 223, 0.08);
+}
+
+.orchCardLabel {
+  display: inline-block;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  margin-bottom: 0.55em;
+}
+
+.orchCardGood .orchCardLabel {
+  color: #b439df;
+}
+
+:global(.dark-mode) .orchCardLabel {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.orchPromptBlock {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--fg-color-2, rgba(55, 53, 47, 0.78));
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+:global(.dark-mode) .orchPromptBlock {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Diagram shared */
+.orchDiagram {
+  margin: 1.4em 0 1.6em;
+  padding: 1.2em 1em 1em;
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.03)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.07));
+}
+
+:global(.dark-mode) .orchDiagram {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.025) 0%,
+    transparent 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.orchCaption {
+  margin: 0.85em auto 0;
+  max-width: 520px;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.6));
+  line-height: 1.55;
+}
+
+:global(.dark-mode) .orchCaption {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Shared timeline scaffold (Ping-pong + Fan-out) */
+.orchTimelineSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.orchTimelineLabel {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--fg-color-3, rgba(55, 53, 47, 0.7));
+}
+
+:global(.dark-mode) .orchTimelineLabel {
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+.orchTimelineDuration {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  font-weight: 500;
+  fill: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+}
+
+:global(.dark-mode) .orchTimelineDuration {
+  fill: rgba(255, 255, 255, 0.55);
+}
+
+.orchTimelineBlock {
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.orchTimelineIdle {
+  fill: var(--fg-color-1, rgba(55, 53, 47, 0.12));
+  stroke: var(--fg-color-1, rgba(55, 53, 47, 0.18));
+  stroke-width: 0.5;
+  stroke-dasharray: 2 2;
+}
+
+:global(.dark-mode) .orchTimelineIdle {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.18);
+}
+
+.orchDiagramVisible .orchTimelineBlock {
+  animation: orchBlockGrow 360ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@keyframes orchBlockGrow {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.orchTimelineAxis {
+  stroke: var(--fg-color-1, rgba(55, 53, 47, 0.18));
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+:global(.dark-mode) .orchTimelineAxis {
+  stroke: rgba(255, 255, 255, 0.18);
+}
+
+.orchTimelineAxisLabel {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--fg-color-3, rgba(55, 53, 47, 0.45));
+}
+
+:global(.dark-mode) .orchTimelineAxisLabel {
+  fill: rgba(255, 255, 255, 0.45);
+}
+
+/* Fan-out specific */
+.orchFanBlockLabel {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: #fff;
+  pointer-events: none;
+}
+
+.orchFanDrop {
+  opacity: 0;
+}
+
+.orchDiagramVisible .orchFanDrop {
+  animation: orchFadeIn 500ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.orchFanTrack {
+  opacity: 0;
+}
+
+.orchDiagramVisible .orchFanTrack {
+  animation: orchFadeIn 600ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.orchFanMerge {
+  opacity: 0;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+}
+
+:global(.dark-mode) .orchFanMerge {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.orchDiagramVisible .orchFanMerge {
+  animation: orchFadeIn 600ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation-delay: 900ms;
+}
+
+.orchFanMergeLabel {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: currentColor;
+}
+
+@keyframes orchFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Roles pipeline */
+.orchRolesPipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0.4em 0 0.2em;
+}
+
+.orchRoleCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 0.7em 1em;
+  min-width: 140px;
+  border-radius: 10px;
+  background: var(--bg-color, #fff);
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  opacity: 0;
+}
+
+:global(.dark-mode) .orchRoleCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.orchDiagramVisible .orchRoleCard {
+  animation: orchFadeIn 600ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.orchRoleName {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #b439df 0%, #e5337e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.orchRoleVerb {
+  font-size: 0.88rem;
+  color: var(--fg-color-2, rgba(55, 53, 47, 0.7));
+}
+
+:global(.dark-mode) .orchRoleVerb {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.orchRoleHandoff {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+}
+
+.orchDiagramVisible .orchRoleHandoff {
+  animation: orchFadeIn 500ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.orchRoleHandoffArtifact {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--fg-color-5, rgba(55, 53, 47, 0.05));
+}
+
+:global(.dark-mode) .orchRoleHandoffArtifact {
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.orchRoleHandoffArrow {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.45));
+}
+
+:global(.dark-mode) .orchRoleHandoffArrow {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orchTimelineBlock,
+  .orchFanDrop,
+  .orchFanTrack,
+  .orchFanMerge,
+  .orchRoleCard,
+  .orchRoleHandoff {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

@@ -3,56 +3,39 @@ import * as React from 'react'
 
 import { ChapterBody } from './ChapterBody'
 import { Bracket, Group, Op } from './EquationDemo'
-
 import styles from './PromptingPage.module.css'
 
 export function RecapContent() {
   return (
     <ChapterBody>
       <p>
-        Five reminders before you go. Skim this on the way out, or save it
-        for later when something feels off.
+        Five reminders before you go. Skim this on the way out, or save it for
+        later when something feels off.
       </p>
 
-      <RecapItem index={1} title='The equation' href='/prompting/equation'>
+      <RecapItem
+        index={1}
+        title='The beginner’s mindset'
+        href='/prompting/mindset'
+      >
+        <p>
+          We&apos;re three years into a five-hundred-year skill. About 1200 ELO.
+          When the model lets you down, the closed-minded blame the AI; the
+          open-minded ask what they could have done differently. The second is
+          the faster path &mdash; by a lot.
+        </p>
+      </RecapItem>
+
+      <RecapItem index={2} title='The equation' href='/prompting/equation'>
         <RecapEquationViz />
         <p>
-          When the output disappoints, walk the four levers. Better tool.
-          Better model. Better prompt. Better context. The biggest unlock
-          is almost always context.
+          When the output disappoints, walk the four levers. Better tool. Better
+          model. Better prompt. Better context. The biggest unlock is almost
+          always context.
         </p>
       </RecapItem>
 
-      <RecapItem index={2} title='The tree' href='/prompting/tree'>
-        <RecapTreeViz />
-        <p>
-          Every change lives somewhere on a 2D map: <em>breadth</em> (which
-          area of code) × <em>depth</em> (how zoomed in). At any node,
-          three moves: <strong>ask</strong>, <strong>plan</strong>,{' '}
-          <strong>delegate</strong>. Most non-trivial work moves through
-          all three.
-        </p>
-      </RecapItem>
-
-      <RecapItem
-        index={3}
-        title='The colleague'
-        href='/prompting/colleague'
-      >
-        <RecapColleagueViz />
-        <p>
-          Treat the agent as a colleague &mdash; a fast, knowledgeable
-          junior who only sees what you&apos;ve shown them. The discipline
-          gets <em>more</em> important, not less, as the models get
-          smarter.
-        </p>
-      </RecapItem>
-
-      <RecapItem
-        index={4}
-        title='Techniques'
-        href='/prompting/techniques'
-      >
+      <RecapItem index={3} title='Techniques' href='/prompting/techniques'>
         <p className={styles.recapTechniquesIntro}>
           Eight moves worth practicing &mdash;
         </p>
@@ -70,6 +53,38 @@ export function RecapContent() {
         </ul>
       </RecapItem>
 
+      <RecapItem index={4} title='The tree' href='/prompting/tree'>
+        <RecapTreeViz />
+        <p>
+          Every change lives somewhere on a 2D map: <em>breadth</em> (which area
+          of code) × <em>depth</em> (how zoomed in). At any node, three moves:{' '}
+          <strong>ask</strong>, <strong>plan</strong>, <strong>delegate</strong>
+          . Most non-trivial work moves through all three.
+        </p>
+      </RecapItem>
+
+      <RecapItem index={5} title='The colleague' href='/prompting/colleague'>
+        <RecapColleagueViz />
+        <p>
+          Treat the agent as a colleague &mdash; a fast, knowledgeable junior
+          who only sees what you&apos;ve shown them. The discipline gets{' '}
+          <em>more</em> important, not less, as the models get smarter.
+        </p>
+      </RecapItem>
+
+      <RecapItem
+        index={6}
+        title='Orchestration'
+        href='/prompting/orchestration'
+      >
+        <p>
+          One agent makes you faster &mdash; but now you have access to a whole
+          team. The bottleneck stops being model speed and becomes <em>you</em>:
+          how well you can brief them, unblock them, and manage several at once.
+          Optimize the hour, not the message.
+        </p>
+      </RecapItem>
+
       <div className={styles.synthesis}>
         <h3 className={styles.synthesisHeading}>
           <span className={styles.synthesisSymbol} aria-hidden='true'>
@@ -78,14 +93,12 @@ export function RecapContent() {
           One more thing
         </h3>
         <p>
-          We&apos;re all early in this. Three years in. Maybe 1200 ELO. The
-          next 1200 is wide open &mdash; and the most useful thing you can
-          do is keep paying attention while everyone else assumes
-          they&apos;ve figured it out.
+          We&apos;re all early in this. Three years in. Maybe 1200 ELO. The next
+          1200 is wide open &mdash; and the most useful thing you can do is keep
+          paying attention while everyone else assumes they&apos;ve figured it
+          out.
         </p>
-        <p>
-          Thanks for reading. Go talk to a machine.
-        </p>
+        <p>Thanks for reading. Go talk to a machine.</p>
       </div>
     </ChapterBody>
   )
@@ -167,8 +180,7 @@ function RecapTreeViz() {
         {Array.from({ length: ROWS }).map((_, r) =>
           Array.from({ length: COLS }).map((__, c) => {
             const isActive = r === ACTIVE.row && c === ACTIVE.col
-            const onAxis =
-              !isActive && (r === ACTIVE.row || c === ACTIVE.col)
+            const onAxis = !isActive && (r === ACTIVE.row || c === ACTIVE.col)
             return (
               <span
                 key={`${r}-${c}`}

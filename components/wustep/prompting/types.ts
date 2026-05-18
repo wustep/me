@@ -3,7 +3,7 @@ import type * as React from 'react'
 import { BODY_BASE_DELAY_MS, BODY_STAGGER_MS } from './constants'
 
 export type ChapterMeta = {
-  index: 1 | 2 | 3 | 4 | 5
+  index: 1 | 2 | 3 | 4 | 5 | 6 | 7
   title: string
   prevHref?: string
   prevLabel?: string

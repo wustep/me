@@ -1,9 +1,6 @@
 import Head from 'next/head'
 
-import {
-  EquationContent,
-  PromptingLayout
-} from '@/components/wustep/prompting'
+import { EquationContent, PromptingLayout } from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
 
 const parentTitle = 'How to talk to coding agents'
@@ -33,12 +30,12 @@ export default function PromptingEquationPage() {
       </Head>
       <PromptingLayout
         chapter={{
-          index: 1,
+          index: 2,
           title: chapterTitle,
-          prevHref: '/prompting',
-          prevLabel: 'Intro',
-          nextHref: '/prompting/tree',
-          nextLabel: 'The tree'
+          prevHref: '/prompting/mindset',
+          prevLabel: 'The beginner’s mindset',
+          nextHref: '/prompting/techniques',
+          nextLabel: 'Techniques'
         }}
       >
         <EquationContent />

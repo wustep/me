@@ -13,21 +13,44 @@ export const PER_WORD_STAGGER_MS = 50
 export const BODY_BASE_DELAY_MS = 600
 export const BODY_STAGGER_MS = 110
 
-export const TOTAL_CHAPTERS = 5
+export const TOTAL_CHAPTERS = 7
+
+/* ─────────────────────────────────────────────────────────
+ * Chapter index
+ *
+ *   Canonical ordered list of every page in the series, used
+ *   by the floating table-of-contents overlay. Intro sits at
+ *   index 0; chapters 1–7 follow.
+ * ───────────────────────────────────────────────────────── */
+export const CHAPTERS: ReadonlyArray<{
+  index: number
+  title: string
+  href: string
+}> = [
+  { index: 0, title: 'Intro', href: '/prompting' },
+  { index: 1, title: 'The beginner’s mindset', href: '/prompting/mindset' },
+  { index: 2, title: 'The equation', href: '/prompting/equation' },
+  { index: 3, title: 'Techniques', href: '/prompting/techniques' },
+  { index: 4, title: 'The tree', href: '/prompting/tree' },
+  { index: 5, title: 'The colleague', href: '/prompting/colleague' },
+  { index: 6, title: 'Orchestration', href: '/prompting/orchestration' },
+  { index: 7, title: 'Recap', href: '/prompting/recap' }
+]
 
 export const FAKE_MODELS = [
-  { name: 'Claude Opus 9.7', tag: '1Q ctx' },
-  { name: 'GPT-7o-turbo-omni-pro', tag: 'thinks?' },
-  { name: 'Gemini 5 Ultra Diamond', tag: 'shiny' },
-  { name: 'Sonnet 12 Hyperdrive', tag: 'fast' },
-  { name: 'Grok Heavy Heavy', tag: 'heavy' },
-  { name: 'DeepSeek V9', tag: 'probably AGI' }
+  { name: 'Claude Opus', tag: 'deep work' },
+  { name: 'GPT Pro', tag: 'balanced' },
+  { name: 'Gemini Ultra', tag: 'long context' },
+  { name: 'Claude Sonnet', tag: 'fast' },
+  { name: 'Grok Heavy', tag: 'reasoning' },
+  { name: 'DeepSeek Reasoner', tag: 'efficient' }
 ]
 
 export const ERROR_MESSAGES = [
   'Insufficient credits. Top up to keep going.',
   'Rate limit exceeded. Give the model a moment.',
-  'Quota exhausted for this model. Try again later or switch models.'
+  'Quota exhausted for this model. Try again later or switch models.',
+  'This model is temporarily unavailable. Try again in a moment.'
 ]
 
 /* PROMPT INPUT auto-type storyboard */
