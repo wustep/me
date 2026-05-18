@@ -38,12 +38,11 @@ export const CHAPTERS: ReadonlyArray<{
 ]
 
 export const FAKE_MODELS = [
-  { name: 'Claude Opus', tag: 'deep work' },
-  { name: 'GPT Pro', tag: 'balanced' },
-  { name: 'Gemini Ultra', tag: 'long context' },
-  { name: 'Claude Sonnet', tag: 'fast' },
-  { name: 'Grok Heavy', tag: 'reasoning' },
-  { name: 'DeepSeek Reasoner', tag: 'efficient' }
+  { name: 'Claude Mythos 7.4', tag: 'deep work' },
+  { name: 'GPT-7o Pro', tag: 'balanced' },
+  { name: 'Gemini Ultra Max', tag: 'long ctx' },
+  { name: 'Grok Heavy', tag: 'spicy' },
+  { name: 'DeepSeek V9', tag: 'budget brain' }
 ]
 
 export const ERROR_MESSAGES = [
