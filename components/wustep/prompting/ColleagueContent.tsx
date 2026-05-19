@@ -96,33 +96,6 @@ export function ColleagueContent() {
           probably wrong, and look for it before merging.
         </p>
       </Lever>
-
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          Working <em>with</em> vs. working <em>through</em>
-        </h3>
-        <p>
-          There&apos;s a difference between treating the agent as a tool you
-          operate (input, output, hope) and a colleague you work with (set up,
-          brief, pair, review). The tool frame scales until it doesn&apos;t. The
-          colleague frame compounds.
-        </p>
-        <p>
-          The tool frame asks <em>&quot;what should I prompt?&quot;</em> The
-          colleague frame asks{' '}
-          <em>&quot;what does this person need to be successful?&quot;</em> Most
-          of the time, the second is the better question.
-        </p>
-        <p>
-          The discipline gets <em>more</em> important, not less, as the models
-          get smarter. As the agent&apos;s ceiling rises, the gap between people
-          who treat it as a colleague and people who treat it as a tool widens.
-          Better to start practicing now.
-        </p>
-      </div>
     </ChapterBody>
   )
 }

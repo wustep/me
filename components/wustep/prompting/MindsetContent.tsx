@@ -30,31 +30,31 @@ export function MindsetContent() {
         hasn&apos;t been uncovered yet.
       </p>
 
-      <h3 className={styles.mindsetForkHeading}>The fork in the road</h3>
+      <h3 className={styles.mindsetForkHeading}>Two responses</h3>
 
       <p>
         Sooner or later the model will let you down. It writes the wrong code.
         Picks the wrong abstraction. Hallucinates an API. Confidently does the
-        opposite of what you asked. In that moment you face a small choice that
-        shapes everything what follows.
+        opposite of what you asked. How you react in that moment shapes
+        everything that follows.
       </p>
 
       <div className={styles.mindsetPair}>
         <section
           className={`${styles.mindsetCard} ${styles.mindsetCardClosed}`}
         >
-          <h4 className={styles.mindsetCardHeading}>Blame the AI.</h4>
+          <h4 className={styles.mindsetCardHeading}>Closed: blame the AI.</h4>
           <p>
             &ldquo;The model is bad.&rdquo; &ldquo;It&apos;s overhyped.&rdquo;
-            &ldquo;It can&apos;t do real work.&rdquo; Comforting, easy, and a
-            dead end &mdash; the verdict shuts the door before you check what
+            &ldquo;It can&apos;t do real work.&rdquo; Comforting, easy, and
+            final &mdash; the verdict closes the question before you check what
             happened. Tomorrow&apos;s task goes the same way as today&apos;s.
           </p>
         </section>
 
         <section className={`${styles.mindsetCard} ${styles.mindsetCardOpen}`}>
           <h4 className={styles.mindsetCardHeading}>
-            Ask what you could have done differently.
+            Open: ask what you could have done differently.
           </h4>
           <p>
             Was the prompt clear, or could it be read two ways? What context was
@@ -73,7 +73,7 @@ export function MindsetContent() {
       </p>
 
       <p>
-        Most of the time, the model isn&apos;t the limit. Your brief is. Your
+        Most of the time, the model isn&apos;t the limit. Your prompt is. Your
         context is. Your patience is. With the bottleneck-is-me stance, the same
         frustrating moment turns into a small lab: which lever would have
         changed the result? Each answer is a piece of edge other people

@@ -189,10 +189,18 @@ export function OrchestrationContent() {
  * Same work, very different wall-clock cost.
  * ───────────────────────────────────────────────────────── */
 
+type SegmentKind = 'you' | 'agent' | 'idle'
+
+const SEGMENT_TOOLTIPS: Record<SegmentKind, string> = {
+  you: 'You — writing a prompt or brief',
+  agent: 'Agent — running',
+  idle: 'You — reading, thinking, deciding what to do next'
+}
+
 type PingSegment = {
   x: number
   w: number
-  kind: 'you' | 'agent' | 'idle'
+  kind: SegmentKind
 }
 
 // Six U/A cycles. Agent block is wider than user block (the model
@@ -268,7 +276,9 @@ function PingPongDiagram() {
               s.kind === 'idle' ? styles.orchTimelineIdle : ''
             }`}
             style={{ animationDelay: `${i * 50}ms` }}
-          />
+          >
+            <title>{SEGMENT_TOOLTIPS[s.kind]}</title>
+          </rect>
         ))}
         <text x={PING_END + 10} y='42' className={styles.orchTimelineDuration}>
           ~14 min
@@ -293,7 +303,9 @@ function PingPongDiagram() {
           fill='url(#orchTimelineYou)'
           className={styles.orchTimelineBlock}
           style={{ animationDelay: '500ms' }}
-        />
+        >
+          <title>{SEGMENT_TOOLTIPS.you}</title>
+        </rect>
         <rect
           x='174'
           y='90'
@@ -304,7 +316,9 @@ function PingPongDiagram() {
           fill='url(#orchTimelineAgent)'
           className={styles.orchTimelineBlock}
           style={{ animationDelay: '640ms' }}
-        />
+        >
+          <title>{SEGMENT_TOOLTIPS.agent}</title>
+        </rect>
         <text x='384' y='104' className={styles.orchTimelineDuration}>
           ~5 min
         </text>
@@ -383,7 +397,9 @@ function FanOutDiagram() {
           ry='6'
           fill='url(#orchFanYou)'
           className={styles.orchTimelineBlock}
-        />
+        >
+          <title>{SEGMENT_TOOLTIPS.you}</title>
+        </rect>
         <text
           x='105'
           y='35'
@@ -423,7 +439,9 @@ function FanOutDiagram() {
               rx='6'
               ry='6'
               fill='url(#orchFanAgent)'
-            />
+            >
+              <title>{SEGMENT_TOOLTIPS.agent}</title>
+            </rect>
             <text
               x={235}
               y={t.y + 15}
@@ -543,7 +561,7 @@ function RolesDiagram() {
 type StaggerSegment = {
   x: number
   w: number
-  kind: 'you' | 'agent' | 'idle'
+  kind: SegmentKind
 }
 
 const STAGGER_TRACKS: ReadonlyArray<{
@@ -637,7 +655,9 @@ function StaggerDiagram() {
                   s.kind === 'idle' ? styles.orchTimelineIdle : ''
                 }`}
                 style={{ animationDelay: `${ti * 120 + si * 80}ms` }}
-              />
+              >
+                <title>{SEGMENT_TOOLTIPS[s.kind]}</title>
+              </rect>
             ))}
           </React.Fragment>
         ))}

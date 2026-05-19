@@ -3766,6 +3766,7 @@
   opacity: 0;
   transform: scaleX(0);
   transform-origin: left center;
+  cursor: help;
 }
 
 .orchTimelineIdle {
