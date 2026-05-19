@@ -18,16 +18,16 @@ export function MindsetContent() {
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
         of chess might get you to 1200 ELO &mdash; past most casual players,
-        nowhere near expert. The frontier sits around 2800. That&apos;s where we
-        all are with this.
+        nowhere near expert. The frontier lies around 2800, and I'm not sure
+        anyone has hit it yet.
       </p>
 
       <p>
-        The danger of feeling expert too early is that your curve flattens. You
-        stop reading tutorials, skip the bootcamp, ignore the patterns the model
-        enabled last week. Look at where your workflow was twelve months ago,
-        then project that forward &mdash; most of the meta hasn&apos;t been
-        uncovered yet.
+        The danger of calling yourself an expert too early is that your curve
+        flattens. You stop reading tutorials, skip the bootcamp, ignore the
+        patterns the model enabled last week. Look at where your workflow was
+        twelve months ago, then project that forward &mdash; most of the meta
+        hasn&apos;t been uncovered yet.
       </p>
 
       <h3 className={styles.mindsetForkHeading}>The fork in the road</h3>
@@ -35,15 +35,14 @@ export function MindsetContent() {
       <p>
         Sooner or later the model will let you down. It writes the wrong code.
         Picks the wrong abstraction. Hallucinates an API. Confidently does the
-        opposite of what you asked. In that moment you face a small, quiet
-        choice that shapes everything that follows.
+        opposite of what you asked. In that moment you face a small choice that
+        shapes everything what follows.
       </p>
 
       <div className={styles.mindsetPair}>
         <section
           className={`${styles.mindsetCard} ${styles.mindsetCardClosed}`}
         >
-          <span className={styles.mindsetCardLabel}>Closed</span>
           <h4 className={styles.mindsetCardHeading}>Blame the AI.</h4>
           <p>
             &ldquo;The model is bad.&rdquo; &ldquo;It&apos;s overhyped.&rdquo;
@@ -54,7 +53,6 @@ export function MindsetContent() {
         </section>
 
         <section className={`${styles.mindsetCard} ${styles.mindsetCardOpen}`}>
-          <span className={styles.mindsetCardLabel}>Open</span>
           <h4 className={styles.mindsetCardHeading}>
             Ask what you could have done differently.
           </h4>
