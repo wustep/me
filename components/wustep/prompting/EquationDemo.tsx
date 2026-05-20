@@ -41,7 +41,13 @@ const LEVER_DETAILS: Record<string, { label: string; examples: string }> = {
  *  prefers-reduced-motion  →  expansion fires instantly
  * ───────────────────────────────────────────────────────── */
 
-export function EquationDemo() {
+export function EquationDemo({
+  showFooter = true,
+  interactive = true
+}: {
+  showFooter?: boolean
+  interactive?: boolean
+}) {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.4 })
   const [expanded, setExpanded] = React.useState(false)
   // Once the max-height transition finishes we let the expanded line overflow
@@ -111,17 +117,17 @@ export function EquationDemo() {
         >
           <Group>
             <Bracket>(</Bracket>
-            <LeverChip name='TOOL' />
+            <LeverChip name='TOOL' interactive={interactive} />
             <Op subtle>+</Op>
-            <LeverChip name='MODEL' />
+            <LeverChip name='MODEL' interactive={interactive} />
             <Bracket>)</Bracket>
           </Group>
           <Op>×</Op>
           <Group>
             <Bracket>(</Bracket>
-            <LeverChip name='HUMAN_PROMPT' />
+            <LeverChip name='HUMAN_PROMPT' interactive={interactive} />
             <Op subtle>+</Op>
-            <LeverChip name='CONTEXT' />
+            <LeverChip name='CONTEXT' interactive={interactive} />
             <Bracket>)</Bracket>
           </Group>
           <Op>→</Op>
@@ -129,22 +135,24 @@ export function EquationDemo() {
         </div>
       </div>
 
-      <div className={styles.equationFooter}>
-        <span
-          className={`${styles.equationHint} ${fullyExpanded ? styles.equationHintVisible : ''}`}
-          aria-hidden={!fullyExpanded}
-        >
-          Hover any lever to learn more.
-        </span>
-        <button
-          type='button'
-          className={styles.equationReplay}
-          onClick={replay}
-          aria-label='Replay animation'
-        >
-          <ReplayIcon /> Replay
-        </button>
-      </div>
+      {showFooter && (
+        <div className={styles.equationFooter}>
+          <span
+            className={`${styles.equationHint} ${fullyExpanded ? styles.equationHintVisible : ''}`}
+            aria-hidden={!fullyExpanded}
+          >
+            Hover any lever to learn more.
+          </span>
+          <button
+            type='button'
+            className={styles.equationReplay}
+            onClick={replay}
+            aria-label='Replay animation'
+          >
+            <ReplayIcon /> Replay
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -192,8 +200,26 @@ export function Group({ children }: { children: React.ReactNode }) {
   return <span className={styles.group}>{children}</span>
 }
 
-function LeverChip({ name }: { name: keyof typeof LEVER_DETAILS }) {
+function LeverChip({
+  name,
+  interactive = true
+}: {
+  name: keyof typeof LEVER_DETAILS
+  interactive?: boolean
+}) {
   const detail = LEVER_DETAILS[name]!
+
+  if (!interactive) {
+    return (
+      <span
+        className={styles.lever}
+        aria-label={`${detail.label}: ${detail.examples}`}
+      >
+        <span className={styles.leverName}>{name}</span>
+      </span>
+    )
+  }
+
   return (
     <button
       type='button'
