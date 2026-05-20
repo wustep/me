@@ -65,7 +65,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'The question',
     title:
       'What does it mean to be good at talking to Claude, Codex, or whatever comes next?',
-    note: 'This is the question at the end of the intro chapter. The structure should feel like the article: mindset, equation, techniques, tree, colleague, orchestration, recap.',
+    note: 'This is the question at the end of the intro chapter. The structure should feel like the article: mindset, equation, techniques, tree, orchestration, recap.',
     visual: { kind: 'none' },
     tone: 'dark',
     layout: 'quote'
@@ -267,46 +267,25 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'The tree',
     title: 'Every change lives somewhere on a 2D map.',
-    note: 'Use the interactive article tree. The axes are breadth and depth; the move is ask, plan, or delegate. Click Take a tour if presenting live.',
+    body: 'Breadth × depth. Where you are tells you what to write.',
+    note: 'Use the interactive article tree. The axes are breadth (which area of code) and depth (how zoomed in). At any cell, three moves: ask, plan, or delegate. Click around so the room sees the prompt change with the cell.',
     visual: { kind: 'treeDemo' },
     tone: 'dark',
     layout: 'visual'
   },
   {
     eyebrow: 'Choosing your move',
-    title:
-      'Delegate thoughtfully. Ask and Plan more than you think you should.',
-    note: 'Tie the tree to the three moves. The article’s warning: the most expensive prompts are the ones in the wrong cell. Ask when you don’t know yet. Plan when you know what but not how. Delegate only when the path is clear and the result is gradeable.',
+    title: 'Pick the move that fits the cell.',
+    body: 'The most expensive prompts are the ones in the wrong cell.',
+    note: 'Tie the tree to the three moves with real examples. Ask when you don’t know yet. Plan when you know what but not how. Delegate only when the path is clear and the result is gradeable. Calibration is most of the skill.',
     visual: { kind: 'choice' },
-    tone: 'dark'
-  },
-  {
-    eyebrow: 'Section 05',
-    title: 'Treat it like a colleague.',
-    note: 'Section break. The agent is fast and capable, but only sees what you show it.',
-    visual: { kind: 'section', number: '05', label: 'The colleague' },
-    tone: 'paper',
-    layout: 'visual'
-  },
-  {
-    eyebrow: 'Colleague model',
-    title: 'Same task, same model. Different setup.',
-    note: 'Use the article’s colleague demo. Click file, screenshot, rules, history. The point is the asymmetry between what you see and what the agent sees.',
-    visual: { kind: 'colleagueDemo' },
     tone: 'dark',
-    layout: 'visual'
-  },
-  {
-    eyebrow: 'The colleague',
-    title: 'Onboard. Prompt. Review.',
-    note: 'The article’s colleague chapter compressed. The same things that help a teammate help an agent: a CLAUDE.md when they start, a real prompt on each task, and a real review before merging.',
-    visual: { kind: 'colleague' },
     layout: 'visual'
   },
   {
     eyebrow: 'Q',
     title: 'What’s your mental model for talking to the AI?',
-    note: 'Ask this after the colleague frame lands. Listen for metaphors people already use: intern, pair programmer, search engine, compiler, reviewer, weird teammate.',
+    note: 'Open it up. Listen for metaphors people already use: intern, pair programmer, search engine, compiler, reviewer, weird teammate.',
     visual: {
       kind: 'audienceQ',
       seeds: ['intern', 'pair programmer', 'weird teammate', 'compiler']
@@ -314,10 +293,10 @@ export const SLIDES: Slide[] = [
     tone: 'dark'
   },
   {
-    eyebrow: 'Section 06',
+    eyebrow: 'Section 05',
     title: 'Conduct the fleet.',
     note: 'Section break. This starts orchestration: from one prompt at a time to managing several runs.',
-    visual: { kind: 'section', number: '06', label: 'Orchestration' },
+    visual: { kind: 'section', number: '05', label: 'Orchestration' },
     tone: 'dark',
     layout: 'visual'
   },
@@ -371,10 +350,10 @@ export const SLIDES: Slide[] = [
     tone: 'dark'
   },
   {
-    eyebrow: 'Section 07',
+    eyebrow: 'Section 06',
     title: 'Keep climbing.',
     note: 'Section break. This is the recap: we are early, the skill is real, and there is a lot left to learn.',
-    visual: { kind: 'section', number: '07', label: 'Recap' },
+    visual: { kind: 'section', number: '06', label: 'Recap' },
     tone: 'paper',
     layout: 'visual'
   },
@@ -847,9 +826,8 @@ function AgendaVisual() {
         ['02', 'the equation'],
         ['03', 'techniques'],
         ['04', 'the tree'],
-        ['05', 'the colleague'],
-        ['06', 'orchestration'],
-        ['07', 'recap']
+        ['05', 'orchestration'],
+        ['06', 'recap']
       ].map(([n, text]) => (
         <li key={n}>
           <span>{n}</span>
@@ -1603,16 +1581,46 @@ function ArticleTreeVisual() {
 }
 
 function ChoiceVisual() {
+  const moves: Array<{
+    verb: string
+    when: string
+    example: string
+    cell: string
+  }> = [
+    {
+      verb: 'Ask',
+      when: 'you don’t know yet',
+      example: '“Why is this list re-rendering on every keystroke?”',
+      cell: 'high zoom · widening what you know'
+    },
+    {
+      verb: 'Plan',
+      when: 'you know what, not how',
+      example: '“Plan how to memoize this list without breaking selection.”',
+      cell: 'mid zoom · converging before code'
+    },
+    {
+      verb: 'Delegate',
+      when: 'the path is clear and gradeable',
+      example: '“Memoize this list. Verify selection still works.”',
+      cell: 'low zoom · narrow scope, clear success'
+    }
+  ]
+
   return (
     <div className={styles.choice}>
-      {[
-        ['ASK', 'when you need to understand'],
-        ['PLAN', 'when the approach is still soft'],
-        ['DELEGATE', 'when the path is clear and gradeable']
-      ].map(([title, body]) => (
-        <section key={title}>
-          <strong>{title}</strong>
-          <span>{body}</span>
+      {moves.map((move, i) => (
+        <section
+          key={move.verb}
+          className={styles.choiceRow}
+          style={{ animationDelay: `${i * 160}ms` }}
+        >
+          <div className={styles.choiceHeader}>
+            <strong>{move.verb}</strong>
+            <span className={styles.choiceWhen}>when {move.when}</span>
+          </div>
+          <p className={styles.choiceExample}>{move.example}</p>
+          <span className={styles.choiceCell}>{move.cell}</span>
         </section>
       ))}
     </div>
@@ -2033,12 +2041,6 @@ function CloseVisual() {
     },
     {
       n: '05',
-      title: 'The colleague',
-      line: 'Onboard. Prompt. Review. Same shape as a teammate.',
-      glyph: <CloseGlyphColleague />
-    },
-    {
-      n: '06',
       title: 'Orchestration',
       line: 'Conduct the fleet. The hour matters more than the message.',
       glyph: <CloseGlyphFanout />
@@ -2117,18 +2119,6 @@ function CloseGlyphTree() {
           />
         )
       })}
-    </div>
-  )
-}
-
-function CloseGlyphColleague() {
-  return (
-    <div className={styles.closeColleague}>
-      <span>onboard</span>
-      <em>→</em>
-      <span>prompt</span>
-      <em>→</em>
-      <span>review</span>
     </div>
   )
 }
