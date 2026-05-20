@@ -508,6 +508,9 @@
 }
 
 .agenda strong {
+  font-family: var(--font-serif, 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', Georgia, serif);
+  font-style: italic;
+  font-weight: 600;
   font-size: clamp(24px, 3vw, 42px);
   line-height: 1;
 }
@@ -1532,104 +1535,195 @@
 
 .colleague {
   display: grid;
-  grid-template-columns: 150px 1fr 170px;
-  align-items: center;
-  gap: 22px;
+  width: 100%;
+  gap: 18px;
 }
 
-.colleague strong {
+.colleagueRow {
   display: grid;
-  min-height: 132px;
-  align-content: center;
-  place-items: center;
-  gap: 8px;
-  padding: 18px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 28px;
-  line-height: 1;
-  text-align: center;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 14px;
 }
 
-.colleague strong small {
-  color: rgba(244, 238, 227, 0.58);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.colleague div {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  position: relative;
-}
-
-.colleague div::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -12px;
-  left: -12px;
-  height: 2px;
-  background: var(--ember);
-  transform: translateY(-50%);
-  z-index: -1;
-}
-
-.colleague span {
+.colleagueCard {
   display: grid;
-  min-height: 96px;
-  align-content: center;
-  gap: 8px;
-  padding: 14px;
+  align-content: start;
+  gap: 14px;
+  padding: 24px;
   background: var(--paper);
   color: var(--ink);
-  box-shadow: 0 12px 32px rgba(18, 17, 15, 0.14);
-  text-align: center;
+  box-shadow: 0 14px 36px rgba(18, 17, 15, 0.14);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: colleagueEnter 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.colleague span b {
-  font-weight: 700;
+.colleagueCard header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.colleagueN {
+  color: var(--ember);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+}
+
+.colleaguePhase {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.colleague span small {
+.colleagueVerb {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.colleagueItems {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.colleagueItems li {
+  padding-left: 18px;
+  position: relative;
+  color: var(--ink);
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.3;
+}
+
+.colleagueItems li::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 8px;
+  height: 2px;
+  background: var(--ember);
+}
+
+.colleagueCadence {
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(18, 17, 15, 0.12);
   color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
-  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.colleagueArrow {
+  align-self: center;
+  color: var(--ember);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(22px, 2.4vw, 30px);
+  opacity: 0;
+  animation: colleagueArrowEnter 360ms ease forwards;
+}
+
+.colleagueCaption {
+  margin: 0;
+  color: rgba(244, 238, 227, 0.58);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.slidePaper .colleagueCaption {
+  color: var(--muted);
+}
+
+@keyframes colleagueEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes colleagueArrowEnter {
+  to {
+    opacity: 1;
+  }
 }
 
 .briefPair {
   display: grid;
-  grid-template-columns: 0.86fr 1fr;
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .briefPair section {
-  min-height: 310px;
-  padding: 22px;
+  display: grid;
+  gap: 14px;
+  padding: 20px 24px;
   border: 1px solid rgba(244, 238, 227, 0.18);
   background: #1d1915;
 }
 
-.briefPair span {
-  display: block;
-  margin-bottom: 18px;
-  color: var(--gold);
+.briefLabel {
+  color: rgba(244, 238, 227, 0.5);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.briefPair pre {
-  margin: 0;
-  white-space: pre-wrap;
-  color: var(--paper);
+.briefGood .briefLabel {
+  color: var(--gold);
+}
+
+.briefTranscript {
+  display: grid;
+  gap: 4px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: clamp(14px, 1.25vw, 18px);
+  font-size: clamp(15px, 1.4vw, 19px);
   line-height: 1.5;
+}
+
+.briefUser {
+  position: relative;
+  padding-left: 22px;
+  color: var(--paper);
+  font-weight: 760;
+}
+
+.briefUser::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--ember);
+  font-weight: 760;
+}
+
+.briefAgent {
+  padding-left: 22px;
+  color: rgba(244, 238, 227, 0.5);
+  font-style: italic;
+}
+
+.briefGap {
+  display: block;
+  height: 8px;
 }
 
 .timeline {
@@ -2007,13 +2101,6 @@
   display: flex;
   justify-self: start;
   align-self: start;
-}
-
-/* The reused article LeverChip is a non-interactive span on these slides;
- * size it up a touch so it reads as a slide-level badge. */
-.leverHeader :global([class*='lever']) {
-  font-size: clamp(17px, 1.8vw, 22px);
-  padding: 8px 14px;
 }
 
 .leverFootnote {
@@ -2894,6 +2981,217 @@
   }
 }
 
+/* ─── YOLO and extract ───────────────────────────────── */
+.yolo {
+  display: grid;
+  width: 100%;
+  gap: clamp(22px, 3vw, 40px);
+}
+
+.yoloFlow {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) auto minmax(0, 0.95fr) auto minmax(0, 1.2fr) auto minmax(0, 0.95fr);
+  align-items: stretch;
+  gap: 16px;
+}
+
+.yoloStage {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(244, 238, 227, 0.12);
+  background: rgba(244, 238, 227, 0.03);
+}
+
+.yoloStageLabel {
+  color: rgba(244, 238, 227, 0.5);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.yoloStageBig {
+  align-self: stretch;
+  border-color: rgba(232, 162, 65, 0.55);
+  background: linear-gradient(
+    180deg,
+    rgba(223, 107, 45, 0.22),
+    rgba(223, 107, 45, 0.06)
+  );
+  box-shadow: 0 18px 44px rgba(223, 107, 45, 0.18);
+}
+
+.yoloStageBig .yoloStageLabel {
+  color: var(--gold);
+}
+
+.yoloFlowArrow {
+  align-self: center;
+  color: var(--gold);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 22px;
+}
+
+.yoloContext {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.yoloContext span {
+  padding: 5px 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.yoloPrompt {
+  padding: 12px 14px;
+  border-left: 3px solid var(--ember);
+  background: rgba(18, 17, 15, 0.55);
+  color: var(--paper);
+  font-family: var(--font-serif, 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', Georgia, serif);
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.yoloBigPr {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+}
+
+.yoloBigPrTitle {
+  color: var(--paper);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.yoloBigPrTag {
+  padding: 4px 10px;
+  background: var(--ember);
+  color: var(--paper);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.yoloExtract {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.yoloExtract span {
+  padding: 5px 10px;
+  background: var(--teal);
+  color: var(--paper);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.yoloExtract em {
+  padding: 5px 10px;
+  border: 1px dashed rgba(244, 238, 227, 0.4);
+  color: rgba(244, 238, 227, 0.78);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 760;
+}
+
+.yoloSpectrum {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 18px 24px;
+  border: 1px solid rgba(244, 238, 227, 0.14);
+  background: rgba(244, 238, 227, 0.04);
+}
+
+.yoloSpectrumBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.yoloSpectrumLeft,
+.yoloSpectrumRight {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.yoloSpectrumLeft {
+  color: rgba(244, 238, 227, 0.62);
+}
+
+.yoloSpectrumRight {
+  color: var(--ember);
+}
+
+.yoloSpectrumTrack {
+  position: relative;
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(244, 238, 227, 0.28), var(--ember));
+}
+
+.yoloSpectrumDot {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 0 0 3px rgba(223, 107, 45, 0.42);
+  transform: translate(-50%, -50%);
+}
+
+.yoloSpectrumLabels,
+.yoloSpectrumWhen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.yoloSpectrumLabels span {
+  color: rgba(244, 238, 227, 0.78);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.yoloSpectrumLabels span:last-child {
+  text-align: right;
+}
+
+.yoloSpectrumWhen span {
+  color: rgba(244, 238, 227, 0.5);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.yoloSpectrumWhen span:last-child {
+  text-align: right;
+}
+
 @media (max-width: 920px) {
   .presenter {
     padding: 12px;
@@ -2928,8 +3226,22 @@
   .roles,
   .briefPair,
   .promptCompare,
-  .closeGrid {
+  .closeGrid,
+  .yolo {
     grid-template-columns: 1fr;
+  }
+
+  .yoloFlow {
+    grid-template-columns: 1fr;
+  }
+
+  .yoloFlowArrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .yoloStageBig {
+    align-self: auto;
   }
 
   .promptCompareArrow {

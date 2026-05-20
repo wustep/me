@@ -26,6 +26,7 @@ type Visual =
   | { kind: 'promptLever' }
   | { kind: 'contextLever' }
   | { kind: 'moves' }
+  | { kind: 'yoloExtract' }
   | { kind: 'rules' }
   | { kind: 'audienceQ'; seeds?: string[] }
   | { kind: 'treeDemo' }
@@ -55,7 +56,7 @@ type Slide = {
 export const SLIDES: Slide[] = [
   {
     eyebrow: 'Opening',
-    title: 'It’s 2026 and coding looks a little bit more like this.',
+    title: 'It’s 2026 and coding looks a lot more like this.',
     note: 'Use the actual intro from the article. More and more, engineering is talking to machines. Let the prompt demo fail; that sets up the rest of the talk.',
     visual: { kind: 'promptDemo' },
     tone: 'dark'
@@ -86,7 +87,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Chess is 500 years old',
-    title: 'AI coding is 3.',
+    title: 'AI coding is barely 4 years old.',
     note: 'Use the pawn to make the chess analogy concrete. The point: the meta has barely been uncovered.',
     visual: { kind: 'pawn' },
     tone: 'dark',
@@ -94,7 +95,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Beginner mindset',
-    title: 'Three years in is about 1200 ELO.',
+    title: 'Four years in is about 1200 ELO.',
     body: 'Past most casual players. Nowhere near expert. Even Magnus is learning new things all the time.',
     note: 'Use the chess analogy from the article. The important bit is: do not trust the feeling of competence too early.',
     visual: { kind: 'elo' }
@@ -122,13 +123,6 @@ export const SLIDES: Slide[] = [
     visual: { kind: 'eloPractice' }
   },
   {
-    eyebrow: 'Expectations',
-    title: '',
-    note: 'Pygmalion effect versus Golem effect. If you expect the agent to be capable, you give it better work, better context, and more chances to surprise you. If you expect it to fail, you under-explain it, under-scope it, and collect evidence for the belief.',
-    visual: { kind: 'pygmalion' },
-    layout: 'icon'
-  },
-  {
     eyebrow: 'Pragmatic optimism',
     title:
       '“I suggest just being 2 or 10 times more ambitious than before, because it might just work.”',
@@ -139,7 +133,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Q',
-    title: 'When the work disappoints you — what do you usually do?',
+    title: 'When the work disappoints you, what do you usually do?',
     note: 'Open-ended — let people share whatever shape this takes for them. Listen for whether they look outward (blame the thing) or inward (what did I miss).',
     visual: {
       kind: 'audienceQ',
@@ -194,23 +188,22 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'Context',
     title: 'When in doubt, load more context.',
-    body: 'The prompt is the verb. Context is the noun. Get the noun right and the verb almost takes care of itself.',
     note: 'Load: project rules, related PR, design doc, screenshots, the failing trace, MCPs into your actual systems. If you’re rewriting the same prompt for the fifth time, stop — the lever you need is the next one.',
     visual: { kind: 'contextLever' },
     tone: 'dark'
   },
   {
-    eyebrow: 'Putting it together',
-    title: 'Walk the four levers. Find the one you didn’t pull.',
-    note: 'Synthesis. When something feels off, treat the output as something you partially authored. Don’t blame the model — diagnose which lever was weak.',
-    visual: { kind: 'none' },
-    tone: 'dark',
-    layout: 'quote'
+    eyebrow: 'Persistent context',
+    title: 'Don’t repeat yourself to the agent.',
+    body: 'Five minutes of investment that pays back forever.',
+    note: 'Project rules are the longest-leverage context you can write. CLAUDE.md, AGENTS.md, .cursorrules — the same paragraph that gets a new hire from “lost” to “useful” in a week does the same for the agent. Capture the things you find yourself correcting twice.',
+    visual: { kind: 'rules' },
+    tone: 'dark'
   },
   {
     eyebrow: 'Q',
     title:
-      'When did you realize you had a lever to pull — and outputs got suddenly better?',
+      'When did you realize you had a lever to pull, and outputs got suddenly better?',
     note: 'Open-ended — the "aha" moment. Look for the specific lever they discovered: switching tools, turning thinking on, dropping in a real doc, writing a CLAUDE.md.',
     visual: {
       kind: 'audienceQ',
@@ -240,14 +233,17 @@ export const SLIDES: Slide[] = [
     layout: 'visual'
   },
   {
-    eyebrow: 'Pay it forward',
-    title: 'When a move works, stop carrying it in your head.',
-    note: 'This is the “lift them into skills” section. Show rules as the compounding artifact: the agent reads the lesson next time. Five minutes of investment that pays back forever.',
-    visual: { kind: 'rules' }
+    eyebrow: 'My new favorite',
+    title: 'YOLO and extract.',
+    body: 'Big context. Ambitious prompt. Disposable PR. Harvest the wins.',
+    note: 'My new favorite technique. Have agents complete a huge chunk of work in a single PR — a whole milestone, not a single change. Then treat the PR as disposable: extract the parts you like as smaller PRs, or as insights. The dial is hands-on (ask along the way, edit the plan) versus YOLO (let it decide). Spec-heavy work goes hands-on; open-ended exploration goes YOLO. Load lots of context — docs, Figma, prior PRs, RFCs. Tell it to commit incrementally so you can cherry-pick. GPT-5.5 high for the run; Opus 4.7 for the PR description. Trust that something in there is useful, even when most of it is wrong.',
+    visual: { kind: 'yoloExtract' },
+    tone: 'dark',
+    layout: 'visual'
   },
   {
     eyebrow: 'Q',
-    title: 'What habits do you keep coming back to?',
+    title: 'What techniques do you keep coming back to?',
     note: "Open-ended — patterns people lean on, not just prompts. Could be openings, recovery moves, things they stole from a teammate, things they've done since forever.",
     visual: {
       kind: 'audienceQ',
@@ -319,7 +315,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Section 06',
-    title: 'Tune the hour.',
+    title: 'Conduct the fleet.',
     note: 'Section break. This starts orchestration: from one prompt at a time to managing several runs.',
     visual: { kind: 'section', number: '06', label: 'Orchestration' },
     tone: 'dark',
@@ -327,14 +323,14 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Orchestration',
-    title: 'Stop tuning the next prompt. Start tuning the next hour.',
+    title: 'Think in hours, not messages.',
     note: 'Use the article’s pinging-versus-full-prompt example. The model loses nothing by knowing the destination; you lose four context switches.',
     visual: { kind: 'brief' },
     tone: 'dark'
   },
   {
     eyebrow: 'Chain, don’t ping',
-    title: 'Same work. Different wall-clock cost.',
+    title: 'Same work. Less idle time and context switching.',
     note: 'This is the first orchestration visual. The grey blocks are you deciding what to type next. That is the hidden cost.',
     visual: { kind: 'timeline' },
     tone: 'dark',
@@ -342,7 +338,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Stagger and overlap',
-    title: 'You can only prompt one agent at a time.',
+    title: 'They run together. You can’t.',
     note: 'Use the article’s cascade idea. Purple is you and never overlaps. Pink is the agent and overlaps freely. Grey is the small but real cost of switching attention between threads.',
     visual: { kind: 'stagger' },
     tone: 'dark'
@@ -791,6 +787,8 @@ function VisualBlock({ slide }: { slide: Slide }) {
       return <ContextLeverVisual />
     case 'moves':
       return <MovesVisual />
+    case 'yoloExtract':
+      return <YoloExtractVisual />
     case 'rules':
       return <RulesVisual />
     case 'audienceQ':
@@ -1170,17 +1168,12 @@ function ModelLeverVisual() {
   const rows: Array<{ when: string; pick: string; accent?: boolean }> = [
     { when: 'fast and cost-friendly edits', pick: 'Sonnet 4.7 · Composer 2.5' },
     {
-      when: 'taste — writing, docs, PRs, UI',
-      pick: 'Opus'
+      when: 'taste: writing, docs, PRs, UI',
+      pick: 'Opus 4.7'
     },
     {
       when: 'gnarly debugging, hard backend',
       pick: 'GPT-5.5'
-    },
-    {
-      when: 'anything tricky or ambiguous',
-      pick: '+ Thinking on',
-      accent: true
     }
   ]
   return (
@@ -1202,6 +1195,10 @@ function ModelLeverVisual() {
           </div>
         ))}
       </div>
+      <p className={styles.effortAutoTrap}>
+        <b>The trap:</b> &ldquo;Auto&rdquo; mode is optimized for the platform’s
+        margin, not your output. Override it whenever the work matters.
+      </p>
     </div>
   )
 }
@@ -1209,7 +1206,7 @@ function ModelLeverVisual() {
 function EffortLeverVisual() {
   const rungs: Array<{ tier: string; what: string }> = [
     { tier: 'low', what: 'trivial edits, format fixes, one-line changes' },
-    { tier: 'medium', what: 'well-specced work — the model is executing' },
+    { tier: 'medium', what: 'well-specced work, the model is executing' },
     { tier: 'high', what: 'planning through constraints, real trade-offs' },
     { tier: 'xhigh', what: 'novel design, gnarly bugs, long-horizon plans' }
   ]
@@ -1229,8 +1226,8 @@ function EffortLeverVisual() {
         ))}
       </div>
       <p className={styles.effortAutoTrap}>
-        <b>The trap:</b> &ldquo;Auto&rdquo; mode is optimized for the platform’s
-        margin, not your output. Override it whenever the work matters.
+        <b>Tricky or ambiguous?</b> Turn thinking on. Match the effort to how
+        much thinking <em>you</em>’d need to solve it.
       </p>
     </div>
   )
@@ -1291,10 +1288,6 @@ function ContextLeverVisual() {
           </div>
         ))}
       </div>
-      <p className={styles.leverFootnote}>
-        Rewriting the same prompt for the fifth time? Stop. The lever you
-        actually need is this one.
-      </p>
     </div>
   )
 }
@@ -1364,9 +1357,77 @@ function RulesVisual() {
 - No \`any\`. Use the narrow types in lib/types.ts.
 - New card UIs should match components/PostCard.tsx.
 - Run \`pnpm typecheck && pnpm test\` before saying you're done.`}</pre>
-      <p className={styles.rulesFootnote}>
-        write the lesson once · the agent reads it on every task
-      </p>
+      <p className={styles.rulesFootnote}>write the lesson once</p>
+    </div>
+  )
+}
+
+/** "YOLO and extract" — a horizontal four-stage flow with the disposable
+ *  mega-PR as the visual centerpiece, plus a hands-on ↔ YOLO spectrum
+ *  below to set expectations on calibration. */
+function YoloExtractVisual() {
+  return (
+    <div className={styles.yolo}>
+      <div className={styles.yoloFlow}>
+        <section className={styles.yoloStage}>
+          <span className={styles.yoloStageLabel}>1 · pile on context</span>
+          <div className={styles.yoloContext}>
+            <span>docs</span>
+            <span>Figma</span>
+            <span>prior PRs</span>
+            <span>RFCs</span>
+            <span>tickets</span>
+          </div>
+        </section>
+        <span className={styles.yoloFlowArrow} aria-hidden='true'>
+          →
+        </span>
+        <section className={styles.yoloStage}>
+          <span className={styles.yoloStageLabel}>2 · ambitious prompt</span>
+          <div className={styles.yoloPrompt}>
+            “build column-based permissions, end-to-end”
+          </div>
+        </section>
+        <span className={styles.yoloFlowArrow} aria-hidden='true'>
+          →
+        </span>
+        <section className={`${styles.yoloStage} ${styles.yoloStageBig}`}>
+          <span className={styles.yoloStageLabel}>3 · one giant PR</span>
+          <div className={styles.yoloBigPr}>
+            <span className={styles.yoloBigPrTitle}>+2,847 / −213</span>
+            <span className={styles.yoloBigPrTag}>disposable</span>
+          </div>
+        </section>
+        <span className={styles.yoloFlowArrow} aria-hidden='true'>
+          →
+        </span>
+        <section className={styles.yoloStage}>
+          <span className={styles.yoloStageLabel}>4 · extract the wins</span>
+          <div className={styles.yoloExtract}>
+            <span>PR #1</span>
+            <span>PR #2</span>
+            <span>PR #3</span>
+            <em>insights</em>
+          </div>
+        </section>
+      </div>
+      <div className={styles.yoloSpectrum} aria-hidden='true'>
+        <div className={styles.yoloSpectrumBar}>
+          <span className={styles.yoloSpectrumLeft}>hands-on</span>
+          <span className={styles.yoloSpectrumTrack}>
+            <span className={styles.yoloSpectrumDot} />
+          </span>
+          <span className={styles.yoloSpectrumRight}>YOLO</span>
+        </div>
+        <div className={styles.yoloSpectrumLabels}>
+          <span>ask along the way · edit the plan</span>
+          <span>let it decide · trust the harvest</span>
+        </div>
+        <div className={styles.yoloSpectrumWhen}>
+          <span>when you have a spec</span>
+          <span>when you don’t</span>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1408,7 +1469,7 @@ function ArticleTreeVisual() {
     UX: {
       High: {
         ask: 'What feels off about this whole page?',
-        plan: 'How would you make this flow feel more polished — what should I do first?',
+        plan: 'How would you make this flow feel more polished? What should I do first?',
         delegate: 'Make this page prettier.'
       },
       Mid: {
@@ -1567,63 +1628,122 @@ function ArticleColleagueVisual() {
 }
 
 function ColleagueVisual() {
+  const stages: Array<{
+    n: string
+    phase: string
+    verb: string
+    items: string[]
+    cadence: string
+  }> = [
+    {
+      n: '01',
+      phase: 'before',
+      verb: 'Onboard',
+      items: ['CLAUDE.md', 'conventions', 'shared examples'],
+      cadence: 'one-time setup'
+    },
+    {
+      n: '02',
+      phase: 'during',
+      verb: 'Prompt',
+      items: ['the goal', 'constraints', 'success criteria'],
+      cadence: 'every task'
+    },
+    {
+      n: '03',
+      phase: 'after',
+      verb: 'Review',
+      items: ['read the diff', 'run the code', 'push back'],
+      cadence: 'every task'
+    }
+  ]
+
   return (
     <div className={styles.colleague}>
-      <strong>
-        You
-        <small>what you already know</small>
-      </strong>
-      <div>
-        <span>
-          <b>onboard</b>
-          <small>CLAUDE.md, conventions, examples</small>
-        </span>
-        <span>
-          <b>prompt</b>
-          <small>goal, constraints, success criteria</small>
-        </span>
-        <span>
-          <b>review</b>
-          <small>diff is a proposal, not an answer</small>
-        </span>
+      <div className={styles.colleagueRow}>
+        {stages.map((stage, i) => (
+          <React.Fragment key={stage.verb}>
+            <section
+              className={styles.colleagueCard}
+              style={{ animationDelay: `${i * 180}ms` }}
+            >
+              <header>
+                <span className={styles.colleagueN}>{stage.n}</span>
+                <span className={styles.colleaguePhase}>{stage.phase}</span>
+              </header>
+              <strong className={styles.colleagueVerb}>{stage.verb}</strong>
+              <ul className={styles.colleagueItems}>
+                {stage.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <span className={styles.colleagueCadence}>{stage.cadence}</span>
+            </section>
+            {i < stages.length - 1 && (
+              <span
+                className={styles.colleagueArrow}
+                aria-hidden='true'
+                style={{ animationDelay: `${i * 180 + 90}ms` }}
+              >
+                →
+              </span>
+            )}
+          </React.Fragment>
+        ))}
       </div>
-      <strong>
-        Agent
-        <small>what it can act on</small>
-      </strong>
+      <p className={styles.colleagueCaption}>same shape as a teammate</p>
+    </div>
+  )
+}
+
+/** Renders a chat transcript with user lines (starting with `> `) styled
+ *  one way and agent lines (parenthetical) styled another. */
+function BriefTranscript({ lines }: { lines: string[] }) {
+  return (
+    <div className={styles.briefTranscript}>
+      {lines.map((line, i) => {
+        if (line === '') return <span key={i} className={styles.briefGap} />
+        const isUser = line.startsWith('> ')
+        return (
+          <span
+            key={i}
+            className={isUser ? styles.briefUser : styles.briefAgent}
+          >
+            {isUser ? line.slice(2) : line}
+          </span>
+        )
+      })}
     </div>
   )
 }
 
 function BriefVisual() {
+  const pingLines = [
+    '> Read the auth module.',
+    '(reads, waits)',
+    '',
+    '> Now find the session bug.',
+    '(finds, waits)',
+    '',
+    '> Now write a test.',
+    '(writes, waits)',
+    '',
+    '> Now open a PR.'
+  ]
+  const promptLines = [
+    '> Read the auth module, find the session bug we keep seeing on refresh, write a regression test, and open a PR.',
+    '',
+    '> If you hit a fork, pick the smaller change and note the alternative in the PR body.'
+  ]
   return (
     <div className={styles.briefPair}>
       <section>
-        <span>Pinging</span>
-        <pre>{`> Read the auth module.
-
-(reads, waits)
-
-> Now find the session bug.
-
-(finds, waits)
-
-> Now write a test.
-
-(writes, waits)
-
-> Now open a PR.`}</pre>
+        <span className={styles.briefLabel}>Ping pong</span>
+        <BriefTranscript lines={pingLines} />
       </section>
       <section className={styles.briefGood}>
-        <span>Full prompt</span>
-        <pre>{`> Read the auth module, find
-  the session bug we keep seeing
-  on refresh, write a regression
-  test, and open a PR.
-
-  If you hit a fork, pick the
-  smaller change and note the
-  alternative in the PR body.`}</pre>
+        <span className={styles.briefLabel}>Full prompt</span>
+        <BriefTranscript lines={promptLines} />
       </section>
     </div>
   )
@@ -1633,7 +1753,7 @@ function TimelineVisual() {
   return (
     <div className={styles.timeline}>
       <div className={styles.timelineRow}>
-        <b>pinging</b>
+        <b>ping pong</b>
         <div className={styles.timelineBars}>
           {Array.from({ length: 6 }).map((_, i) => (
             <React.Fragment key={i}>
