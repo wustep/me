@@ -3,7 +3,7 @@ import * as React from 'react'
 import BodyClassName from 'react-body-classname'
 
 import { ColleagueDemo } from './ColleagueDemo'
-import { EquationDemo } from './EquationDemo'
+import { EquationDemo, LeverChip } from './EquationDemo'
 import styles from './PromptingPresentation.module.css'
 import { PromptInputDemo } from './PromptInputDemo'
 
@@ -14,6 +14,7 @@ type Visual =
   | { kind: 'pawn' }
   | { kind: 'elo' }
   | { kind: 'fork' }
+  | { kind: 'skillIssue' }
   | { kind: 'eloPractice' }
   | { kind: 'quoteAvatar' }
   | { kind: 'pygmalion' }
@@ -21,11 +22,12 @@ type Visual =
   | { kind: 'none' }
   | { kind: 'toolLever' }
   | { kind: 'modelLever' }
+  | { kind: 'effortLever' }
   | { kind: 'promptLever' }
   | { kind: 'contextLever' }
   | { kind: 'moves' }
   | { kind: 'rules' }
-  | { kind: 'audienceQ' }
+  | { kind: 'audienceQ'; seeds?: string[] }
   | { kind: 'treeDemo' }
   | { kind: 'choice' }
   | { kind: 'colleagueDemo' }
@@ -37,6 +39,7 @@ type Visual =
   | { kind: 'roles' }
   | { kind: 'contract' }
   | { kind: 'close' }
+  | { kind: 'finalCard' }
   | { kind: 'qa' }
 
 type Slide = {
@@ -60,21 +63,21 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'The question',
     title:
-      'What does it mean to be good at talking to Claude, Codex, or whoever’s next?',
+      'What does it mean to be good at talking to Claude, Codex, or whatever comes next?',
     note: 'This is the question at the end of the intro chapter. The structure should feel like the article: mindset, equation, techniques, tree, colleague, orchestration, recap.',
     visual: { kind: 'none' },
     tone: 'dark',
     layout: 'quote'
   },
   {
-    eyebrow: 'The question',
+    eyebrow: 'The plan',
     title: '',
     note: 'Let the structure become the table of contents for the talk.',
     visual: { kind: 'agenda' },
     layout: 'quote'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 01',
     title: 'The beginner’s mindset.',
     note: 'Section break. This starts the mindset chapter: we are early, and the people still learning are going to pull away.',
     visual: { kind: 'section', number: '01', label: 'Mindset' },
@@ -82,9 +85,9 @@ export const SLIDES: Slide[] = [
     layout: 'visual'
   },
   {
-    eyebrow: 'Chess',
-    title: '',
-    note: 'Silent beat. Let the pawn do the transition into the chess analogy.',
+    eyebrow: 'Chess is 500 years old',
+    title: 'AI coding is 3.',
+    note: 'Use the pawn to make the chess analogy concrete. The point: the meta has barely been uncovered.',
     visual: { kind: 'pawn' },
     tone: 'dark',
     layout: 'icon'
@@ -92,7 +95,7 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'Beginner mindset',
     title: 'Three years in is about 1200 ELO.',
-    body: 'Past casual. Nowhere near expert.',
+    body: 'Past most casual players. Nowhere near expert. Even Magnus is learning new things all the time.',
     note: 'Use the chess analogy from the article. The important bit is: do not trust the feeling of competence too early.',
     visual: { kind: 'elo' }
   },
@@ -104,10 +107,26 @@ export const SLIDES: Slide[] = [
     tone: 'dark'
   },
   {
+    eyebrow: 'Gaming culture has a useful phrase',
+    title: 'Skill issue.',
+    body: 'Assume, provisionally, the bottleneck is you. It isn’t always true. It’s the assumption that grows you.',
+    note: 'The article’s strongest mindset line. When your character keeps dying, the level isn’t broken — you’re missing something. Sounds flippant; the move underneath is serious.',
+    visual: { kind: 'skillIssue' },
+    tone: 'dark',
+    layout: 'quote'
+  },
+  {
     eyebrow: 'Practice curve',
     title: 'Every useful failure can become a little ELO.',
-    note: 'Say this like the chess puzzle analogy. If you try something new, notice what worked, and update your repertoire, you gain a point or two. If you close the question with “the model is bad,” you stop practicing and can regress.',
+    note: 'Like doing one chess puzzle every day. Try something new, notice what worked, update your repertoire. Or: close the question with “the model is bad,” stop practicing, regress.',
     visual: { kind: 'eloPractice' }
+  },
+  {
+    eyebrow: 'Expectations',
+    title: '',
+    note: 'Pygmalion effect versus Golem effect. If you expect the agent to be capable, you give it better work, better context, and more chances to surprise you. If you expect it to fail, you under-explain it, under-scope it, and collect evidence for the belief.',
+    visual: { kind: 'pygmalion' },
+    layout: 'icon'
   },
   {
     eyebrow: 'Pragmatic optimism',
@@ -119,14 +138,17 @@ export const SLIDES: Slide[] = [
     layout: 'quote'
   },
   {
-    eyebrow: 'Expectations',
-    title: '',
-    note: 'Pygmalion effect versus Golem effect. If you expect the agent to be capable, you give it better work, better context, and more chances to surprise you. If you expect it to fail, you under-explain it, under-scope it, and collect evidence for the belief.',
-    visual: { kind: 'pygmalion' },
-    layout: 'icon'
+    eyebrow: 'Q',
+    title: 'When the work disappoints you — what do you usually do?',
+    note: 'Open-ended — let people share whatever shape this takes for them. Listen for whether they look outward (blame the thing) or inward (what did I miss).',
+    visual: {
+      kind: 'audienceQ',
+      seeds: ['walk away', 'look harder', 'try it differently', 'ask someone']
+    },
+    tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 02',
     title: 'Pull the levers.',
     note: 'Section break. Shift from posture to diagnosis: what part of the setup produced this output?',
     visual: { kind: 'section', number: '02', label: 'The equation' },
@@ -134,41 +156,75 @@ export const SLIDES: Slide[] = [
     layout: 'visual'
   },
   {
-    eyebrow: 'Equation',
-    title: 'Better outputs start with better inputs.',
-    note: 'Use the article equation. First AGENT × INPUT, then expand it. This is the frame everything else hangs on.',
+    eyebrow: 'The simplest frame is an equation',
+    title: 'Better inputs. Better outputs.',
+    note: 'Use the article equation. First AGENT × INPUT, then expand it. This is the frame everything else hangs on. Walk the four levers when output disappoints.',
     visual: { kind: 'equationDemo' },
     tone: 'dark',
     layout: 'visual'
   },
   {
     eyebrow: 'Tool',
-    title: 'Use the best tool.',
-    note: 'This is usually not the biggest lever because most of us are already using agent-native tools. But tool quality still matters: even updating Cursor to the latest version can fix a surprising number of system prompt bugs.',
+    title: 'Same model. Different tool. Different ceiling.',
+    note: 'Most of us are already on agent-native tools. The point is: don’t bolt AI onto VSCode. Cursor, Claude Code, Codex slice context smarter, manage long tasks, persist state, and inject project-aware system prompts. Tool is the smallest of the four levers, but it’s the easiest one to pull.',
     visual: { kind: 'toolLever' },
     tone: 'dark'
   },
   {
     eyebrow: 'Model',
-    title: 'Pick the smartest model the work warrants.',
-    note: 'Use the article’s calibration frame: Composer/Sonnet for fast edits, Opus for taste, GPT5.5 for hard technical problems, and higher effort when the task has real ambiguity.',
-    visual: { kind: 'modelLever' }
+    title: 'Use the best model.',
+    note: 'Pick the smartest model the work warrants. Walk down the article guide: fast/Sonnet, taste/Opus, hard/GPT-5.5, ambiguous/thinking on.',
+    visual: { kind: 'modelLever' },
+    tone: 'dark'
+  },
+  {
+    eyebrow: 'Effort',
+    title: 'The cheap dial nobody touches.',
+    note: 'Thinking effort is becoming one of the most important levers. Low for trivial edits, medium for executing, high for real decisions, xhigh for novel problems. And: stop using Auto mode. It’s optimized for platform margin, not your output.',
+    visual: { kind: 'effortLever' },
+    tone: 'dark'
   },
   {
     eyebrow: 'Human prompt',
-    title: 'Be specific. Show the model what good looks like.',
-    note: 'Use the article’s concrete-over-abstract examples. “Make this faster” gives the model nothing. “First paint is 2.4s, target under 1s, profile and start with the biggest wins” gives it a job.',
+    title: 'Clarity is everything.',
+    note: 'Walk the article comparison: “make this faster” vs “first paint is 2.4s, target under 1s, profile and start with the biggest wins.” Then the don’ts: “be careful,” “think step by step,” politeness padding.',
     visual: { kind: 'promptLever' },
     tone: 'dark'
   },
   {
     eyebrow: 'Context',
-    title: 'The prompt is the verb. Context is the noun.',
-    note: 'Use the exact phrasing from the article. Context is boring and high leverage. Load files, docs, screenshots, traces, project rules, MCPs. If you rewrite the same prompt five times, the lever you need is probably context.',
-    visual: { kind: 'contextLever' }
+    title: 'When in doubt, load more context.',
+    body: 'The prompt is the verb. Context is the noun. Get the noun right and the verb almost takes care of itself.',
+    note: 'Load: project rules, related PR, design doc, screenshots, the failing trace, MCPs into your actual systems. If you’re rewriting the same prompt for the fifth time, stop — the lever you need is the next one.',
+    visual: { kind: 'contextLever' },
+    tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Putting it together',
+    title: 'Walk the four levers. Find the one you didn’t pull.',
+    note: 'Synthesis. When something feels off, treat the output as something you partially authored. Don’t blame the model — diagnose which lever was weak.',
+    visual: { kind: 'none' },
+    tone: 'dark',
+    layout: 'quote'
+  },
+  {
+    eyebrow: 'Q',
+    title:
+      'When did you realize you had a lever to pull — and outputs got suddenly better?',
+    note: 'Open-ended — the "aha" moment. Look for the specific lever they discovered: switching tools, turning thinking on, dropping in a real doc, writing a CLAUDE.md.',
+    visual: {
+      kind: 'audienceQ',
+      seeds: [
+        'the moment it clicked',
+        'the lever you found',
+        'what changed',
+        'what you do now'
+      ]
+    },
+    tone: 'dark'
+  },
+  {
+    eyebrow: 'Section 03',
     title: 'Collect moves.',
     note: 'Section break. This is the techniques portion of the article: prompting as a repertoire of small moves.',
     visual: { kind: 'section', number: '03', label: 'Techniques' },
@@ -178,7 +234,7 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'Techniques',
     title: 'Build a repertoire.',
-    note: 'This comes straight from the techniques chapter: openings, tactics, endgame moves. Keep the slide light: mostly the eight prompts.',
+    note: 'This comes straight from the techniques chapter: openings, tactics, pressure-test, pay it forward. Keep the slide light: the moves are grouped so the structure is part of the lesson.',
     visual: { kind: 'moves' },
     tone: 'dark',
     layout: 'visual'
@@ -186,18 +242,26 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'Pay it forward',
     title: 'When a move works, stop carrying it in your head.',
-    note: 'This is the “lift them into skills” section. Show rules as the compounding artifact: the agent reads the lesson next time.',
+    note: 'This is the “lift them into skills” section. Show rules as the compounding artifact: the agent reads the lesson next time. Five minutes of investment that pays back forever.',
     visual: { kind: 'rules' }
   },
   {
     eyebrow: 'Q',
-    title: 'Q: what are some of your favorite prompting techniques?',
-    note: 'Let people name their own openings, tactics, and repair moves before introducing the tree.',
-    visual: { kind: 'audienceQ' },
+    title: 'What habits do you keep coming back to?',
+    note: "Open-ended — patterns people lean on, not just prompts. Could be openings, recovery moves, things they stole from a teammate, things they've done since forever.",
+    visual: {
+      kind: 'audienceQ',
+      seeds: [
+        'since forever',
+        'stole from a teammate',
+        'from a talk',
+        'by accident'
+      ]
+    },
     tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 04',
     title: 'Use the tree.',
     note: 'Section break. The next step after collecting moves is knowing where each move belongs.',
     visual: { kind: 'section', number: '04', label: 'The tree' },
@@ -214,13 +278,14 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Choosing your move',
-    title: 'Ask. Plan. Delegate.',
-    note: 'Tie the tree to the three moves. The article’s warning is the line to say out loud: the most expensive prompts are the ones in the wrong cell.',
+    title:
+      'Delegate thoughtfully. Ask and Plan more than you think you should.',
+    note: 'Tie the tree to the three moves. The article’s warning: the most expensive prompts are the ones in the wrong cell. Ask when you don’t know yet. Plan when you know what but not how. Delegate only when the path is clear and the result is gradeable.',
     visual: { kind: 'choice' },
     tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 05',
     title: 'Treat it like a colleague.',
     note: 'Section break. The agent is fast and capable, but only sees what you show it.',
     visual: { kind: 'section', number: '05', label: 'The colleague' },
@@ -237,21 +302,23 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'The colleague',
-    title: 'Onboard. Explain. Review.',
-    note: 'This is the article’s colleague chapter compressed. The same things that help a teammate help an agent.',
+    title: 'Onboard. Prompt. Review.',
+    note: 'The article’s colleague chapter compressed. The same things that help a teammate help an agent: a CLAUDE.md when they start, a real prompt on each task, and a real review before merging.',
     visual: { kind: 'colleague' },
     layout: 'visual'
   },
   {
     eyebrow: 'Q',
-    title:
-      'Q: what are your mental models for how you think about talking to the AI?',
+    title: 'What’s your mental model for talking to the AI?',
     note: 'Ask this after the colleague frame lands. Listen for metaphors people already use: intern, pair programmer, search engine, compiler, reviewer, weird teammate.',
-    visual: { kind: 'audienceQ' },
+    visual: {
+      kind: 'audienceQ',
+      seeds: ['intern', 'pair programmer', 'weird teammate', 'compiler']
+    },
     tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 06',
     title: 'Tune the hour.',
     note: 'Section break. This starts orchestration: from one prompt at a time to managing several runs.',
     visual: { kind: 'section', number: '06', label: 'Orchestration' },
@@ -260,8 +327,8 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Orchestration',
-    title: 'If you know the next step, put it in the task.',
-    note: 'Use the article’s pinging versus full-task example. The model loses nothing by knowing the destination; you lose four context switches.',
+    title: 'Stop tuning the next prompt. Start tuning the next hour.',
+    note: 'Use the article’s pinging-versus-full-prompt example. The model loses nothing by knowing the destination; you lose four context switches.',
     visual: { kind: 'brief' },
     tone: 'dark'
   },
@@ -275,23 +342,16 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Stagger and overlap',
-    title: 'You can only write one task at a time.',
-    note: 'Use the article’s cascade idea. Purple is you. Pink is the agent. Your bars do not overlap; theirs do.',
+    title: 'You can only prompt one agent at a time.',
+    note: 'Use the article’s cascade idea. Purple is you and never overlaps. Pink is the agent and overlaps freely. Grey is the small but real cost of switching attention between threads.',
     visual: { kind: 'stagger' },
     tone: 'dark'
   },
   {
     eyebrow: 'Fan out',
-    title: 'Independent work can run side by side.',
-    note: 'Good candidates: tests beside implementation, unrelated bugs, library spikes. Bad candidates: chains where B needs A’s output.',
+    title: 'Try spawning sub-agents.',
+    note: 'Good candidates: tests beside implementation, unrelated bugs, library spikes. Bad candidates: chains where B needs A’s output. Budget for the merge — three branches become one review queue.',
     visual: { kind: 'fanout' }
-  },
-  {
-    eyebrow: 'Specialize',
-    title: 'Researcher → implementer → reviewer.',
-    note: 'Use the article’s role split. Each role wants a different mindset and a different context window.',
-    visual: { kind: 'roles' },
-    tone: 'dark'
   },
   {
     eyebrow: 'Long jobs',
@@ -301,13 +361,21 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Q',
-    title: 'Q: what are your tips for managing many agents at once?',
+    title: 'How do you manage many agents at once?',
     note: 'This should pull out practical habits: naming threads, staggered task descriptions, review queues, keeping scope boundaries sharp.',
-    visual: { kind: 'audienceQ' },
+    visual: {
+      kind: 'audienceQ',
+      seeds: [
+        'naming threads',
+        'staggered prompts',
+        'review queues',
+        'killing runs gone sideways'
+      ]
+    },
     tone: 'dark'
   },
   {
-    eyebrow: 'Section',
+    eyebrow: 'Section 07',
     title: 'Keep climbing.',
     note: 'Section break. This is the recap: we are early, the skill is real, and there is a lot left to learn.',
     visual: { kind: 'section', number: '07', label: 'Recap' },
@@ -315,15 +383,24 @@ export const SLIDES: Slide[] = [
     layout: 'visual'
   },
   {
-    eyebrow: 'Close',
-    title: 'We’re all early. The next 1200 is wide open.',
-    note: 'End with the recap chapter. The most useful move is paying attention while everyone else assumes they have figured it out.',
-    visual: { kind: 'close' }
+    eyebrow: 'Six reminders before you go',
+    title: 'The whole talk in one page.',
+    note: 'Six recap cards — one per chapter — each with the chapter’s single sharpest line.',
+    visual: { kind: 'close' },
+    layout: 'visual'
+  },
+  {
+    eyebrow: 'The next 1200 is wide open',
+    title: 'Go talk to a machine.',
+    note: 'The article’s actual closing line. End on that.',
+    visual: { kind: 'finalCard' },
+    tone: 'dark',
+    layout: 'quote'
   },
   {
     eyebrow: 'Q&A',
     title: 'Q&A',
-    note: 'Open floor.',
+    note: 'Open floor. Seed prompts if it goes quiet: what surprised you, what would you push back on, what would you ship tomorrow.',
     visual: { kind: 'qa' },
     tone: 'dark',
     layout: 'quote'
@@ -341,22 +418,86 @@ function slideIndexFromHash() {
   return 0
 }
 
+// For any slide, find the most recent `section` slide at or before it and
+// return its label. Lets the footer show "Mindset" on slides 4–11 even
+// though only slide 4 itself is the section card.
+function sectionLabelAt(index: number): string {
+  for (let i = index; i >= 0; i--) {
+    const slide = SLIDES[i]
+    if (slide?.visual.kind === 'section') return slide.visual.label
+  }
+  return ''
+}
+
 export function PromptingPresentation() {
   const [index, setIndex] = React.useState(0)
+  const [goToOpen, setGoToOpen] = React.useState(false)
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
+  const [chromeIdle, setChromeIdle] = React.useState(false)
   const current = SLIDES[index] ?? SLIDES[0]!
+  const sectionLabel = sectionLabelAt(index)
 
   const go = React.useCallback((next: number) => {
     setIndex(Math.max(0, Math.min(SLIDES.length - 1, next)))
   }, [])
 
+  const toggleFullscreen = React.useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {})
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {})
+    }
+  }, [])
+
+  React.useEffect(() => {
+    const handle = () => setIsFullscreen(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', handle)
+    return () => document.removeEventListener('fullscreenchange', handle)
+  }, [])
+
+  // Auto-hide the header/controls/progress in fullscreen after 2.5s
+  // of mouse inactivity; reveal on any pointer activity.
+  React.useEffect(() => {
+    if (!isFullscreen) {
+      setChromeIdle(false)
+      return
+    }
+    let timer: number | undefined
+    const wake = () => {
+      setChromeIdle(false)
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => setChromeIdle(true), 2500)
+    }
+    wake()
+    window.addEventListener('mousemove', wake)
+    window.addEventListener('keydown', wake)
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('mousemove', wake)
+      window.removeEventListener('keydown', wake)
+    }
+  }, [isFullscreen])
+
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (
         event.target instanceof HTMLElement &&
-        ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(event.target.tagName)
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)
       ) {
         return
       }
+
+      // ESC closes go-to overlay; if not open, it's a no-op.
+      if (event.key === 'Escape') {
+        if (goToOpen) {
+          event.preventDefault()
+          setGoToOpen(false)
+        }
+        return
+      }
+
+      // While the overlay is open, swallow nav keys so numbers can be typed.
+      if (goToOpen) return
 
       if (
         event.key === 'ArrowRight' ||
@@ -370,11 +511,27 @@ export function PromptingPresentation() {
         event.preventDefault()
         go(index - 1)
       }
+      if (event.key === 'Home') {
+        event.preventDefault()
+        go(0)
+      }
+      if (event.key === 'End') {
+        event.preventDefault()
+        go(SLIDES.length - 1)
+      }
+      if (event.key === 'g' || event.key === 'G') {
+        event.preventDefault()
+        setGoToOpen(true)
+      }
+      if (event.key === 'f' || event.key === 'F') {
+        event.preventDefault()
+        toggleFullscreen()
+      }
     }
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [go, index])
+  }, [go, index, goToOpen, toggleFullscreen])
 
   React.useEffect(() => {
     const syncFromHash = () => setIndex(slideIndexFromHash())
@@ -393,7 +550,11 @@ export function PromptingPresentation() {
   return (
     <>
       <BodyClassName className='notion dark-mode' />
-      <main className={styles.presenter}>
+      <main
+        className={`${styles.presenter} ${
+          isFullscreen ? styles.presenterFullscreen : ''
+        } ${chromeIdle ? styles.presenterIdle : ''}`}
+      >
         <header className={styles.chrome}>
           <Link href='/prompting' className={styles.backLink}>
             How to talk to coding agents
@@ -405,6 +566,19 @@ export function PromptingPresentation() {
             >
               Notes
             </Link>
+            <button
+              type='button'
+              className={styles.iconButton}
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              title='Toggle fullscreen (F)'
+            >
+              {isFullscreen ? (
+                <FullscreenExitGlyph />
+              ) : (
+                <FullscreenEnterGlyph />
+              )}
+            </button>
             <button
               type='button'
               className={styles.iconButton}
@@ -438,15 +612,29 @@ export function PromptingPresentation() {
           } ${current.layout === 'quote' ? styles.slideQuoteOnly : ''}`}
           aria-live='polite'
         >
-          {(current.title || current.body) && (
+          {(current.eyebrow || current.title || current.body) && (
             <div className={styles.copy}>
+              {current.eyebrow && (
+                <div className={styles.eyebrow}>
+                  <span className={styles.eyebrowMark} aria-hidden='true' />
+                  {current.eyebrow}
+                </div>
+              )}
               {current.title && <h1>{current.title}</h1>}
               {current.body && <p>{current.body}</p>}
             </div>
           )}
           <VisualBlock slide={current} />
           <div className={styles.slideFooter}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
+            <span>
+              {String(index + 1).padStart(2, '0')}
+              {sectionLabel && (
+                <>
+                  <i aria-hidden='true'>·</i>
+                  {sectionLabel}
+                </>
+              )}
+            </span>
           </div>
         </section>
 
@@ -455,8 +643,108 @@ export function PromptingPresentation() {
             style={{ transform: `scaleX(${(index + 1) / SLIDES.length})` }}
           />
         </div>
+
+        {goToOpen && (
+          <GoToOverlay
+            count={SLIDES.length}
+            onClose={() => setGoToOpen(false)}
+            onPick={(target) => {
+              setGoToOpen(false)
+              go(target)
+            }}
+          />
+        )}
       </main>
     </>
+  )
+}
+
+function FullscreenEnterGlyph() {
+  return (
+    <svg
+      viewBox='0 0 16 16'
+      width='14'
+      height='14'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='1.5'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4' />
+    </svg>
+  )
+}
+
+function FullscreenExitGlyph() {
+  return (
+    <svg
+      viewBox='0 0 16 16'
+      width='14'
+      height='14'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='1.5'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M6 2v4H2M10 2v4h4M6 14v-4H2M10 14v-4h4' />
+    </svg>
+  )
+}
+
+function GoToOverlay({
+  count,
+  onClose,
+  onPick
+}: {
+  count: number
+  onClose: () => void
+  onPick: (target: number) => void
+}) {
+  const [value, setValue] = React.useState('')
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
+
+  React.useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault()
+    const parsed = Number.parseInt(value, 10)
+    if (Number.isFinite(parsed) && parsed >= 1 && parsed <= count) {
+      onPick(parsed - 1)
+    } else {
+      onClose()
+    }
+  }
+
+  return (
+    <div className={styles.goToScrim} role='dialog' aria-label='Go to slide'>
+      <button
+        type='button'
+        className={styles.goToScrimButton}
+        aria-label='Close'
+        onClick={onClose}
+      />
+      <form className={styles.goTo} onSubmit={submit}>
+        <label htmlFor='go-to-input'>Go to slide</label>
+        <input
+          id='go-to-input'
+          ref={inputRef}
+          type='number'
+          inputMode='numeric'
+          min={1}
+          max={count}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder={`1–${count}`}
+        />
+        <button type='submit'>jump</button>
+      </form>
+    </div>
   )
 }
 
@@ -479,6 +767,8 @@ function VisualBlock({ slide }: { slide: Slide }) {
       return <EloVisual />
     case 'fork':
       return <ForkVisual />
+    case 'skillIssue':
+      return <SkillIssueVisual />
     case 'eloPractice':
       return <EloPracticeVisual />
     case 'quoteAvatar':
@@ -493,6 +783,8 @@ function VisualBlock({ slide }: { slide: Slide }) {
       return <ToolLeverVisual />
     case 'modelLever':
       return <ModelLeverVisual />
+    case 'effortLever':
+      return <EffortLeverVisual />
     case 'promptLever':
       return <PromptLeverVisual />
     case 'contextLever':
@@ -502,7 +794,7 @@ function VisualBlock({ slide }: { slide: Slide }) {
     case 'rules':
       return <RulesVisual />
     case 'audienceQ':
-      return <AudienceQuestionVisual />
+      return <AudienceQuestionVisual seeds={slide.visual.seeds} />
     case 'treeDemo':
       return <ArticleTreeVisual />
     case 'choice':
@@ -525,6 +817,8 @@ function VisualBlock({ slide }: { slide: Slide }) {
       return <ContractVisual />
     case 'close':
       return <CloseVisual />
+    case 'finalCard':
+      return <FinalCardVisual />
     case 'qa':
       return null
   }
@@ -574,50 +868,107 @@ function PawnVisual() {
       <svg viewBox='0 0 220 260' role='img' aria-hidden='true'>
         <path d='M110 20c25 0 45 20 45 45 0 17-9 32-23 40 25 8 43 31 43 59v14h-28l16 48h29v14H28v-14h29l16-48H45v-14c0-28 18-51 43-59-14-8-23-23-23-40 0-25 20-45 45-45Z' />
       </svg>
+      <p className={styles.pawnCaption}>the meta has barely been uncovered</p>
     </div>
   )
 }
 
+// Smooth bell-shaped player-density curve. Peak around ELO ~1050 (x=140).
+// Mirrors the article's chart so the presentation tells the same story:
+// most players bunch up around 1000 and Magnus is far out in the right tail.
+const ELO_CURVE_PATH =
+  'M 40,70 C 60,55 100,30 140,30 C 180,30 215,60 240,80 C 265,100 310,124 360,130 L 560,130'
+const ELO_CURVE_FILL_PATH = `${ELO_CURVE_PATH} L 40,130 Z`
+const ELO_YOU_X = 170
+const ELO_YOU_Y = 35
+
 function EloVisual() {
   return (
-    <div className={styles.elo}>
-      <div className={styles.eloCurveWrap}>
-        <svg
-          className={styles.eloCurve}
-          viewBox='0 0 760 260'
-          aria-label='Chess skill curve from beginner through 2800 plus.'
-          role='img'
-        >
-          <path
-            d='M36 216 C78 148 132 78 214 66 C288 55 346 126 414 174 C508 236 636 231 728 224'
-            fill='none'
-            pathLength={100}
-          />
-          <line x1='40' x2='720' y1='220' y2='220' />
-          <circle cx='118' cy='150' r='6' />
-          <circle cx='236' cy='72' r='7' />
-          <circle cx='704' cy='220' r='6' />
-        </svg>
-        <div className={`${styles.eloPhoto} ${styles.eloPhotoBeth}`}>
-          <img src='/images/prompting/beth-harmon-800.png' alt='' />
-          <span>young Beth · 800</span>
-        </div>
-        <div className={`${styles.eloPhoto} ${styles.eloPhotoMagnus}`}>
-          <img src='/images/prompting/magnus-carlsen-2800.png' alt='' />
-          <span>Magnus · 2800+</span>
-        </div>
-        <div className={styles.eloYou}>
-          <b>you</b>
-          <span>1200</span>
-        </div>
-        <div className={styles.eloTicks}>
-          {['600', '800', '1200', '2000', '2800+'].map((tick) => (
-            <span key={tick}>{tick}</span>
-          ))}
-        </div>
-        <p>the meta has barely been uncovered</p>
-      </div>
-    </div>
+    <figure className={styles.elo}>
+      <svg
+        viewBox='0 0 600 180'
+        className={styles.eloCurveSvg}
+        role='img'
+        aria-label='Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2839 ELO, far out in the right tail.'
+        preserveAspectRatio='xMidYMid meet'
+      >
+        <defs>
+          <linearGradient id='presEloFill' x1='0' x2='0' y1='0' y2='1'>
+            <stop offset='0%' stopColor='#c14a30' stopOpacity='0.35' />
+            <stop offset='100%' stopColor='#e89042' stopOpacity='0.04' />
+          </linearGradient>
+          <linearGradient id='presEloStroke' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#c14a30' />
+            <stop offset='100%' stopColor='#e89042' />
+          </linearGradient>
+        </defs>
+
+        <path d={ELO_CURVE_FILL_PATH} fill='url(#presEloFill)' />
+        <path
+          d={ELO_CURVE_PATH}
+          fill='none'
+          stroke='url(#presEloStroke)'
+          strokeWidth='1.75'
+          strokeLinecap='round'
+          pathLength={100}
+          className={styles.eloCurveStroke}
+        />
+
+        <line
+          x1='40'
+          y1='130'
+          x2='560'
+          y2='130'
+          className={styles.eloCurveAxis}
+        />
+
+        <g className={styles.eloCurveTicks}>
+          <line x1='40' y1='130' x2='40' y2='135' />
+          <line x1='170' y1='130' x2='170' y2='135' />
+          <line x1='300' y1='130' x2='300' y2='135' />
+          <line x1='430' y1='130' x2='430' y2='135' />
+          <line x1='560' y1='130' x2='560' y2='135' />
+        </g>
+
+        <g className={styles.eloCurveLabels}>
+          <text x='40' y='150' textAnchor='start'>
+            600
+          </text>
+          <text x='300' y='150' textAnchor='middle'>
+            1800
+          </text>
+          <text x='560' y='150' textAnchor='end'>
+            3000
+          </text>
+        </g>
+
+        <g className={styles.eloCurveGap}>
+          <line x1='176' y1='38' x2='519' y2='128' strokeDasharray='2 4' />
+          <text x='347' y='76' textAnchor='middle'>
+            tons more to learn
+          </text>
+        </g>
+
+        <g className={styles.eloCurveMarkerYou}>
+          <line x1={ELO_YOU_X} y1={ELO_YOU_Y} x2={ELO_YOU_X} y2='130' />
+          <circle cx={ELO_YOU_X} cy={ELO_YOU_Y} r='5.5' />
+          <text x={ELO_YOU_X} y={ELO_YOU_Y - 13} textAnchor='middle'>
+            you · 1200
+          </text>
+        </g>
+
+        <g className={styles.eloCurveMarkerMagnus}>
+          <line x1='525' y1='100' x2='525' y2='130' />
+          <circle cx='525' cy='130' r='5.5' />
+          <text x='525' y='91' textAnchor='middle'>
+            Magnus · 2839
+          </text>
+        </g>
+      </svg>
+      <figcaption className={styles.eloCaption}>
+        Most players sit in the 600–1000 range. Three years gets you to ~1200.
+      </figcaption>
+    </figure>
   )
 }
 
@@ -640,6 +991,19 @@ function ForkVisual() {
         <strong>“what did I miss?”</strong>
         <p>the failure becomes a rep</p>
       </section>
+    </div>
+  )
+}
+
+function SkillIssueVisual() {
+  return (
+    <div className={styles.skillIssue} aria-hidden='true'>
+      <div className={styles.skillIssueChat}>
+        <span className={styles.skillIssueMessageThem}>
+          “the model is bad today”
+        </span>
+        <span className={styles.skillIssueMessageYou}>skill issue.</span>
+      </div>
     </div>
   )
 }
@@ -684,46 +1048,58 @@ function PygmalionVisual() {
     <div className={styles.pygmalion}>
       <div className={styles.pygmalionCaption}>self-fulfilling prophecy</div>
       <section className={styles.pygmalionGood}>
-        <AiFace mood='happy' />
+        <PygmalionGlyph direction='up' />
         <span>Pygmalion</span>
         <strong>expect capability</strong>
-        <p>better setup → stronger response → happier thoughts</p>
+        <p>better setup → stronger response → next ask is more ambitious</p>
         <ol>
           <li>you ask for harder work</li>
           <li>the agent gets clearer context</li>
-          <li>success makes the next ask more ambitious</li>
+          <li>success raises the next expectation</li>
         </ol>
       </section>
       <section className={styles.pygmalionBad}>
-        <AiFace mood='sad' />
+        <PygmalionGlyph direction='down' />
         <span>Golem</span>
         <strong>expect failure</strong>
-        <p>thin setup → weaker response → sad feedback</p>
+        <p>thin setup → weaker response → confirms the low expectation</p>
         <ol>
           <li>you ask for smaller work</li>
           <li>the agent sees less of the problem</li>
-          <li>failure confirms the low expectation</li>
+          <li>failure confirms what you already believed</li>
         </ol>
       </section>
     </div>
   )
 }
 
-function AiFace({ mood }: { mood: 'happy' | 'sad' }) {
-  const happy = mood === 'happy'
-
+/**
+ * Editorial replacement for the old AI-face glyph: a stepped arrow that
+ * either climbs (Pygmalion) or descends (Golem). Matches the rest of
+ * the deck's abstract style.
+ */
+function PygmalionGlyph({ direction }: { direction: 'up' | 'down' }) {
+  const isUp = direction === 'up'
+  const path = isUp
+    ? 'M 10,68 L 28,68 L 28,52 L 46,52 L 46,36 L 64,36 L 64,20 L 82,20'
+    : 'M 10,20 L 28,20 L 28,36 L 46,36 L 46,52 L 64,52 L 64,68 L 82,68'
+  const tip = isUp ? 'M 78,16 L 86,20 L 78,24' : 'M 78,64 L 86,68 L 78,72'
   return (
     <div
-      className={`${styles.aiFace} ${happy ? styles.aiHappy : styles.aiSad}`}
+      className={`${styles.pygmalionGlyph} ${
+        isUp ? styles.pygmalionGlyphUp : styles.pygmalionGlyphDown
+      }`}
+      aria-hidden='true'
     >
-      <svg viewBox='0 0 120 96' aria-hidden='true'>
-        <rect x='18' y='24' width='84' height='58' rx='18' />
-        <path d='M60 24V10' />
-        <circle cx='60' cy='9' r='5' />
-        <circle cx='45' cy='50' r='5' />
-        <circle cx='75' cy='50' r='5' />
-        <path d={happy ? 'M43 62c9 12 25 12 34 0' : 'M43 70c9-10 25-10 34 0'} />
-        <path d='M18 52H7M102 52h11' />
+      <svg viewBox='0 0 96 80'>
+        <path d={path} fill='none' strokeWidth='3' strokeLinejoin='round' />
+        <path
+          d={tip}
+          fill='none'
+          strokeWidth='3'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
       </svg>
     </div>
   )
@@ -737,136 +1113,243 @@ function ArticleEquationVisual() {
   )
 }
 
+type EquationLever = 'tool' | 'model' | 'effort' | 'prompt' | 'context'
+
+/**
+ * Each lever slide gets the matching article-style badge from the equation
+ * illustration. Effort is a sub-lever of Model, so it shows MODEL.
+ */
+const LEVER_TO_CHIP: Record<
+  EquationLever,
+  'TOOL' | 'MODEL' | 'HUMAN_PROMPT' | 'CONTEXT'
+> = {
+  tool: 'TOOL',
+  model: 'MODEL',
+  effort: 'MODEL',
+  prompt: 'HUMAN_PROMPT',
+  context: 'CONTEXT'
+}
+
+function LeverHeader({ active }: { active: EquationLever }) {
+  return (
+    <div className={styles.leverHeader}>
+      <LeverChip name={LEVER_TO_CHIP[active]} interactive={false} />
+    </div>
+  )
+}
+
 function ToolLeverVisual() {
   return (
-    <EquationLeverVisual
-      active='tool'
-      kicker='same model, different ceiling'
-      details={[
-        'smarter context slicing',
-        'persistent long tasks',
-        'project-aware system prompts'
-      ]}
-      chips={['Cursor', 'Claude Code', 'Codex']}
-    />
+    <div className={styles.leverSlide}>
+      <LeverHeader active='tool' />
+      <div className={styles.toolLadder}>
+        <div className={styles.toolLadderRow}>
+          <span className={styles.toolLadderTier}>then</span>
+          <span className={styles.toolLadderName}>VSCode + Copilot</span>
+          <span className={styles.toolLadderNote}>autocomplete bolted on</span>
+        </div>
+        <div className={`${styles.toolLadderRow} ${styles.toolLadderRowNow}`}>
+          <span className={styles.toolLadderTier}>now</span>
+          <span className={styles.toolLadderName}>
+            Cursor · Claude Code · Codex
+          </span>
+          <span className={styles.toolLadderNote}>
+            agent-native: better context slicing, long-running tasks,
+            project-aware prompts
+          </span>
+        </div>
+      </div>
+      <p className={styles.leverFootnote}>
+        Try one for a week. If your day-to-day doesn’t get easier, go back.
+      </p>
+    </div>
   )
 }
 
 function ModelLeverVisual() {
-  return (
-    <EquationLeverVisual
-      active='model'
-      kicker='calibrate to the work'
-      details={[
-        'fast edits → Composer/Sonnet',
-        'taste → Opus',
-        'hard technical problems → GPT5.5',
-        'ambiguous work → higher effort'
-      ]}
-    />
-  )
-}
-
-function PromptLeverVisual() {
-  return (
-    <EquationLeverVisual
-      active='prompt'
-      kicker='concrete beats vibes'
-      details={[
-        'weak: “Make this faster.”',
-        'strong: “First paint is 2.4s. Target under 1s.”',
-        'examples beat taste words'
-      ]}
-    />
-  )
-}
-
-function ContextLeverVisual() {
-  return (
-    <EquationLeverVisual
-      active='context'
-      kicker='context is the noun'
-      details={[
-        'CLAUDE.md / AGENTS.md',
-        'the related PR',
-        'the failing trace',
-        'screenshots and real systems'
-      ]}
-    />
-  )
-}
-
-type EquationLever = 'tool' | 'model' | 'prompt' | 'context'
-
-function EquationLeverVisual({
-  active,
-  kicker,
-  details,
-  chips
-}: {
-  active: EquationLever
-  kicker: string
-  details: string[]
-  chips?: string[]
-}) {
-  const tokens: Array<{ id: EquationLever; label: string; side: string }> = [
-    { id: 'tool', label: 'TOOL', side: 'AGENT' },
-    { id: 'model', label: 'MODEL', side: 'AGENT' },
-    { id: 'prompt', label: 'HUMAN_PROMPT', side: 'INPUT' },
-    { id: 'context', label: 'CONTEXT', side: 'INPUT' }
+  const rows: Array<{ when: string; pick: string; accent?: boolean }> = [
+    { when: 'fast and cost-friendly edits', pick: 'Sonnet 4.7 · Composer 2.5' },
+    {
+      when: 'taste — writing, docs, PRs, UI',
+      pick: 'Opus'
+    },
+    {
+      when: 'gnarly debugging, hard backend',
+      pick: 'GPT-5.5'
+    },
+    {
+      when: 'anything tricky or ambiguous',
+      pick: '+ Thinking on',
+      accent: true
+    }
   ]
-  const current = tokens.find((token) => token.id === active) ?? tokens[0]!
-
   return (
-    <div className={styles.equationLever}>
-      <div className={styles.equationLeverFormula}>
-        <span>AGENT</span>
-        <b>×</b>
-        <span>INPUT</span>
-        <b>→</b>
-        <span>OUTPUT</span>
-      </div>
-      <div className={styles.equationLeverBadge}>
-        <small>{current.side}</small>
-        <strong>{current.label}</strong>
-      </div>
-      <div className={styles.equationLeverCallout}>
-        <span>{current.label}</span>
-        <strong>{kicker}</strong>
-        <ul>
-          {details.map((detail) => (
-            <li key={detail}>{detail}</li>
-          ))}
-        </ul>
-        {chips && (
-          <div>
-            {chips.map((chip) => (
-              <b key={chip}>{chip}</b>
-            ))}
+    <div className={styles.leverSlide}>
+      <LeverHeader active='model' />
+      <div className={styles.modelGuide}>
+        {rows.map((row) => (
+          <div
+            key={row.pick}
+            className={`${styles.modelGuideRow} ${
+              row.accent ? styles.modelGuideRowAccent : ''
+            }`}
+          >
+            <span className={styles.modelGuideWhen}>{row.when}</span>
+            <span className={styles.modelGuideArrow} aria-hidden='true'>
+              →
+            </span>
+            <span className={styles.modelGuidePick}>{row.pick}</span>
           </div>
-        )}
+        ))}
       </div>
     </div>
   )
 }
 
+function EffortLeverVisual() {
+  const rungs: Array<{ tier: string; what: string }> = [
+    { tier: 'low', what: 'trivial edits, format fixes, one-line changes' },
+    { tier: 'medium', what: 'well-specced work — the model is executing' },
+    { tier: 'high', what: 'planning through constraints, real trade-offs' },
+    { tier: 'xhigh', what: 'novel design, gnarly bugs, long-horizon plans' }
+  ]
+  return (
+    <div className={styles.leverSlide}>
+      <LeverHeader active='effort' />
+      <div className={styles.effortDial}>
+        {rungs.map((rung, i) => (
+          <div key={rung.tier} className={styles.effortRung}>
+            <span className={styles.effortRungTier}>{rung.tier}</span>
+            <span
+              className={styles.effortRungBar}
+              style={{ width: `${30 + i * 18}%` }}
+            />
+            <span className={styles.effortRungWhat}>{rung.what}</span>
+          </div>
+        ))}
+      </div>
+      <p className={styles.effortAutoTrap}>
+        <b>The trap:</b> &ldquo;Auto&rdquo; mode is optimized for the platform’s
+        margin, not your output. Override it whenever the work matters.
+      </p>
+    </div>
+  )
+}
+
+function PromptLeverVisual() {
+  return (
+    <div className={styles.leverSlide}>
+      <LeverHeader active='prompt' />
+      <div className={styles.promptCompare}>
+        <section className={styles.promptCompareWeak}>
+          <span className={styles.promptCompareLabel}>weak</span>
+          <pre>“Make this faster.”</pre>
+          <p>nothing to grade against</p>
+        </section>
+        <span className={styles.promptCompareArrow} aria-hidden='true'>
+          →
+        </span>
+        <section className={styles.promptCompareStrong}>
+          <span className={styles.promptCompareLabel}>strong</span>
+          <pre>{`“First paint is 2.4s.
+Target under 1s.
+Profile and start with
+the biggest wins.”`}</pre>
+          <p>concrete · measurable · scoped</p>
+        </section>
+      </div>
+      <div className={styles.promptDont}>
+        <span>doesn’t help:</span>
+        <b>“be careful”</b>
+        <b>“think step by step”</b>
+        <b>politeness padding</b>
+      </div>
+    </div>
+  )
+}
+
+function ContextLeverVisual() {
+  const items: Array<{ label: string; note: string }> = [
+    { label: 'CLAUDE.md', note: 'project rules and conventions' },
+    { label: 'the design doc', note: 'reference material' },
+    { label: 'the failing trace', note: 'what is actually happening' },
+    { label: 'screenshots', note: 'a sketch beats ten paragraphs' },
+    { label: 'MCPs', note: 'wire into your actual systems' }
+  ]
+  return (
+    <div className={styles.leverSlide}>
+      <LeverHeader active='context' />
+      <div className={styles.contextStackV2}>
+        {items.map((item, i) => (
+          <div
+            key={item.label}
+            className={styles.contextStackV2Row}
+            style={{ animationDelay: `${200 + i * 80}ms` }}
+          >
+            <span className={styles.contextStackV2Label}>{item.label}</span>
+            <span className={styles.contextStackV2Note}>{item.note}</span>
+          </div>
+        ))}
+      </div>
+      <p className={styles.leverFootnote}>
+        Rewriting the same prompt for the fifth time? Stop. The lever you
+        actually need is this one.
+      </p>
+    </div>
+  )
+}
+
+const MOVE_GROUPS: Array<{ heading: string; moves: string[] }> = [
+  {
+    heading: 'Before you start',
+    moves: [
+      'What questions should you ask me before starting?',
+      'What’s the smallest version of this that ships?'
+    ]
+  },
+  {
+    heading: 'Open the options',
+    moves: [
+      'Give me 3 options, rank them, name the trade-offs.',
+      'Argue against your last suggestion.'
+    ]
+  },
+  {
+    heading: 'Pressure-test it',
+    moves: ['What did you skip?', 'How would a senior engineer review this?']
+  },
+  {
+    heading: 'Pay it forward',
+    moves: [
+      'Match the style of components/PostCard.tsx.',
+      'Update CLAUDE.md with what you just learned.'
+    ]
+  }
+]
+
 function MovesVisual() {
   return (
-    <div className={styles.moves}>
-      {[
-        'What questions should you ask me before starting?',
-        'What’s the smallest version of this that ships?',
-        'Give me 3 options, rank them, name the trade-offs.',
-        'Argue against your last suggestion.',
-        'What did you skip?',
-        'How would a senior engineer review this?',
-        'Match the style of components/PostCard.tsx.',
-        'Update AGENTS.md with what you just learned.'
-      ].map((move, i) => (
-        <span key={move}>
-          <b>{String(i + 1).padStart(2, '0')}</b>
-          {move}
-        </span>
+    <div className={styles.moveGroups}>
+      {MOVE_GROUPS.map((group) => (
+        <section key={group.heading} className={styles.moveGroup}>
+          <h3 className={styles.moveGroupHeading}>
+            <span aria-hidden='true' className={styles.moveGroupMark} />
+            {group.heading}
+          </h3>
+          <ul className={styles.moveGroupList}>
+            {group.moves.map((move) => (
+              <li key={move}>
+                <span className={styles.moveQuoteMark} aria-hidden='true'>
+                  “
+                </span>
+                {move}
+                <span className={styles.moveQuoteMark} aria-hidden='true'>
+                  ”
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
     </div>
   )
@@ -875,20 +1358,31 @@ function MovesVisual() {
 function RulesVisual() {
   return (
     <div className={styles.rulesFile}>
-      <div className={styles.fileTab}>AGENTS.md</div>
-      <pre>{`- Before non-trivial work, ask what is unclear.
-- When asked to plan, give 3 options and trade-offs.
-- After delegating, list what was skipped.
-- Match components/PostCard.tsx for new card UIs.`}</pre>
+      <div className={styles.fileTab}>CLAUDE.md</div>
+      <pre>{`- Use pnpm. Don't run npm or yarn.
+- Tests live next to the source file. No __tests__/ folder.
+- No \`any\`. Use the narrow types in lib/types.ts.
+- New card UIs should match components/PostCard.tsx.
+- Run \`pnpm typecheck && pnpm test\` before saying you're done.`}</pre>
+      <p className={styles.rulesFootnote}>
+        write the lesson once · the agent reads it on every task
+      </p>
     </div>
   )
 }
 
-function AudienceQuestionVisual() {
+function AudienceQuestionVisual({ seeds }: { seeds?: string[] }) {
   return (
     <div className={styles.audienceQuestion}>
+      <span className={styles.audienceQuestionFrame} aria-hidden='true' />
       <strong>Q</strong>
-      <span aria-hidden='true' />
+      {seeds && seeds.length > 0 && (
+        <ul className={styles.audienceQuestionSeeds} aria-hidden='true'>
+          {seeds.map((seed) => (
+            <li key={seed}>{seed}</li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
@@ -1082,15 +1576,15 @@ function ColleagueVisual() {
       <div>
         <span>
           <b>onboard</b>
-          <small>rules, files, history</small>
+          <small>CLAUDE.md, conventions, examples</small>
         </span>
         <span>
-          <b>explain</b>
-          <small>goal, constraints, taste</small>
+          <b>prompt</b>
+          <small>goal, constraints, success criteria</small>
         </span>
         <span>
           <b>review</b>
-          <small>grade against intent</small>
+          <small>diff is a proposal, not an answer</small>
         </span>
       </div>
       <strong>
@@ -1108,21 +1602,28 @@ function BriefVisual() {
         <span>Pinging</span>
         <pre>{`> Read the auth module.
 
+(reads, waits)
+
 > Now find the session bug.
+
+(finds, waits)
 
 > Now write a test.
 
+(writes, waits)
+
 > Now open a PR.`}</pre>
       </section>
-      <section>
-        <span>Full task</span>
+      <section className={styles.briefGood}>
+        <span>Full prompt</span>
         <pre>{`> Read the auth module, find
-  the session bug on refresh,
-  write a regression test,
-  and open a PR.
+  the session bug we keep seeing
+  on refresh, write a regression
+  test, and open a PR.
 
-  If you hit a fork, pick
-  the smaller change.`}</pre>
+  If you hit a fork, pick the
+  smaller change and note the
+  alternative in the PR body.`}</pre>
       </section>
     </div>
   )
@@ -1131,21 +1632,29 @@ function BriefVisual() {
 function TimelineVisual() {
   return (
     <div className={styles.timeline}>
-      <div>
-        <b>ping</b>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <React.Fragment key={i}>
-            <span className={styles.you} />
-            <span className={styles.agent} />
-            <span className={styles.idle} />
-          </React.Fragment>
-        ))}
+      <div className={styles.timelineRow}>
+        <b>pinging</b>
+        <div className={styles.timelineBars}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <React.Fragment key={i}>
+              <span className={styles.you} />
+              <span className={styles.agent} />
+              <span className={styles.idle} />
+            </React.Fragment>
+          ))}
+        </div>
+        <span className={styles.timelineDuration}>~14 min</span>
       </div>
-      <div>
-        <b>task</b>
-        <span className={styles.youWide} />
-        <span className={styles.agentWide} />
-        <span className={styles.done} />
+      <div className={styles.timelineRow}>
+        <b>full prompt</b>
+        <div className={styles.timelineBars}>
+          <span className={styles.youWide} />
+          <span className={styles.agentWide} />
+        </div>
+        <span className={styles.timelineDuration}>~5 min</span>
+      </div>
+      <div className={styles.timelineAxis} aria-hidden='true'>
+        <span>time →</span>
       </div>
     </div>
   )
@@ -1183,25 +1692,168 @@ function StaggerVisual() {
   )
 }
 
+/** Article-style fan-out: one prompt drops three parallel agent tracks
+ *  into a single merge point. */
 function FanoutVisual() {
+  const tracks: Array<{ y: number; end: number; label: string }> = [
+    { y: 70, end: 420, label: 'agent · tests' },
+    { y: 105, end: 380, label: 'agent · docs' },
+    { y: 140, end: 460, label: 'agent · refactor' }
+  ]
+
   return (
-    <div className={styles.fanout}>
-      <strong>You</strong>
-      <span>tests</span>
-      <span>bug A</span>
-      <span>library spike</span>
-      <em>review queue</em>
-    </div>
+    <figure className={styles.fanout}>
+      <svg
+        viewBox='0 0 600 200'
+        className={styles.fanoutSvg}
+        role='img'
+        aria-label='One prompt feeds three parallel agent tracks; the three streams converge at a single merge point on the right.'
+        preserveAspectRatio='xMidYMid meet'
+      >
+        <defs>
+          <linearGradient id='presFanYou' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#6d28d9' />
+            <stop offset='100%' stopColor='#7c3aed' />
+          </linearGradient>
+          <linearGradient id='presFanAgent' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#9d174d' />
+            <stop offset='100%' stopColor='#be185d' />
+          </linearGradient>
+        </defs>
+
+        <rect
+          x='40'
+          y='20'
+          width='130'
+          height='22'
+          rx='6'
+          ry='6'
+          fill='url(#presFanYou)'
+        />
+        <text
+          x='105'
+          y='35'
+          textAnchor='middle'
+          className={styles.fanoutBlockLabel}
+        >
+          you · prompt
+        </text>
+
+        {tracks.map((t, i) => (
+          <path
+            key={`drop-${i}`}
+            d={`M 170,42 C 200,42 195,${t.y + 11} 230,${t.y + 11}`}
+            fill='none'
+            stroke='url(#presFanYou)'
+            strokeWidth='1.25'
+            strokeLinecap='round'
+            strokeDasharray='3 4'
+            className={styles.fanoutDrop}
+            style={{ animationDelay: `${i * 140}ms` }}
+          />
+        ))}
+
+        {tracks.map((t, i) => (
+          <g
+            key={`track-${i}`}
+            style={{ animationDelay: `${300 + i * 140}ms` }}
+            className={styles.fanoutTrack}
+          >
+            <rect
+              x='230'
+              y={t.y}
+              width={t.end - 230}
+              height='22'
+              rx='6'
+              ry='6'
+              fill='url(#presFanAgent)'
+            />
+            <text
+              x={235}
+              y={t.y + 15}
+              textAnchor='start'
+              className={styles.fanoutBlockLabel}
+            >
+              {t.label}
+            </text>
+          </g>
+        ))}
+
+        <g className={styles.fanoutMerge}>
+          <path
+            d='M 478,68 C 490,68 490,120 502,120 C 490,120 490,172 478,172'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='1.25'
+          />
+          <text x='510' y='124' className={styles.fanoutMergeLabel}>
+            merge
+          </text>
+        </g>
+
+        <line
+          x1='40'
+          y1='185'
+          x2='560'
+          y2='185'
+          className={styles.fanoutAxis}
+        />
+        <text
+          x='560'
+          y='199'
+          textAnchor='end'
+          className={styles.fanoutAxisLabel}
+        >
+          time →
+        </text>
+      </svg>
+      <figcaption className={styles.fanoutCaption}>
+        One prompt fans out · three streams run in parallel · one merge to
+        review.
+      </figcaption>
+    </figure>
   )
 }
 
+const ROLES_PIPELINE: Array<{ name: string; verb: string }> = [
+  { name: 'Researcher', verb: 'reads & plans' },
+  { name: 'Implementer', verb: 'writes the diff' },
+  { name: 'Reviewer', verb: 'critiques cold' }
+]
+const ROLE_HANDOFFS = ['plan.md', 'diff']
+
 function RolesVisual() {
   return (
-    <div className={styles.roles}>
-      {['researcher', 'implementer', 'reviewer'].map((role) => (
-        <span key={role}>{role}</span>
-      ))}
-    </div>
+    <figure className={styles.rolesPipeline}>
+      <div className={styles.rolesRow}>
+        {ROLES_PIPELINE.map((role, i) => (
+          <React.Fragment key={role.name}>
+            <div
+              className={styles.roleCard}
+              style={{ animationDelay: `${i * 220}ms` }}
+            >
+              <span className={styles.roleName}>{role.name}</span>
+              <span className={styles.roleVerb}>{role.verb}</span>
+            </div>
+            {i < ROLES_PIPELINE.length - 1 && (
+              <div
+                className={styles.roleHandoff}
+                style={{ animationDelay: `${i * 220 + 140}ms` }}
+                aria-hidden='true'
+              >
+                <span className={styles.roleHandoffArtifact}>
+                  {ROLE_HANDOFFS[i]}
+                </span>
+                <span className={styles.roleHandoffArrow}>→</span>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <figcaption className={styles.rolesCaption}>
+        name the artifact that crosses each seam — the handoff stops being fuzzy
+      </figcaption>
+    </figure>
   )
 }
 
@@ -1226,22 +1878,195 @@ function ContractVisual() {
   )
 }
 
+/** A six-card recap, one per chapter. Each card has a tiny inline visual
+ *  so the page reads like a leaflet, not a flashcard. */
 function CloseVisual() {
+  const cards: Array<{
+    n: string
+    title: string
+    line: string
+    glyph: React.ReactNode
+  }> = [
+    {
+      n: '01',
+      title: 'Beginner’s mindset',
+      line: 'Three years in is about 1200 ELO. The bottleneck is usually you.',
+      glyph: <CloseGlyphElo />
+    },
+    {
+      n: '02',
+      title: 'The equation',
+      line: 'Figure out which levers to improve.',
+      glyph: <CloseGlyphEquation />
+    },
+    {
+      n: '03',
+      title: 'Techniques',
+      line: 'Build a repertoire of small moves. Turn your favorites into skills.',
+      glyph: <CloseGlyphMoves />
+    },
+    {
+      n: '04',
+      title: 'The tree',
+      line: 'Navigate the breadth and depth of coding.',
+      glyph: <CloseGlyphTree />
+    },
+    {
+      n: '05',
+      title: 'The colleague',
+      line: 'Onboard. Prompt. Review. Same shape as a teammate.',
+      glyph: <CloseGlyphColleague />
+    },
+    {
+      n: '06',
+      title: 'Orchestration',
+      line: 'Conduct the fleet. The hour matters more than the message.',
+      glyph: <CloseGlyphFanout />
+    }
+  ]
   return (
-    <div className={styles.closeList}>
-      {[
-        'beginner’s mindset',
-        'the equation',
-        'technique repertoire',
-        'the tree',
-        'the colleague',
-        'orchestration'
-      ].map((line, i) => (
-        <span key={line}>
-          <b>{String(i + 1).padStart(2, '0')}</b>
-          {line}
-        </span>
+    <div className={styles.closeGrid}>
+      {cards.map((card) => (
+        <article key={card.n} className={styles.closeCard}>
+          <header>
+            <span className={styles.closeCardN}>{card.n}</span>
+            <h3>{card.title}</h3>
+          </header>
+          <div className={styles.closeCardGlyph} aria-hidden='true'>
+            {card.glyph}
+          </div>
+          <p>{card.line}</p>
+        </article>
       ))}
+    </div>
+  )
+}
+
+function CloseGlyphElo() {
+  return (
+    <svg viewBox='0 0 120 40' role='img' aria-hidden='true'>
+      <path
+        d='M4 32 C 14 22 24 10 36 10 C 52 10 60 24 70 30 C 84 36 100 34 116 34'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+      />
+      <circle cx='40' cy='12' r='3' fill='currentColor' />
+      <circle cx='110' cy='34' r='3' fill='currentColor' />
+    </svg>
+  )
+}
+
+function CloseGlyphEquation() {
+  return (
+    <div className={styles.closeEquation}>
+      <span>TOOL</span>
+      <b>+</b>
+      <span>MODEL</span>
+      <b>×</b>
+      <span>PROMPT</span>
+      <b>+</b>
+      <span className={styles.closeEquationContext}>CONTEXT</span>
+    </div>
+  )
+}
+
+function CloseGlyphMoves() {
+  return (
+    <div className={styles.closeMoves}>
+      <span>“ask”</span>
+      <span>“rank”</span>
+      <span>“argue”</span>
+      <span>“skip?”</span>
+    </div>
+  )
+}
+
+function CloseGlyphTree() {
+  return (
+    <div className={styles.closeTree}>
+      {Array.from({ length: 12 }).map((_, i) => {
+        const active = i === 4
+        const onAxis =
+          i === 0 || i === 4 || i === 8 || i === 5 || i === 6 || i === 7
+        return (
+          <span
+            key={i}
+            className={`${active ? styles.closeTreeActive : ''} ${onAxis && !active ? styles.closeTreeAxis : ''}`}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+function CloseGlyphColleague() {
+  return (
+    <div className={styles.closeColleague}>
+      <span>onboard</span>
+      <em>→</em>
+      <span>prompt</span>
+      <em>→</em>
+      <span>review</span>
+    </div>
+  )
+}
+
+function CloseGlyphFanout() {
+  return (
+    <svg viewBox='0 0 120 40' role='img' aria-hidden='true'>
+      <rect x='2' y='14' width='22' height='10' rx='2' fill='currentColor' />
+      <path
+        d='M 24,19 C 36,19 36,8 50,8 M 24,19 C 36,19 36,19 50,19 M 24,19 C 36,19 36,30 50,30'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1'
+      />
+      <rect
+        x='50'
+        y='4'
+        width='30'
+        height='10'
+        rx='2'
+        fill='currentColor'
+        opacity='0.7'
+      />
+      <rect
+        x='50'
+        y='15'
+        width='42'
+        height='10'
+        rx='2'
+        fill='currentColor'
+        opacity='0.7'
+      />
+      <rect
+        x='50'
+        y='26'
+        width='24'
+        height='10'
+        rx='2'
+        fill='currentColor'
+        opacity='0.7'
+      />
+      <path
+        d='M 96,9 C 102,9 102,20 108,20 C 102,20 102,31 96,31'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='1'
+      />
+    </svg>
+  )
+}
+
+function FinalCardVisual() {
+  return (
+    <div className={styles.finalCard}>
+      <span className={styles.finalCardCursor} aria-hidden='true'>
+        &gt;
+      </span>
+      <span className={styles.finalCardThanks}>thanks for listening.</span>
     </div>
   )
 }

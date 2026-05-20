@@ -200,7 +200,7 @@ export function Group({ children }: { children: React.ReactNode }) {
   return <span className={styles.group}>{children}</span>
 }
 
-function LeverChip({
+export function LeverChip({
   name,
   interactive = true
 }: {
