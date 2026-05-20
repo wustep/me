@@ -65,7 +65,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'The question',
     title:
       'What does it mean to be good at talking to Claude, Codex, or whatever comes next?',
-    note: 'This is the question at the end of the intro chapter. The structure should feel like the article: mindset, equation, techniques, tree, orchestration, recap.',
+    note: 'This is the question at the end of the intro chapter. The structure should feel like the article: mindset, equation, techniques, map, orchestration, recap.',
     visual: { kind: 'none' },
     tone: 'dark',
     layout: 'quote'
@@ -87,7 +87,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Chess is 500 years old',
-    title: 'AI coding is barely 4 years old.',
+    title: 'AI coding is barely 3 years old.',
     note: 'Use the pawn to make the chess analogy concrete. The point: the meta has barely been uncovered.',
     visual: { kind: 'pawn' },
     tone: 'dark',
@@ -95,7 +95,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Beginner mindset',
-    title: 'Four years in is about 1200 ELO.',
+    title: 'Three years in is about 1200 ELO.',
     body: 'Past most casual players. Nowhere near expert. Even Magnus is learning new things all the time.',
     note: 'Use the chess analogy from the article. The important bit is: do not trust the feeling of competence too early.',
     visual: { kind: 'elo' }
@@ -159,7 +159,7 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Tool',
-    title: 'Same model. Different tool. Different ceiling.',
+    title: 'Tools are changing every day.',
     note: 'Most of us are already on agent-native tools. The point is: don’t bolt AI onto VSCode. Cursor, Claude Code, Codex slice context smarter, manage long tasks, persist state, and inject project-aware system prompts. Tool is the smallest of the four levers, but it’s the easiest one to pull.',
     visual: { kind: 'toolLever' },
     tone: 'dark'
@@ -258,17 +258,17 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Section 04',
-    title: 'Use the tree.',
+    title: 'Explore the map.',
     note: 'Section break. The next step after collecting moves is knowing where each move belongs.',
-    visual: { kind: 'section', number: '04', label: 'The tree' },
+    visual: { kind: 'section', number: '04', label: 'The map' },
     tone: 'dark',
     layout: 'visual'
   },
   {
-    eyebrow: 'The tree',
+    eyebrow: 'The map',
     title: 'Every change lives somewhere on a 2D map.',
     body: 'Breadth × depth. Where you are tells you what to write.',
-    note: 'Use the interactive article tree. The axes are breadth (which area of code) and depth (how zoomed in). At any cell, three moves: ask, plan, or delegate. Click around so the room sees the prompt change with the cell.',
+    note: 'Use the interactive article map. The axes are breadth (which area of code) and depth (how zoomed in). At any cell, three moves: ask, plan, or delegate. Click around so the room sees the prompt change with the cell.',
     visual: { kind: 'treeDemo' },
     tone: 'dark',
     layout: 'visual'
@@ -277,7 +277,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'Choosing your move',
     title: 'Pick the move that fits the cell.',
     body: 'The most expensive prompts are the ones in the wrong cell.',
-    note: 'Tie the tree to the three moves with real examples. Ask when you don’t know yet. Plan when you know what but not how. Delegate only when the path is clear and the result is gradeable. Calibration is most of the skill.',
+    note: 'Tie the map to the three moves with real examples. Ask when you don’t know yet. Plan when you know what but not how. Delegate only when the path is clear and the result is gradeable. Calibration is most of the skill.',
     visual: { kind: 'choice' },
     tone: 'dark',
     layout: 'visual'
@@ -825,7 +825,7 @@ function AgendaVisual() {
         ['01', 'beginner’s mindset'],
         ['02', 'the equation'],
         ['03', 'techniques'],
-        ['04', 'the tree'],
+        ['04', 'the map'],
         ['05', 'orchestration'],
         ['06', 'recap']
       ].map(([n, text]) => (
@@ -1275,7 +1275,7 @@ const MOVE_GROUPS: Array<{ heading: string; moves: string[] }> = [
     heading: 'Before you start',
     moves: [
       'What questions should you ask me before starting?',
-      'What’s the smallest version of this that ships?'
+      'What are you assuming that I haven’t said?'
     ]
   },
   {
@@ -1293,7 +1293,7 @@ const MOVE_GROUPS: Array<{ heading: string; moves: string[] }> = [
     heading: 'Pay it forward',
     moves: [
       'Match the style of components/PostCard.tsx.',
-      'Update CLAUDE.md with what you just learned.'
+      'How should I improve my CLAUDE.md or skills so we don’t hit this again?'
     ]
   }
 ]
@@ -1585,25 +1585,21 @@ function ChoiceVisual() {
     verb: string
     when: string
     example: string
-    cell: string
   }> = [
     {
       verb: 'Ask',
       when: 'you don’t know yet',
-      example: '“Why is this list re-rendering on every keystroke?”',
-      cell: 'high zoom · widening what you know'
+      example: '“Why is this list re-rendering on every keystroke?”'
     },
     {
       verb: 'Plan',
       when: 'you know what, not how',
-      example: '“Plan how to memoize this list without breaking selection.”',
-      cell: 'mid zoom · converging before code'
+      example: '“Plan how to memoize this list without breaking selection.”'
     },
     {
       verb: 'Delegate',
       when: 'the path is clear and gradeable',
-      example: '“Memoize this list. Verify selection still works.”',
-      cell: 'low zoom · narrow scope, clear success'
+      example: '“Memoize this list. Verify selection still works.”'
     }
   ]
 
@@ -1620,7 +1616,6 @@ function ChoiceVisual() {
             <span className={styles.choiceWhen}>when {move.when}</span>
           </div>
           <p className={styles.choiceExample}>{move.example}</p>
-          <span className={styles.choiceCell}>{move.cell}</span>
         </section>
       ))}
     </div>
@@ -1739,9 +1734,7 @@ function BriefVisual() {
     '> Now open a PR.'
   ]
   const promptLines = [
-    '> Read the auth module, find the session bug we keep seeing on refresh, write a regression test, and open a PR.',
-    '',
-    '> If you hit a fork, pick the smaller change and note the alternative in the PR body.'
+    '> Read the auth module, find the session bug we keep seeing on refresh, write a regression test, and open a PR. If you hit a fork, pick the smaller change and note the alternative in the PR body.'
   ]
   return (
     <div className={styles.briefPair}>
@@ -2035,7 +2028,7 @@ function CloseVisual() {
     },
     {
       n: '04',
-      title: 'The tree',
+      title: 'The map',
       line: 'Navigate the breadth and depth of coding.',
       glyph: <CloseGlyphTree />
     },
