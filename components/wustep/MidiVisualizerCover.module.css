@@ -47,10 +47,10 @@
   );
 }
 
-/* Per-bar heights — vary so the chord reads as natural */
-.bar:nth-child(1) { height: 56%; }
-.bar:nth-child(2) { height: 68%; }
-.bar:nth-child(3) { height: 60%; }
+/* Equal heights so every note rises at the same speed — scaleY/translateY in
+   the rise animation are relative to each bar's own height, so differing
+   heights would make taller notes travel faster over the same duration. */
+.bar { height: 62%; }
 
 @media (hover: hover) {
   :global(.group):hover .bar,
