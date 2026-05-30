@@ -110,7 +110,7 @@
       rgba(255, 255, 255, 0.03) 0%,
       rgba(0, 0, 0, 0) 55%
     ),
-    var(--design-canvas-bg-dark, #16161a);
+    var(--design-canvas-bg-dark, #161616);
   color: #f5f1e8;
 }
 
@@ -619,7 +619,7 @@
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
     0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
     0 0 0 var(--design-selected-ring-gap, 3px)
-      var(--design-canvas-bg-dark, #16161a),
+      var(--design-canvas-bg-dark, #161616),
     0 0 0
       calc(
         var(--design-selected-ring-gap, 3px) + var(--design-selected-ring, 2px)
@@ -1013,7 +1013,7 @@
       rgba(0, 0, 0, 0) 68%,
       rgba(0, 0, 0, 0.1) 100%
     ),
-    var(--center-card-bg, #172a3a);
+    var(--center-card-bg, #222226);
   color: var(--center-card-fg, #f6ead8);
   border: 0;
   /* Generous radius matches the lens-card scale-up; the focal
@@ -1085,7 +1085,7 @@
       rgba(0, 0, 0, 0) 70%,
       rgba(0, 0, 0, 0.06) 100%
     ),
-    linear-gradient(180deg, #9a9bb0 0%, #7c7894 100%);
+    linear-gradient(180deg, #9c9c9c 0%, #7d7d7d 100%);
   color: #f6ead8;
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
@@ -1235,7 +1235,7 @@
 }
 
 :global(.dark-mode) .panel {
-  background: #1c1d1f;
+  background: #1c1c1c;
   color: #f5f1e8;
   box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.7);
 }
@@ -1629,6 +1629,36 @@
   display: none;
 }
 
+/* Optional pull-quote — sits below the further-reading list and above
+   the related lenses. A left accent rule in the lens's own accent
+   color marks it as a quotation; generous top margin (rather than
+   another hairline) keeps the footer from stacking dividers. */
+.quoteBlock {
+  margin: 28px 0 0;
+  padding-left: 18px;
+  border-left: 2px solid
+    color-mix(in srgb, var(--panel-accent, currentColor) 80%, transparent);
+}
+
+.quoteText {
+  margin: 0;
+  font-family: var(--design-serif, var(--font-serif, Georgia, serif));
+  font-size: 1.1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.quoteCite {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  opacity: 0.55;
+}
+
 /* Related-lenses block at bottom of panel body. */
 .relatedBlock {
   margin-top: 32px;
@@ -1774,7 +1804,7 @@
 }
 
 :global(.dark-mode) .dialog {
-  background: #1c1d1f;
+  background: #1c1c1c;
   color: #f5f1e8;
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.4),
@@ -4275,7 +4305,7 @@
       rgba(255, 255, 255, 0.04) 0%,
       rgba(0, 0, 0, 0) 60%
     ),
-    #16161a;
+    #161616;
   color: #f5f1e8;
 }
 

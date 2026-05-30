@@ -6,6 +6,7 @@ import { isDev } from '@/lib/config'
 import { ignoreDesignPanelOutside, useDesignFlag } from './DesignPanel'
 import { ChevronIcon, CloseIcon } from './icons'
 import { Illustration } from './illustrations'
+import { LensBody } from './LensBody'
 import styles from './LensesPage.module.css'
 import { neighborInDirection } from './navigation'
 import { LENS_BY_ID } from './registry'
@@ -270,13 +271,13 @@ export function SidePanel({
                     <em>{shown.tagline}</em>
                   </p>
                 ) : bodyDensity === 'tldr' ? (
-                  // First paragraph only — find the first <p> in the
-                  // freeform body. We don't try to parse arbitrary JSX,
-                  // so we cheat: render the body and clamp via CSS.
-                  // In practice every lens body is `<><p>…</p>…</>`.
-                  <div className={styles.panelBodyTldr}>{shown.body}</div>
+                  // First paragraph only — render the full body and clamp
+                  // it via CSS (.panelBodyTldr).
+                  <div className={styles.panelBodyTldr}>
+                    <LensBody markdown={shown.body} />
+                  </div>
                 ) : (
-                  shown.body
+                  <LensBody markdown={shown.body} />
                 )}
                 {shown.readings && shown.readings.length > 0 && (
                   <div className={styles.readingsBlock}>
@@ -307,6 +308,18 @@ export function SidePanel({
                       })}
                     </ul>
                   </div>
+                )}
+                {shown.quote && (
+                  <figure className={styles.quoteBlock}>
+                    <blockquote className={styles.quoteText}>
+                      {shown.quote.text}
+                    </blockquote>
+                    {shown.quote.cite && (
+                      <figcaption className={styles.quoteCite}>
+                        {shown.quote.cite}
+                      </figcaption>
+                    )}
+                  </figure>
                 )}
                 {shown.related && shown.related.length > 0 && (
                   <div className={styles.relatedBlock}>

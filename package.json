@@ -16,6 +16,7 @@
     "build": "next build",
     "start": "next start",
     "deploy": "vercel deploy",
+    "lenses:sync": "node scripts/sync-lenses.mjs",
     "deps:upgrade": "[ -z $GITHUB_ACTIONS ] && pnpm up -L notion-client notion-types notion-utils react-notion-x || echo 'Skipping deps:update on CI'",
     "deps:link": "[ -z $GITHUB_ACTIONS ] && run-s deps:link:* || echo 'Skipping deps:update on CI'",
     "deps:unlink": "[ -z $GITHUB_ACTIONS ] && pnpm add notion-client notion-types notion-utils react-notion-x || echo 'Skipping deps:update on CI'",
@@ -112,6 +113,7 @@
     "*.{ts,tsx}": [
       "prettier --ignore-unknown --write",
       "eslint --fix"
-    ]
+    ],
+    "components/wustep/lenses/lenses.md": "node scripts/sync-lenses.mjs && git add components/wustep/lenses/lenses.json"
   }
 }

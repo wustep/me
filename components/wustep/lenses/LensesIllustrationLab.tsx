@@ -106,12 +106,7 @@ const LENSES_DECK_LENS: Lens = {
   fg: '#F6EAD8',
   accent: '#F0A85A',
   illustration: LENSES_DECK_ILLUSTRATION_ID,
-  body: (
-    <p>
-      The center card is the index for the whole deck: a compact visual system
-      for choosing how to look at a question.
-    </p>
-  )
+  body: 'The center card is the index for the whole deck: a compact visual system for choosing how to look at a question.'
 }
 
 const UNIQUE_ILLUSTRATIONS: IllustrationId[] = Array.from(

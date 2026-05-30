@@ -98,6 +98,15 @@ export type Reading = {
   href: string
 }
 
+export type Quote = {
+  /** The quotation, rendered as a pull-quote below the readings list.
+   *  No surrounding quote marks needed — the styling supplies the
+   *  visual treatment (accent rule + indent). */
+  text: string
+  /** Optional attribution, e.g. a book title or author. */
+  cite?: string
+}
+
 export type Lens = {
   id: string
   category: string
@@ -110,10 +119,13 @@ export type Lens = {
   fg: string
   accent?: string
   illustration: IllustrationId
-  body: React.ReactNode
+  /** Markdown body (compiled from lenses.md). Render with <LensBody />. */
+  body: string
   related?: string[]
   /** Optional further-reading list rendered above the related lenses. */
   readings?: Reading[]
+  /** Optional pull-quote, rendered below the readings list. */
+  quote?: Quote
 }
 
 export type LensPreviewOverride = {

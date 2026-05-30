@@ -213,9 +213,9 @@ type CenterCardProps = {
 /**
  * CenterCard — the larger "Lenses" card that opens the index dialog.
  *
- *   At 1200px+ this is a 2×2 spanning card centered in the grid:
- *   illustration above, title below. At narrower widths (where it
- *   can't span 2×2) it becomes a full-width hero pinned to the top
+ *   At a deck width of 1000px+ this is a 2×2 spanning card centered
+ *   in the grid: illustration above, title below. Below that (where
+ *   it can't span 2×2) it becomes a full-width hero pinned to the top
  *   of the grid: illustration on the left, title + tagline on the
  *   right. The tagline is hidden in 2×2 mode via CSS so the
  *   markup is the same in both states.
@@ -251,7 +251,7 @@ function CenterCardImpl({ stage, onOpen, previewOverride }: CenterCardProps) {
           <Illustration
             id='lenses-deck'
             fg='#F6EAD8'
-            bg='#172A3A'
+            bg='#222226'
             accent='#F0A85A'
           />
         )}

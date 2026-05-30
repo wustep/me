@@ -296,16 +296,31 @@ export function LensesPage({
         event.preventDefault()
         setCursorLensId(next)
 
+        const nextEl = document.querySelector<HTMLElement>(
+          `[data-lens-id="${next}"]`
+        )
+
+        /* Keep the moving cursor on-screen. The deck scrolls on short
+           and mobile viewports, so an arrow press can land the
+           selected card outside the viewport. `block`/`inline:
+           'nearest'` only scrolls when the card is actually clipped,
+           so navigating within the visible area stays still. Smooth
+           unless the user prefers reduced motion. */
+        nextEl?.scrollIntoView({
+          block: 'nearest',
+          inline: 'nearest',
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        })
+
         /* If a card button currently has focus, follow the cursor
            with focus too — otherwise leave focus where it was, so
            we don't yank focus into the canvas just because the user
-           moved their mouse off-page and tapped an arrow. */
+           moved their mouse off-page and tapped an arrow.
+           `preventScroll` so focus doesn't fight the smooth scroll
+           we just kicked off. */
         const active = document.activeElement as HTMLElement | null
         if (active && active.dataset && active.dataset.lensId) {
-          const nextEl = document.querySelector<HTMLElement>(
-            `[data-lens-id="${next}"]`
-          )
-          nextEl?.focus()
+          nextEl?.focus({ preventScroll: true })
         }
         return
       }
@@ -322,7 +337,14 @@ export function LensesPage({
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [centerOpen, openLensId, cursorLensId, openLens, previewLensId])
+  }, [
+    centerOpen,
+    openLensId,
+    cursorLensId,
+    openLens,
+    previewLensId,
+    prefersReducedMotion
+  ])
 
   const activeLens = previewLensId
     ? (LENS_BY_ID[previewLensId] ?? null)
