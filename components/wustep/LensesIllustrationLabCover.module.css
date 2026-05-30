@@ -2,17 +2,12 @@
   --cover-ink: #1f1a14;
   --cover-accent: #f2c77a;
   --cover-bg-top: #faf7f1;
-  --cover-bg-mid: #f3eee5;
   --cover-bg-bottom: #e6e3dc;
-  --cover-glow-gold: rgba(255, 255, 255, 0.5);
-  --cover-glow-rust: rgba(160, 106, 72, 0.08);
   --cover-grid: rgba(31, 26, 20, 0.075);
   --cover-panel-bg: rgba(255, 248, 231, 0.82);
   --cover-panel-border: rgba(31, 26, 20, 0.16);
   --cover-panel-shadow: rgba(75, 56, 32, 0.22);
   --cover-card-outline: rgba(255, 250, 240, 0.62);
-  --cover-title-muted: rgba(31, 26, 20, 0.62);
-  --cover-title-shadow: rgba(255, 250, 240, 0.62);
   --cover-matrix-cell: rgba(31, 26, 20, 0.12);
 
   position: relative;
@@ -21,39 +16,22 @@
   overflow: hidden;
   isolation: isolate;
   color: var(--cover-ink);
-  background:
-    radial-gradient(
-      circle at 76% 18%,
-      var(--cover-glow-gold),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 18% 92%,
-      var(--cover-glow-rust),
-      transparent 34%
-    ),
-    linear-gradient(
-      135deg,
-      var(--cover-bg-top) 0%,
-      var(--cover-bg-mid) 48%,
-      var(--cover-bg-bottom) 100%
-    );
+  background: linear-gradient(
+    160deg,
+    var(--cover-bg-top),
+    var(--cover-bg-bottom)
+  );
 }
 
 :global(.dark-mode) .cover {
   --cover-ink: #f5efe0;
   --cover-bg-top: #17130f;
-  --cover-bg-mid: #252128;
   --cover-bg-bottom: #0f151d;
-  --cover-glow-gold: rgba(242, 199, 122, 0.26);
-  --cover-glow-rust: rgba(180, 58, 46, 0.32);
   --cover-grid: rgba(245, 239, 224, 0.055);
   --cover-panel-bg: rgba(20, 20, 23, 0.72);
   --cover-panel-border: rgba(245, 239, 224, 0.16);
   --cover-panel-shadow: rgba(0, 0, 0, 0.34);
   --cover-card-outline: rgba(245, 239, 224, 0.18);
-  --cover-title-muted: rgba(245, 239, 224, 0.72);
-  --cover-title-shadow: rgba(0, 0, 0, 0.45);
   --cover-matrix-cell: rgba(245, 239, 224, 0.14);
 }
 
@@ -70,7 +48,16 @@
 
 .workbench {
   position: absolute;
-  inset: 12% 10% 18%;
+  /* The cover keeps a fixed height while its width grows (single-column
+     layouts), so cap the workbench width and center it — otherwise the
+     cards scale off width and balloon past the cover's height on wide
+     covers. Below the cap it stays fluid at 80% for narrow covers. */
+  top: 12%;
+  right: 0;
+  bottom: 18%;
+  left: 0;
+  width: min(80%, 360px);
+  margin-inline: auto;
   z-index: 1;
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
@@ -89,52 +76,43 @@
   border-radius: 16px;
   padding: 14px;
   color: #f5efe0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 38%), #204a40;
+  background: #204a40;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 0 0 3px var(--cover-card-outline),
-    0 18px 38px rgba(0, 0, 0, 0.32);
-  transition: transform 260ms ease-out;
+    0 0 0 1px var(--cover-card-outline),
+    0 14px 30px rgba(0, 0, 0, 0.28);
+  transition:
+    transform 260ms ease-out,
+    background-color 400ms ease;
 }
 
 .illustration {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 0;
+}
+
+.illustration svg {
+  width: 100%;
+  height: 100%;
   transform: scale(1.08);
   transform-origin: center;
 }
 
-.gaugePlate {
-  fill: rgba(245, 239, 224, 0.1);
-  stroke: rgba(245, 239, 224, 0.24);
-  stroke-width: 1.4;
+/* Bow draw/release — declared paused, runs while the cover (or the
+   playground card wrapper) is hovered. Mirrors the production
+   `expertise` animation, whose keyframes live in LensesPage.module.css
+   and aren't loaded on the playground route. */
+.illustration :global(svg[data-anim='expertise'] [data-anim-target='string']) {
+  animation: labCoverBowString 3.2s ease-in-out infinite;
+  animation-play-state: paused;
 }
 
-.gaugeRail {
-  opacity: 0.58;
-}
-
-.gaugeTicks {
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-width: 1.4;
-  opacity: 0.54;
-}
-
-.gaugeProbe {
-  transform-origin: 64px 52px;
-}
-
-.gaugeTarget {
-  transform-origin: 34px 52px;
-}
-
-.cardLabel {
-  font-size: 0.92rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+.illustration :global(svg[data-anim='expertise'] [data-anim-target='arrow']) {
+  animation: labCoverBowArrow 3.2s ease-in-out infinite;
+  animation-play-state: paused;
 }
 
 .panel {
@@ -146,7 +124,7 @@
   border-radius: 18px;
   background: var(--cover-panel-bg);
   box-shadow: 0 16px 44px var(--cover-panel-shadow);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(5px);
 }
 
 .panelHeader,
@@ -163,12 +141,43 @@
 }
 
 .swatches span {
-  width: 18px;
-  height: 18px;
+  flex: 1;
+  max-width: 18px;
+  aspect-ratio: 1;
   border-radius: 6px;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.16) inset,
     0 4px 10px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 180ms ease;
+}
+
+/* The currently-picked color carries a selection ring; the ring moves to
+   a new swatch every few seconds while hovered (driven by JS). */
+.swatches .swatchActive {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset,
+    0 0 0 2px var(--cover-panel-bg),
+    0 0 0 3.5px var(--cover-ink),
+    0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.swatches .swatchPressing {
+  animation: labCoverSwatchPress 480ms ease-in-out;
+}
+
+@keyframes labCoverSwatchPress {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  34% {
+    transform: scale(0.8);
+  }
+
+  64% {
+    transform: scale(1.1);
+  }
 }
 
 .matrix {
@@ -183,104 +192,101 @@
   background: var(--cover-matrix-cell);
 }
 
-.matrix .activeCell {
-  background: var(--cover-accent);
-  box-shadow: 0 0 18px rgba(242, 199, 122, 0.46);
-}
-
-.titleLockup {
-  position: absolute;
-  right: 14px;
-  bottom: 12px;
-  z-index: 2;
-  display: grid;
-  justify-items: end;
-  line-height: 0.86;
-  text-transform: uppercase;
-  text-shadow: 0 8px 24px var(--cover-title-shadow);
-}
-
-.titleLockup span {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  color: var(--cover-title-muted);
-}
-
-.titleLockup strong {
-  font-size: clamp(2.65rem, 9.8vw, 4.35rem);
-  letter-spacing: -0.08em;
+/* A cell "press" — added/removed by JS so random cells light up one at a
+   time, looping while the card is hovered. */
+.matrix .pressing {
+  animation: labCoverPress 600ms ease-in-out;
 }
 
 @media (hover: hover) {
   .cover:hover .workbench,
   :global(.group):hover .workbench {
-    transform: rotate(-2deg) translateY(-2px);
+    transform: rotate(0deg) translateY(-2px);
   }
 
   .cover:hover .previewCard,
   :global(.group):hover .previewCard {
-    transform: translateY(-4px) rotate(-1deg);
+    transform: translateY(-4px) rotate(0deg);
   }
 
-  .cover:hover .activeCell,
-  :global(.group):hover .activeCell {
-    animation: labCoverPulse 820ms ease-out both;
-  }
-
-  .cover:hover .gaugeProbe,
-  :global(.group):hover .gaugeProbe {
-    animation: labCoverGaugeProbe 860ms ease-out both;
-  }
-
-  .cover:hover .gaugeTarget,
-  :global(.group):hover .gaugeTarget {
-    animation: labCoverGaugeTarget 860ms ease-out both;
+  .cover:hover
+    .illustration
+    :global(svg[data-anim='expertise'] [data-anim-target]),
+  :global(.group):hover
+    .illustration
+    :global(svg[data-anim='expertise'] [data-anim-target]) {
+    animation-play-state: running;
   }
 }
 
-@keyframes labCoverPulse {
-  0% {
-    transform: scale(1);
-  }
-
-  45% {
-    transform: scale(1.18);
-  }
-
+@keyframes labCoverPress {
+  0%,
   100% {
     transform: scale(1);
+    background-color: var(--cover-matrix-cell);
+    box-shadow: none;
+  }
+
+  28% {
+    transform: scale(0.9);
+    background-color: var(--cover-accent);
+    box-shadow: 0 0 14px rgba(242, 199, 122, 0.5);
+  }
+
+  52% {
+    transform: scale(1.05);
+    background-color: var(--cover-accent);
+    box-shadow: 0 0 10px rgba(242, 199, 122, 0.32);
   }
 }
 
-@keyframes labCoverGaugeProbe {
-  0% {
-    transform: translateY(-7px);
-  }
-
-  58% {
-    transform: translateY(1px);
-  }
-
+@keyframes labCoverBowString {
+  0%,
+  18%,
+  70%,
   100% {
-    transform: translateY(0);
+    d: path('M 62 18 L 62 50 L 62 82');
+  }
+
+  44%,
+  54% {
+    d: path('M 62 18 L 38 50 L 62 82');
   }
 }
 
-@keyframes labCoverGaugeTarget {
-  0% {
-    opacity: 0.58;
-    transform: scaleX(0.82);
-  }
-
-  58% {
+@keyframes labCoverBowArrow {
+  0%,
+  18% {
+    transform: translateX(0);
     opacity: 1;
-    transform: scaleX(1.04);
   }
 
+  44%,
+  54% {
+    transform: translateX(-24px);
+    opacity: 1;
+  }
+
+  63% {
+    transform: translateX(16px);
+    opacity: 0.95;
+  }
+
+  70% {
+    transform: translateX(28px);
+    opacity: 0;
+  }
+
+  71%,
+  78% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  94%,
   100% {
+    transform: translateX(0);
     opacity: 1;
-    transform: scaleX(1);
   }
 }
 
@@ -289,14 +295,12 @@
     transition: none;
   }
 
-  .cover:hover .activeCell,
+  .matrix .pressing,
+  .swatches .swatchPressing,
   .cover:hover .previewCard,
-  .cover:hover .gaugeProbe,
-  .cover:hover .gaugeTarget,
+  .cover:hover .illustration :global(svg[data-anim='expertise'] [data-anim-target]),
   :global(.group):hover .previewCard,
-  :global(.group):hover .gaugeProbe,
-  :global(.group):hover .gaugeTarget,
-  :global(.group):hover .activeCell {
+  :global(.group):hover .illustration :global(svg[data-anim='expertise'] [data-anim-target]) {
     animation: none;
   }
 }

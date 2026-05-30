@@ -48,7 +48,7 @@ export const playgroundSections: PlaygroundSection[] = [
         url: '/playground/lenses-illustrations',
         description:
           'A visual workbench for testing Lenses SVG illustrations against production, controlled, and randomized card color palettes.',
-        summary: 'Test Lenses illustrations and card palettes',
+        summary: 'Testing ground for lenses illustrations and palettes',
         date: 'May 2026',
         year: '2026',
         gradient: 'from-stone-800 via-amber-700 to-rose-700',
