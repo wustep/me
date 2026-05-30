@@ -142,7 +142,7 @@ export function EquationContent() {
       </Lever>
 
       <Lever
-        name='HUMAN_PROMPT'
+        name='PROMPT'
         tagline='Be specific. Show the model what good looks like.'
       >
         <p>

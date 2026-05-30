@@ -15,7 +15,7 @@ const LEVER_DETAILS: Record<string, { label: string; examples: string }> = {
     label: 'Model',
     examples: 'Opus 4.7 Thinking, Sonnet 12, GPT-7o, Gemini 5.'
   },
-  HUMAN_PROMPT: {
+  PROMPT: {
     label: 'Prompt',
     examples: 'The literal words you type into the box.'
   },
@@ -125,7 +125,7 @@ export function EquationDemo({
           <Op>×</Op>
           <Group>
             <Bracket>(</Bracket>
-            <LeverChip name='HUMAN_PROMPT' interactive={interactive} />
+            <LeverChip name='PROMPT' interactive={interactive} />
             <Op subtle>+</Op>
             <LeverChip name='CONTEXT' interactive={interactive} />
             <Bracket>)</Bracket>

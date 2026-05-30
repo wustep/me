@@ -28,7 +28,7 @@ type Visual =
   | { kind: 'moves' }
   | { kind: 'yoloExtract' }
   | { kind: 'rules' }
-  | { kind: 'audienceQ'; seeds?: string[] }
+  | { kind: 'audienceQ' }
   | { kind: 'treeDemo' }
   | { kind: 'choice' }
   | { kind: 'colleagueDemo' }
@@ -110,7 +110,7 @@ export const SLIDES: Slide[] = [
   {
     eyebrow: 'Gaming culture has a useful phrase',
     title: 'Skill issue.',
-    body: 'Assume, provisionally, the bottleneck is you. It isn’t always true. It’s the assumption that grows you.',
+    body: "It isn't always true, but it pushes you to get the most out of models.",
     note: 'The article’s strongest mindset line. When your character keeps dying, the level isn’t broken — you’re missing something. Sounds flippant; the move underneath is serious.',
     visual: { kind: 'skillIssue' },
     tone: 'dark',
@@ -135,10 +135,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'Q',
     title: 'When the work disappoints you, what do you usually do?',
     note: 'Open-ended — let people share whatever shape this takes for them. Listen for whether they look outward (blame the thing) or inward (what did I miss).',
-    visual: {
-      kind: 'audienceQ',
-      seeds: ['walk away', 'look harder', 'try it differently', 'ask someone']
-    },
+    visual: { kind: 'audienceQ' },
     tone: 'dark'
   },
   {
@@ -179,7 +176,7 @@ export const SLIDES: Slide[] = [
     tone: 'dark'
   },
   {
-    eyebrow: 'Human prompt',
+    eyebrow: 'Prompt',
     title: 'Clarity is everything.',
     note: 'Walk the article comparison: “make this faster” vs “first paint is 2.4s, target under 1s, profile and start with the biggest wins.” Then the don’ts: “be careful,” “think step by step,” politeness padding.',
     visual: { kind: 'promptLever' },
@@ -205,15 +202,7 @@ export const SLIDES: Slide[] = [
     title:
       'When did you realize you had a lever to pull, and outputs got suddenly better?',
     note: 'Open-ended — the "aha" moment. Look for the specific lever they discovered: switching tools, turning thinking on, dropping in a real doc, writing a CLAUDE.md.',
-    visual: {
-      kind: 'audienceQ',
-      seeds: [
-        'the moment it clicked',
-        'the lever you found',
-        'what changed',
-        'what you do now'
-      ]
-    },
+    visual: { kind: 'audienceQ' },
     tone: 'dark'
   },
   {
@@ -245,15 +234,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'Q',
     title: 'What techniques do you keep coming back to?',
     note: "Open-ended — patterns people lean on, not just prompts. Could be openings, recovery moves, things they stole from a teammate, things they've done since forever.",
-    visual: {
-      kind: 'audienceQ',
-      seeds: [
-        'since forever',
-        'stole from a teammate',
-        'from a talk',
-        'by accident'
-      ]
-    },
+    visual: { kind: 'audienceQ' },
     tone: 'dark'
   },
   {
@@ -286,10 +267,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'Q',
     title: 'What’s your mental model for talking to the AI?',
     note: 'Open it up. Listen for metaphors people already use: intern, pair programmer, search engine, compiler, reviewer, weird teammate.',
-    visual: {
-      kind: 'audienceQ',
-      seeds: ['intern', 'pair programmer', 'weird teammate', 'compiler']
-    },
+    visual: { kind: 'audienceQ' },
     tone: 'dark'
   },
   {
@@ -338,15 +316,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'Q',
     title: 'How do you manage many agents at once?',
     note: 'This should pull out practical habits: naming threads, staggered task descriptions, review queues, keeping scope boundaries sharp.',
-    visual: {
-      kind: 'audienceQ',
-      seeds: [
-        'naming threads',
-        'staggered prompts',
-        'review queues',
-        'killing runs gone sideways'
-      ]
-    },
+    visual: { kind: 'audienceQ' },
     tone: 'dark'
   },
   {
@@ -366,8 +336,8 @@ export const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'The next 1200 is wide open',
-    title: 'Go talk to a machine.',
-    note: 'The article’s actual closing line. End on that.',
+    title: 'Keep climbing.',
+    note: 'Final card. Close with a direct invitation to practice.',
     visual: { kind: 'finalCard' },
     tone: 'dark',
     layout: 'quote'
@@ -771,7 +741,7 @@ function VisualBlock({ slide }: { slide: Slide }) {
     case 'rules':
       return <RulesVisual />
     case 'audienceQ':
-      return <AudienceQuestionVisual seeds={slide.visual.seeds} />
+      return <AudienceQuestionVisual />
     case 'treeDemo':
       return <ArticleTreeVisual />
     case 'choice':
@@ -960,12 +930,10 @@ function ForkVisual() {
       <section className={styles.forkClosed}>
         <span>closed-minded</span>
         <strong>“the model is bad”</strong>
-        <p>comforting, easy, final</p>
       </section>
       <section className={styles.forkOpen}>
         <span>open-minded</span>
         <strong>“what did I miss?”</strong>
-        <p>the failure becomes a rep</p>
       </section>
     </div>
   )
@@ -1097,12 +1065,12 @@ type EquationLever = 'tool' | 'model' | 'effort' | 'prompt' | 'context'
  */
 const LEVER_TO_CHIP: Record<
   EquationLever,
-  'TOOL' | 'MODEL' | 'HUMAN_PROMPT' | 'CONTEXT'
+  'TOOL' | 'MODEL' | 'PROMPT' | 'CONTEXT'
 > = {
   tool: 'TOOL',
   model: 'MODEL',
   effort: 'MODEL',
-  prompt: 'HUMAN_PROMPT',
+  prompt: 'PROMPT',
   context: 'CONTEXT'
 }
 
@@ -1122,21 +1090,16 @@ function ToolLeverVisual() {
         <div className={styles.toolLadderRow}>
           <span className={styles.toolLadderTier}>then</span>
           <span className={styles.toolLadderName}>VSCode + Copilot</span>
-          <span className={styles.toolLadderNote}>autocomplete bolted on</span>
         </div>
         <div className={`${styles.toolLadderRow} ${styles.toolLadderRowNow}`}>
           <span className={styles.toolLadderTier}>now</span>
           <span className={styles.toolLadderName}>
             Cursor · Claude Code · Codex
           </span>
-          <span className={styles.toolLadderNote}>
-            agent-native: better context slicing, long-running tasks,
-            project-aware prompts
-          </span>
         </div>
       </div>
       <p className={styles.leverFootnote}>
-        Try one for a week. If your day-to-day doesn’t get easier, go back.
+        Make sure you're on the latest versions.
       </p>
     </div>
   )
@@ -1247,8 +1210,8 @@ function ContextLeverVisual() {
   const items: Array<{ label: string; note: string }> = [
     { label: 'CLAUDE.md', note: 'project rules and conventions' },
     { label: 'the design doc', note: 'reference material' },
-    { label: 'the failing trace', note: 'what is actually happening' },
-    { label: 'screenshots', note: 'a sketch beats ten paragraphs' },
+    { label: 'stacktrace', note: 'what is actually happening' },
+    { label: 'screenshots', note: 'help the model see more clearly' },
     { label: 'MCPs', note: 'wire into your actual systems' }
   ]
   return (
@@ -1410,18 +1373,11 @@ function YoloExtractVisual() {
   )
 }
 
-function AudienceQuestionVisual({ seeds }: { seeds?: string[] }) {
+function AudienceQuestionVisual() {
   return (
     <div className={styles.audienceQuestion}>
       <span className={styles.audienceQuestionFrame} aria-hidden='true' />
       <strong>Q</strong>
-      {seeds && seeds.length > 0 && (
-        <ul className={styles.audienceQuestionSeeds} aria-hidden='true'>
-          {seeds.map((seed) => (
-            <li key={seed}>{seed}</li>
-          ))}
-        </ul>
-      )}
     </div>
   )
 }
@@ -2067,7 +2023,7 @@ function CloseGlyphElo() {
         strokeWidth='1.5'
         strokeLinecap='round'
       />
-      <circle cx='40' cy='12' r='3' fill='currentColor' />
+      <circle cx='40' cy='10.3' r='3' fill='currentColor' />
       <circle cx='110' cy='34' r='3' fill='currentColor' />
     </svg>
   )
@@ -2076,13 +2032,17 @@ function CloseGlyphElo() {
 function CloseGlyphEquation() {
   return (
     <div className={styles.closeEquation}>
-      <span>TOOL</span>
-      <b>+</b>
-      <span>MODEL</span>
+      <em className={styles.closeEquationGroup}>
+        <span>TOOL</span>
+        <b>+</b>
+        <span>MODEL</span>
+      </em>
       <b>×</b>
-      <span>PROMPT</span>
-      <b>+</b>
-      <span className={styles.closeEquationContext}>CONTEXT</span>
+      <em className={styles.closeEquationGroup}>
+        <span>PROMPT</span>
+        <b>+</b>
+        <span>CONTEXT</span>
+      </em>
     </div>
   )
 }
