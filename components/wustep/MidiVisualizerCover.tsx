@@ -1,38 +1,76 @@
+'use client'
+
+import { type CSSProperties,useEffect, useRef, useState } from 'react'
+
 import styles from './MidiVisualizerCover.module.css'
 
-// Two-octave keyboard starting at C. E major chord = E, G#, B.
-// White key indices: 0=C, 1=D, 2=E, 3=F, 4=G, 5=A, 6=B, 7=C, 8=D, 9=E
-// Black key offsets — "right edge of white key N":
-//   0→C#, 1→D#, 3→F#, 4→G#, 5→A#, 7→C#, 8→D#
-const WHITE_KEYS = 10
-const PRESSED_WHITES = new Set([2, 6])
-// Black keys (in order so :nth-of-type works) and which is pressed.
-const BLACK_KEYS = [
-  { offset: 0, pressed: false }, // C#
-  { offset: 1, pressed: false }, // D#
-  { offset: 3, pressed: false }, // F#
-  { offset: 4, pressed: true }, // G# ← chord note
-  { offset: 5, pressed: false }, // A#
-  { offset: 7, pressed: false }, // C#
-  { offset: 8, pressed: false } // D#
-]
+// The board fits roughly one white key per this many px of cover width, so wider
+// covers show more (and thinner) keys/notes instead of fat ones.
+const TARGET_KEY_PX = 28
+const MIN_WHITE_KEYS = 8
+const MAX_WHITE_KEYS = 28
 
-// Bars positioned over the chord notes. `whiteIdx` is for white keys; for the
-// black bar we use `blackOffset` (matches BLACK_KEYS.offset).
-const BARS = [
-  { key: 'E', whiteIdx: 2, accent: false },
-  { key: 'G#', blackOffset: 4, accent: true },
-  { key: 'B', whiteIdx: 6, accent: false }
-]
+// Within an octave (C D E F G A B = white indices 0–6), a black key sits on the
+// right edge of these positions. None follow E (2) or B (6).
+const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
+
+// Build a keyboard with `whiteKeys` keys and an E-major chord (E, G#, B)
+// highlighted on a near-central octave, so the rising notes stay centered
+// regardless of how many keys fit.
+function buildKeyboard(whiteKeys: number) {
+  let base = Math.round((whiteKeys / 2 - 4) / 7) * 7
+  base = Math.max(0, Math.min(base, whiteKeys - 7))
+
+  const eIdx = base + 2
+  const bIdx = base + 6
+  const gSharpOffset = base + 4 // black key on the right edge of G
+
+  const blackKeys: { offset: number; pressed: boolean }[] = []
+  for (let i = 0; i < whiteKeys - 1; i++) {
+    if (BLACK_AFTER.has(i % 7)) {
+      blackKeys.push({ offset: i, pressed: i === gSharpOffset })
+    }
+  }
+
+  // Bars sit over the chord notes. `whiteIdx` is for white keys; the black bar
+  // uses `blackOffset` (matches a black key's offset). Order = E, G#, B so the
+  // per-bar heights in CSS (:nth-child) line up.
+  const bars = [
+    { key: 'E', whiteIdx: eIdx, accent: false },
+    { key: 'G#', blackOffset: gSharpOffset, accent: true },
+    { key: 'B', whiteIdx: bIdx, accent: false }
+  ]
+
+  return { pressedWhites: new Set([eIdx, bIdx]), blackKeys, bars }
+}
 
 export function MidiVisualizerCover() {
-  const whiteWidthPct = 100 / WHITE_KEYS
+  const ref = useRef<HTMLDivElement>(null)
+  const [whiteKeys, setWhiteKeys] = useState(14)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const update = () => {
+      const w = el.clientWidth
+      if (!w) return
+      const n = Math.round(w / TARGET_KEY_PX)
+      setWhiteKeys(Math.max(MIN_WHITE_KEYS, Math.min(MAX_WHITE_KEYS, n)))
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const { pressedWhites, blackKeys, bars } = buildKeyboard(whiteKeys)
+  const whiteWidthPct = 100 / whiteKeys
   const blackWidthPct = whiteWidthPct * 0.6
 
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={ref}>
       <div className={styles.bars}>
-        {BARS.map((bar, i) => {
+        {bars.map((bar, i) => {
           const isBlack = bar.blackOffset != null
           // Bar width matches key width exactly so each bar reads as the
           // key's note rising up.
@@ -47,27 +85,32 @@ export function MidiVisualizerCover() {
               className={[styles.bar, bar.accent ? styles.barAccent : ''].join(
                 ' '
               )}
-              style={{
-                left: `${left}%`,
-                width: `${barWidth}%`
-              }}
+              style={
+                {
+                  left: `${left}%`,
+                  width: `${barWidth}%`,
+                  // Corner radius in cqw (= % of cover width); ~1/4 the bar
+                  // width for a gently rounded note rather than a full pill.
+                  '--r': `${barWidth / 4}cqw`
+                } as CSSProperties
+              }
             />
           )
         })}
       </div>
       <div className={styles.piano}>
         <div className={styles.whiteRow}>
-          {Array.from({ length: WHITE_KEYS }).map((_, i) => (
+          {Array.from({ length: whiteKeys }).map((_, i) => (
             <div
               key={i}
               className={[
                 styles.white,
-                PRESSED_WHITES.has(i) ? styles.whitePressed : ''
+                pressedWhites.has(i) ? styles.whitePressed : ''
               ].join(' ')}
             />
           ))}
         </div>
-        {BLACK_KEYS.map((bk, i) => {
+        {blackKeys.map((bk, i) => {
           const left = (bk.offset + 1) * whiteWidthPct - blackWidthPct / 2
           return (
             <div

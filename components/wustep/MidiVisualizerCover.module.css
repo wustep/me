@@ -3,17 +3,14 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(
-      ellipse 90% 60% at 50% -10%,
-      rgba(0, 212, 177, 0.18) 0%,
-      transparent 60%
-    ),
-    linear-gradient(180deg, #0d1413 0%, #080a0a 100%);
+  background: #000;
   isolation: isolate;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  /* Lets bars size their corner radius in cqw (1cqw = 1% of cover width), so
+     --r can be set to exactly half a bar's width regardless of viewport. */
+  container-type: inline-size;
 }
 
 /* ---------- Bars (rising notes) ---------- */
@@ -35,8 +32,10 @@
   transform-origin: bottom;
   transform: scaleY(0);
   opacity: 0;
-  /* Rounded at top while held; animation morphs to fully rounded after release. */
-  border-radius: 999px 999px 0 0;
+  /* --r is half the bar's width (set inline as `${barWidth / 2}cqw`), i.e. the
+     exact corner radius for a pill end. Rounded top, flat bottom while rising;
+     the bottom rounds into a full pill only at the very end (see @keyframes). */
+  border-radius: var(--r, 999px) var(--r, 999px) 0 0;
   will-change: transform, opacity, border-radius;
 }
 
@@ -76,28 +75,29 @@
   }
 }
 
-/* Phase 1 (0%–35%): note is pressed — bar grows, square corners.
-   Phase 2 (35%–100%): note ended — bar travels up, morphs to pill. */
-/* Two phases at constant velocity:
-   0%–35%   = key held: bar grows in place at constant rate (scaleY 0→1)
-   35%–100% = key released: bar travels up at constant rate (translateY 0→-115%)
-   Border-radius snaps to fully rounded right at release. */
+/* Two phases, split so the top edge moves at one constant speed across both:
+   0%–46%   = key held: bar grows in place (scaleY 0→1), top rises by 1 height
+   46%–100% = key released: bar travels up (translateY 0→-115%)
+   The 46/54 split matches the per-phase velocity (1H over 46% ≈ 1.15H over 54%),
+   so the note rises evenly instead of growing fast then drifting up.
+   Bottom is flat while the key is held, then rounds immediately the moment the
+   note lifts off (46%→48%) and stays rounded as it floats up and fades. */
 @keyframes rise {
   0% {
     transform: translateY(0%) scaleY(0);
     opacity: 0;
-    border-radius: 999px 999px 0 0;
+    border-radius: var(--r) var(--r) 0 0;
   }
   8% {
     opacity: 1;
   }
-  35% {
+  46% {
     transform: translateY(0%) scaleY(1);
     opacity: 1;
-    border-radius: 999px 999px 0 0;
+    border-radius: var(--r) var(--r) 0 0;
   }
-  36% {
-    border-radius: 999px;
+  48% {
+    border-radius: var(--r);
   }
   90% {
     opacity: 1;
@@ -105,13 +105,13 @@
   100% {
     transform: translateY(-115%) scaleY(1);
     opacity: 0;
-    border-radius: 999px;
+    border-radius: var(--r);
   }
 }
 
 /* Pressed key sync — fully pressed during phase 1, released during phase 2 */
 @keyframes whiteKeyPress {
-  0%, 35% {
+  0%, 46% {
     background: linear-gradient(180deg, #00d4b1 0%, #33ffe0 100%);
     box-shadow:
       inset 0 8px 14px rgba(0, 0, 0, 0.18),
@@ -119,7 +119,7 @@
     border-bottom-width: 1px;
     transform: translateY(1px);
   }
-  45%, 100% {
+  56%, 100% {
     background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
     box-shadow: none;
     border-bottom-width: 3px;
@@ -127,18 +127,19 @@
   }
 }
 
+/* No translateY here: nudging a black key down exposes a sliver of the white
+   key behind it at the top, which reads as a white gap. The press is conveyed
+   by the teal fill and glow instead, with the key's top staying anchored. */
 @keyframes blackKeyPress {
-  0%, 35% {
+  0%, 46% {
     background: linear-gradient(180deg, #018470 0%, #01483e 100%);
     box-shadow:
       inset 0 -3px 6px rgba(0, 0, 0, 0.5),
       0 0 12px rgba(0, 212, 177, 0.45);
-    transform: translateY(1px);
   }
-  45%, 100% {
+  56%, 100% {
     background: linear-gradient(180deg, #2a2a2a 0%, #444 100%);
     box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.55);
-    transform: translateY(0);
   }
 }
 
@@ -191,7 +192,7 @@
     animation: none !important;
     opacity: 0.85;
     transform: translateY(0%) scaleY(1);
-    border-radius: 0;
+    border-radius: var(--r) var(--r) 0 0;
   }
   .whitePressed,
   .blackPressed {
