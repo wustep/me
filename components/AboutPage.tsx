@@ -321,7 +321,7 @@ export function AboutPage() {
               </a>
             </Tooltip>
 
-            <Tooltip label='An interactive 3D bookshelf of my reading list'>
+            <Tooltip label='An interactive bookshelf of my reading list'>
               <a
                 href='/playground/bookshelf'
                 className={`${styles.projectCard} ${styles.bookshelf}`}
