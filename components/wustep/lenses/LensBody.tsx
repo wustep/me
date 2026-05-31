@@ -4,13 +4,14 @@ import * as React from 'react'
  * LensBody — renders a lens body authored as markdown in `lenses.md`.
  *
  *   Supports the small subset the essays use: paragraphs separated by
- *   blank lines, *emphasis*, and [text](href) links. The content is
- *   author-controlled (compiled from `lenses.md` at build time via
- *   `pnpm lenses:sync`), so there's no untrusted-HTML surface here —
- *   we build real React nodes rather than dangerouslySetInnerHTML.
+ *   blank lines, *emphasis* / _emphasis_ (both render as <em>), and
+ *   [text](href) links. The content is author-controlled (compiled from
+ *   `lenses.md` at build time via `pnpm lenses:sync`), so there's no
+ *   untrusted-HTML surface here — we build real React nodes rather than
+ *   dangerouslySetInnerHTML.
  */
 
-const INLINE = /\*([^*]+)\*|\[([^\]]+)\]\(([^)]+)\)/g
+const INLINE = /\*([^*]+)\*|_([^_]+)_|\[([^\]]+)\]\(([^)]+)\)/g
 
 function renderInline(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = []
@@ -20,10 +21,10 @@ function renderInline(text: string): React.ReactNode[] {
   INLINE.lastIndex = 0
   while ((m = INLINE.exec(text))) {
     if (m.index > last) nodes.push(text.slice(last, m.index))
-    if (m[1] != null) {
-      nodes.push(<em key={key++}>{m[1]}</em>)
+    if (m[1] != null || m[2] != null) {
+      nodes.push(<em key={key++}>{m[1] ?? m[2]}</em>)
     } else {
-      const href = m[3]!
+      const href = m[4]!
       const external = /^https?:\/\//.test(href)
       nodes.push(
         <a
@@ -32,7 +33,7 @@ function renderInline(text: string): React.ReactNode[] {
           target={external ? '_blank' : undefined}
           rel={external ? 'noopener noreferrer' : undefined}
         >
-          {m[2]}
+          {m[3]}
         </a>
       )
     }
