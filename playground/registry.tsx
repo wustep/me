@@ -7,6 +7,7 @@ import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrati
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 import { SpotItCover } from '@/components/wustep/SpotItCover'
+import { StarrySequencerCover } from '@/components/wustep/StarrySequencerCover'
 
 export type PlaygroundEntry = {
   title: string
@@ -147,7 +148,8 @@ export const playgroundSections: PlaygroundSection[] = [
         article: '/starry-sequencer',
         source: 'https://github.com/wustep/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
-        image: '/playground/covers/starry-sequencer.png'
+        image: '/playground/covers/starry-sequencer-poster.webp',
+        CoverComponent: StarrySequencerCover
       },
       {
         title: 'TBDBITL',

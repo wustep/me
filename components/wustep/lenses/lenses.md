@@ -26,7 +26,7 @@
 
 id: agency
 category: Philosophy
-tagline: Most ceilings are self-imposed.
+tagline: Ceilings are self-imposed.
 bg: #B83D31
 fg: #F6EAD8
 accent: #F3C35F
@@ -34,11 +34,11 @@ illustration: agency
 related: momentum, narrative, incentives
 reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.com/p/how-to-be-more-agentic
 
-A surprising amount of what feels like a wall turns out to be a social convention, an unexamined assumption, or a story the person carrying it tells themselves. Real walls exist. They’re rarer than they feel, and most ceilings give if you push them on purpose.
+What feels like an impenetrable wall is often a social convention, an unexamined assumption, or a story the person carrying it tells themselves. Real walls exist. They’re rarer than they feel, and most ceilings give if you push them on purpose.
 
-Adopt the frame and the question stops being *am I allowed to do this?* It becomes *who, specifically, is stopping me — and what would actually happen if I tried?* The people who change their lives are rarely the most talented. They’re the ones least willing to treat the default as the limit.
+Adopt the frame and the question stops being _am I allowed to do this?_ It becomes _who, specifically, is stopping me — and what would actually happen if I tried?_ The people who change their lives are rarely the most talented. They’re the ones least willing to treat the default as the limit.
 
-The other half of agency is the cost of restraint. Every quiet *I shouldn’t* compounds. You don’t get the decision back later in a different form; you get a smaller version of the life you would have lived. Pushing is a habit, and so is not pushing.
+The other half of agency is the cost of restraint. Every quiet _I shouldn’t_ compounds. You don’t get the decision back later in a different form; you get a smaller version of the life you would have lived. Pushing is a habit, and so is not pushing.
 
 Lean too hard on this and it curdles into contempt for structural reality — some walls really are stone, and pretending otherwise hurts people. But walls are easier to find than doors, so the standing error is to under-try.
 
@@ -55,7 +55,7 @@ related: osmosis, energy, headspace
 
 Attention is the most concentrated form of energy a person spends, and it’s spent constantly — on phones, conversations, worries, screens, faces, ideas. Whatever you keep looking at trains the rest of you: taste, reactions, sense of what counts as normal, sense of what’s even possible.
 
-The useful question isn’t *what should I do with my time?* The useful question is *what is allowed to occupy my attention, and what isn’t?* Time gets spent by default. Attention gets stolen.
+The useful question isn’t _what should I do with my time?_ The useful question is _what is allowed to occupy my attention, and what isn’t?_ Time gets spent by default. Attention gets stolen.
 
 Most regrets, on inspection, trace back to attention more than effort. The wrong things were given the air, and the right ones starved for lack of it. You can recover lost hours. You can’t easily recover the version of yourself that would have grown if you’d looked elsewhere.
 
@@ -74,7 +74,7 @@ related: headspace, narrative, interface
 
 Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted.
 
-Held up against most disagreements, “they’re wrong” and “they don’t care” almost always rephrase as *we are not in the same conversation*. The fix is rarely a stronger argument. The fix is a slower, more patient transfer of model — what you mean by the words, what you fear, what you actually want.
+Held up against most disagreements, “they’re wrong” and “they don’t care” almost always rephrase as _we are not in the same conversation_. The fix is rarely a stronger argument. The fix is a slower, more patient transfer of model — what you mean by the words, what you fear, what you actually want.
 
 Practically, this raises the price of vague language. “Soon, ” “fine,” “I’m not mad” — these are the sentences that build the gap. Specificity is expensive in the moment and cheap over a year.
 
@@ -93,7 +93,7 @@ related: minimalism, interface, energy
 
 Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards, four-bar phrases — every one of them a trellis the work climbs.
 
-An overwhelming choice is often a missing constraint. The blank page paralyzes. The assignment generates. “Build anything” yields nothing in particular; *build this in a week with these three tools* runs as a generative engine.
+An overwhelming choice is often a missing constraint. The blank page paralyzes. The assignment generates. “Build anything” yields nothing in particular; _build this in a week with these three tools_ runs as a generative engine.
 
 The interesting move is choosing constraints on purpose. Self-imposed deadlines, fixed budgets, a smaller toolkit than you can afford — these don’t shrink you. They give your taste somewhere to push against. Most ambitious work happens inside walls that someone chose to build.
 
@@ -112,9 +112,9 @@ related: energy, incentives, mimetics
 reading: The Molecule of More — Daniel Z. Lieberman & Michael E. Long | https://amzn.to/4283g1X
 quote: From dopamine’s point of view, having things is uninteresting. It’s only getting things that matters. If you live under a bridge, dopamine makes you want a tent. If you live in a tent, dopamine makes you want a house. If you live in the most expensive mansion in the world, dopamine makes you want a castle on the moon. Dopamine has no standard for good, and seeks no finish line. The dopamine circuits in the brain can be stimulated only by the possibility of whatever is shiny and new, never mind how perfect things are at the moment. The dopamine motto is “More.”
 
-A lot of human behavior makes more sense as *internal-state regulation* than as goal-pursuit. People are seeking novelty, reward, relief, control, connection, or a sense of meaning — and the brain’s dopamine system is orchestrating most of it underneath the conscious story.
+A lot of human behavior makes more sense as _internal-state regulation_ than as goal-pursuit. People are seeking novelty, reward, relief, control, connection, or a sense of meaning — and the brain’s dopamine system is orchestrating most of it underneath the conscious story.
 
-Look at it this way and scrolling, snacking, gambling, refreshing email, picking fights, falling in love, doomscrolling, and starting a new project all start to resemble flavors of the same loop: *I felt off; this promised to make it less off.* The reach for the phone is the same reach as the reach for the fridge or the breakup text.
+Look at it this way and scrolling, snacking, gambling, refreshing email, picking fights, falling in love, doomscrolling, and starting a new project all start to resemble flavors of the same loop: _I felt off; this promised to make it less off._ The reach for the phone is the same reach as the reach for the fridge or the breakup text.
 
 Shame doesn’t fix it. Shame is itself a state, and a costly one — it hides the loop without changing it. The real move is upstream: change what’s available to reach for, what the room rewards, what the day looks like before the urge arrives.
 
@@ -133,7 +133,7 @@ related: headspace, interface, constraint
 
 Motivation isn’t purely moral. It’s biochemical, environmental, social, and narrative. Sleep, food, light, exercise, recent wins, who you saw yesterday — all of it rewrites what’s possible today. Willpower runs on a battery, and the battery isn’t infinite.
 
-Apply the lens and “why am I being lazy?” stops being the right question. The right one is *where in the day did the fuel run out, and what would refill it?* Most discipline failures are battery failures wearing a moral costume.
+Apply the lens and “why am I being lazy?” stops being the right question. The right one is _where in the day did the fuel run out, and what would refill it?_ Most discipline failures are battery failures wearing a moral costume.
 
 This changes what counts as serious work. Going to bed on time is serious work. Eating before the meeting is serious work. The walk after lunch isn’t a break from the project; it’s part of how the project gets done. Designing around energy beats negotiating with it.
 
@@ -150,11 +150,11 @@ accent: #F0A86B
 illustration: epistemic
 related: legibility, systems, narrative
 
-Beliefs are maps for action. The question is not only *is this true?* but *what does believing this help me predict, build, notice, or become?* A belief that pays out in better decisions earns its place. One that doesn’t — however impressive — is a souvenir.
+Beliefs are maps for action. The question is not only _is this true?_ but _what does believing this help me predict, build, notice, or become?_ A belief that pays out in better decisions earns its place. One that doesn’t — however impressive — is a souvenir.
 
-Carry it around and you become less precious about being correct, more interested in being *useful-correct*. Two beliefs can be equally defensible; the one that gives you traction in the world is the one to keep on the workbench. The rest go in a drawer, not the trash — beliefs that are useless today are sometimes load-bearing tomorrow.
+Carry it around and you become less precious about being correct, more interested in being _useful-correct_. Two beliefs can be equally defensible; the one that gives you traction in the world is the one to keep on the workbench. The rest go in a drawer, not the trash — beliefs that are useless today are sometimes load-bearing tomorrow.
 
-It also reframes disagreement. You stop trying to win at *true* and start asking which model lets the other person do their next thing better. Sometimes that’s yours. Often it isn’t.
+It also reframes disagreement. You stop trying to win at _true_ and start asking which model lets the other person do their next thing better. Sometimes that’s yours. Often it isn’t.
 
 Pragmatism without honesty curdles into self-serving belief — you keep what flatters and discard what doesn’t, and call it traction. But truth without traction is theology, and most of us already have plenty of that.
 
@@ -188,13 +188,13 @@ accent: #EDAC55
 illustration: expertise
 related: taste, legibility, primitives
 
-Every skill is a long curve, and people sit all over it. Obvious for cooking or chess — but it’s also true for the things we don’t usually call skills: patience, listening, taste, charisma, attention, knowing when to stop. The world becomes much more legible the moment you treat these as *practiced abilities* rather than fixed traits.
+Every skill is a long curve, and people sit all over it. Obvious for cooking or chess — but it’s also true for the things we don’t usually call skills: patience, listening, taste, charisma, attention, knowing when to stop. The world becomes much more legible the moment you treat these as _practiced abilities_ rather than fixed traits.
 
-Used as a frame, “I’m not good at conflict” rephrases as *I’m on the early part of that curve.* The annoying coworker becomes someone with a different skill mix, not a different species. The genuinely impressive person stops being a wonder and becomes a question: *which curve are they very far along, and how did they get there?*
+Used as a frame, “I’m not good at conflict” rephrases as _I’m on the early part of that curve._ The annoying coworker becomes someone with a different skill mix, not a different species. The genuinely impressive person stops being a wonder and becomes a question: _which curve are they very far along, and how did they get there?_
 
 It also reorders who you take seriously. The loudest person in a room is often early-stage at the curve they keep talking about — confidence climbs faster than competence at the start. The quiet ones, ten years in, give you the real information if you ask.
 
-Treating every quality as a skill flattens temperament and circumstance, and some abilities are genuinely gated by talent. But *trait* as the default explanation for behavior is one of the most common ways to misread a person.
+Treating every quality as a skill flattens temperament and circumstance, and some abilities are genuinely gated by talent. But _trait_ as the default explanation for behavior is one of the most common ways to misread a person.
 
 # Game theory
 
@@ -207,9 +207,9 @@ accent: #F0B85F
 illustration: game-theory
 related: incentives, utility, interface
 
-Life, products, and organizations get shaped by their rules, rewards, feedback loops, and affordances. The best of them make the right behavior *feel playable* — clear objective, visible progress, fair odds, meaningful choice at every turn.
+Life, products, and organizations get shaped by their rules, rewards, feedback loops, and affordances. The best of them make the right behavior _feel playable_ — clear objective, visible progress, fair odds, meaningful choice at every turn.
 
-Take the frame and you stop asking *how do I make people behave?* You start asking *what game am I putting them in?* Bad games punish the right move and reward the easy one. Good games line up effort, skill, and reward so that doing the right thing is also the most engaging thing.
+Take the frame and you stop asking _how do I make people behave?_ You start asking _what game am I putting them in?_ Bad games punish the right move and reward the easy one. Good games line up effort, skill, and reward so that doing the right thing is also the most engaging thing.
 
 This is the real work of good managers, teachers, and product designers. They’re rarely heroic motivators. They’re game-makers — adjusting the payoff matrix until the move they want is also the move people want to make.
 
@@ -229,7 +229,7 @@ reading: Headspace | /headspace
 
 Every person is operating from an internal world-model, an emotional state, an identity constraint, and a salience landscape that determines what they notice. To understand behavior, enter the headspace first.
 
-Carry the lens into a confusing interaction and “why are they doing this?” becomes *what would a person have to believe, feel, and be afraid of* for this to be the obvious move? Most disagreements aren’t about facts. They’re about which facts feel real, urgent, and self-relevant.
+Carry the lens into a confusing interaction and “why are they doing this?” becomes _what would a person have to believe, feel, and be afraid of_ for this to be the obvious move? Most disagreements aren’t about facts. They’re about which facts feel real, urgent, and self-relevant.
 
 The skill is provisional empathy — building someone’s headspace well enough to predict their next sentence, without committing to live there. You don’t have to agree with the model. You do have to be able to run it.
 
@@ -249,7 +249,7 @@ reading: Atomic Habits — James Clear | https://amzn.to/4w6JdP7
 
 Identity is a construct, not a fact. The story you tell about who you are — your nature, your limits, the kind of person you are and aren’t — is a pattern in your headspace, not a property of the universe. And like any pattern, it can be examined, loosened, and rewritten.
 
-Held up to behavior, identity turns out to be a stronger engine than goals. *I’m the kind of person who…* outperforms *I’m trying to…* over almost any time horizon. Habits stick when they’re downstream of who you think you are, and fall apart when they’re not.
+Held up to behavior, identity turns out to be a stronger engine than goals. _I’m the kind of person who…_ outperforms _I’m trying to…_ over almost any time horizon. Habits stick when they’re downstream of who you think you are, and fall apart when they’re not.
 
 Loosening the grip on a fixed self — sometimes called ego death — opens up headspaces you previously couldn’t inhabit. It also makes you more resilient to challenge: fewer things land as attacks on who you are when “who you are” isn’t a thing you’re defending.
 
@@ -266,9 +266,9 @@ accent: #C73B2D
 illustration: incentives
 related: utility, game-theory, probabilistic
 
-Charlie Munger: *show me the incentive and I’ll show you the outcome.* People, organizations, and entire systems drift toward whatever they get paid — in money, attention, or social approval — to do. The drift is rarely visible while it’s happening.
+Charlie Munger: _show me the incentive and I’ll show you the outcome._ People, organizations, and entire systems drift toward whatever they get paid — in money, attention, or social approval — to do. The drift is rarely visible while it’s happening.
 
-Used as a frame, “why does this keep happening?” almost always resolves into *who benefits when it does?* Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. The cure is rarely exhortation; the cure is rewiring the rewards.
+Used as a frame, “why does this keep happening?” almost always resolves into _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. The cure is rarely exhortation; the cure is rewiring the rewards.
 
 It also predicts where the gaps will be. A team measured on tickets closed will close tickets. A team measured on customer love will hear from customers. Whatever you don’t put on the scoreboard gets cut, slowly and without anyone deciding to cut it.
 
@@ -307,9 +307,9 @@ related: communication, primitives, epistemic
 
 A thing that can’t be named, explained, or made visible is hard to improve. Writing, diagrams, dashboards, frameworks — these convert fog into handles. They turn a vague unease into a problem you can point at.
 
-Looked at this way, the act of articulation *is* half the work. The team that writes its values down lives them more clearly than the team that just “has them.” The bug you can reproduce is already half-fixed. The dashboard reshapes the decisions even when no one is looking at it.
+Looked at this way, the act of articulation _is_ half the work. The team that writes its values down lives them more clearly than the team that just “has them.” The bug you can reproduce is already half-fixed. The dashboard reshapes the decisions even when no one is looking at it.
 
-Legibility is also how others come to know you. Reputation, credibility, and rewards accrue to what is *visible* — people can only judge, trust, or champion what they can actually see. The unshowy excellent engineer and the loud mediocre one often trade places in the org’s memory because one shipped legibility and the other did not. Making your work, your reasoning, and your standards readable to others is how people back you in the first place. Calling it self-promotion misses what’s actually being exchanged.
+Legibility is also how others come to know you. Reputation, credibility, and rewards accrue to what is _visible_ — people can only judge, trust, or champion what they can actually see. The unshowy excellent engineer and the loud mediocre one often trade places in the org’s memory because one shipped legibility and the other did not. Making your work, your reasoning, and your standards readable to others is how people back you in the first place. Calling it self-promotion misses what’s actually being exchanged.
 
 Legibility can flatten what matters into what fits in a chart, and metrics get gamed the moment they start to count. But darkness is rarely an upgrade.
 
@@ -326,9 +326,9 @@ related: narrative, osmosis, status
 
 Ideas, beliefs, formats, and aesthetics compete to spread, the way organisms compete to reproduce. The ones you see most owe their visibility to transmissibility, not truth. Catchy beats correct; sticky beats subtle; shareable beats nuanced, almost every time.
 
-Hold the lens up to a viral take and the question stops being *is this idea right?* It becomes *why is this winning right now, and what does it offer the people carrying it?* Most movements, fashions, and opinions are legible this way long before they make sense any other way.
+Hold the lens up to a viral take and the question stops being _is this idea right?_ It becomes _why is this winning right now, and what does it offer the people carrying it?_ Most movements, fashions, and opinions are legible this way long before they make sense any other way.
 
-It also clarifies your own taste. A surprising amount of what you *believe* is what your information diet kept feeding you, slightly adapted. Notice the meme structure under an opinion and you can decide, separately, whether you still want to hold it.
+It also clarifies your own taste. A surprising amount of what you _believe_ is what your information diet kept feeding you, slightly adapted. Notice the meme structure under an opinion and you can decide, separately, whether you still want to hold it.
 
 Not every popular idea is empty, and not every obscure one is profound — sometimes the mainstream is right and the contrarian is simply lonely. But mistake virality for validity and you become a passenger in your own beliefs.
 
@@ -343,7 +343,7 @@ accent: #B83D31
 illustration: minimalism
 related: constraint, primitives, interface
 
-Dieter Rams put it in three words: *“Weniger, aber besser”* — less, but better. Value comes from what remains after you remove the unnecessary. Not aesthetic austerity for its own sake, but a discipline of asking *what is the smallest thing that still does the job?* — and then making that thing exceptional.
+Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Value comes from what remains after you remove the unnecessary. Not aesthetic austerity for its own sake, but a discipline of asking _what is the smallest thing that still does the job?_ — and then making that thing exceptional.
 
 Carry the discipline and complexity reveals itself as a tax. Every feature, possession, obligation, abstraction, and relationship has a hidden cost — cognitive, maintenance, emotional, financial. The cost is rarely visible at the moment of acquisition; it shows up later, as friction, clutter, and the slow erosion of attention. Subtraction is creative work, and often the harder half of it.
 
@@ -364,11 +364,11 @@ related: agency, systems, taste
 
 Most people think about effort as a single push: how hard, in what direction, right now. Momentum says that what you can do today depends on what you’ve been doing. Effort compounds into mass — trust, reputation, shipping cadence, a team that expects to win. That mass is what makes the hard moves possible later. The unpopular call, the risky bet, the honest conversation — each one lands more easily when you’ve built the credibility to spend.
 
-Apply the frame and the question is rarely *should I do this now?* It’s *am I building the momentum I’ll need, and spending it on the right things?* Early wins compound into permission. Consistency compounds into the room. Both look like overhead until you need them.
+Apply the frame and the question is rarely _should I do this now?_ It’s _am I building the momentum I’ll need, and spending it on the right things?_ Early wins compound into permission. Consistency compounds into the room. Both look like overhead until you need them.
 
 You also rarely stop momentum head-on. You nudge its vector. A small push on something already moving beats a big push against something that’s going to win regardless. Most strategic wins, in a career or in a company, look like that — a small redirect, applied early, while the mass was still moving.
 
-The lens romanticizes motion and underrates the deliberate halt — sometimes the highest-value move is stopping a thing that shouldn’t continue, and *we have momentum here* is how bad projects survive. It also flatters incumbents, who confuse inherited mass with earned mass. But ignoring momentum is how smart people keep making technically-correct moves that don’t land, because they never built the standing to make them work.
+The lens romanticizes motion and underrates the deliberate halt — sometimes the highest-value move is stopping a thing that shouldn’t continue, and _we have momentum here_ is how bad projects survive. It also flatters incumbents, who confuse inherited mass with earned mass. But ignoring momentum is how smart people keep making technically-correct moves that don’t land, because they never built the standing to make them work.
 
 # Narrative
 
@@ -385,7 +385,7 @@ Humans don’t just optimize; they story-tell. A good frame can change what peop
 
 Read movements, companies, and personal change through this and the narrative becomes the leading indicator, not the trailing one. The same career pivot is a “brave leap” or a “reckless mistake” depending entirely on the surrounding tale. The shift in framing precedes the shift in behavior, every time.
 
-Practically, this raises the price of the words you use about yourself. The throwaway sentence — *I’m bad at this*, *we don’t do that here*, *I’m not the kind of person who…* — sets the ceiling for what comes next. Edit the narrative and behavior follows.
+Practically, this raises the price of the words you use about yourself. The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the narrative and behavior follows.
 
 Stories can outrun reality, and good narratives have buried bad decisions for as long as there have been stories to tell. But operating without one is its own kind of story — usually a thinner one, and rarely the one you’d have chosen.
 
@@ -421,7 +421,7 @@ related: minimalism, systems, legibility
 
 Composable units live beneath complex systems. Many things that look different are the same underlying thing wearing different clothes. Identify and solve the primitive problem and you solve the more complex problems for free.
 
-Used as a frame, ten features collapse into three building blocks. Five competing tools collapse into one missing abstraction. A tangle of edge cases collapses into one rule generating them. The work is mostly noticing: *what is actually moving here, beneath all the surface variety?*
+Used as a frame, ten features collapse into three building blocks. Five competing tools collapse into one missing abstraction. A tangle of edge cases collapses into one rule generating them. The work is mostly noticing: _what is actually moving here, beneath all the surface variety?_
 
 It changes what good design looks like. The impressive system has fewer knobs than expected, and the knobs it has all derive from a smaller, cleaner core. Most things — in software, in writing, in organizations — get better the moment someone finds the primitive the surface was hiding.
 
@@ -438,9 +438,9 @@ accent: #E6B64E
 illustration: probabilistic
 related: epistemic, systems, incentives
 
-The world doesn’t deliver outcomes; it delivers *distributions* of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary (will/won’t, true/false, safe/risky) is the most common and most expensive cognitive error.
+The world doesn’t deliver outcomes; it delivers _distributions_ of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary (will/won’t, true/false, safe/risky) is the most common and most expensive cognitive error.
 
-Apply the lens and *what will happen?* gives way to *what’s the spread, and where’s my edge?* Plans become ranges. Confidence becomes calibration. A 70% chance lives in the world as a posture — lean toward action, stay ready to be wrong, update as evidence arrives. Updating is half the skill.
+Apply the lens and _what will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. A 70% chance lives in the world as a posture — lean toward action, stay ready to be wrong, update as evidence arrives. Updating is half the skill.
 
 It also reorders which bets count as smart. A move that wins 80% of the time and loses everything the other 20% is worse than one that wins 55% with bounded losses. People who only see outcomes call the first one bold and the second one timid. People who see distributions call them what they are.
 
@@ -459,11 +459,11 @@ related: headspace, communication, narrative
 
 Almost every general statement a person makes is, to some degree, a self-portrait in disguise. Their feedback to others, the patterns they keep noticing, the flaws they find unbearable — the source is inside them, refracted onto whoever happens to be standing in front of them.
 
-Once you can see it, listening changes. When someone says *people in this industry are all so insecure,* the useful question is *what about me, right now, made that line feel important to say?* The same goes for praise: what someone admires reveals what they wish were more true of themselves.
+Once you can see it, listening changes. When someone says _people in this industry are all so insecure,_ the useful question is _what about me, right now, made that line feel important to say?_ The same goes for praise: what someone admires reveals what they wish were more true of themselves.
 
 It changes how you take criticism too. The cruelest readings of you usually tell you more about the reader than about you. Not always — but often enough that you should ask before flinching.
 
-Not everything is projection. Sometimes a sharp observation is a sharp observation, and dismissing critique as “they’re just projecting” is its own ugly move. But the part of the message that’s about *them* is almost always the louder signal.
+Not everything is projection. Sometimes a sharp observation is a sharp observation, and dismissing critique as “they’re just projecting” is its own ugly move. But the part of the message that’s about _them_ is almost always the louder signal.
 
 # Second-order effects
 
@@ -478,11 +478,11 @@ related: incentives, systems, constraint
 
 Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.
 
-Held up to a decision, the honest question is rarely *does this solve the problem?* It’s *what does this produce downstream?* Rent control reduces rent, then reduces housing supply. A metric rewards a behavior, then corrupts it. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is almost always the one people argue about; the second-order answer is almost always the one that matters.
+Held up to a decision, the honest question is rarely _does this solve the problem?_ It’s _what does this produce downstream?_ Rent control reduces rent, then reduces housing supply. A metric rewards a behavior, then corrupts it. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is almost always the one people argue about; the second-order answer is almost always the one that matters.
 
-The skill is forcing yourself to ask *and then what?* three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.
+The skill is forcing yourself to ask _and then what?_ three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.
 
-Taken too far, it becomes paralysis. Every move has an infinite downstream, and you can always invent a scary second-order story for any change. The lens also favors the status quo, because the consequences of *not acting* are less legible than the consequences of acting. But people who think only in first-order effects build systems that solve the visible problem and create three invisible ones, over and over, for decades.
+Taken too far, it becomes paralysis. Every move has an infinite downstream, and you can always invent a scary second-order story for any change. The lens also favors the status quo, because the consequences of _not acting_ are less legible than the consequences of acting. But people who think only in first-order effects build systems that solve the visible problem and create three invisible ones, over and over, for decades.
 
 # Status
 
@@ -517,7 +517,7 @@ reading: Thinking in Systems — Donella Meadows | https://amzn.to/4w6VpPF
 
 Outcomes are rarely caused by one thing. They emerge from feedback loops, bottlenecks, delays, constraints, and second-order effects. The visible event is the tip; the system is everything underneath producing it, again and again.
 
-Used as a lens, blame becomes less interesting than *structure* . Why does this team keep missing deadlines? Why do diets fail? Why does the same kind of meeting keep getting scheduled? Look at the loop, the lag, the limit — not the last person who acted.
+Used as a lens, blame becomes less interesting than _structure_ . Why does this team keep missing deadlines? Why do diets fail? Why does the same kind of meeting keep getting scheduled? Look at the loop, the lag, the limit — not the last person who acted.
 
 The most useful move is finding leverage points: the one valve that, turned slightly, changes everything downstream. They’re rarely the obvious ones. The biggest lever is often a delay no one notices, a goal no one wrote down, or a feedback signal that arrives too late to matter.
 
@@ -536,7 +536,7 @@ related: expertise, minimalism, legibility
 
 Taste is a refined sense of what’s meaningful and worth pursuing — a filter built from aesthetic, moral, and cultural values that helps you predict what will resonate. Useful for movies and furniture. Also for product decisions, hires, and who you spend time with.
 
-Looked at as a function, good taste has three components: *resonance* (others find your vector appealing — your friends like the books you recommend), *articulation* (you can state what you’re optimizing for and why), and *execution* (you can consistently make decisions that optimize for that vector in context). All three are trainable; most people are uneven across them.
+Looked at as a function, good taste has three components: _resonance_ (others find your vector appealing — your friends like the books you recommend), _articulation_ (you can state what you’re optimizing for and why), and _execution_ (you can consistently make decisions that optimize for that vector in context). All three are trainable; most people are uneven across them.
 
 The interesting practice is noticing which one is your bottleneck. Resonance without articulation is intuition you can’t share. Articulation without execution is a manifesto with nothing behind it. Execution without resonance is a closed loop — you make what you want, and no one else cares. Each one demands a different kind of work.
 
@@ -553,10 +553,10 @@ accent: #F0B85F
 illustration: utility
 related: incentives, game-theory, minimalism
 
-Every person behaves *exactly* according to a function — a private utility function — that they’re maximizing in every choice. Not approximately, not most of the time. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
+Every person behaves _exactly_ according to a personal utility function that they’re maximizing in every choice. Not approximately, not most of the time. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
 
-It contains far more than the utilitarian’s ledger of pain and pleasure. People also pay for identity, status, belonging, coherence, dignity, the feeling of being right, the feeling of having chosen. Costs that look irrational on a spreadsheet — staying in a bad job for the title, picking the harder gym, refusing the cheap win — make sense the moment you allow the function to weigh those terms.
+Utility can contain far more than the utilitarian’s ledger of pain and pleasure. People also pay for identity, status, belonging, coherence, dignity, the feeling of being right, the feeling of having chosen. Costs that look irrational on a spreadsheet — staying in a bad job for the title, picking the more expensive gym, refusing the cheap win — make sense the moment you allow the utility function to weigh those terms.
 
-Used this way, “they’re being irrational” almost always rephrases as *their function has terms mine doesn’t*. The middle manager is pricing risk to her standing, not failing to think clearly. The friend who’d rather be right than agree has identity in the function, and the function is doing its job. Once you can write down even a rough version of someone’s utility function — yours included — strange behavior turns ordinary.
+Used this way, “they’re being irrational” almost always rephrases as _their utility function has terms mine doesn’t_. The middle manager is pricing risk to her standing, not failing to think clearly. The friend who’d rather be right than agree has their personal identity in the utility function, and the utility function is doing its job. Once you can quantify even a rough version of someone’s utility function's dominant weights — yours included — strange behavior turns ordinary.
 
-Humans aren’t fully coherent maximizers, and shoehorning every motive into a single scalar can flatten things that deserve their own dimension. The function also drifts over time and under stress, and assuming stability when it doesn’t hold is its own error. But as a first cut on strange behavior, it cuts deep.
+Humans aren’t fully coherent maximizers, and shoehorning every motive into a single scalar can flatten things that deserve their own dimension. Utility functions also drift over time and under stress, and assuming stability when it doesn’t hold is its own error. But as a first cut on strange behavior, it cuts deep.

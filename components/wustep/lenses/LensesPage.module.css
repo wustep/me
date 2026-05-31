@@ -1640,6 +1640,12 @@
     color-mix(in srgb, var(--panel-accent, currentColor) 80%, transparent);
 }
 
+/* The quote is pulled from the recommended reading, so when it follows the
+   readings block keep it tucked close rather than a full section gap. */
+.readingsBlock + .quoteBlock {
+  margin-top: 12px;
+}
+
 .quoteText {
   margin: 0;
   font-family: var(--design-serif, var(--font-serif, Georgia, serif));
