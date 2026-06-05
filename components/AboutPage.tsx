@@ -318,7 +318,7 @@ export function AboutPage() {
                 <div className={styles.lensesArt} aria-hidden='true'>
                   <Illustration
                     id='lenses-deck'
-                    fg={isDark ? '#e8e8e8' : '#1a1a1a'}
+                    fg={isDark ? '#e8e8e8' : '#4d4d4d'}
                     bg='transparent'
                     accent={isDark ? '#f0a85a' : '#c2701f'}
                   />

@@ -758,16 +758,26 @@
   opacity: 0.96;
 }
 
+/* Smooth the eye's color swap when the page theme toggles, so it
+   cross-fades with the card instead of snapping. */
+.lensesArt svg path,
+.lensesArt svg circle {
+  transition:
+    fill 300ms ease,
+    stroke 300ms ease;
+}
+
+/* The eye breathes at rest at a calm cadence — alive on touch and in
+   step with the neighboring cards — then focuses a touch faster on
+   hover. */
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
-  animation: lensesCardLid 2.8s ease-in-out infinite;
-  animation-play-state: paused;
+  animation: lensesCardLid 3.6s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
 
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-  animation: lensesCardPupil 2.8s ease-in-out infinite;
-  animation-play-state: paused;
+  animation: lensesCardPupil 3.6s ease-in-out infinite;
 }
 
 @keyframes lensesCardLid {
@@ -792,7 +802,7 @@
 
 @media (hover: hover) {
   .lenses:hover .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-    animation-play-state: running;
+    animation-duration: 2.2s;
   }
 }
 
@@ -1150,9 +1160,37 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Entrance reveals: drop the keyframe so each section renders at its
+     resting state (the `both` fill already lands at opacity 1). */
+  .header,
+  .hero,
+  .projects,
+  .writing,
+  .footer,
+  .workGroup {
+    animation: none;
+  }
+
   /* .workGroup has opacity: 0 as its base state and relies on fadeSlideIn
      to reveal it — keep it visible when motion is reduced. */
   .workGroup {
     opacity: 1;
+  }
+
+  /* Decorative ambient loops that run without user intent. The `.page`
+     prefix matches the specificity of the per-child animation rules so
+     these win by source order without needing `!important`. */
+  .page .dominoTitle,
+  .page .dominoBlock,
+  .page .spotItSymbol,
+  .page .book,
+  .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
+    animation: none;
+  }
+
+  /* Don't cross-fade the eye's color on theme toggle either. */
+  .page .lensesArt svg path,
+  .page .lensesArt svg circle {
+    transition: none;
   }
 }
