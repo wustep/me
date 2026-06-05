@@ -291,6 +291,29 @@
   height: 16px;
 }
 
+/* Desktop-only; revealed on header hover (AboutPage theme-toggle pattern). */
+.playAnimationsButton {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .playAnimationsButton {
+    display: inline-flex;
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+  }
+
+  .playAnimationsButton:focus-visible {
+    opacity: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .header:hover .playAnimationsButton {
+      opacity: 1;
+    }
+  }
+}
+
 /* ===== Canvas ===== */
 
 .canvas {
@@ -3545,6 +3568,15 @@
   .centerCard:hover .cardArt :global(svg[data-anim] [data-anim-target]),
   .dialogJumpBtn:hover
     .dialogJumpArt
+    :global(svg[data-anim] [data-anim-target]) {
+    animation-play-state: running;
+  }
+
+  .frame[data-animations='playing'] .card .cardArt
+    :global(svg[data-anim] [data-anim-target]),
+  .frame[data-animations='playing'] .centerCard .cardArt
+    :global(svg[data-anim] [data-anim-target]),
+  .frame[data-animations='playing'] .dialogJumpArt
     :global(svg[data-anim] [data-anim-target]) {
     animation-play-state: running;
   }

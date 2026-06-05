@@ -16,6 +16,7 @@ import { CenterDialog } from './CenterDialog'
 import { DesignPanel } from './DesignPanel'
 import styles from './LensesPage.module.css'
 import { keyToDirection, neighborInDirection } from './navigation'
+import { PlayAnimationsButton } from './PlayAnimationsButton'
 import { LENS_BY_ID } from './registry'
 import { SidePanel } from './SidePanel'
 import { type LensesPageProps, STAGE, type Stage, TIMING } from './types'
@@ -82,6 +83,7 @@ export function LensesPage({
     previewLensId ?? null
   )
   const [centerOpen, setCenterOpen] = React.useState(false)
+  const [playAllAnimations, setPlayAllAnimations] = React.useState(false)
 
   /* Keyboard cursor across the canvas. The cursor is the lens that
      currently shows the "selected" treatment when no panel is open —
@@ -372,6 +374,7 @@ export function LensesPage({
       <div
         ref={previewOverride ? setPreviewContainer : undefined}
         className={frameClass}
+        data-animations={playAllAnimations ? 'playing' : undefined}
       >
         {!embedded && (
           <header className={styles.header}>
@@ -387,6 +390,12 @@ export function LensesPage({
               </Link>
 
               <div className={styles.headerRhs}>
+                {!prefersReducedMotion && (
+                  <PlayAnimationsButton
+                    playing={playAllAnimations}
+                    onToggle={() => setPlayAllAnimations((on) => !on)}
+                  />
+                )}
                 <LabsButton className={styles.headerButton} />
                 <ThemeToggle
                   isDark={hasMounted ? isDarkMode : false}
