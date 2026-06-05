@@ -7,6 +7,31 @@ import { getTweet as getTweetData } from 'react-tweet/api'
 import type { ExtendedTweetRecordMap } from './types'
 import { db } from './db'
 
+/**
+ * react-tweet's enrichTweet iterates entities.hashtags, .urls, etc. without
+ * guarding against missing arrays — some tweets (e.g. media-only posts) omit them.
+ */
+function normalizeTweetEntities(
+  tweet: Record<string, any> | null | undefined
+): Record<string, any> | null | undefined {
+  if (!tweet) return tweet
+
+  const entities = tweet.entities ?? {}
+  return {
+    ...tweet,
+    entities: {
+      hashtags: entities.hashtags ?? [],
+      user_mentions: entities.user_mentions ?? [],
+      urls: entities.urls ?? [],
+      symbols: entities.symbols ?? [],
+      ...(entities.media ? { media: entities.media } : {})
+    },
+    ...(tweet.quoted_tweet
+      ? { quoted_tweet: normalizeTweetEntities(tweet.quoted_tweet) }
+      : {})
+  }
+}
+
 export async function getTweetsMap(
   recordMap: ExtendedRecordMap
 ): Promise<void> {
@@ -36,14 +61,16 @@ async function getTweetImpl(tweetId: string): Promise<any> {
     try {
       const cachedTweet = await db.get(cacheKey)
       if (cachedTweet || cachedTweet === null) {
-        return cachedTweet
+        return normalizeTweetEntities(cachedTweet)
       }
     } catch (err: any) {
       // ignore redis errors
       console.warn(`redis error get "${cacheKey}"`, err.message)
     }
 
-    const tweetData = (await getTweetData(tweetId)) || null
+    const tweetData = normalizeTweetEntities(
+      (await getTweetData(tweetId)) || null
+    )
 
     try {
       await db.set(cacheKey, tweetData)
