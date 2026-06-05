@@ -529,7 +529,8 @@
 
 .domino,
 .spotIt,
-.bookshelf {
+.bookshelf,
+.lenses {
   align-items: center;
   justify-content: center;
   height: 120px;
@@ -593,9 +594,9 @@
 
 .spotIt {
   gap: 0;
-  padding: 14px 16px;
+  padding-inline: clamp(22px, 7%, 34px);
   align-items: flex-start;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .spotItCards {
@@ -703,7 +704,13 @@
 .spotIt h3 {
   position: relative;
   z-index: var(--z-base);
-  font-size: 1.5rem;
+  width: 100%;
+  max-width: min(52%, 10.5rem);
+  text-align: left;
+  font-size: clamp(1.48rem, 1.3rem + 0.5vw, 1.78rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
 
 .bookshelf {
@@ -714,6 +721,79 @@
 
 .bookshelf h3 {
   font-size: 1.4rem;
+}
+
+.lenses {
+  gap: 0;
+  padding-inline: clamp(22px, 7%, 34px);
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.lenses h3 {
+  position: relative;
+  z-index: var(--z-base);
+  width: 100%;
+  max-width: min(52%, 10.5rem);
+  text-align: left;
+  font-size: clamp(1.48rem, 1.3rem + 0.5vw, 1.78rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.lensesArt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px clamp(10px, 3%, 16px) 8px 0;
+  pointer-events: none;
+}
+
+.lensesArt svg {
+  width: 118px;
+  height: 118px;
+  opacity: 0.96;
+}
+
+.lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+  animation: lensesCardLid 2.8s ease-in-out infinite;
+  animation-play-state: paused;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+  animation: lensesCardPupil 2.8s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+@keyframes lensesCardLid {
+  0%,
+  100% {
+    transform: scaleY(0.86);
+  }
+  50% {
+    transform: scaleY(1.03);
+  }
+}
+
+@keyframes lensesCardPupil {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@media (hover: hover) {
+  .lenses:hover .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+    animation-play-state: running;
+  }
 }
 
 .bookshelfBooks {
@@ -901,8 +981,9 @@
 
 .tooltipWrapper:has(.domino),
 .tooltipWrapper:has(.spotIt),
-.tooltipWrapper:has(.bookshelf) {
-  grid-column: span 2;
+.tooltipWrapper:has(.bookshelf),
+.tooltipWrapper:has(.lenses) {
+  grid-column: span 3;
 }
 
 .tooltip {
@@ -1037,7 +1118,8 @@
   .tooltipWrapper:has(.compact),
   .tooltipWrapper:has(.domino),
   .tooltipWrapper:has(.spotIt),
-  .tooltipWrapper:has(.bookshelf) {
+  .tooltipWrapper:has(.bookshelf),
+  .tooltipWrapper:has(.lenses) {
     grid-column: 1 / -1;
   }
 

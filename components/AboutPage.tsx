@@ -7,6 +7,7 @@ import { github, linkedin, x } from '@/lib/config'
 
 import styles from './AboutPage.module.css'
 import { LabsButton } from './wustep/LabsButton'
+import { Illustration } from './wustep/lenses/illustrations'
 import { ThemeToggle } from './wustep/ThemeToggle'
 
 export const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I like to write about software engineering, design, philosophy, and life.`
@@ -308,6 +309,23 @@ export function AboutPage() {
             </Tooltip>
 
             <div className={styles.projectDivider} />
+
+            <Tooltip label='A canvas of lenses for seeing the world'>
+              <a
+                href='/lenses'
+                className={`${styles.projectCard} ${styles.lenses}`}
+              >
+                <div className={styles.lensesArt} aria-hidden='true'>
+                  <Illustration
+                    id='lenses-deck'
+                    fg={isDark ? '#e8e8e8' : '#1a1a1a'}
+                    bg='transparent'
+                    accent={isDark ? '#f0a85a' : '#c2701f'}
+                  />
+                </div>
+                <h3>Lenses</h3>
+              </a>
+            </Tooltip>
 
             <Tooltip label='Matter.js and pretext playground with playful DOM interactions'>
               <a
