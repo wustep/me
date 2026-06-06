@@ -36,7 +36,7 @@ reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.
 
 Agency is the capacity to identify desirable futures, notice the actions actually available, and execute on them — despite uncertainty, friction, or external constraints. Being high in agency is consistently being able to reshape your internal self and external environments rather than treating these as fixed.
 
-This often involves realizing there are more choices on the table than the default script suggests. Then, you evaluate those choices against your goals and the risks, pick one or more, and execute to completion. Agency is less a personality trait than a skill loop — _identify desired outcomes →_ _identify options → assess fit → commit → execute → update_ — and like any skill, it grows with practice.
+This often involves realizing there are more choices on the table than the default script suggests. Then you weigh them against your goals and the risks, pick, and execute. Agency is less a personality trait than a skill loop — _identify desired outcomes →_ _identify options → assess fit → commit → execute → update_ — and like any skill, it grows with practice.
 
 Questions you may ask are: _what are the unexamined assumptions I’m making here? Which choices do I treat as off the table that should be on it?_ Usually choices are filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just call out and solve the elephant in the room, find alternative paths to solving a problem, or do things that aren’t considered your “role” because nobody else is doing them.
 
@@ -55,7 +55,7 @@ related: osmosis, energy, headspace
 
 Attention is the most concentrated form of energy a person spends, and it’s spent constantly — on phones, conversations, worries, screens, faces, ideas. Whatever you keep looking at trains the rest of you: taste, reactions, sense of what counts as normal, sense of what’s even possible.
 
-This lens asks you to ask yourself, _what is allowed to occupy my attention, and what isn’t?_ Or _how are others spending this currency and what outcomes does that produce?_
+This lens asks: _what is allowed to occupy my attention, and what isn’t?_ Or _how are others spending this currency, and what does it buy them?_
 
 Most regrets, on inspection, trace back to attention more than effort. The wrong things were given the air, and the right ones starved for lack of it. You can recover lost hours.
 
@@ -76,7 +76,7 @@ Almost every problem between two people is, at root, a translation problem. Diff
 
 Held up against most disagreements, “they’re wrong” and “they don’t care” almost always rephrase as _we are not in the same conversation_. The fix is often a slower, more patient transfer of model, asking questions to bridge the gap.
 
-Practically, this raises the price of vague language. The clearer you can communicate your internal models, and the clearer you can understand theirs, the faster you can reach the crux of your problem and resolve it.
+Practically, this raises the price of vague language. The clearer you make your own model and the better you read theirs, the faster you reach the actual crux.
 
 Not every disagreement is a misunderstanding. Some are real conflicts of interest dressed in misunderstanding’s clothes, and assuming translation can be a way to avoid the harder fight. But assume translation first.
 
@@ -91,11 +91,11 @@ accent: #E2AB3F
 illustration: constraint
 related: minimalism, interface, energy
 
-Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each of these formats give the author direction and freedom.
+Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each format gives its maker direction and freedom at once.
 
-An overwhelming choice is often a missing constraint. The blank canvas paralyzes. “Build anything” yields nothing in particular except to those already with abundant creativity and agency; _build this in a week with these three ideas_ runs as a generative engine. Meanwhile, pressing on unexamined constraints helps you find the right solution too.
+An overwhelming choice is often a missing constraint. The blank canvas paralyzes. “Build anything” yields nothing in particular, except for those already overflowing with creativity and agency; _build this in a week with these three ideas_ runs as a generative engine. And pushing on a constraint you assumed was fixed is often where the real solution hides.
 
-This lens helps you identify and choose constraints on purpose. Self-imposed deadlines, fixed budgets, a smaller toolkit than you can afford — these don’t always shrink you. They give your taste somewhere to push against. Most ambitious work happens inside walls that someone chose to build.
+This lens helps you choose constraints on purpose. Self-imposed deadlines, fixed budgets, a smaller toolkit than you can afford — these don’t always shrink you. They give your taste somewhere to push against. Most ambitious work happens inside walls that someone chose to build.
 
 # Dopamine
 
@@ -116,7 +116,7 @@ Look at it this way and scrolling, snacking, gambling, refreshing email, picking
 
 Shame doesn’t fix it. Shame is itself a state, and a costly one — it hides the loop without changing it. The real move is upstream: change what’s available to reach for, what the room rewards, what the day looks like before the urge arrives.
 
-Reducing all behavior to neurotransmitters flattens meaning that really is there, and “your dopamine made you do it” can become a way to dodge responsibility. But understanding dopamine more deeply helps you explain some natural tendencies of yourself and others.
+Reducing all behavior to neurotransmitters flattens real meaning, and “your dopamine made you do it” can become a way to dodge responsibility. But understanding dopamine more deeply helps you explain some natural tendencies of yourself and others.
 
 # Energy
 
@@ -129,9 +129,9 @@ accent: #F0D04D
 illustration: energy
 related: headspace, interface, constraint
 
-Motivation isn’t purely moral. It’s biochemical, environmental, social, and narrative. Sleep, food, light, exercise, recent wins, who you saw yesterday all play a role. The right work-life balance doesn’t have your work energy competing with your life energy, but a life where you feel energized by both sides.
+Motivation isn’t purely moral. It’s biochemical, environmental, social, and narrative. Sleep, food, light, exercise, recent wins, who you saw yesterday — all of it sets the ceiling on today. Done right, work and life don’t compete for the same battery; both sides charge you.
 
-Apply the lens and “why am I being lazy?” or “why am I feeling tired?” may have an answer, and your energy throughout the day goes from feeling like a battery that runs out to a less constrained supply.
+Apply the lens and “why am I being lazy?” or “why am I feeling tired?” usually has a concrete answer — and your energy stops feeling like a battery draining toward empty and starts looking like something you can refill on purpose.
 
 This changes what counts as serious work. Going to bed on time is serious work. Eating before the meeting is serious work. The walk after lunch isn’t a break from the project; it’s part of how the project gets done. Finding motivating work and organizing it in a way that helps you flow is also serious work. Designing around energy beats negotiating with it.
 
@@ -288,7 +288,7 @@ Read the world this way and a stuck team often doesn’t have a strategy problem
 
 The corollary is that small surface changes do disproportionate work. Move the gym bag to the door. Move the Slack notification off the home screen. Move the agenda to before the meeting instead of during. Each one works on the surface the person meets every day. The person comes along.
 
-Not every problem is interface. Some are values or incentives wearing a UX disguise, and re-skinning the meeting won’t fix a team that doesn’t agree on what it’s for. But the right surface change often unlocks behavior that exhortation could not.
+Not every problem is interface. Some are values or incentives wearing a UX disguise, and re-skinning the meeting won’t fix a team that doesn’t agree on what it’s for. But the right surface change often gets the behavior that exhortation couldn’t.
 
 # Legibility
 
@@ -547,7 +547,7 @@ accent: #F0B85F
 illustration: utility
 related: incentives, game-theory, minimalism
 
-Every person behaves _exactly_ according to a personal utility function that they’re maximizing in every choice. Not approximately, not most of the time, exactly. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
+Every person behaves _exactly_ according to a personal utility function that they’re maximizing in every choice. Not approximately, not most of the time — exactly. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
 
 Utility can contain far more than the utilitarian’s ledger of pain and pleasure. People also pay for identity, status, belonging, coherence, dignity, the feeling of being right, the feeling of having chosen. Costs that look irrational on a spreadsheet — staying in a bad job, picking the absurdly expensive gym, refusing the cheap win — make sense the moment you allow the utility function to weigh those terms.
 
