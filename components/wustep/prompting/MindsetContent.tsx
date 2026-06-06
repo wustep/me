@@ -48,8 +48,7 @@ export function MindsetContent() {
           <h4 className={styles.mindsetCardHeading}>Closed: Blame the AI.</h4>
           <p>
             &ldquo;The model is bad.&rdquo; &ldquo;AI&apos;s overhyped.&rdquo;
-            &ldquo;It can&apos;t do real work.&rdquo; Comforting, easy, and
-            final.
+            &ldquo;It can&apos;t do real work.&rdquo;
           </p>
         </section>
 
@@ -58,19 +57,18 @@ export function MindsetContent() {
             Open: Ask what you could have done differently.
           </h4>
           <p>
-            Was the prompt clear, or could it be read two ways? What context was
-            missing? Each failure becomes a rep &mdash; often the fix is writing
-            what you meant, more plainly. That&apos;s how the curve climbs.
+            Was the prompt clear? What context was missing? What levers can you
+            change?
           </p>
         </section>
       </div>
 
       <p>
         Gaming culture has a useful phrase for this: <em>skill issue</em>. When
-        your character keeps dying, the level isn&apos;t broken &mdash;
-        you&apos;re missing something. It sounds flippant, but the move
-        underneath is serious: assume, provisionally, that the bottleneck is
-        you. It isn&apos;t always true. It&apos;s the assumption that grows you.
+        your character keeps dying, the level isn&apos;t broken, you&apos;re
+        missing something. It sounds flippant, but the move underneath is
+        serious: assume, provisionally, that the bottleneck is you. It
+        isn&apos;t always true. But this assumption helps you grow when it is.
       </p>
 
       <p>
@@ -82,17 +80,21 @@ export function MindsetContent() {
         bad.
       </p>
 
+      <h3 className={styles.mindsetForkHeading}>Every failure is a rep</h3>
+
+      <p>
+        Treat each disappointment like a chess puzzle: try something, notice
+        what actually worked, update your repertoire. One a day and the curve
+        climbs &mdash; slowly, then all at once.
+      </p>
+
+      <PracticeLoop />
+
       <p>
         The beginner&apos;s mindset isn&apos;t humility for its own sake.
         It&apos;s the faster path. Three years in, the people pulling away are
         the ones still treating themselves like beginners &mdash; still reading,
         still experimenting, still updating when the model surprises them.
-      </p>
-
-      <p>
-        The rest of this guide is what the next 1200 points look like from where
-        I&apos;m standing. A few mental models, then a handful of moves to
-        practice. Stay curious.
       </p>
 
       <div className={styles.synthesis}>
@@ -103,8 +105,9 @@ export function MindsetContent() {
           We&apos;re all beginners
         </h3>
         <p>
-          Closed minds blame the model. Open minds ask what they missed. Only
-          one of those is still gaining ELO a year from now.
+          Closed minds blame the model. Open minds ask what they missed and find
+          something to learn from each transcript. Only one of those is still
+          gaining ELO a year from now.
         </p>
       </div>
     </ChapterBody>
@@ -237,9 +240,65 @@ function EloChart() {
 
       <figcaption className={styles.eloChartCaption}>
         Most chess players sit in the 600&ndash;1000 range. Three years of
-        practice gets you to about 1200 &mdash; past most players, but nowhere
-        near the frontier. Magnus is still finding new things every year.
+        practice gets you to about 1200.
       </figcaption>
     </figure>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────
+ * PRACTICE LOOP
+ *
+ * Two ladders, side by side. The open loop climbs (try → notice →
+ * update); the closed loop slides back (blame → stop → regress). Bars
+ * fade up with a stagger once the figure scrolls into view. Reuses the
+ * fork's color coding: open = orange, closed = ember.
+ * ───────────────────────────────────────────────────────── */
+
+const PRACTICE_OPEN = [1200, 1204, 1211, 1218, 1227]
+const PRACTICE_CLOSED = [1200, 1198, 1192, 1186]
+
+function PracticeLoop() {
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.3 })
+
+  return (
+    <div
+      ref={ref}
+      className={`${styles.practiceLoop} ${
+        inView ? styles.practiceLoopVisible : ''
+      }`}
+    >
+      <section className={`${styles.practiceCard} ${styles.practiceCardOpen}`}>
+        <span className={styles.practiceLabel}>Open loop</span>
+        <div className={styles.practiceLadder} aria-hidden='true'>
+          {PRACTICE_OPEN.map((elo, i) => (
+            <b key={elo} style={{ transitionDelay: `${200 + i * 90}ms` }}>
+              {elo}
+            </b>
+          ))}
+        </div>
+        <strong className={styles.practiceFlow}>
+          try &rarr; notice &rarr; update
+        </strong>
+        <p>One chess puzzle a day, and the curve climbs.</p>
+      </section>
+
+      <section
+        className={`${styles.practiceCard} ${styles.practiceCardClosed}`}
+      >
+        <span className={styles.practiceLabel}>Closed loop</span>
+        <div className={styles.practiceLadder} aria-hidden='true'>
+          {PRACTICE_CLOSED.map((elo, i) => (
+            <b key={elo} style={{ transitionDelay: `${200 + i * 90}ms` }}>
+              {elo}
+            </b>
+          ))}
+        </div>
+        <strong className={styles.practiceFlow}>
+          blame &rarr; stop &rarr; regress
+        </strong>
+        <p>The edge you had quietly rusts.</p>
+      </section>
+    </div>
   )
 }
