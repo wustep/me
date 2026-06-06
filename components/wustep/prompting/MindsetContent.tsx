@@ -17,14 +17,16 @@ export function MindsetContent() {
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
-        of chess might get you to 1200 ELO &mdash; past most casual players,
-        nowhere near expert. The frontier lies around 2800, and I'm not sure
-        anyone has hit it yet.
+        of chess might get you to 1200 ELO &mdash; past most casual players, but
+        nowhere near expert. The frontier of chess lies around 2800 ELO.
+        Grandmasters in chess will win against amateurs 100% of the time. Those
+        at the frontier of AI coding might be 10x as effective as your average
+        senior software engineer.
       </p>
 
       <p>
-        The danger of calling yourself an expert too early is that your curve
-        flattens. You stop reading tutorials, skip the bootcamp, ignore the
+        The danger of calling yourself an expert too early is that your learning
+        stalls. You stop reading tutorials, skip the bootcamp, ignore the
         patterns the model enabled last week. Look at where your workflow was
         twelve months ago, then project that forward &mdash; most of the meta
         hasn&apos;t been uncovered yet.
@@ -43,18 +45,17 @@ export function MindsetContent() {
         <section
           className={`${styles.mindsetCard} ${styles.mindsetCardClosed}`}
         >
-          <h4 className={styles.mindsetCardHeading}>Closed: blame the AI.</h4>
+          <h4 className={styles.mindsetCardHeading}>Closed: Blame the AI.</h4>
           <p>
-            &ldquo;The model is bad.&rdquo; &ldquo;It&apos;s overhyped.&rdquo;
+            &ldquo;The model is bad.&rdquo; &ldquo;AI&apos;s overhyped.&rdquo;
             &ldquo;It can&apos;t do real work.&rdquo; Comforting, easy, and
-            final &mdash; the verdict closes the question before you check what
-            happened. Tomorrow&apos;s task goes the same way as today&apos;s.
+            final.
           </p>
         </section>
 
         <section className={`${styles.mindsetCard} ${styles.mindsetCardOpen}`}>
           <h4 className={styles.mindsetCardHeading}>
-            Open: ask what you could have done differently.
+            Open: Ask what you could have done differently.
           </h4>
           <p>
             Was the prompt clear, or could it be read two ways? What context was
