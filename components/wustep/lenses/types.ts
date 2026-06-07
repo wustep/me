@@ -103,8 +103,12 @@ export type Quote = {
    *  No surrounding quote marks needed — the styling supplies the
    *  visual treatment (accent rule + indent). */
   text: string
-  /** Optional attribution, e.g. a book title or author. */
+  /** Optional attribution, e.g. an author and/or book title. */
   cite?: string
+  /** Optional source URL for the attribution — when set, the cite
+   *  renders as a link (with an external/internal arrow), so a quote
+   *  can carry its own reading reference instead of a separate entry. */
+  citeHref?: string
 }
 
 export type Lens = {

@@ -21,25 +21,48 @@ import { LENS_BY_ID } from './registry'
 import { SidePanel } from './SidePanel'
 import { type LensesPageProps, STAGE, type Stage, TIMING } from './types'
 
+/** Standalone route that owns per-lens path segments (/lenses/<id>). */
+const LENSES_BASE = '/lenses'
+
 /**
- * Build the next URL search string given the current path's params plus
- * an override patch. Empty values strip the key entirely. We mutate the
- * URL via `history.replaceState` rather than `router.replace` so we
- * don't trigger a Next re-render (state already reflects the change).
+ * Reflect panel + index-dialog state into the URL.
+ *
+ *   On the standalone /lenses route the open lens lives in the path as a
+ *   clean segment — /lenses/attention — and the index dialog stays an
+ *   `?index=open` query flag. Anywhere the page is embedded (e.g.
+ *   /playground/lenses, which has no per-lens route) we fall back to the
+ *   legacy `?lens=…` query param and never touch the pathname.
+ *
+ *   We mutate via `history.replaceState` rather than `router.replace` so
+ *   we don't trigger a Next re-render (state already reflects the change)
+ *   or re-run the entrance animation.
  */
-function syncUrl(
-  pathname: string,
-  current: URLSearchParams,
-  patch: Record<string, string | null>
-) {
-  const next = new URLSearchParams(current)
-  for (const [k, v] of Object.entries(patch)) {
-    if (v == null || v === '') next.delete(k)
-    else next.set(k, v)
+function syncLensUrl(openLensId: string | null, centerOpen: boolean) {
+  const { pathname, search } = window.location
+  const isStandalone =
+    pathname === LENSES_BASE || pathname.startsWith(`${LENSES_BASE}/`)
+  const params = new URLSearchParams(search)
+
+  let url: string
+  if (isStandalone) {
+    // Path carries the open lens; the index dialog stays a query flag.
+    params.delete('lens')
+    if (centerOpen) params.set('index', 'open')
+    else params.delete('index')
+    const path = openLensId ? `${LENSES_BASE}/${openLensId}` : LENSES_BASE
+    const qs = params.toString()
+    url = qs ? `${path}?${qs}` : path
+  } else {
+    // Embedded mount: keep the lens in the query string, pathname intact.
+    if (openLensId) params.set('lens', openLensId)
+    else params.delete('lens')
+    if (centerOpen) params.set('index', 'open')
+    else params.delete('index')
+    const qs = params.toString()
+    url = qs ? `${pathname}?${qs}` : pathname
   }
-  const qs = next.toString()
-  const url = qs ? `${pathname}?${qs}` : pathname
-  if (url === window.location.pathname + window.location.search) return
+
+  if (url === pathname + search) return
   window.history.replaceState(null, '', url)
 }
 
@@ -105,13 +128,21 @@ export function LensesPage({
   /* Hydrate panel + dialog state from the URL once the router is ready.
      `router.isReady` flips to true on the client after Next has parsed
      `query`. Reading on first render in SSR would yield empty values
-     and overwrite a real `?lens=…` after hydration, hence this guard.
-     We only seed once — the user takes over from there. */
+     and overwrite a real lens after hydration, hence this guard.
+
+     The open lens comes from the `/lenses/<id>` path segment
+     (`router.query.lensId`) on the standalone route, falling back to the
+     legacy `?lens=…` query param so old links and the embedded mount
+     keep working. We only seed once — the user takes over from there. */
   React.useEffect(() => {
     if (previewLensId) return
     if (!router.isReady || hydratedFromUrl) return
     const lensRaw =
-      typeof router.query.lens === 'string' ? router.query.lens : null
+      typeof router.query.lensId === 'string'
+        ? router.query.lensId
+        : typeof router.query.lens === 'string'
+          ? router.query.lens
+          : null
     const indexRaw =
       typeof router.query.index === 'string' ? router.query.index : null
     if (lensRaw && LENS_BY_ID[lensRaw]) {
@@ -122,6 +153,7 @@ export function LensesPage({
     setHydratedFromUrl(true)
   }, [
     router.isReady,
+    router.query.lensId,
     router.query.lens,
     router.query.index,
     hydratedFromUrl,
@@ -129,19 +161,15 @@ export function LensesPage({
   ])
 
   /* Push state -> URL whenever the user opens / closes / swaps a panel
-     or the index dialog. We use `history.replaceState` rather than
-     `router.replace` so we don't re-render the page tree (state already
-     reflects the change) and we don't re-trigger the entrance
-     animation. We never touch `pathname`, so this is safe for both
-     standalone (/lenses) and embedded (/playground/lenses) mounts. */
+     or the index dialog. `syncLensUrl` uses `history.replaceState` (not
+     `router.replace`) so we don't re-render the page tree or re-trigger
+     the entrance animation. On the standalone /lenses route it writes a
+     path segment (/lenses/<id>); on the embedded mount it falls back to
+     the `?lens=` query param. */
   React.useEffect(() => {
     if (previewLensId) return
     if (!hydratedFromUrl) return
-    const current = new URLSearchParams(window.location.search)
-    syncUrl(window.location.pathname, current, {
-      lens: openLensId,
-      index: centerOpen ? 'open' : null
-    })
+    syncLensUrl(openLensId, centerOpen)
   }, [hydratedFromUrl, openLensId, centerOpen, previewLensId])
 
   /* Drive the entrance storyboard. Snap to final stage instantly when

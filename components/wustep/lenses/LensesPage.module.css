@@ -1619,11 +1619,19 @@
 
 .readingsArrow {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
   opacity: 0.45;
-  font-size: 0.95em;
   transition:
     transform 200ms var(--ease-spring-snap),
     opacity 200ms var(--ease-spring-snap);
+}
+
+.readingsArrow svg {
+  width: 0.9em;
+  height: 0.9em;
+  position: relative;
+  top: 0.08em;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1638,6 +1646,10 @@
 
   .readingsLink:hover .readingsArrow {
     opacity: 1;
+    transform: translateX(2px);
+  }
+
+  .readingsLink:hover .readingsArrow[data-external] {
     transform: translate(2px, -2px);
   }
 }
@@ -1663,10 +1675,22 @@
     color-mix(in srgb, var(--panel-accent, currentColor) 80%, transparent);
 }
 
-/* The quote is pulled from the recommended reading, so when it follows the
-   readings block keep it tucked close rather than a full section gap. */
-.readingsBlock + .quoteBlock {
+/* The quote lives inside the references footer. Under the "Quotes" label
+   alone it keeps the label's normal gap; when it follows a reading list
+   it tucks right beneath the link so the pull-quote reads as belonging
+   to that source. */
+.relatedLabel + .quoteBlock {
   margin-top: 12px;
+}
+
+.readingsList + .quoteBlock {
+  margin-top: 6px;
+}
+
+/* Trim the last link's trailing padding when a quote sits beneath it,
+   pulling the pull-quote visibly closer to its source. */
+.readingsList:has(+ .quoteBlock) .readingsItem:last-child .readingsLink {
+  padding-bottom: 4px;
 }
 
 .quoteText {
@@ -1686,6 +1710,59 @@
   letter-spacing: 0.16em;
   font-weight: 500;
   opacity: 0.55;
+}
+
+/* Linked attribution — the quote carries its own reading reference, so
+   the cite becomes a subtle link with the same arrow as the reading
+   list. Opacity lives here (not on .quoteCite) so hover can brighten. */
+.quoteCite:has(.quoteCiteLink) {
+  opacity: 1;
+}
+
+.quoteCiteLink {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.55;
+  transition:
+    opacity 200ms var(--ease-spring-snap),
+    color 200ms var(--ease-spring-snap);
+}
+
+.quoteCiteArrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 200ms var(--ease-spring-snap);
+}
+
+.quoteCiteArrow svg {
+  width: 1em;
+  height: 1em;
+  position: relative;
+  top: 0.06em;
+  margin-left: 0.3em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .quoteCiteLink:hover {
+    opacity: 1;
+    color: var(--panel-bg, inherit);
+  }
+
+  .quoteCiteLink:hover .quoteCiteArrow {
+    transform: translateX(2px);
+  }
+
+  .quoteCiteLink:hover .quoteCiteArrow[data-external] {
+    transform: translate(2px, -2px);
+  }
+}
+
+.quoteCiteLink:focus-visible {
+  outline: 2px solid var(--panel-bg, currentColor);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* Related-lenses block at bottom of panel body. */

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { isDev } from '@/lib/config'
 
 import { ignoreDesignPanelOutside, useDesignFlag } from './DesignPanel'
-import { ChevronIcon, CloseIcon } from './icons'
+import { ChevronIcon, CloseIcon, ReadingArrowIcon } from './icons'
 import { Illustration } from './illustrations'
 import { LensBody } from './LensBody'
 import styles from './LensesPage.module.css'
@@ -279,47 +279,85 @@ export function SidePanel({
                 ) : (
                   <LensBody markdown={shown.body} />
                 )}
-                {shown.readings && shown.readings.length > 0 && (
+                {((shown.readings && shown.readings.length > 0) ||
+                  shown.quote) && (
                   <div className={styles.readingsBlock}>
-                    <span className={styles.relatedLabel}>Further reading</span>
-                    <ul className={styles.readingsList}>
-                      {shown.readings.map((r) => {
-                        const external = /^https?:\/\//.test(r.href)
-                        return (
-                          <li key={r.href} className={styles.readingsItem}>
-                            <a
-                              className={styles.readingsLink}
-                              href={r.href}
-                              target={external ? '_blank' : undefined}
-                              rel={external ? 'noopener noreferrer' : undefined}
-                            >
-                              <span className={styles.readingsLabel}>
-                                {r.label}
-                              </span>
-                              <span
-                                className={styles.readingsArrow}
-                                aria-hidden='true'
+                    <span className={styles.relatedLabel}>
+                      {shown.readings && shown.readings.length > 0
+                        ? 'Further reading'
+                        : 'Quotes'}
+                    </span>
+                    {shown.readings && shown.readings.length > 0 && (
+                      <ul className={styles.readingsList}>
+                        {shown.readings.map((r) => {
+                          const external = /^https?:\/\//.test(r.href)
+                          return (
+                            <li key={r.href} className={styles.readingsItem}>
+                              <a
+                                className={styles.readingsLink}
+                                href={r.href}
+                                target={external ? '_blank' : undefined}
+                                rel={
+                                  external ? 'noopener noreferrer' : undefined
+                                }
                               >
-                                {external ? '↗' : '→'}
-                              </span>
-                            </a>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                )}
-                {shown.quote && (
-                  <figure className={styles.quoteBlock}>
-                    <blockquote className={styles.quoteText}>
-                      {shown.quote.text}
-                    </blockquote>
-                    {shown.quote.cite && (
-                      <figcaption className={styles.quoteCite}>
-                        {shown.quote.cite}
-                      </figcaption>
+                                <span className={styles.readingsLabel}>
+                                  {r.label}
+                                </span>
+                                <span
+                                  className={styles.readingsArrow}
+                                  data-external={external ? '' : undefined}
+                                  aria-hidden='true'
+                                >
+                                  <ReadingArrowIcon external={external} />
+                                </span>
+                              </a>
+                            </li>
+                          )
+                        })}
+                      </ul>
                     )}
-                  </figure>
+                    {shown.quote && (
+                      <figure className={styles.quoteBlock}>
+                        <blockquote className={styles.quoteText}>
+                          {shown.quote.text}
+                        </blockquote>
+                        {shown.quote.cite &&
+                          (() => {
+                            const href = shown.quote.citeHref
+                            if (!href) {
+                              return (
+                                <figcaption className={styles.quoteCite}>
+                                  {shown.quote.cite}
+                                </figcaption>
+                              )
+                            }
+                            const external = /^https?:\/\//.test(href)
+                            return (
+                              <figcaption className={styles.quoteCite}>
+                                <a
+                                  className={styles.quoteCiteLink}
+                                  href={href}
+                                  target={external ? '_blank' : undefined}
+                                  rel={
+                                    external ? 'noopener noreferrer' : undefined
+                                  }
+                                >
+                                  {shown.quote.cite}
+                                  <span
+                                    className={styles.quoteCiteArrow}
+                                    data-external={external ? '' : undefined}
+                                    aria-hidden='true'
+                                  >
+                                    <ReadingArrowIcon external={external} />
+                                  </span>
+                                </a>
+                              </figcaption>
+                            )
+                          })()}
+                      </figure>
+                    )}
+                  </div>
                 )}
                 {shown.related && shown.related.length > 0 && (
                   <div className={styles.relatedBlock}>

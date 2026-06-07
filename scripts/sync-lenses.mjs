@@ -99,6 +99,7 @@ for (const section of sections) {
   if (meta.quote) {
     rec.quote = { text: meta.quote }
     if (meta['quote-cite']) rec.quote.cite = meta['quote-cite']
+    if (meta['quote-cite-href']) rec.quote.citeHref = meta['quote-cite-href']
   }
   rec.body = body
 

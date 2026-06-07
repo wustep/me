@@ -16,7 +16,10 @@
     related      optional  comma-separated lens ids
     reading      repeat    "Label | https://url"  (one line per reading)
     quote        optional  pull-quote text
-    quote-cite   optional  attribution for the quote
+    quote-cite   optional  attribution for the quote (author / title)
+    quote-cite-href optional  source URL — renders the attribution as a
+                              link (use instead of a separate `reading`
+                              line when the quote IS the recommended source)
 
   Card x/y positions are assigned automatically at runtime — don't set
   them here. After editing, run: pnpm lenses:sync
@@ -33,6 +36,8 @@ accent: #F3C35F
 illustration: agency
 related: momentum, narrative, incentives
 reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.com/p/how-to-be-more-agentic
+quote: Between stimulus and response there is a space. In that space is our power to choose our response.
+quote-cite: Viktor Frankl
 
 Agency is the capacity to identify desirable futures, notice the actions actually available, and execute on them — despite uncertainty, friction, or external constraints. Being high in agency is consistently being able to reshape your internal self and external environments rather than treating these as fixed.
 
@@ -52,6 +57,8 @@ fg: #F6EAD8
 accent: #E6B64E
 illustration: attention
 related: osmosis, energy, headspace
+quote: What information consumes is rather obvious: it consumes the attention of its recipients. Hence a wealth of information creates a poverty of attention.
+quote-cite: Herbert Simon
 
 Attention is the most concentrated form of energy a person spends, and it’s spent constantly — on phones, conversations, worries, screens, faces, ideas. Whatever you keep looking at trains the rest of you: taste, reactions, sense of what counts as normal, sense of what’s even possible.
 
@@ -71,6 +78,8 @@ fg: #F6EAD8
 accent: #F0B85F
 illustration: communication
 related: headspace, narrative, interface
+quote: The single biggest problem in communication is the illusion that it has taken place.
+quote-cite: George Bernard Shaw
 
 Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted.
 
@@ -90,6 +99,8 @@ fg: #F6EAD8
 accent: #E2AB3F
 illustration: constraint
 related: minimalism, interface, energy
+quote: Art is limitation; the essence of every picture is the frame.
+quote-cite: G.K. Chesterton
 
 Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each format gives its maker direction and freedom at once.
 
@@ -107,8 +118,9 @@ fg: #F6EAD8
 accent: #F2C4D4
 illustration: dopamine
 related: energy, incentives, mimetics
-reading: The Molecule of More — Daniel Z. Lieberman & Michael E. Long | https://amzn.to/4283g1X
 quote: From dopamine’s point of view, having things is uninteresting. It’s only getting things that matters. If you live under a bridge, dopamine makes you want a tent. If you live in a tent, dopamine makes you want a house. If you live in the most expensive mansion in the world, dopamine makes you want a castle on the moon. Dopamine has no standard for good, and seeks no finish line. The dopamine circuits in the brain can be stimulated only by the possibility of whatever is shiny and new, never mind how perfect things are at the moment. The dopamine motto is “More.”
+quote-cite: Daniel Z. Lieberman & Michael E. Long, The Molecule of More
+quote-cite-href: https://amzn.to/4283g1X
 
 A lot of human behavior makes more sense as _internal-state regulation._ People are seeking novelty, reward, relief, control, connection, or a sense of meaning — and the brain’s dopamine system is orchestrating most of it underneath the conscious story.
 
@@ -147,6 +159,8 @@ fg: #F6EAD8
 accent: #F0A86B
 illustration: epistemic
 related: legibility, systems, narrative
+quote: All models are wrong, but some are useful.
+quote-cite: George Box
 
 Beliefs are maps for action. The question is not only _is this true?_ but _what does believing this help me predict, build, notice, or become?_ A belief that pays out in better decisions earns its place.
 
@@ -166,6 +180,9 @@ fg: #F6EAD8
 accent: #BDE08E
 illustration: evo-psych
 related: status, incentives, mimetics
+quote: The brain is a product of evolution, and just as animal brains serve to optimize the fitness of their owners, we should expect human brains to have been shaped by natural selection to think in ways that were adaptive in the ancestral environment.
+quote-cite: Steven Pinker, How the Mind Works
+quote-cite-href: https://amzn.to/4esTgqP
 
 Behavior is the residue of selection pressures from the ancestral environment. Why we crave sugar, fear snakes more than cars, gossip, form coalitions, find symmetry beautiful, and feel the sting of low status more sharply than the warmth of moderate gain. Your old hardware is running new software, badly.
 
@@ -222,6 +239,8 @@ accent: #F0C66C
 illustration: headspace
 related: communication, narrative, energy
 reading: Headspace | /headspace
+quote: We cannot solve our problems with the same thinking we used when we created them.
+quote-cite: Albert Einstein
 
 Every person is operating from an internal world-model, an emotional state, an identity constraint, and a sense of what feels salient that shapes what they even notice. To understand behavior, enter the headspace first.
 
@@ -241,7 +260,9 @@ fg: #F6EAD8
 accent: #F07064
 illustration: identity
 related: agency, narrative, headspace
-reading: Atomic Habits — James Clear | https://amzn.to/4w6JdP7
+quote: Every action you take is a vote for the type of person you wish to become.
+quote-cite: James Clear, Atomic Habits
+quote-cite-href: https://amzn.to/4w6JdP7
 
 Identity is a construct, not a fact. The story you tell about who you are — your nature, your limits, the kind of person you are and aren’t — is a pattern in your headspace, not a property of the universe. And like any pattern, it can be examined, loosened, and rewritten.
 
@@ -261,8 +282,11 @@ fg: #222226
 accent: #C73B2D
 illustration: incentives
 related: utility, game-theory, probabilistic
+quote: Show me the incentive and I’ll show you the outcome.
+quote-cite: Charlie Munger, Poor Charlie’s Almanack
+quote-cite-href: https://amzn.to/4fqMKBY
 
-Charlie Munger: _show me the incentive and I’ll show you the outcome._ People, organizations, and entire systems drift toward whatever they get paid — in money, attention, or social approval — to do. The drift is rarely visible while it’s happening.
+People, organizations, and entire systems drift toward whatever they get paid — in money, attention, or social approval — to do. The drift is rarely visible while it’s happening.
 
 “Why does this keep happening?” almost always resolves into _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. The cure is rarely exhortation; it’s rewiring the rewards.
 
@@ -338,6 +362,8 @@ fg: #222226
 accent: #B83D31
 illustration: minimalism
 related: constraint, primitives, interface
+quote: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+quote-cite: Antoine de Saint-Exupéry
 
 Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Value comes from what remains after you remove the unnecessary. Not aesthetic austerity for its own sake, but a discipline of asking _what is the smallest thing that still does the job?_ — and then making that thing exceptional.
 
@@ -376,6 +402,8 @@ fg: #F6EAD8
 accent: #F3C35F
 illustration: narrative
 related: mimetics, headspace, status
+quote: The most powerful person in the world is the storyteller.
+quote-cite: Steve Jobs
 
 Humans don’t just optimize; they story-tell. A good frame can change what people perceive as possible, admirable, embarrassing, or inevitable — without changing a single underlying fact. The story does the work the data never could.
 
@@ -395,6 +423,8 @@ fg: #222226
 accent: #24704A
 illustration: osmosis
 related: mimetics, headspace, status
+quote: You are the average of the five people you spend the most time with.
+quote-cite: Jim Rohn
 
 People absorb culture, standards, vocabulary, and taste from their environment. Most growth happens through proximity, not effort — steady exposure to better defaults, day after day, until what used to seem impressive feels normal and what used to feel normal feels embarrassing.
 
@@ -414,6 +444,7 @@ fg: #F6EAD8
 accent: #F0D04D
 illustration: primitives
 related: minimalism, systems, legibility
+reading: The Pragmatic Programmer — Andrew Hunt & David Thomas | https://amzn.to/4odvous
 
 Composable units live beneath complex systems. Many things that look different are the same underlying thing wearing different clothes. Identify and solve the primitive problem and you solve the more complex problems for free.
 
@@ -452,6 +483,8 @@ fg: #F6EAD8
 accent: #E2AB3F
 illustration: projection
 related: headspace, communication, narrative
+quote: Everything that irritates us about others can lead us to an understanding of ourselves.
+quote-cite: Carl Jung
 
 Almost every general statement a person makes is, to some degree, a self-portrait in disguise. Their feedback to others, the patterns they keep noticing, the flaws they find unbearable — the source is inside them, refracted onto whoever happens to be standing in front of them.
 
@@ -509,7 +542,9 @@ fg: #F6EAD8
 accent: #E2AB3F
 illustration: systems
 related: incentives, primitives, probabilistic
-reading: Thinking in Systems — Donella Meadows | https://amzn.to/4w6VpPF
+quote: A system is more than the sum of its parts. It may exhibit adaptive, dynamic, goal-seeking, self-preserving, and sometimes evolutionary behavior.
+quote-cite: Donella Meadows, Thinking in Systems
+quote-cite-href: https://amzn.to/4w6VpPF
 
 Outcomes are rarely caused by one thing. They emerge from feedback loops, bottlenecks, delays, constraints, and second-order effects. The visible event is the tip; the system is everything underneath producing it, again and again.
 
@@ -546,6 +581,9 @@ fg: #F6EAD8
 accent: #F0B85F
 illustration: utility
 related: incentives, game-theory, minimalism
+reading: The Elephant in the Brain — Kevin Simler & Robin Hanson | https://amzn.to/4xlCwcH
+quote: Man is not a rational animal; he is a rationalizing animal.
+quote-cite: Robert Heinlein
 
 Every person behaves _exactly_ according to a personal utility function that they’re maximizing in every choice. Not approximately, not most of the time — exactly. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
 
