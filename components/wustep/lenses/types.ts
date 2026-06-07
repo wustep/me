@@ -87,6 +87,7 @@ export type IllustrationId =
   | 'taste'
   | 'agency'
   | 'expertise'
+  | 'self-fulfilling'
   | 'momentum'
   | 'identity'
   | 'lenses-deck'

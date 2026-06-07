@@ -34,7 +34,7 @@ bg: #B83D31
 fg: #F6EAD8
 accent: #F3C35F
 illustration: agency
-related: momentum, narrative, constraint
+related: self-fulfilling, narrative, constraint
 reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.com/p/how-to-be-more-agentic
 quote: Between stimulus and response there is a space. In that space is our power to choose our response.
 quote-cite: Viktor Frankl
@@ -134,7 +134,7 @@ Reducing all behavior to neurotransmitters flattens real meaning, and “your do
 
 id: energy
 category: Psychology
-tagline: Willpower runs on a battery — design around it.
+tagline: Low energy is a symptom, not a cause.
 bg: #526D2B
 fg: #F6EAD8
 accent: #F0D04D
@@ -373,25 +373,6 @@ The lens applies as much to a life as to a product. What you make, but also what
 
 Some problems are irreducibly complex, and over-pruned systems are brittle. Aestheticized minimalism can curdle into performance — empty rooms, empty calendars, empty work, where the subtraction becomes the point instead of the means. But as a counterweight to default accumulation, the lens is nearly always corrective: less, but better, applied to almost anything.
 
-# Momentum
-
-id: momentum
-category: Strategy
-tagline: Consistency is the currency that buys bold moves.
-bg: #227449
-fg: #F6EAD8
-accent: #F0A86B
-illustration: momentum
-related: agency, systems, identity
-
-Most people think about effort as a single push: how hard, in what direction, right now. Momentum says that what you can do today depends on what you’ve been doing. Effort compounds into mass — trust, reputation, shipping cadence, a team that expects to win. That mass is what makes the hard moves possible later. The unpopular call, the risky bet, the honest conversation — each one lands more easily when you’ve built the credibility to spend.
-
-The question is rarely _should I do this now?_ It’s _am I building the momentum I’ll need, and spending it on the right things?_ Early wins compound into permission. Consistency compounds into the room. Both look like overhead until the day you need them.
-
-You also rarely stop momentum head-on. You nudge its vector. A small push on something already moving beats a big push against something that’s going to win regardless. Most strategic wins, in a career or in a company, look like that — a small redirect, applied early, while the mass was still moving.
-
-It romanticizes motion and underrates the deliberate halt — sometimes the highest-value move is killing a thing that shouldn’t continue, and _we have momentum here_ is exactly how bad projects survive. It flatters incumbents, too, who mistake inherited mass for earned mass. But ignore momentum and you get smart people making technically-correct moves that never land, because they never built the standing to make them work.
-
 # Narrative
 
 id: narrative
@@ -477,7 +458,7 @@ Conviction beats probability sometimes — now and then the move is to commit ha
 
 id: projection
 category: Psychology
-tagline: What people say about others is also about themselves.
+tagline: What people say about others is about themselves.
 bg: #344557
 fg: #F6EAD8
 accent: #E2AB3F
@@ -512,6 +493,27 @@ The honest question about any decision is rarely _does this solve the problem?_ 
 The skill is forcing yourself to ask _and then what?_ three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.
 
 Taken too far, it becomes paralysis. Every move has an infinite downstream, and you can always invent a scary second-order story for any change. The lens also favors the status quo, because the consequences of _not acting_ are less legible than the consequences of acting. But people who think only in first-order effects build systems that solve the visible problem and create three invisible ones, over and over, for decades.
+
+# Self-fulfilling prophecy
+
+id: self-fulfilling
+category: Psychology
+tagline: Belief bends the outcome toward itself.
+bg: #2C6E63
+fg: #F6EAD8
+accent: #EEC15C
+illustration: self-fulfilling
+related: agency, narrative, identity
+quote: Whether you think you can, or you think you can’t — you’re right.
+quote-cite: Henry Ford
+
+A belief can reach into the world and arrange the conditions that prove it true. Expect the meeting to go badly and you show up guarded and a little cold — and it goes badly. Decide the new hire is brilliant and you hand them the good projects, the benefit of the doubt, the room to grow into it — and they grow into it. The prediction isn’t read off reality; it quietly helps write it.
+
+It runs as a loop: belief shapes behavior, behavior shapes the outcome, the outcome confirms the belief. Confidence is the obvious case, but the same machine runs in reverse — the quiet certainty that you’re bad at this becomes the tension that makes you bad at it. A lot of _I knew it_ moments are really _I caused it_ moments wearing a disguise.
+
+This is why believing in your own agency pays even when you can’t yet prove it’s warranted. The belief is an input, not just a readout, so the optimistic-but-uncertain bet often beats the accurate-but-resigned one. It’s the engine under reputations, bank runs, and first dates: treat the thing as already half-true, carefully, and you load the dice toward it.
+
+Push it too far and it curdles into magical thinking — believing harder at a wall that was never going to move, talking yourself into a story reality keeps refusing. And it cuts the other way in other hands: low expectations quietly manufacture the failures that seem to justify them. The move isn’t blind faith. It’s noticing that the forecast is also a lever, and choosing which way to lean.
 
 # Status
 

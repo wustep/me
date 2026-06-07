@@ -19,6 +19,17 @@ import { type Lens } from './types'
  *   bumping `bodyKey`) so navigating between related lenses feels like
  *   flipping pages within the same surface rather than re-opening.
  */
+
+/* User-resizable width. The panel is right-anchored, so the drag width
+   is simply the distance from the viewport's right edge to the pointer.
+   We persist the chosen width and feed it back through a CSS var the
+   `.panel` width clamp already reads, so the `min(…, 100vw)` cap and the
+   phone full-bleed override still win. */
+const RESIZE_STORAGE_KEY = 'lenses:panel-width'
+const PANEL_MIN_WIDTH = 384
+function panelMaxWidth() {
+  return Math.min(window.innerWidth * 0.92, 860)
+}
 type SidePanelProps = {
   lens: Lens | null
   onClose: () => void
@@ -110,6 +121,79 @@ export function SidePanel({
           }
         : null
 
+  /* Drag-to-resize. `panelWidth === null` means "use the default" so we
+     don't emit the var at all (lets the design-panel/default value show
+     through). Lab previews keep their fixed framed width. */
+  const [panelWidth, setPanelWidth] = React.useState<number | null>(null)
+  const resizingRef = React.useRef(false)
+
+  React.useEffect(() => {
+    if (previewOverride) return
+    try {
+      const saved = window.localStorage.getItem(RESIZE_STORAGE_KEY)
+      if (saved) {
+        const n = Number.parseInt(saved, 10)
+        if (Number.isFinite(n)) setPanelWidth(n)
+      }
+    } catch {
+      /* storage disabled — fall back to the default width. */
+    }
+  }, [previewOverride])
+
+  const handleResizePointerDown = React.useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (previewOverride) return
+      event.preventDefault()
+      event.currentTarget.setPointerCapture(event.pointerId)
+      resizingRef.current = true
+      document.documentElement.dataset.lensesResizing = 'true'
+    },
+    [previewOverride]
+  )
+
+  const handleResizePointerMove = React.useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!resizingRef.current) return
+      const next = Math.round(
+        Math.min(
+          Math.max(window.innerWidth - event.clientX, PANEL_MIN_WIDTH),
+          panelMaxWidth()
+        )
+      )
+      setPanelWidth(next)
+    },
+    []
+  )
+
+  const handleResizePointerUp = React.useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!resizingRef.current) return
+      resizingRef.current = false
+      event.currentTarget.releasePointerCapture?.(event.pointerId)
+      delete document.documentElement.dataset.lensesResizing
+      setPanelWidth((w) => {
+        if (w != null) {
+          try {
+            window.localStorage.setItem(RESIZE_STORAGE_KEY, String(w))
+          } catch {
+            /* ignore */
+          }
+        }
+        return w
+      })
+    },
+    []
+  )
+
+  const handleResizeReset = React.useCallback(() => {
+    setPanelWidth(null)
+    try {
+      window.localStorage.removeItem(RESIZE_STORAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+  }, [])
+
   return (
     <DialogPrimitive.Root
       open={open}
@@ -166,13 +250,18 @@ export function SidePanel({
           }`}
           tabIndex={-1}
           style={
-            panelPalette
-              ? ({
-                  ['--panel-bg' as string]: panelPalette.bg,
-                  ['--panel-fg' as string]: panelPalette.fg,
-                  ['--panel-accent' as string]: panelPalette.accent
-                } as React.CSSProperties)
-              : undefined
+            {
+              ...(panelPalette
+                ? {
+                    ['--panel-bg' as string]: panelPalette.bg,
+                    ['--panel-fg' as string]: panelPalette.fg,
+                    ['--panel-accent' as string]: panelPalette.accent
+                  }
+                : {}),
+              ...(panelWidth != null
+                ? { ['--panel-user-width' as string]: `${panelWidth}px` }
+                : {})
+            } as React.CSSProperties
           }
           aria-describedby={undefined}
           onOpenAutoFocus={(event) => {
@@ -203,6 +292,18 @@ export function SidePanel({
           onPointerDownOutside={ignoreOutsideInteraction}
           onInteractOutside={ignoreOutsideInteraction}
         >
+          {shown && !previewOverride && (
+            <div
+              className={styles.panelResizer}
+              aria-hidden='true'
+              onPointerDown={handleResizePointerDown}
+              onPointerMove={handleResizePointerMove}
+              onPointerUp={handleResizePointerUp}
+              onPointerCancel={handleResizePointerUp}
+              onDoubleClick={handleResizeReset}
+              title='Drag to resize · double-click to reset'
+            />
+          )}
           {shown && (
             <>
               <div className={styles.panelHero}>

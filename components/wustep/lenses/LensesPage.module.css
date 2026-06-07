@@ -446,7 +446,7 @@
  *
  *   Interaction model — deliberately simple:
  *     States:    rest → lifted (hover OR selected) → press
- *     Transform: rest = scale(1); lifted = translateY(-5px) scale(1.025);
+ *     Transform: rest = scale(1); lifted = translateY(-2px) scale(1.06);
  *                press dampens the lift.
  *     Shadow:    cheap inset rest shadow on the card itself; the
  *                heavy ambient cast shadow lives on `::before` and
@@ -466,6 +466,9 @@
   /* Pre-promote to its own compositor layer so the first hover
      doesn't pay layer-creation cost. Never toggled on :hover. */
   will-change: transform;
+  /* Anchor scale at the top edge so hover growth pushes the bottom
+     edge downward instead of letting a low cursor fall out of hover. */
+  transform-origin: center top;
   width: 100%;
   aspect-ratio: var(--design-card-aspect, 0.8);
   /* 3-value padding (top / x / bottom). Bottom stays a touch more
@@ -482,14 +485,14 @@
       rgba(255, 255, 255, var(--design-highlight, 0.06)) 0%,
       rgba(255, 255, 255, 0) 32%,
       rgba(0, 0, 0, 0) 68%,
-      rgba(0, 0, 0, 0.1) 100%
+      rgba(0, 0, 0, var(--design-card-shade, 0.06)) 100%
     ),
     var(--card-bg);
   color: var(--card-fg);
   /* `border: 0` keeps native button borders from resurfacing under
      broad UA/reset styles. */
   border: 0;
-  border-radius: var(--design-card-radius, 18px);
+  border-radius: var(--design-card-radius, 16px);
   /* Rest shadow — cheap inset layers only. Cast shadow lives on
      `::before` so hover/selected can fade it in via opacity
      (GPU-only) instead of repainting the whole shadow stack. */
@@ -544,20 +547,20 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    0 2px 3px rgba(44, 32, 18, calc(0.1 * var(--design-shadow-strength, 1))),
+    0 2px 3px rgba(44, 32, 18, calc(0.1 * var(--design-shadow-strength, 0.9))),
     0 calc(var(--design-shadow-y, 13px))
       calc(var(--design-shadow-blur, 32px)) -12px
       color-mix(
         in oklab,
         var(--card-bg) 13%,
-        rgba(44, 32, 18, calc(0.26 * var(--design-shadow-strength, 1)))
+        rgba(44, 32, 18, calc(0.26 * var(--design-shadow-strength, 0.9)))
       ),
     0 calc(var(--design-shadow-y, 13px) * 2.25)
       calc(var(--design-shadow-blur, 32px) * 2.05) -26px
       color-mix(
         in oklab,
         var(--card-bg) 12%,
-        rgba(44, 32, 18, calc(0.24 * var(--design-shadow-strength, 1)))
+        rgba(44, 32, 18, calc(0.24 * var(--design-shadow-strength, 0.9)))
       );
   opacity: 0;
   transition: opacity var(--design-hover-out, 180ms)
@@ -605,8 +608,8 @@
      must outrank hover, never the other way around). The ring +
      gap below provide the unique selected signal — the lift just
      needs to be at-least the hover amount. */
-  transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
-    scale(var(--design-hover-scale, 1.025));
+  transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
+    scale(var(--design-hover-scale, 1.06));
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
@@ -706,8 +709,12 @@
 
 @media (hover: hover) and (pointer: fine) {
   .cardInteractionReady:hover {
-    transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
-      scale(var(--design-hover-scale, 1.025))
+    /* Small rise + top-origin scale. Because the scale is anchored at
+       the top edge, the bottom edge only moves downward as the card
+       grows; the translate would need to exceed the full added height
+       before a low cursor could fall out of hover. */
+    transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
+      scale(var(--design-hover-scale, 1.06))
       rotate(var(--design-card-tilt, 0deg));
     /* Snap up under the cursor — short enough that the lift
        feels caused by the pointer, not chased by it. */
@@ -719,8 +726,8 @@
   /* Tilt direction alternates per-cell so the deck doesn't lean
      all one way under the cursor. */
   .cardInteractionReady:nth-child(even):hover {
-    transform: translateY(calc(var(--design-hover-lift, 5px) * -1))
-      scale(var(--design-hover-scale, 1.025))
+    transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
+      scale(var(--design-hover-scale, 1.06))
       rotate(calc(var(--design-card-tilt, 0deg) * -1));
   }
 
@@ -749,11 +756,20 @@
     box-shadow 80ms var(--design-ease, var(--ease-out-snap));
 }
 
+.cardHoverGuard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc((var(--design-hover-lift, 2px) + 8px) * -1);
+  height: calc(var(--design-hover-lift, 2px) + 12px);
+  pointer-events: auto;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .cardInteractionReady:hover:active,
   .cardInteractionReady.cardSelected:hover:active {
-    transform: translateY(calc(var(--design-hover-lift, 5px) * -0.4))
-      scale(calc(var(--design-hover-scale, 1.025) * 0.985));
+    transform: translateY(calc(var(--design-hover-lift, 2px) * -0.4))
+      scale(calc(var(--design-hover-scale, 1.06) * 0.97));
   }
 }
 
@@ -841,6 +857,9 @@
   overflow-wrap: normal;
   word-break: normal;
   hyphens: none;
+  /* Eases the hover/focus fade-out that hands the space to the
+     tagline, in both directions (the reveal rules only set opacity). */
+  transition: opacity 180ms var(--ease-out-snap);
 }
 
 /* Inner clamp element — caps the visible line count to 2 so
@@ -958,9 +977,12 @@
   display: block;
 }
 
-/* Hover-revealed tagline. Hidden at rest, fades in on hover. */
+/* Tagline preview. Hidden at rest, fades up on hover and on keyboard
+   focus so the deck is browsable without opening every card. Absolutely
+   positioned + pointer-events:none → revealing it causes no layout
+   shift; the title slides up (transform) to make room. */
 .cardHoverTagline {
-  display: none;
+  display: block;
   position: absolute;
   inset: auto var(--design-card-pad-x, 14px) var(--design-card-pad-y, 13px);
   font-family: var(--design-serif, var(--font-serif, Georgia, serif));
@@ -976,23 +998,39 @@
   pointer-events: none;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
-:global(html[data-design-card-tagline='on']) .cardHoverTagline {
-  display: block;
+
+/* Keyboard reveal — un-gated by pointer media so tabbing/arrowing
+   through the deck previews each lens on any device. The selected
+   card (open in the panel, or under the keyboard cursor) holds the
+   reveal too, so the "current" lens always shows its line. */
+.cardInteractionReady:focus-visible .cardHoverTagline,
+.cardSelected .cardHoverTagline {
+  opacity: 0.95;
+  transform: translateY(0);
 }
+.cardInteractionReady:focus-visible .cardTitle,
+.cardSelected .cardTitle {
+  opacity: 0;
+}
+
 @media (hover: hover) and (pointer: fine) {
-  :global(html[data-design-card-tagline='on'])
-    .cardInteractionReady:hover
-    .cardHoverTagline {
+  .cardInteractionReady:hover .cardHoverTagline {
     opacity: 0.95;
     transform: translateY(0);
   }
-  /* Slide the title up to make room for the tagline. */
-  :global(html[data-design-card-tagline='on'])
-    .cardInteractionReady:hover
-    .cardTitle {
-    transform: translateY(-22px);
-    transition: transform 180ms var(--ease-out-snap);
+  /* Fade the title out so the tagline takes its place without colliding. */
+  .cardInteractionReady:hover .cardTitle {
+    opacity: 0;
   }
+}
+
+/* Dev: pin the tagline permanently visible (no hover) for inspection. */
+:global(html[data-design-card-tagline='on']) .cardHoverTagline {
+  opacity: 0.95;
+  transform: translateY(0);
+}
+:global(html[data-design-card-tagline='on']) .cardTitle {
+  opacity: 0;
 }
 
 /* ===== Center "Lenses" card — spans the middle 2×2 of the grid =====
@@ -1005,6 +1043,7 @@
   /* Same compositor-promotion as lens cards — pre-promote at rest,
      no will-change toggling on hover. Keeps hover-in instant. */
   will-change: transform;
+  transform-origin: center top;
   /* Sits inside the middle 2×2 cells of the 8-col grid. */
   grid-column: 4 / 6;
   grid-row: 2 / 4;
@@ -1151,7 +1190,9 @@
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover {
-    transform: translateY(-6px) scale(1.02);
+    /* Center-scale only, same rationale as the lens cards: outward
+       growth never pulls an edge off the cursor. */
+    transform: scale(1.03);
     transition: transform 90ms var(--ease-out-snap);
     z-index: 25;
   }
@@ -1169,7 +1210,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .centerCard:hover:active {
-    transform: translateY(-2px) scale(1.005);
+    transform: scale(1.01);
   }
 }
 
@@ -1245,7 +1286,9 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(var(--design-panel-width, 540px), 100vw);
+  /* User drag-width (`--panel-user-width`) wins when set, else the
+     design-panel/default value. The 100vw cap keeps it on-screen. */
+  width: min(var(--panel-user-width, var(--design-panel-width, 540px)), 100vw);
   background: #faf7ee;
   display: flex;
   flex-direction: column;
@@ -1269,6 +1312,56 @@
 
 .panel[data-state='closed'] {
   animation: slideOutRight 280ms var(--ease-out-quart);
+}
+
+/* Drag handle straddling the panel's left edge. A wide-ish hit area
+   (12px) with a thin grip line that surfaces on hover / while
+   dragging. Sits above the hero so it's grabbable over the colored
+   zone. */
+.panelResizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 12px;
+  transform: translateX(-50%);
+  z-index: 5;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.panelResizer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  transition: opacity 160ms var(--ease-out-quart);
+}
+
+:global(.dark-mode) .panelResizer::after {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .panelResizer:hover::after {
+    opacity: 1;
+  }
+}
+
+/* While dragging: pin the resize cursor everywhere and kill text
+   selection so the drag feels like a single gesture. */
+:global(html[data-lenses-resizing]) {
+  cursor: ew-resize;
+  user-select: none;
+}
+
+:global(html[data-lenses-resizing]) .panelResizer::after {
+  opacity: 1;
 }
 
 .panelPreviewOverlay {
@@ -3583,7 +3676,35 @@
   }
 }
 
-/* Momentum — the metronome arm swings; motion, once started, keeps going. */
+/* Self-fulfilling prophecy — the lit segment races the loop and
+   returns to its origin; the belief seed pulses as it comes around. */
+:global(svg[data-anim='self-fulfilling'] [data-anim-target='pulse']) {
+  animation: lensSelfFulfillingPulse 2.8s linear infinite;
+}
+:global(svg[data-anim='self-fulfilling'] [data-anim-target='seed']) {
+  animation: lensSelfFulfillingSeed 2.8s ease-in-out infinite;
+}
+@keyframes lensSelfFulfillingPulse {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -175.93;
+  }
+}
+@keyframes lensSelfFulfillingSeed {
+  0%,
+  60%,
+  100% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(1.32);
+  }
+}
+
+/* Momentum — retired from the deck; kept for the illustration lab.
+   The metronome arm swings; motion, once started, keeps going. */
 :global(svg[data-anim='momentum'] [data-anim-target='1']) {
   animation: lensMomentumSwing 1.6s ease-in-out infinite;
 }
@@ -3660,11 +3781,16 @@
     animation-play-state: running;
   }
 
-  .frame[data-animations='playing'] .card .cardArt
+  .frame[data-animations='playing']
+    .card
+    .cardArt
     :global(svg[data-anim] [data-anim-target]),
-  .frame[data-animations='playing'] .centerCard .cardArt
+  .frame[data-animations='playing']
+    .centerCard
+    .cardArt
     :global(svg[data-anim] [data-anim-target]),
-  .frame[data-animations='playing'] .dialogJumpArt
+  .frame[data-animations='playing']
+    .dialogJumpArt
     :global(svg[data-anim] [data-anim-target]) {
     animation-play-state: running;
   }
@@ -3933,6 +4059,11 @@
     animation-duration: 4.8s;
   }
 
+  :global(svg[data-anim='self-fulfilling'] [data-anim-target='pulse']),
+  :global(svg[data-anim='self-fulfilling'] [data-anim-target='seed']) {
+    animation-duration: 4.2s;
+  }
+
   :global(svg[data-anim='momentum'] [data-anim-target='1']) {
     animation-duration: 2.4s;
   }
@@ -3955,6 +4086,8 @@
   .card,
   .cardArt :global(svg),
   .cardArt :global(svg [data-anim-target]),
+  .cardTitle,
+  .cardHoverTagline,
   .panelArt :global(svg [data-anim-target]),
   .dialogJumpArt :global(svg [data-anim-target]),
   .centerCard,
@@ -4180,6 +4313,11 @@
      the slide-in still arrives from the anchored edge. */
   .panel {
     width: 100vw;
+  }
+
+  /* Full-bleed on phones — nothing to resize, so drop the handle. */
+  .panelResizer {
+    display: none;
   }
 
   /* Lab previews portal the panel into a framed stage, not the document
@@ -4460,8 +4598,8 @@
    state until the next tap elsewhere. */
 @media (hover: hover) and (pointer: fine) {
   :global(html[data-design-magnetic='on']) .cardInteractionReady:hover {
-    transform: translateY(calc(var(--design-hover-lift, 5px) * -1.3))
-      scale(calc(var(--design-hover-scale, 1.025) * 1.01))
+    transform: translateY(calc(var(--design-hover-lift, 2px) * -1.3))
+      scale(calc(var(--design-hover-scale, 1.06) * 1.01))
       rotate(calc(var(--design-card-tilt, 0deg) * 1.5));
   }
 }

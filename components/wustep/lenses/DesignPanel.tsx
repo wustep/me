@@ -45,7 +45,11 @@ import {
  *   the JS, and never pay any runtime cost.
  * ========================================================================== */
 
-const STORAGE_KEY = 'lenses:design-panel:v1'
+/* Bumped when hover mechanics changed. Old saved sessions can preserve a
+   lift/scale pair that lets the bottom edge move off the cursor, causing
+   hover oscillation. Starting fresh adopts the stable defaults and hover
+   guard; saved slots use their own keys and are unaffected. */
+const STORAGE_KEY = 'lenses:design-panel:v4'
 const COLLAPSED_KEY = 'lenses:design-panel:collapsed:v1'
 const SLOT_KEY = (n: number) => `lenses:design-panel:slot:${n}:v1`
 

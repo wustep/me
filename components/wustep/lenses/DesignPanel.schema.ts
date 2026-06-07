@@ -216,7 +216,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 36,
         step: 1,
-        default: 18
+        default: 16
       },
       {
         kind: 'slider',
@@ -238,7 +238,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 20,
         step: 1,
-        default: 5
+        default: 2
       },
       {
         kind: 'slider',
@@ -249,7 +249,7 @@ export const SECTIONS: Section[] = [
         min: 1,
         max: 1.15,
         step: 0.005,
-        default: 1.025
+        default: 1.06
       },
       {
         kind: 'slider',
@@ -366,7 +366,18 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 1.5,
         step: 0.05,
-        default: 1
+        default: 0.9
+      },
+      {
+        kind: 'slider',
+        id: 'cardShade',
+        label: 'Card bottom shade',
+        cssVar: '--design-card-shade',
+        cssUnit: '',
+        min: 0,
+        max: 0.2,
+        step: 0.01,
+        default: 0.06
       },
       {
         kind: 'slider',
@@ -1031,7 +1042,7 @@ export const SECTIONS: Section[] = [
       {
         kind: 'toggle',
         id: 'cardTagline',
-        label: 'Show tagline on hover',
+        label: 'Pin tagline (always visible)',
         dataAttr: 'card-tagline',
         default: false
       },

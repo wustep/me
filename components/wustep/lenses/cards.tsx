@@ -185,6 +185,7 @@ function LensCardImpl({
       <span className={styles.cardHoverTagline} aria-hidden='true'>
         {lens.tagline}
       </span>
+      <span className={styles.cardHoverGuard} aria-hidden='true' />
     </button>
   )
 }

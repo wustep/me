@@ -225,7 +225,7 @@ export const SLIDES: Slide[] = [
     eyebrow: 'My new favorite',
     title: 'YOLO and extract.',
     body: 'Big context. Ambitious prompt. Disposable PR. Harvest the wins.',
-    note: 'My new favorite technique. Have agents complete a huge chunk of work in a single PR — a whole milestone, not a single change. Then treat the PR as disposable: extract the parts you like as smaller PRs, or as insights. The dial is hands-on (ask along the way, edit the plan) versus YOLO (let it decide). Spec-heavy work goes hands-on; open-ended exploration goes YOLO. Load lots of context — docs, Figma, prior PRs, RFCs. Tell it to commit incrementally so you can cherry-pick. GPT-5.5 high for the run; Opus 4.7 for the PR description. Trust that something in there is useful, even when most of it is wrong.',
+    note: 'My new favorite technique. Have agents complete a huge chunk of work in a single PR — a whole milestone, not a single change. Then treat the PR as disposable: extract the parts you like as smaller PRs, or as insights. The dial is hands-on (ask along the way, edit the plan) versus YOLO (let it decide). Spec-heavy work goes hands-on; open-ended exploration goes YOLO. Load lots of context — docs, Figma, prior PRs, RFCs. Tell it to commit incrementally so you can cherry-pick. GPT for the run; Opus for the PR description. Trust that something in there is useful, even when most of it is wrong.',
     visual: { kind: 'yoloExtract' },
     tone: 'dark',
     layout: 'visual'

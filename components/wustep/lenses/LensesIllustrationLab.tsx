@@ -109,10 +109,32 @@ const LENSES_DECK_LENS: Lens = {
   body: 'The center card is the index for the whole deck: a compact visual system for choosing how to look at a question.'
 }
 
+const MOMENTUM_ILLUSTRATION_ID = 'momentum' satisfies IllustrationId
+
+/** Momentum was retired from the production deck (replaced by
+ *  Self-fulfilling prophecy), but its illustration is kept available
+ *  in the lab as an extra card to select. Modeled as a synthetic
+ *  lens — exactly like the center `lenses-deck` card — so it carries
+ *  its own palette, title, and tagline without rejoining `LENSES`. */
+const MOMENTUM_LENS: Lens = {
+  id: 'momentum',
+  category: 'Strategy',
+  title: 'Momentum',
+  tagline: 'Easier to steer motion than to start it.',
+  x: 50,
+  y: 50,
+  bg: '#227449',
+  fg: '#F6EAD8',
+  accent: '#F0A86B',
+  illustration: MOMENTUM_ILLUSTRATION_ID,
+  body: 'Retired from the deck — kept in the lab as a selectable illustration.'
+}
+
 const UNIQUE_ILLUSTRATIONS: IllustrationId[] = Array.from(
   new Set<IllustrationId>([
     ...LENSES.map((lens) => lens.illustration),
-    LENSES_DECK_ILLUSTRATION_ID
+    LENSES_DECK_ILLUSTRATION_ID,
+    MOMENTUM_ILLUSTRATION_ID
   ])
 ).toSorted((a, b) => a.localeCompare(b))
 
@@ -123,6 +145,7 @@ for (const lens of LENSES) {
   }
 }
 FIRST_LENS_FOR_ILLUSTRATION.set(LENSES_DECK_ILLUSTRATION_ID, LENSES_DECK_LENS)
+FIRST_LENS_FOR_ILLUSTRATION.set(MOMENTUM_ILLUSTRATION_ID, MOMENTUM_LENS)
 
 function titleLengthBucket(title: string): 'long-word' | 'long' | undefined {
   const words = title.split(/\s+/)

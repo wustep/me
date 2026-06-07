@@ -79,6 +79,8 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
       return <ArtAgency fg={fg} accent={accent} />
     case 'expertise':
       return <ArtExpertise fg={fg} accent={accent} />
+    case 'self-fulfilling':
+      return <ArtSelfFulfilling fg={fg} accent={accent} />
     case 'momentum':
       return <ArtMomentum fg={fg} accent={accent} />
     case 'identity':
@@ -2301,10 +2303,83 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
+/** Self-fulfilling prophecy — a belief that feeds itself. A faint
+ *  ring is the loop (belief → behavior → outcome → belief); a lit
+ *  accent segment races around it and returns to where it began,
+ *  over and over. An arrowhead bites back into the accent "seed" at
+ *  the top — the outcome arriving to confirm the belief that started
+ *  it. The seed pulses each time the loop closes.
+ *
+ *    data-anim-target='pulse' = the racing lit segment (stroke-
+ *      dashoffset sweeps it once around the ring per cycle).
+ *    data-anim-target='seed' = the belief dot (a gentle scale pulse
+ *      as the prophecy comes back around).
+ */
+function ArtSelfFulfilling({ fg, accent }: { fg: string; accent: string }) {
+  // Ring geometry. The circumference lets the racing pulse express
+  // its lit length as a fraction of the full loop, and the CSS
+  // keyframe sweeps stroke-dashoffset by exactly this amount so the
+  // segment travels once around per cycle and loops seamlessly.
+  const R = 28
+  const C = 2 * Math.PI * R // ≈ 175.93
+
+  return (
+    <svg {...SVG_BASE} aria-hidden='true' data-anim='self-fulfilling'>
+      {/* The loop track — belief feeding back on itself. */}
+      <circle
+        cx='50'
+        cy='50'
+        r={R}
+        fill='none'
+        stroke={fg}
+        strokeWidth={ART_STROKE.regular}
+        opacity={ART_OPACITY.base}
+      />
+
+      {/* The prophecy — a short lit segment that races the loop and
+          returns to its origin again and again. */}
+      <circle
+        cx='50'
+        cy='50'
+        r={R}
+        fill='none'
+        stroke={accent}
+        strokeWidth={ART_STROKE.bold}
+        strokeLinecap='round'
+        opacity={ART_OPACITY.solid}
+        data-anim-target='pulse'
+        style={{ strokeDasharray: `10 ${C - 10}` }}
+      />
+
+      {/* The outcome returning to confirm the belief — an arrowhead
+          biting back into the seed at the top of the loop. */}
+      <polygon
+        points='49,22 41.5,18 41.5,26'
+        fill={fg}
+        opacity={ART_OPACITY.solid}
+      />
+
+      {/* The belief — the accent seed the loop keeps returning to. */}
+      <circle
+        cx='50'
+        cy='22'
+        r={ART_DOT.medium}
+        fill={accent}
+        data-anim-target='seed'
+        style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+      />
+    </svg>
+  )
+}
+
 /** Momentum — a metronome. The triangular body sits still; the
  *  pendulum arm swings, carrying its own motion. The story: what&rsquo;s
  *  already moving keeps moving, and most outcomes are decided by mass
  *  in flight rather than the best argument in the room.
+ *
+ *  Retired from the production deck (replaced by Self-fulfilling
+ *  prophecy) but kept here so it stays selectable in the
+ *  illustration lab as an extra card.
  *
  *    data-anim-target='1' = the pendulum arm + bob (swings).
  */
