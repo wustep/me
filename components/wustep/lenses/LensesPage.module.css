@@ -1563,13 +1563,18 @@
   border-top-color: rgba(255, 255, 255, 0.08);
 }
 
-/* When readings AND related are both present, the related block sits
-   directly under readings — collapse the doubled divider/spacing so
-   it reads as one footer with two labels. */
+/* When readings AND related are both present, keep a subtle hairline
+   between them — readings/quotes point out of the deck, Related points
+   within it, so the two sections read as distinct (just lighter than the
+   footer's leading divider). */
 .readingsBlock + .relatedBlock {
   margin-top: 22px;
-  padding-top: 0;
-  border-top: 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(.dark-mode) .readingsBlock + .relatedBlock {
+  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 .readingsList {
