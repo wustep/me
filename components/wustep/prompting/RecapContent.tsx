@@ -18,6 +18,7 @@ export function RecapContent() {
         title='The beginner’s mindset'
         href='/prompting/mindset'
       >
+        <RecapMindsetViz />
         <p>
           We&apos;re three years into a five-hundred-year skill. About 1200 ELO.
           When the model lets you down, the closed-minded blame the AI; the
@@ -66,9 +67,10 @@ export function RecapContent() {
       <RecapItem index={5} title='The colleague' href='/prompting/colleague'>
         <RecapColleagueViz />
         <p>
-          Treat the agent as a colleague &mdash; a fast, knowledgeable junior
-          who only sees what you&apos;ve shown them. The discipline gets{' '}
-          <em>more</em> important, not less, as the models get smarter.
+          Treat the agent as a colleague &mdash; a fast, knowledgeable{' '}
+          <s>junior</s> senior who only sees what you&apos;ve shown them. The
+          discipline gets <em>more</em> important, not less, as the models get
+          smarter.
         </p>
       </RecapItem>
 
@@ -77,6 +79,7 @@ export function RecapContent() {
         title='Orchestration'
         href='/prompting/orchestration'
       >
+        <RecapOrchestrationViz />
         <p>
           One agent makes you faster &mdash; but now you have access to a whole
           team. The bottleneck stops being model speed and becomes <em>you</em>:
@@ -206,6 +209,173 @@ function RecapColleagueViz() {
       <span className={styles.recapColleagueStep}>Brief</span>
       <span className={styles.recapColleagueArrow}>→</span>
       <span className={styles.recapColleagueStep}>Review</span>
+    </div>
+  )
+}
+
+// Mindset viz — a tiny ELO distribution: you near the hump (~1200),
+// Magnus far out in the right tail, a dashed gap between.
+function RecapMindsetViz() {
+  return (
+    <div className={styles.recapMindsetViz} aria-hidden='true'>
+      <svg
+        viewBox='0 0 240 64'
+        className={styles.recapMindsetSvg}
+        preserveAspectRatio='xMidYMid meet'
+      >
+        <defs>
+          <linearGradient id='recapEloStroke' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#c14a30' />
+            <stop offset='100%' stopColor='#e89042' />
+          </linearGradient>
+        </defs>
+
+        <line
+          x1='6'
+          y1='52'
+          x2='234'
+          y2='52'
+          className={styles.recapMindsetAxis}
+        />
+
+        <path
+          d='M 6,46 C 26,30 50,16 74,16 C 100,16 122,34 144,44 C 168,52 204,52 234,52'
+          className={styles.recapMindsetCurve}
+        />
+
+        <line
+          x1='100'
+          y1='22'
+          x2='216'
+          y2='50'
+          className={styles.recapMindsetGap}
+        />
+
+        <g>
+          <line
+            x1='100'
+            y1='22'
+            x2='100'
+            y2='52'
+            className={styles.recapMindsetStem}
+          />
+          <circle
+            cx='100'
+            cy='22'
+            r='3.4'
+            className={styles.recapMindsetDotYou}
+          />
+          <text
+            x='100'
+            y='13'
+            textAnchor='middle'
+            className={styles.recapMindsetLabelYou}
+          >
+            you · 1200
+          </text>
+        </g>
+
+        <g>
+          <circle
+            cx='216'
+            cy='50'
+            r='3.4'
+            className={styles.recapMindsetDotMagnus}
+          />
+          <text
+            x='216'
+            y='42'
+            textAnchor='end'
+            className={styles.recapMindsetLabel}
+          >
+            Magnus
+          </text>
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+// Orchestration viz — one prompt fans out into three parallel agent
+// lanes that converge on a single merge point. Geometry is fully
+// connected: branches leave the prompt node, lanes share a right edge,
+// and merge lines pull that edge back to one dot.
+function RecapOrchestrationViz() {
+  const lanes = [14, 34, 54] // vertical centers of the three agent lanes
+  const NODE_RIGHT = 54
+  const LANE_LEFT = 92
+  const LANE_RIGHT = 184
+  const MERGE_X = 214
+  const MERGE_Y = 34
+
+  return (
+    <div className={styles.recapOrchViz} aria-hidden='true'>
+      <svg
+        viewBox='0 0 240 68'
+        className={styles.recapOrchSvg}
+        preserveAspectRatio='xMidYMid meet'
+      >
+        <defs>
+          <linearGradient id='recapFanYou' x1='0' x2='1' y1='0' y2='0'>
+            <stop offset='0%' stopColor='#c14a30' />
+            <stop offset='100%' stopColor='#e89042' />
+          </linearGradient>
+        </defs>
+
+        <rect
+          x='4'
+          y='25'
+          width='50'
+          height='18'
+          rx='5'
+          className={styles.recapOrchYou}
+        />
+        <text x='29' y='34.5' className={styles.recapOrchYouLabel}>
+          you
+        </text>
+
+        {lanes.map((cy) => (
+          <path
+            key={`b-${cy}`}
+            d={`M ${NODE_RIGHT},34 C ${NODE_RIGHT + 20},34 ${LANE_LEFT - 20},${cy} ${LANE_LEFT},${cy}`}
+            className={styles.recapOrchBranch}
+          />
+        ))}
+
+        {lanes.map((cy) => (
+          <g key={`a-${cy}`}>
+            <rect
+              x={LANE_LEFT}
+              y={cy - 6}
+              width={LANE_RIGHT - LANE_LEFT}
+              height='12'
+              rx='4'
+              className={styles.recapOrchAgent}
+            />
+            <circle
+              cx={LANE_LEFT + 9}
+              cy={cy}
+              r='2.4'
+              className={styles.recapOrchAgentDot}
+            />
+          </g>
+        ))}
+
+        {lanes.map((cy) => (
+          <path
+            key={`m-${cy}`}
+            d={`M ${LANE_RIGHT},${cy} C ${LANE_RIGHT + 16},${cy} ${MERGE_X - 14},${MERGE_Y} ${MERGE_X},${MERGE_Y}`}
+            className={styles.recapOrchMerge}
+          />
+        ))}
+
+        <circle
+          cx={MERGE_X}
+          cy={MERGE_Y}
+          r='4.5'
+          className={styles.recapOrchMergeDot}
+        />
+      </svg>
     </div>
   )
 }

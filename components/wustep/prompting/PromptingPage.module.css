@@ -275,6 +275,47 @@
   transform: translateX(3px);
 }
 
+.beginRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 0.6em;
+}
+
+.beginRow .beginCta {
+  margin-top: 0;
+}
+
+/* Secondary alternative — a quiet muted line beside the Begin pill,
+   with just "presentation" underlined as the link. */
+.altVersion {
+  font-size: 0.92rem;
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.55));
+}
+
+:global(.dark-mode) .altVersion {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.altVersionLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  border: none !important;
+  background-image: none !important;
+  transition: color 160ms ease;
+}
+
+.altVersionLink:hover {
+  color: var(--fg-color, rgb(55, 53, 47)) !important;
+}
+
+:global(.dark-mode) .altVersionLink:hover {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
 /* ===== Chapter header (top of every chapter page) ===== */
 
 .chapterHeader {
@@ -766,6 +807,26 @@
 :global(.dark-mode) .prose code {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Inline code inside any chapter body (recap list, equation prose, …).
+   Keeps it upright + monospace with a chip background so it stays
+   legible in both light and dark mode. */
+.chapterBody code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.88em;
+  font-style: normal;
+  padding: 0.08em 0.4em;
+  border-radius: 5px;
+  background: var(--fg-color-0, rgba(55, 53, 47, 0.06));
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  color: var(--fg-color, rgb(55, 53, 47));
+}
+
+:global(.dark-mode) .chapterBody code {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .axisList {
@@ -1742,6 +1803,17 @@
   box-shadow: 0 0 0 3px rgba(232, 144, 66, 0.18);
 }
 
+/* Dark-mode overrides need the same specificity as the base dark rule
+   above (two classes), or the crosshair + active cell get flattened to
+   the same grey. */
+:global(.dark-mode) .recapTreeCellOnAxis {
+  background: rgba(232, 144, 66, 0.22);
+}
+
+:global(.dark-mode) .recapTreeCellActive {
+  background: linear-gradient(135deg, #c14a30 0%, #e89042 100%);
+}
+
 .recapTreeMoves {
   display: flex;
   flex-direction: column;
@@ -1828,6 +1900,162 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* Mindset viz — tiny ELO distribution */
+.recapMindsetViz,
+.recapOrchViz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 16px;
+  margin: 0 0 1em;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--fg-color-5, rgba(55, 53, 47, 0.04)) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--fg-color-1, rgba(55, 53, 47, 0.1));
+  color: var(--fg-color-3, rgba(55, 53, 47, 0.5));
+}
+
+:global(.dark-mode) .recapMindsetViz,
+:global(.dark-mode) .recapOrchViz {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  border-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.recapMindsetSvg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  overflow: visible;
+}
+
+.recapMindsetAxis {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.3;
+}
+
+.recapMindsetCurve {
+  fill: none;
+  stroke: url(#recapEloStroke);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.recapMindsetGap {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  opacity: 0.45;
+}
+
+.recapMindsetStem {
+  stroke: #c14a30;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  opacity: 0.55;
+}
+
+:global(.dark-mode) .recapMindsetStem {
+  stroke: #e89042;
+}
+
+.recapMindsetDotYou {
+  fill: #c14a30;
+}
+
+:global(.dark-mode) .recapMindsetDotYou {
+  fill: #e89042;
+}
+
+.recapMindsetDotMagnus {
+  fill: currentColor;
+}
+
+.recapMindsetLabel,
+.recapMindsetLabelYou {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  fill: currentColor;
+}
+
+.recapMindsetLabelYou {
+  fill: #c14a30;
+}
+
+:global(.dark-mode) .recapMindsetLabelYou {
+  fill: #e89042;
+}
+
+/* Orchestration viz — fan-out into a merge */
+.recapOrchSvg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  overflow: visible;
+}
+
+.recapOrchYou {
+  fill: url(#recapFanYou);
+}
+
+.recapOrchYouLabel {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  fill: #fff;
+}
+
+.recapOrchBranch {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.recapOrchAgent {
+  fill: rgba(193, 74, 48, 0.14);
+  stroke: rgba(193, 74, 48, 0.32);
+  stroke-width: 1;
+}
+
+:global(.dark-mode) .recapOrchAgent {
+  fill: rgba(232, 144, 66, 0.16);
+  stroke: rgba(232, 144, 66, 0.34);
+}
+
+.recapOrchAgentDot {
+  fill: #c14a30;
+}
+
+:global(.dark-mode) .recapOrchAgentDot {
+  fill: #e89042;
+}
+
+.recapOrchMerge {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.recapOrchMergeDot {
+  fill: url(#recapFanYou);
+}
+
 .recapTechniquesIntro {
   margin: 0 0 0.4em !important;
   font-style: italic;
@@ -1861,10 +2089,6 @@
 
 :global(.dark-mode) .recapList li {
   color: rgba(255, 255, 255, 0.82);
-}
-
-.recapList code {
-  font-style: normal;
 }
 
 /* "Lift them into skills" closing block */

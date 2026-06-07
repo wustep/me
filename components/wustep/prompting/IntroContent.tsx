@@ -30,9 +30,10 @@ export function IntroContent() {
       setRevealed(true)
       return
     }
-    // On the first visit per session, let the dot-matrix animation
-    // complete a full cycle (~5s covers the slowest pattern's tail).
-    // After that, snap to the short duration so revisits stay snappy.
+    // On the first visit per session, hold just long enough for the
+    // dot-matrix to finish one clean cycle (plus a small tail), capped
+    // under 3s. After that, snap to the short duration so revisits stay
+    // snappy.
     let firstLoad = false
     try {
       firstLoad = !window.sessionStorage.getItem('prompting:intro:seen')
@@ -40,7 +41,7 @@ export function IntroContent() {
     } catch {
       /* ignore */
     }
-    const wait = firstLoad ? 5000 : THINKING_DURATION_MS
+    const wait = firstLoad ? 2000 : THINKING_DURATION_MS
     const id = window.setTimeout(() => setRevealed(true), wait)
     return () => window.clearTimeout(id)
   }, [prefersReducedMotion])
@@ -98,13 +99,23 @@ export function IntroContent() {
           to Claude, Codex, or whatever comes next?
         </p>
 
-        <div className={styles.bodyItem} style={bodyDelay(5)}>
+        <div
+          className={`${styles.bodyItem} ${styles.beginRow}`}
+          style={bodyDelay(5)}
+        >
           <Link href='/prompting/mindset' className={styles.beginCta}>
             <span>Begin: The beginner&rsquo;s mindset</span>
             <span className={styles.beginCtaArrow} aria-hidden='true'>
               →
             </span>
           </Link>
+
+          <span className={styles.altVersion}>
+            Or view the{' '}
+            <Link href='/prompting/present' className={styles.altVersionLink}>
+              presentation
+            </Link>
+          </span>
         </div>
       </div>
     </>

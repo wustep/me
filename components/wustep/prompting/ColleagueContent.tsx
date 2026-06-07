@@ -9,8 +9,8 @@ export function ColleagueContent() {
       <p>
         The most useful mental shift I&apos;ve found is treating the agent as a{' '}
         <em>colleague</em> &mdash; specifically, a fast, knowledgeable,
-        infinitely patient junior who has only seen what you&apos;ve shown them
-        and forgets between sessions.
+        infinitely patient <s>junior</s> senior who has only seen what
+        you&apos;ve shown them and forgets between sessions.
       </p>
 
       <p>

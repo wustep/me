@@ -18,13 +18,12 @@ import styles from './PromptingPage.module.css'
  *
  *    0ms   waits for parent to flip `start` (after title reveals)
  * 1400ms   begins typing "Center this div" (70ms/char ≈ 1.2s)
- * 2700ms   pause on the completed sentence
- * 3300ms   auto-fires Send → error appears, card shakes
- *           Send button swaps in to the Replay button (cross-fade)
+ * 2700ms   typing settles; the prompt waits for the visitor to send
  *
+ *  user hits Send / Enter  →  error appears, card shakes, Replay swaps in
  *  user types again        →  error clears, Send returns
- *  user clicks Replay      →  re-runs the whole sequence
- *  prefers-reduced-motion  →  fills value instantly, sends after 250ms
+ *  user clicks Replay      →  re-runs the typing sequence
+ *  prefers-reduced-motion  →  fills value instantly, no auto-send
  * ───────────────────────────────────────────────────────── */
 
 export function PromptInputDemo({ start }: { start: boolean }) {
@@ -64,9 +63,6 @@ export function PromptInputDemo({ start }: { start: boolean }) {
 
     if (prefersReducedMotion) {
       setValue(AUTO_PROMPT)
-      timersRef.current.push(
-        window.setTimeout(() => triggerSend(AUTO_PROMPT), 250)
-      )
       return
     }
 
@@ -78,16 +74,15 @@ export function PromptInputDemo({ start }: { start: boolean }) {
       if (i < AUTO_PROMPT.length) {
         timersRef.current.push(window.setTimeout(typeStep, AUTO_TYPE_CHAR_MS))
       } else {
+        // Leave the typed prompt sitting in the input — the visitor sends
+        // it themselves (or hits the wall) rather than us auto-firing.
         timersRef.current.push(
-          window.setTimeout(
-            () => triggerSend(AUTO_PROMPT),
-            AUTO_TYPE_SEND_DELAY_MS
-          )
+          window.setTimeout(() => setAutoTyping(false), AUTO_TYPE_SEND_DELAY_MS)
         )
       }
     }
     timersRef.current.push(window.setTimeout(typeStep, 100))
-  }, [prefersReducedMotion, triggerSend])
+  }, [prefersReducedMotion])
 
   React.useEffect(() => {
     if (!start || hasRunRef.current) return

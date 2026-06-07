@@ -8,7 +8,7 @@ export const TITLE_WORDS = TITLE.split(' ')
  *   blurs in word-by-word. Body content lands just as the title
  *   settles, then staggers down the page.
  * ───────────────────────────────────────────────────────── */
-export const THINKING_DURATION_MS = 1200
+export const THINKING_DURATION_MS = 1400
 export const PER_WORD_STAGGER_MS = 50
 export const BODY_BASE_DELAY_MS = 600
 export const BODY_STAGGER_MS = 110
