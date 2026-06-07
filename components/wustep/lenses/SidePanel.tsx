@@ -282,11 +282,6 @@ export function SidePanel({
                 {((shown.readings && shown.readings.length > 0) ||
                   shown.quote) && (
                   <div className={styles.readingsBlock}>
-                    <span className={styles.relatedLabel}>
-                      {shown.readings && shown.readings.length > 0
-                        ? 'Further reading'
-                        : 'Quotes'}
-                    </span>
                     {shown.readings && shown.readings.length > 0 && (
                       <ul className={styles.readingsList}>
                         {shown.readings.map((r) => {
@@ -361,7 +356,7 @@ export function SidePanel({
                 )}
                 {shown.related && shown.related.length > 0 && (
                   <div className={styles.relatedBlock}>
-                    <span className={styles.relatedLabel}>Related lenses</span>
+                    <span className={styles.relatedLabel}>Related</span>
                     <div className={styles.relatedChips}>
                       {shown.related.map((id) => {
                         const r = LENS_BY_ID[id]

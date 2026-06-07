@@ -1675,22 +1675,16 @@
     color-mix(in srgb, var(--panel-accent, currentColor) 80%, transparent);
 }
 
-/* The quote lives inside the references footer. Under the "Quotes" label
-   alone it keeps the label's normal gap; when it follows a reading list
-   it tucks right beneath the link so the pull-quote reads as belonging
-   to that source. */
-.relatedLabel + .quoteBlock {
-  margin-top: 12px;
+/* The quote lives inside the references footer (now unlabeled). When
+   it's the only thing there, the footer's own top padding supplies the
+   gap; when it follows a reading list, give it some breathing room so
+   the quote reads as distinct from the link above it. */
+.readingsBlock > .quoteBlock:first-child {
+  margin-top: 0;
 }
 
 .readingsList + .quoteBlock {
-  margin-top: 6px;
-}
-
-/* Trim the last link's trailing padding when a quote sits beneath it,
-   pulling the pull-quote visibly closer to its source. */
-.readingsList:has(+ .quoteBlock) .readingsItem:last-child .readingsLink {
-  padding-bottom: 4px;
+  margin-top: 20px;
 }
 
 .quoteText {
