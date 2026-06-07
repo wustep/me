@@ -498,7 +498,7 @@ Taken too far, it becomes paralysis. Every move has an infinite downstream, and 
 
 id: self-fulfilling
 category: Psychology
-tagline: Belief bends the outcome toward itself.
+tagline: Belief bends reality.
 bg: #2C6E63
 fg: #F6EAD8
 accent: #EEC15C

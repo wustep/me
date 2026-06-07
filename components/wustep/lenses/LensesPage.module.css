@@ -3676,30 +3676,35 @@
   }
 }
 
-/* Self-fulfilling prophecy — the lit segment races the loop and
-   returns to its origin; the belief seed pulses as it comes around. */
-:global(svg[data-anim='self-fulfilling'] [data-anim-target='pulse']) {
-  animation: lensSelfFulfillingPulse 2.8s linear infinite;
+/* Self-fulfilling prophecy — the prediction is traced into a complete
+   outcome, then resets; the belief seed pulses as the loop closes. */
+:global(svg[data-anim='self-fulfilling'] [data-anim-target='fulfill']) {
+  animation: lensSelfFulfillingTrace 2.8s ease-in-out infinite;
 }
 :global(svg[data-anim='self-fulfilling'] [data-anim-target='seed']) {
   animation: lensSelfFulfillingSeed 2.8s ease-in-out infinite;
 }
-@keyframes lensSelfFulfillingPulse {
-  from {
+@keyframes lensSelfFulfillingTrace {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  62%,
+  82% {
     stroke-dashoffset: 0;
   }
-  to {
-    stroke-dashoffset: -175.93;
+  100% {
+    stroke-dashoffset: 100;
   }
 }
 @keyframes lensSelfFulfillingSeed {
   0%,
-  60%,
+  52%,
   100% {
     transform: scale(1);
   }
-  80% {
-    transform: scale(1.32);
+  64%,
+  74% {
+    transform: scale(1.4);
   }
 }
 
@@ -4059,7 +4064,7 @@
     animation-duration: 4.8s;
   }
 
-  :global(svg[data-anim='self-fulfilling'] [data-anim-target='pulse']),
+  :global(svg[data-anim='self-fulfilling'] [data-anim-target='fulfill']),
   :global(svg[data-anim='self-fulfilling'] [data-anim-target='seed']) {
     animation-duration: 4.2s;
   }

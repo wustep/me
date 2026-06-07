@@ -2303,41 +2303,36 @@ function ArtExpertise({ fg, accent }: { fg: string; accent: string }) {
   )
 }
 
-/** Self-fulfilling prophecy — a belief that feeds itself. A faint
- *  ring is the loop (belief → behavior → outcome → belief); a lit
- *  accent segment races around it and returns to where it began,
- *  over and over. An arrowhead bites back into the accent "seed" at
- *  the top — the outcome arriving to confirm the belief that started
- *  it. The seed pulses each time the loop closes.
+/** Self-fulfilling prophecy — a predicted circle traced into fact.
+ *  The dashed ring is the prophecy (the expectation before reality
+ *  has caught up); the accent stroke draws over it until the predicted
+ *  shape is solid. The seed at 3 o'clock marks where the belief starts
+ *  and where the loop closes.
  *
- *    data-anim-target='pulse' = the racing lit segment (stroke-
- *      dashoffset sweeps it once around the ring per cycle).
+ *    data-anim-target='fulfill' = the accent stroke that traces the
+ *      dashed prediction into a complete outcome.
  *    data-anim-target='seed' = the belief dot (a gentle scale pulse
- *      as the prophecy comes back around).
+ *      as the prophecy completes).
  */
 function ArtSelfFulfilling({ fg, accent }: { fg: string; accent: string }) {
-  // Ring geometry. The circumference lets the racing pulse express
-  // its lit length as a fraction of the full loop, and the CSS
-  // keyframe sweeps stroke-dashoffset by exactly this amount so the
-  // segment travels once around per cycle and loops seamlessly.
   const R = 28
-  const C = 2 * Math.PI * R // ≈ 175.93
 
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='self-fulfilling'>
-      {/* The loop track — belief feeding back on itself. */}
+      {/* The prophecy — a faint dashed ring, visible before the outcome. */}
       <circle
         cx='50'
         cy='50'
         r={R}
         fill='none'
         stroke={fg}
-        strokeWidth={ART_STROKE.regular}
-        opacity={ART_OPACITY.base}
+        strokeWidth={ART_STROKE.fine}
+        strokeDasharray='3 4'
+        opacity={ART_OPACITY.soft}
       />
 
-      {/* The prophecy — a short lit segment that races the loop and
-          returns to its origin again and again. */}
+      {/* The fulfillment — the accent stroke traces the prediction into
+          something solid. pathLength normalizes the reveal to 0–100. */}
       <circle
         cx='50'
         cy='50'
@@ -2347,22 +2342,15 @@ function ArtSelfFulfilling({ fg, accent }: { fg: string; accent: string }) {
         strokeWidth={ART_STROKE.bold}
         strokeLinecap='round'
         opacity={ART_OPACITY.solid}
-        data-anim-target='pulse'
-        style={{ strokeDasharray: `10 ${C - 10}` }}
+        pathLength={100}
+        strokeDasharray='100'
+        data-anim-target='fulfill'
       />
 
-      {/* The outcome returning to confirm the belief — an arrowhead
-          biting back into the seed at the top of the loop. */}
-      <polygon
-        points='49,22 41.5,18 41.5,26'
-        fill={fg}
-        opacity={ART_OPACITY.solid}
-      />
-
-      {/* The belief — the accent seed the loop keeps returning to. */}
+      {/* The belief — where the trace starts and comes back around. */}
       <circle
-        cx='50'
-        cy='22'
+        cx='78'
+        cy='50'
         r={ART_DOT.medium}
         fill={accent}
         data-anim-target='seed'

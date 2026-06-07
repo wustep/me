@@ -112,10 +112,10 @@ const LENSES_DECK_LENS: Lens = {
 const MOMENTUM_ILLUSTRATION_ID = 'momentum' satisfies IllustrationId
 
 /** Momentum was retired from the production deck (replaced by
- *  Self-fulfilling prophecy), but its illustration is kept available
- *  in the lab as an extra card to select. Modeled as a synthetic
- *  lens — exactly like the center `lenses-deck` card — so it carries
- *  its own palette, title, and tagline without rejoining `LENSES`. */
+ *  Self-fulfilling prophecy). It's kept as a lab-only candidate (see
+ *  LensesIllustrationCandidates), so it never rejoins the production
+ *  library or `LENSES` — but it still needs a synthetic lens here so
+ *  that candidate can resolve its palette, title, and tagline. */
 const MOMENTUM_LENS: Lens = {
   id: 'momentum',
   category: 'Strategy',
@@ -133,8 +133,7 @@ const MOMENTUM_LENS: Lens = {
 const UNIQUE_ILLUSTRATIONS: IllustrationId[] = Array.from(
   new Set<IllustrationId>([
     ...LENSES.map((lens) => lens.illustration),
-    LENSES_DECK_ILLUSTRATION_ID,
-    MOMENTUM_ILLUSTRATION_ID
+    LENSES_DECK_ILLUSTRATION_ID
   ])
 ).toSorted((a, b) => a.localeCompare(b))
 

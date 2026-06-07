@@ -1,6 +1,7 @@
 import type * as React from 'react'
 
 import type { IllustrationId } from './types'
+import { Illustration } from './illustrations'
 
 /**
  * LensesIllustrationCandidates — lab-only illustration sketches.
@@ -658,7 +659,451 @@ export const LENSES_DECK_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
   }
 ]
 
+export const SELF_FULFILLING_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] =
+  [
+    {
+      id: 'reinforcing-loop',
+      lensId: 'self-fulfilling',
+      label: 'Reinforcing Loop',
+      notes: 'Belief and outcome feed each other around a two-node loop.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-reinforcing-loop'
+        >
+          {/* The two arcs that close the loop, with a gentle dashed flow. */}
+          <g
+            data-anim-target='flow'
+            fill='none'
+            stroke={fg}
+            strokeWidth='1.8'
+            strokeLinecap='round'
+            opacity='0.6'
+            strokeDasharray='4 4'
+          >
+            <path d='M 37 44 C 45 31, 55 31, 63 44' />
+            <path d='M 63 56 C 55 69, 45 69, 37 56' />
+          </g>
+          {/* Arrowheads: top arc into the outcome, bottom arc into belief. */}
+          <polygon points='63,45 56,41 57,49' fill={fg} opacity='0.72' />
+          <polygon points='37,55 44,59 43,51' fill={fg} opacity='0.72' />
+          {/* Belief (accent) drives outcome (fg); outcome confirms belief. */}
+          <circle
+            cx='30'
+            cy='50'
+            r='8'
+            fill={accent}
+            data-anim-target='belief'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+          <circle
+            cx='70'
+            cy='50'
+            r='8'
+            fill={fg}
+            opacity='0.7'
+            data-anim-target='outcome'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+        </svg>
+      )
+    },
+    {
+      id: 'mirror',
+      lensId: 'self-fulfilling',
+      label: 'Mirror',
+      notes: 'What you project across the line fills in as reality.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-mirror'
+        >
+          {/* The mirror — a soft boundary between belief and the world. */}
+          <line
+            x1='50'
+            y1='16'
+            x2='50'
+            y2='84'
+            stroke={fg}
+            strokeWidth='1.2'
+            opacity='0.4'
+            strokeDasharray='3 4'
+          />
+          {/* Belief — the solid expectation on the near side. */}
+          <circle
+            cx='30'
+            cy='50'
+            r='9'
+            fill={accent}
+            data-anim-target='belief'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+          {/* The predicted reflection — an outline waiting to be made real. */}
+          <circle
+            cx='70'
+            cy='50'
+            r='9'
+            fill='none'
+            stroke={fg}
+            strokeWidth='1.4'
+            strokeDasharray='3 3'
+            opacity='0.5'
+          />
+          {/* …which fills in to match, on cue. */}
+          <circle
+            cx='70'
+            cy='50'
+            r='9'
+            fill={fg}
+            opacity='0'
+            data-anim-target='reflection'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+        </svg>
+      )
+    },
+    {
+      id: 'prophecy-trace',
+      lensId: 'self-fulfilling',
+      label: 'Prophecy Trace',
+      notes: 'A predicted loop is traced into solid fact, then starts again.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-prophecy-trace'
+        >
+          {/* The prophecy — a faint dashed ring (the prediction). */}
+          <circle
+            cx='50'
+            cy='50'
+            r='28'
+            fill='none'
+            stroke={fg}
+            strokeWidth='1.4'
+            strokeDasharray='3 4'
+            opacity='0.4'
+          />
+          {/* The fulfillment — an accent stroke that fills the ring.
+              pathLength is normalized to 100 so the reveal is easy to
+              drive from CSS via stroke-dashoffset. */}
+          <circle
+            cx='50'
+            cy='50'
+            r='28'
+            fill='none'
+            stroke={accent}
+            strokeWidth='2.4'
+            strokeLinecap='round'
+            pathLength={100}
+            strokeDasharray='100'
+            data-anim-target='fulfill'
+          />
+          {/* The belief seed where the trace starts and returns (3 o'clock,
+              the default start of an SVG circle's stroke). */}
+          <circle
+            cx='78'
+            cy='50'
+            r='4.4'
+            fill={accent}
+            data-anim-target='seed'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+        </svg>
+      )
+    },
+    {
+      id: 'spiral',
+      lensId: 'self-fulfilling',
+      label: 'Spiral',
+      notes: 'Belief compounds outward, each turn wider than the last.',
+      render: ({ fg, accent }) => {
+        const spiral =
+          'M 53 50 L 53.6 53.6 L 50 57.1 L 43.6 56.5 L 38.8 50 ' +
+          'L 40.7 40.7 L 50 34.8 L 62.2 37.8 L 69.3 50 L 65.1 65.1 ' +
+          'L 50 73.4 L 32 68 L 22.5 50 L 29.1 29.1 L 50 18.4'
+        return (
+          <svg
+            {...SVG_BASE}
+            aria-hidden='true'
+            data-anim='candidate-self-fulfilling-spiral'
+          >
+            {/* Faint full spiral — the track the belief will climb. */}
+            <path
+              d={spiral}
+              fill='none'
+              stroke={fg}
+              strokeWidth='1.4'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              opacity='0.35'
+            />
+            {/* Accent spiral grows outward from the seed. */}
+            <path
+              d={spiral}
+              fill='none'
+              stroke={accent}
+              strokeWidth='2.2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              pathLength={100}
+              strokeDasharray='100'
+              data-anim-target='grow'
+            />
+            {/* The seed belief at the center. */}
+            <circle
+              cx='50'
+              cy='50'
+              r='4'
+              fill={accent}
+              data-anim-target='seed'
+              style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+            />
+          </svg>
+        )
+      }
+    },
+    {
+      id: 'spotlight',
+      lensId: 'self-fulfilling',
+      label: 'Spotlight',
+      notes:
+        'Expectation acts like a spotlight; the person grows into the role.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-spotlight'
+        >
+          {/* Stage line: the world the performance lands on. */}
+          <line
+            x1='18'
+            y1='78'
+            x2='82'
+            y2='78'
+            stroke={fg}
+            strokeWidth='1'
+            strokeLinecap='round'
+            opacity='0.36'
+          />
+          {/* Expectation as a cone of attention. */}
+          <g
+            data-anim-target='spotlight'
+            style={{ transformOrigin: '50px 26px' }}
+          >
+            <path d='M 50 18 L 30 78 H 70 Z' fill={accent} opacity='0.22' />
+            <path
+              d='M 50 18 L 30 78 M 50 18 L 70 78'
+              fill='none'
+              stroke={accent}
+              strokeWidth='1'
+              strokeLinecap='round'
+              opacity='0.72'
+            />
+          </g>
+          {/* The person grows into the expectation. */}
+          <g
+            data-anim-target='performer'
+            style={{ transformOrigin: '50px 66px' }}
+          >
+            <circle cx='50' cy='48' r='6' fill={fg} opacity='0.84' />
+            <path
+              d='M 38 76 Q 38 60 50 60 Q 62 60 62 76 Z'
+              fill={fg}
+              opacity='0.72'
+            />
+            <circle
+              cx='50'
+              cy='48'
+              r='11'
+              fill='none'
+              stroke={accent}
+              strokeWidth='1'
+              opacity='0.38'
+            />
+          </g>
+        </svg>
+      )
+    },
+    {
+      id: 'label-path',
+      lensId: 'self-fulfilling',
+      label: 'Label Path',
+      notes: 'A label creates the path the outcome starts following.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-label-path'
+        >
+          {/* The label/stamp — a compact tag with a small notch. */}
+          <g data-anim-target='label' style={{ transformOrigin: '34px 28px' }}>
+            <path
+              d='M 20 18 H 49 L 58 27 L 49 36 H 20 Z'
+              fill={accent}
+              opacity='0.88'
+            />
+            <circle cx='48' cy='27' r='2.2' fill={fg} opacity='0.42' />
+            <line
+              x1='27'
+              y1='26'
+              x2='42'
+              y2='26'
+              stroke={fg}
+              strokeWidth='1.2'
+              opacity='0.42'
+              strokeLinecap='round'
+            />
+          </g>
+          {/* The path the label makes available. */}
+          <path
+            d='M 24 72 C 34 66, 39 58, 48 54 C 58 50, 65 43, 74 30'
+            fill='none'
+            stroke={fg}
+            strokeWidth='1.4'
+            strokeDasharray='3 4'
+            opacity='0.36'
+          />
+          <path
+            d='M 24 72 C 34 66, 39 58, 48 54 C 58 50, 65 43, 74 30'
+            fill='none'
+            stroke={accent}
+            strokeWidth='2'
+            strokeLinecap='round'
+            pathLength={100}
+            strokeDasharray='100'
+            data-anim-target='path'
+          />
+          <circle
+            cx='24'
+            cy='72'
+            r='4'
+            fill={fg}
+            data-anim-target='traveler'
+            style={{ transformOrigin: '24px 72px' }}
+          />
+          <polygon points='74,30 66,30 72,38' fill={accent} opacity='0.9' />
+        </svg>
+      )
+    },
+    {
+      id: 'dominoes',
+      lensId: 'self-fulfilling',
+      label: 'Dominoes',
+      notes: 'The first belief tips a sequence that later looks inevitable.',
+      render: ({ fg, accent }) => {
+        const dominoes = [
+          { x: 22, h: 34, fill: accent, target: 'd1', opacity: 1 },
+          { x: 36, h: 30, fill: fg, target: 'd2', opacity: 0.78 },
+          { x: 50, h: 26, fill: fg, target: 'd3', opacity: 0.66 },
+          { x: 64, h: 22, fill: fg, target: 'd4', opacity: 0.56 },
+          { x: 78, h: 18, fill: fg, target: 'd5', opacity: 0.46 }
+        ] as const
+        return (
+          <svg
+            {...SVG_BASE}
+            aria-hidden='true'
+            data-anim='candidate-self-fulfilling-dominoes'
+          >
+            <line
+              x1='14'
+              y1='78'
+              x2='88'
+              y2='78'
+              stroke={fg}
+              strokeWidth='1'
+              opacity='0.3'
+              strokeLinecap='round'
+            />
+            {dominoes.map((domino) => (
+              <rect
+                key={domino.target}
+                x={domino.x - 4}
+                y={78 - domino.h}
+                width='8'
+                height={domino.h}
+                rx='1.5'
+                fill={domino.fill}
+                opacity={domino.opacity}
+                data-anim-target={domino.target}
+                style={{
+                  transformBox: 'fill-box',
+                  transformOrigin: 'center bottom'
+                }}
+              />
+            ))}
+          </svg>
+        )
+      }
+    },
+    {
+      id: 'expectation-ladder',
+      lensId: 'self-fulfilling',
+      label: 'Expectation Ladder',
+      notes: 'People rise toward the standard you set for them.',
+      render: ({ fg, accent }) => (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-self-fulfilling-expectation-ladder'
+        >
+          {/* The expectation line: a target height before the bars move. */}
+          <g data-anim-target='line' stroke={accent} strokeLinecap='round'>
+            <line x1='18' y1='28' x2='82' y2='28' strokeWidth='2' />
+            <circle cx='82' cy='28' r='3.4' fill={accent} />
+          </g>
+          <g fill={fg} opacity='0.16'>
+            <rect x='20' y='72' width='12' height='6' rx='1.5' />
+            <rect x='44' y='72' width='12' height='6' rx='1.5' />
+            <rect x='68' y='72' width='12' height='6' rx='1.5' />
+          </g>
+          {[
+            { x: 20, y: 56, h: 22, target: 'bar-1', opacity: 0.52 },
+            { x: 44, y: 46, h: 32, target: 'bar-2', opacity: 0.66 },
+            { x: 68, y: 36, h: 42, target: 'bar-3', opacity: 0.82 }
+          ].map((bar) => (
+            <rect
+              key={bar.target}
+              x={bar.x}
+              y={bar.y}
+              width='12'
+              height={bar.h}
+              rx='2'
+              fill={fg}
+              opacity={bar.opacity}
+              data-anim-target={bar.target}
+              style={{
+                transformBox: 'fill-box',
+                transformOrigin: 'center bottom'
+              }}
+            />
+          ))}
+        </svg>
+      )
+    }
+  ]
+
+/** Momentum was retired from the production deck (replaced by
+ *  Self-fulfilling prophecy). Its metronome art lives on here as a
+ *  lab-only candidate, reusing the production switchboard illustration
+ *  so there's a single source of truth for the SVG and its animation. */
+export const MOMENTUM_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
+  {
+    id: 'metronome',
+    lensId: 'momentum',
+    label: 'Metronome',
+    notes: 'A metronome arm swings — motion, once started, keeps going.',
+    render: ({ fg, bg, accent }) => (
+      <Illustration id='momentum' fg={fg} bg={bg} accent={accent} />
+    )
+  }
+]
+
 export const LAB_ILLUSTRATION_CANDIDATES = [
   ...EXPERTISE_ILLUSTRATION_CANDIDATES,
-  ...LENSES_DECK_ILLUSTRATION_CANDIDATES
+  ...SELF_FULFILLING_ILLUSTRATION_CANDIDATES,
+  ...LENSES_DECK_ILLUSTRATION_CANDIDATES,
+  ...MOMENTUM_ILLUSTRATION_CANDIDATES
 ]
