@@ -62,7 +62,7 @@ export function EquationContent() {
             <span className={styles.modelGuideWhen}>
               Taste &mdash; writing, docs, PRs, UI/UX, animations
             </span>
-            <span className={styles.modelGuidePick}>Opus</span>
+            <span className={styles.modelGuidePick}>Opus 4.8</span>
           </div>
           <div className={styles.modelGuideRow}>
             <span className={styles.modelGuideWhen}>

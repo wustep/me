@@ -123,7 +123,7 @@ export function MindsetContent() {
  * 1400ms   axis ticks + tier labels fade in
  * 1600ms   "You · 1200" marker fades in (line + dot + label)
  * 1900ms   gap arrow draws between the two markers
- * 2200ms   "Magnus · 2839" marker fades in
+ * 2200ms   "Magnus · 2840" marker fades in
  * 2600ms   caption fades in below
  * ───────────────────────────────────────────────────────── */
 
@@ -154,7 +154,7 @@ function EloChart() {
         viewBox='0 0 600 180'
         className={styles.eloChartSvg}
         role='img'
-        aria-label='Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2839 ELO, far out in the right tail.'
+        aria-label='Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2840 ELO, far out in the right tail.'
         preserveAspectRatio='xMidYMid meet'
       >
         <defs>
@@ -233,7 +233,7 @@ function EloChart() {
           <line x1='525' y1='100' x2='525' y2='130' />
           <circle cx='525' cy='130' r='5.5' />
           <text x='525' y='91' textAnchor='middle'>
-            Magnus · 2839
+            Magnus · 2840
           </text>
         </g>
       </svg>

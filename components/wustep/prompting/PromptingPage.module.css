@@ -23,9 +23,26 @@
   color: var(--fg-color, rgb(55, 53, 47));
 }
 
+/*
+ * Dark mode runs on a true-black palette matching the About page
+ * (#0d0d0d) rather than notion's default greenish charcoal (#2f3437).
+ * We re-point the notion color tokens here so every `var(--bg-color, …)`
+ * / `var(--fg-color-N, …)` reference across this file shifts in lockstep.
+ */
 :global(.dark-mode) .frame {
-  background: var(--bg-color, #2f3437);
-  color: var(--fg-color, rgba(255, 255, 255, 0.9));
+  --bg-color: #0d0d0d;
+  --bg-color-0: rgba(255, 255, 255, 0.06);
+  --bg-color-1: #161616;
+  --fg-color: rgba(255, 255, 255, 0.92);
+  --fg-color-0: rgba(255, 255, 255, 0.05);
+  --fg-color-1: rgba(255, 255, 255, 0.1);
+  --fg-color-2: rgba(255, 255, 255, 0.4);
+  --fg-color-3: rgba(255, 255, 255, 0.55);
+  --fg-color-5: rgba(255, 255, 255, 0.03);
+  --fg-color-6: rgba(255, 255, 255, 0.82);
+
+  background: var(--bg-color);
+  color: var(--fg-color);
 }
 
 .homeBackButton {
@@ -3576,7 +3593,7 @@
 }
 
 :global(.dark-mode) .modelMenu {
-  background: #2b2f31;
+  background: #181818;
   border-color: rgba(255, 255, 255, 0.12);
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.4),
