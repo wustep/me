@@ -383,7 +383,7 @@ export function SidePanel({
                               className={styles.relatedChipArrow}
                               aria-hidden='true'
                             >
-                              →
+                              <ReadingArrowIcon external={false} />
                             </span>
                           </button>
                         )

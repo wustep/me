@@ -1828,14 +1828,16 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Preview the destination: the pill picks up the target lens's own
+     colour so hovering feels connected to the card it opens. */
   .relatedChip:hover {
-    background: rgba(0, 0, 0, 0.08);
-    border-color: rgba(0, 0, 0, 0.2);
+    background: color-mix(in srgb, var(--chip-bg) 12%, transparent);
+    border-color: color-mix(in srgb, var(--chip-bg) 45%, transparent);
   }
 
   :global(.dark-mode) .relatedChip:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.24);
+    background: color-mix(in srgb, var(--chip-bg) 22%, transparent);
+    border-color: color-mix(in srgb, var(--chip-bg) 55%, transparent);
   }
 
   .relatedChip:hover .relatedChipArrow {
@@ -1857,8 +1859,18 @@
 }
 
 .relatedChipArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0.5;
-  transition: transform 200ms var(--ease-spring-snap);
+  transition:
+    transform 200ms var(--ease-spring-snap),
+    opacity 200ms ease;
+}
+
+.relatedChipArrow svg {
+  width: 13px;
+  height: 13px;
 }
 
 /* ===== Center dialog (the "Lenses" index) ===== */
