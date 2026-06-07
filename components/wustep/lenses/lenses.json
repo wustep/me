@@ -11,7 +11,7 @@
     "related": [
       "momentum",
       "narrative",
-      "incentives"
+      "constraint"
     ],
     "readings": [
       {
@@ -97,7 +97,7 @@
     "related": [
       "energy",
       "incentives",
-      "mimetics"
+      "attention"
     ],
     "quote": {
       "text": "From dopamine’s point of view, having things is uninteresting. It’s only getting things that matters. If you live under a bridge, dopamine makes you want a tent. If you live in a tent, dopamine makes you want a house. If you live in the most expensive mansion in the world, dopamine makes you want a castle on the moon. Dopamine has no standard for good, and seeks no finish line. The dopamine circuits in the brain can be stimulated only by the possibility of whatever is shiny and new, never mind how perfect things are at the moment. The dopamine motto is “More.”",
@@ -175,7 +175,7 @@
     "related": [
       "taste",
       "legibility",
-      "primitives"
+      "osmosis"
     ],
     "body": "Every skill is a long curve, and people sit all over it. Obvious for cooking or chess — but it’s also true for the things we don’t usually call skills: patience, listening, taste, charisma, attention, knowing when to stop. The world becomes much more legible the moment you treat these as _practiced abilities_ rather than fixed traits.\n\n“I’m not good at conflict” really means _I’m on the early part of that curve._ The annoying coworker has a different skill mix, not a different species. The genuinely impressive person stops being a wonder and becomes a question: _which curve are they far along, and how did they get there?_\n\nTreating every quality as a skill flattens temperament and circumstance, and some abilities are gated by talent."
   },
@@ -349,7 +349,7 @@
     "related": [
       "agency",
       "systems",
-      "taste"
+      "identity"
     ],
     "body": "Most people think about effort as a single push: how hard, in what direction, right now. Momentum says that what you can do today depends on what you’ve been doing. Effort compounds into mass — trust, reputation, shipping cadence, a team that expects to win. That mass is what makes the hard moves possible later. The unpopular call, the risky bet, the honest conversation — each one lands more easily when you’ve built the credibility to spend.\n\nThe question is rarely _should I do this now?_ It’s _am I building the momentum I’ll need, and spending it on the right things?_ Early wins compound into permission. Consistency compounds into the room. Both look like overhead until the day you need them.\n\nYou also rarely stop momentum head-on. You nudge its vector. A small push on something already moving beats a big push against something that’s going to win regardless. Most strategic wins, in a career or in a company, look like that — a small redirect, applied early, while the mass was still moving.\n\nIt romanticizes motion and underrates the deliberate halt — sometimes the highest-value move is killing a thing that shouldn’t continue, and _we have momentum here_ is exactly how bad projects survive. It flatters incumbents, too, who mistake inherited mass for earned mass. But ignore momentum and you get smart people making technically-correct moves that never land, because they never built the standing to make them work."
   },
@@ -384,7 +384,7 @@
     "illustration": "osmosis",
     "related": [
       "mimetics",
-      "headspace",
+      "attention",
       "status"
     ],
     "quote": {
@@ -427,7 +427,7 @@
     "related": [
       "epistemic",
       "systems",
-      "incentives"
+      "second-order"
     ],
     "body": "The world doesn’t deliver outcomes; it delivers _distributions_ of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary (will/won’t, true/false, safe/risky) is the most common and most expensive cognitive error.\n\n_What will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. A 70% chance is a posture, not a promise: lean toward action, stay ready to be wrong, update as evidence arrives. Updating is half the skill.\n\nWhich bets count as smart gets reordered, too. A move that wins 80% of the time and loses everything the other 20% is worse than one that wins 55% with bounded losses. Outcome-watchers call the first bold and the second timid; people who see distributions call them what they are and price the expected value.\n\nConviction beats probability sometimes — now and then the move is to commit hard to a thin chance and self-fulfill it. But mistake the average for the outcome and variance will mug you eventually."
   },
@@ -463,7 +463,7 @@
     "related": [
       "incentives",
       "systems",
-      "constraint"
+      "probabilistic"
     ],
     "body": "Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.\n\nThe honest question about any decision is rarely _does this solve the problem?_ It’s _what does this produce downstream?_ Rent control reduces rent, then reduces housing supply. A metric rewards a behavior, then corrupts it. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is what people argue about; the second-order answer is what actually matters.\n\nThe skill is forcing yourself to ask _and then what?_ three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.\n\nTaken too far, it becomes paralysis. Every move has an infinite downstream, and you can always invent a scary second-order story for any change. The lens also favors the status quo, because the consequences of _not acting_ are less legible than the consequences of acting. But people who think only in first-order effects build systems that solve the visible problem and create three invisible ones, over and over, for decades."
   },
@@ -532,7 +532,7 @@
     "related": [
       "incentives",
       "game-theory",
-      "minimalism"
+      "status"
     ],
     "readings": [
       {

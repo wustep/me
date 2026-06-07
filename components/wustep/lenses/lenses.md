@@ -34,7 +34,7 @@ bg: #B83D31
 fg: #F6EAD8
 accent: #F3C35F
 illustration: agency
-related: momentum, narrative, incentives
+related: momentum, narrative, constraint
 reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.com/p/how-to-be-more-agentic
 quote: Between stimulus and response there is a space. In that space is our power to choose our response.
 quote-cite: Viktor Frankl
@@ -117,7 +117,7 @@ bg: #B1396C
 fg: #F6EAD8
 accent: #F2C4D4
 illustration: dopamine
-related: energy, incentives, mimetics
+related: energy, incentives, attention
 quote: From dopamine’s point of view, having things is uninteresting. It’s only getting things that matters. If you live under a bridge, dopamine makes you want a tent. If you live in a tent, dopamine makes you want a house. If you live in the most expensive mansion in the world, dopamine makes you want a castle on the moon. Dopamine has no standard for good, and seeks no finish line. The dopamine circuits in the brain can be stimulated only by the possibility of whatever is shiny and new, never mind how perfect things are at the moment. The dopamine motto is “More.”
 quote-cite: Daniel Z. Lieberman & Michael E. Long, The Molecule of More
 quote-cite-href: https://amzn.to/4283g1X
@@ -201,7 +201,7 @@ bg: #744133
 fg: #F6EAD8
 accent: #EDAC55
 illustration: expertise
-related: taste, legibility, primitives
+related: taste, legibility, osmosis
 
 Every skill is a long curve, and people sit all over it. Obvious for cooking or chess — but it’s also true for the things we don’t usually call skills: patience, listening, taste, charisma, attention, knowing when to stop. The world becomes much more legible the moment you treat these as _practiced abilities_ rather than fixed traits.
 
@@ -382,7 +382,7 @@ bg: #227449
 fg: #F6EAD8
 accent: #F0A86B
 illustration: momentum
-related: agency, systems, taste
+related: agency, systems, identity
 
 Most people think about effort as a single push: how hard, in what direction, right now. Momentum says that what you can do today depends on what you’ve been doing. Effort compounds into mass — trust, reputation, shipping cadence, a team that expects to win. That mass is what makes the hard moves possible later. The unpopular call, the risky bet, the honest conversation — each one lands more easily when you’ve built the credibility to spend.
 
@@ -422,7 +422,7 @@ bg: #B8CE79
 fg: #222226
 accent: #24704A
 illustration: osmosis
-related: mimetics, headspace, status
+related: mimetics, attention, status
 quote: You are the average of the five people you spend the most time with.
 quote-cite: Jim Rohn
 
@@ -463,7 +463,7 @@ bg: #596B81
 fg: #F6EAD8
 accent: #E6B64E
 illustration: probabilistic
-related: epistemic, systems, incentives
+related: epistemic, systems, second-order
 
 The world doesn’t deliver outcomes; it delivers _distributions_ of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary (will/won’t, true/false, safe/risky) is the most common and most expensive cognitive error.
 
@@ -503,7 +503,7 @@ bg: #167384
 fg: #F6EAD8
 accent: #F3C35F
 illustration: second-order
-related: incentives, systems, constraint
+related: incentives, systems, probabilistic
 
 Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.
 
@@ -580,7 +580,7 @@ bg: #A8482B
 fg: #F6EAD8
 accent: #F0B85F
 illustration: utility
-related: incentives, game-theory, minimalism
+related: incentives, game-theory, status
 reading: The Elephant in the Brain — Kevin Simler & Robin Hanson | https://amzn.to/4xlCwcH
 quote: Man is not a rational animal; he is a rationalizing animal.
 quote-cite: Robert Heinlein
