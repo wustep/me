@@ -343,6 +343,8 @@ fg: #F6EAD8
 accent: #F0D04D
 illustration: mimetics
 related: narrative, osmosis, status
+quote: Man is the creature who does not know what to desire, and he turns to others in order to make up his mind.
+quote-cite: René Girard
 
 Ideas, beliefs, formats, and aesthetics compete to spread, the way organisms compete to reproduce. The ones you see most owe their visibility to transmissibility, not truth. Catchy beats correct; sticky beats subtle; shareable beats nuanced, almost every time.
 
@@ -485,6 +487,8 @@ fg: #F6EAD8
 accent: #F3C35F
 illustration: second-order
 related: incentives, systems, probabilistic
+quote: We can never do merely one thing. Any intrusion into nature has numerous effects, many of which are unpredictable.
+quote-cite: Garrett Hardin
 
 Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.
 
@@ -525,6 +529,8 @@ fg: #F6EAD8
 accent: #F3C35F
 illustration: status
 related: mimetics, evo-psych, narrative
+quote: The desire of the esteem of others is as real a want of nature as hunger.
+quote-cite: John Adams, Discourses on Davila
 
 Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. A surprising amount of human behavior is about status — relative standing within the groups we care about. Not money, not power directly, but where you sit in the local pecking order, and the movement of that position over time. The local part is the trick. People will burn months of comfort for a half-step inside a group of forty.
 
