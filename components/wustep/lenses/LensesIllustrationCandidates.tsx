@@ -1101,9 +1101,548 @@ export const MOMENTUM_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
   }
 ]
 
+export const SYSTEMS_ILLUSTRATION_CANDIDATES: IllustrationCandidate[] = [
+  {
+    id: 'stock-flow',
+    lensId: 'systems',
+    label: 'Stock & Flow',
+    notes: 'A stock fills and drains as the inflow and outflow valves run.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-systems-stock-flow'
+      >
+        <defs>
+          <clipPath id='sysStockClip'>
+            <rect x='38' y='31' width='24' height='46' rx='2.5' />
+          </clipPath>
+        </defs>
+
+        {/* Inflow pipe + gate valve into the upper-left of the tank. */}
+        <line
+          x1='12'
+          y1='40'
+          x2='37'
+          y2='40'
+          stroke={fg}
+          strokeWidth='2'
+          strokeLinecap='round'
+          opacity='0.55'
+          strokeDasharray='4 4'
+          data-anim-target='inflow'
+        />
+        <polygon points='22,37 25,40 22,43 19,40' fill={fg} opacity='0.7' />
+        <polygon points='37.5,40 32,37 32,43' fill={fg} opacity='0.62' />
+
+        {/* Outflow pipe + gate valve out of the lower-right of the tank. */}
+        <line
+          x1='63'
+          y1='68'
+          x2='88'
+          y2='68'
+          stroke={fg}
+          strokeWidth='2'
+          strokeLinecap='round'
+          opacity='0.55'
+          strokeDasharray='4 4'
+          data-anim-target='outflow'
+        />
+        <polygon points='78,65 81,68 78,71 75,68' fill={fg} opacity='0.7' />
+        <polygon points='88.5,68 83,65 83,71' fill={fg} opacity='0.62' />
+
+        {/* The stock — a tank holding the accumulated quantity. */}
+        <rect
+          x='37'
+          y='30'
+          width='26'
+          height='48'
+          rx='3'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.6'
+          opacity='0.6'
+        />
+
+        {/* The level — an accent body with a gentle surface that rises
+            and falls as the balance of the two flows shifts. */}
+        <g clipPath='url(#sysStockClip)'>
+          <g data-anim-target='level'>
+            <path
+              d='M 34 50 Q 42 45 50 50 T 66 50 L 66 82 L 34 82 Z'
+              fill={accent}
+              opacity='0.85'
+            />
+          </g>
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'leverage',
+    lensId: 'systems',
+    label: 'Leverage Point',
+    notes: 'A small push on the long arm lifts a heavy load — find the lever.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-systems-leverage'
+      >
+        {/* Ground the instrument rests on. */}
+        <line
+          x1='14'
+          y1='82'
+          x2='86'
+          y2='82'
+          stroke={fg}
+          strokeWidth='1'
+          strokeLinecap='round'
+          opacity='0.3'
+        />
+        {/* Fulcrum — the pivot the beam balances on. */}
+        <polygon points='50,52 45,72 55,72' fill={fg} opacity='0.5' />
+
+        {/* The lever — beam + load + the small accent input that moves it. */}
+        <g data-anim-target='lever' style={{ transformOrigin: '50px 52px' }}>
+          <line
+            x1='17'
+            y1='52'
+            x2='83'
+            y2='52'
+            stroke={fg}
+            strokeWidth='3'
+            strokeLinecap='round'
+            opacity='0.8'
+          />
+          {/* Heavy load, near the fulcrum on the short arm. */}
+          <rect
+            x='62'
+            y='37'
+            width='17'
+            height='15'
+            rx='2.5'
+            fill={fg}
+            opacity='0.72'
+          />
+          {/* The leverage point — a small accent input far out on the
+              long arm, pressing down. */}
+          <line
+            x1='22'
+            y1='40'
+            x2='22'
+            y2='45'
+            stroke={accent}
+            strokeWidth='2'
+            strokeLinecap='round'
+          />
+          <polygon points='22,48.5 18.5,43.5 25.5,43.5' fill={accent} />
+          <circle cx='22' cy='52' r='4.4' fill={accent} />
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'gears',
+    lensId: 'systems',
+    label: 'Gears',
+    notes: 'Coupled parts: turn one and the whole system turns with it.',
+    render: ({ fg, bg, accent }) => {
+      const cog = (
+        cx: number,
+        cy: number,
+        r: number,
+        count: number,
+        color: string,
+        opacity: number
+      ) => {
+        const tip = r + 4
+        return (
+          <>
+            {Array.from({ length: count }, (_, i) => (
+              <polygon
+                key={i}
+                points={`${cx - 3},${cy - r} ${cx - 2},${cy - tip} ${cx + 2},${cy - tip} ${cx + 3},${cy - r}`}
+                fill={color}
+                opacity={opacity}
+                transform={`rotate(${(360 / count) * i} ${cx} ${cy})`}
+              />
+            ))}
+            <circle cx={cx} cy={cy} r={r} fill={color} opacity={opacity} />
+            {/* Spokes read as cut-outs through the body. */}
+            <g stroke={bg} strokeWidth={r * 0.18} strokeLinecap='round'>
+              {Array.from({ length: 4 }, (_, i) => (
+                <line
+                  key={i}
+                  x1={cx}
+                  y1={cy}
+                  x2={cx}
+                  y2={cy - (r - 2)}
+                  transform={`rotate(${i * 90} ${cx} ${cy})`}
+                />
+              ))}
+            </g>
+            {/* Hub. */}
+            <circle cx={cx} cy={cy} r={r * 0.34} fill={bg} />
+            <circle
+              cx={cx}
+              cy={cy}
+              r={r * 0.34}
+              fill='none'
+              stroke={color}
+              strokeWidth='1'
+              opacity={opacity}
+            />
+          </>
+        )
+      }
+
+      return (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-systems-gears'
+        >
+          {/* Big accent gear (the driver). */}
+          <g data-anim-target='gear-a' style={{ transformOrigin: '40px 55px' }}>
+            {cog(40, 55, 15, 9, accent, 1)}
+          </g>
+          {/* Small fg gear, meshing into the upper-right. */}
+          <g data-anim-target='gear-b' style={{ transformOrigin: '66px 36px' }}>
+            {cog(66, 36, 10.5, 7, fg, 0.85)}
+          </g>
+        </svg>
+      )
+    }
+  },
+  {
+    id: 'iceberg',
+    lensId: 'systems',
+    label: 'Iceberg',
+    notes: 'The visible event is the tip; the system is the structure below.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-systems-iceberg'
+      >
+        {/* Waterline ripples — the surface hiding most of the system. */}
+        <path
+          d='M 8 46 Q 20 43 32 46 T 56 46 T 80 46 T 92 46'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.2'
+          strokeLinecap='round'
+          opacity='0.4'
+        />
+
+        {/* The berg bobs gently as a whole. */}
+        <g data-anim-target='berg'>
+          {/* Underwater mass — two facets give it ice-like dimension. */}
+          <polygon
+            points='34,46 50,46 50,80 42,80 30,60'
+            fill={fg}
+            opacity='0.46'
+          />
+          <polygon
+            points='50,46 66,46 70,60 58,80 50,80'
+            fill={fg}
+            opacity='0.32'
+          />
+          {/* A slow feedback loop turning under the surface. */}
+          <g
+            data-anim-target='loop'
+            style={{ transformOrigin: '50px 64px' }}
+            fill='none'
+            stroke={fg}
+            opacity='0.42'
+          >
+            <circle
+              cx='50'
+              cy='64'
+              r='5'
+              strokeWidth='1.2'
+              strokeDasharray='2.6 3'
+            />
+            <polygon
+              points='55,64 50.5,61.5 50.5,66.5'
+              fill={fg}
+              stroke='none'
+            />
+          </g>
+          {/* The visible tip — a faceted crystal above the water. */}
+          <g
+            data-anim-target='tip'
+            style={{
+              transformBox: 'fill-box',
+              transformOrigin: 'center bottom'
+            }}
+          >
+            <polygon points='44,46 50,28 50,46' fill={accent} opacity='0.92' />
+            <polygon points='50,28 56,46 50,46' fill={accent} opacity='0.6' />
+          </g>
+        </g>
+      </svg>
+    )
+  },
+  {
+    id: 'network',
+    lensId: 'systems',
+    label: 'Network',
+    notes: 'Interconnected parts — a signal ripples through the whole web.',
+    render: ({ fg, accent }) => {
+      const nodes = [
+        { x: 50, y: 22, d: 0.1 },
+        { x: 24, y: 32, d: 0.22 },
+        { x: 78, y: 34, d: 0.34 },
+        { x: 20, y: 70, d: 0.46 },
+        { x: 74, y: 70, d: 0.58 }
+      ]
+      const hub = { x: 50, y: 52 }
+      const edges: Array<[{ x: number; y: number }, { x: number; y: number }]> =
+        [
+          [hub, nodes[0]!],
+          [hub, nodes[1]!],
+          [hub, nodes[2]!],
+          [hub, nodes[3]!],
+          [hub, nodes[4]!],
+          [nodes[1]!, nodes[0]!],
+          [nodes[0]!, nodes[2]!],
+          [nodes[1]!, nodes[3]!],
+          [nodes[2]!, nodes[4]!]
+        ]
+
+      return (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-systems-network'
+        >
+          {/* Edges — a steady current flows along every connection. */}
+          <g
+            stroke={fg}
+            strokeWidth='1.3'
+            opacity='0.3'
+            strokeLinecap='round'
+            strokeDasharray='4 4'
+            data-anim-target='edge'
+          >
+            {edges.map(([a, b], i) => (
+              <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />
+            ))}
+          </g>
+          {/* Outer nodes pulse in a staggered ripple. */}
+          {nodes.map((n, i) => (
+            <circle
+              key={i}
+              cx={n.x}
+              cy={n.y}
+              r='3.4'
+              fill={fg}
+              opacity='0.78'
+              data-anim-target='n'
+              style={{
+                transformBox: 'fill-box',
+                transformOrigin: '50% 50%',
+                animationDelay: `${n.d}s`
+              }}
+            />
+          ))}
+          {/* The hub the signal radiates from. */}
+          <circle
+            cx={hub.x}
+            cy={hub.y}
+            r='5.4'
+            fill={accent}
+            data-anim-target='hub'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+        </svg>
+      )
+    }
+  },
+  {
+    id: 'equilibrium',
+    lensId: 'systems',
+    label: 'Equilibrium',
+    notes:
+      'A system seeks its attractor — the ball settles at the basin floor.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-systems-equilibrium'
+      >
+        {/* The basin — the stability landscape the state moves through. */}
+        <path
+          d='M 16 28 Q 50 90 84 28'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.8'
+          strokeLinecap='round'
+          opacity='0.55'
+        />
+        {/* The equilibrium point at the floor. */}
+        <line
+          x1='44'
+          y1='62'
+          x2='56'
+          y2='62'
+          stroke={fg}
+          strokeWidth='1'
+          strokeLinecap='round'
+          opacity='0.3'
+          strokeDasharray='2 2'
+        />
+        {/* The state — swings in with damping, then settles. */}
+        <circle cx='50' cy='58' r='5' fill={accent} data-anim-target='ball' />
+      </svg>
+    )
+  },
+  {
+    id: 'nested',
+    lensId: 'systems',
+    label: 'Nested Systems',
+    notes: 'Systems within systems — each boundary holds the next.',
+    render: ({ fg, accent }) => (
+      <svg
+        {...SVG_BASE}
+        aria-hidden='true'
+        data-anim='candidate-systems-nested'
+      >
+        {/* Outer boundary — dashed, because the environment is open. */}
+        <rect
+          x='18'
+          y='18'
+          width='64'
+          height='64'
+          rx='12'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.4'
+          strokeDasharray='4 5'
+          opacity='0.32'
+          data-anim-target='ring'
+          style={{
+            transformBox: 'fill-box',
+            transformOrigin: '50% 50%',
+            animationDelay: '0s'
+          }}
+        />
+        <rect
+          x='29'
+          y='29'
+          width='42'
+          height='42'
+          rx='9'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.5'
+          opacity='0.46'
+          data-anim-target='ring'
+          style={{
+            transformBox: 'fill-box',
+            transformOrigin: '50% 50%',
+            animationDelay: '0.18s'
+          }}
+        />
+        <rect
+          x='39'
+          y='39'
+          width='22'
+          height='22'
+          rx='6'
+          fill='none'
+          stroke={fg}
+          strokeWidth='1.6'
+          opacity='0.62'
+          data-anim-target='ring'
+          style={{
+            transformBox: 'fill-box',
+            transformOrigin: '50% 50%',
+            animationDelay: '0.36s'
+          }}
+        />
+        {/* The core. */}
+        <rect
+          x='45.5'
+          y='45.5'
+          width='9'
+          height='9'
+          rx='2.5'
+          fill={accent}
+          data-anim-target='core'
+          style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+        />
+      </svg>
+    )
+  },
+  {
+    id: 'overshoot',
+    lensId: 'systems',
+    label: 'Overshoot',
+    notes: 'Delay makes the response overshoot its goal before it settles.',
+    render: ({ fg, accent }) => {
+      const wave =
+        'M 12 50 C 20 50 24 28 34 28 C 44 28 48 70 58 64 ' +
+        'C 66 59 68 43 76 46 C 82 48 84 52 88 50'
+      return (
+        <svg
+          {...SVG_BASE}
+          aria-hidden='true'
+          data-anim='candidate-systems-overshoot'
+        >
+          {/* The goal the system is trying to reach. */}
+          <line
+            x1='10'
+            y1='50'
+            x2='90'
+            y2='50'
+            stroke={fg}
+            strokeWidth='1'
+            strokeLinecap='round'
+            opacity='0.4'
+            strokeDasharray='3 4'
+          />
+          {/* The track the response will trace. */}
+          <path
+            d={wave}
+            fill='none'
+            stroke={fg}
+            strokeWidth='1.4'
+            strokeLinecap='round'
+            opacity='0.26'
+          />
+          {/* The response — overshoots, then damps back to the goal. */}
+          <path
+            d={wave}
+            fill='none'
+            stroke={accent}
+            strokeWidth='2.2'
+            strokeLinecap='round'
+            pathLength={100}
+            strokeDasharray='100'
+            data-anim-target='wave'
+          />
+          {/* The first, largest overshoot peak. */}
+          <circle
+            cx='34'
+            cy='28'
+            r='3.4'
+            fill={accent}
+            data-anim-target='peak'
+            style={{ transformBox: 'fill-box', transformOrigin: '50% 50%' }}
+          />
+        </svg>
+      )
+    }
+  }
+]
+
 export const LAB_ILLUSTRATION_CANDIDATES = [
   ...EXPERTISE_ILLUSTRATION_CANDIDATES,
   ...SELF_FULFILLING_ILLUSTRATION_CANDIDATES,
   ...LENSES_DECK_ILLUSTRATION_CANDIDATES,
+  ...SYSTEMS_ILLUSTRATION_CANDIDATES,
   ...MOMENTUM_ILLUSTRATION_CANDIDATES
 ]

@@ -38,6 +38,11 @@ const workHistory = [
 
 const writingSoftware = [
   {
+    title: 'Prompting',
+    href: '/prompting',
+    note: 'talking to coding agents'
+  },
+  {
     title: 'Advice for students',
     href: '/advice-students',
     note: 'career pathfinding'
@@ -56,11 +61,6 @@ const writingSoftware = [
 
 const writingPersonal = [
   {
-    title: "oct '25",
-    href: '/oct-25',
-    note: 'life update'
-  },
-  {
     title: 'Headspace',
     href: '/headspace',
     note: 'identity, growth, thought-space'
@@ -69,6 +69,16 @@ const writingPersonal = [
     title: 'Foraging',
     href: '/foraging',
     note: 'ADHD, dopamine, attention'
+  },
+  {
+    title: 'On philosophy',
+    href: '/philosophy',
+    note: 'moral philosophy, lenses'
+  },
+  {
+    title: "oct '25",
+    href: '/oct-25',
+    note: 'life update'
   }
 ]
 

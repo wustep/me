@@ -17,11 +17,10 @@ export function MindsetContent() {
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
-        of chess might get you to 1200 ELO &mdash; past most casual players, but
-        nowhere near expert. The frontier of chess lies around 2800 ELO.
-        Grandmasters in chess will win against amateurs 100% of the time. Those
-        at the frontier of AI coding might be 10x as effective as your average
-        senior software engineer.
+        of chess might get you to 1200 ELO &mdash; past most casual players,
+        nowhere near expert. A grandmaster beats a 1200 every single game. The
+        frontier of AI coding might be 10x as effective as your average senior
+        engineer.
       </p>
 
       <p>
@@ -91,10 +90,10 @@ export function MindsetContent() {
       <PracticeLoop />
 
       <p>
-        The beginner&apos;s mindset isn&apos;t humility for its own sake.
-        It&apos;s the faster path. Three years in, the people pulling away are
-        the ones still treating themselves like beginners &mdash; still reading,
-        still experimenting, still updating when the model surprises them.
+        The beginner&apos;s mindset is the faster path. Three years in, the
+        people pulling away are the ones still treating themselves like
+        beginners &mdash; still reading, still experimenting, still updating
+        when the model surprises them.
       </p>
 
       <div className={styles.synthesis}>
@@ -297,7 +296,7 @@ function PracticeLoop() {
         <strong className={styles.practiceFlow}>
           blame &rarr; stop &rarr; regress
         </strong>
-        <p>The edge you had quietly rusts.</p>
+        <p>The edge you had rusts.</p>
       </section>
     </div>
   )

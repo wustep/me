@@ -1102,14 +1102,14 @@ export const SECTIONS: Section[] = [
         cssVar: '--design-em-style',
         whenOn: 'italic',
         whenOff: 'normal',
-        default: true
+        default: false
       },
       {
         kind: 'toggle',
         id: 'emphasisUnderline',
         label: 'Underline emphasis',
         dataAttr: 'em-underline',
-        default: true
+        default: false
       }
     ]
   },

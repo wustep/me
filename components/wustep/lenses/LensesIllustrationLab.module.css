@@ -1880,6 +1880,186 @@
   }
 }
 
+/* ── Systems candidates ───────────────────────────────────────────────
+   Eight reads on "outcomes emerge from loops": a stock & flow tank, a
+   leverage lever, meshed gears, an iceberg, a network mesh, an
+   equilibrium basin, nested subsystems, and a damped overshoot. Motion
+   stays diagrammatic — just enough to explain each metaphor while
+   keeping the silhouette judgeable at rest. */
+
+/* Stock & flow — the level rises and falls as both valves run. */
+:global(
+  svg[data-anim='candidate-systems-stock-flow'] [data-anim-target='level']
+) {
+  animation: labCandidateSysLevel var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+:global(
+    svg[data-anim='candidate-systems-stock-flow'] [data-anim-target='inflow']
+  ),
+:global(
+    svg[data-anim='candidate-systems-stock-flow'] [data-anim-target='outflow']
+  ) {
+  animation: labCandidateSysFlow 1.1s linear infinite;
+}
+@keyframes labCandidateSysLevel {
+  0%,
+  100% {
+    transform: translateY(11px);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes labCandidateSysFlow {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+
+/* Leverage — a small input tips the beam and lifts the load. */
+:global(svg[data-anim='candidate-systems-leverage'] [data-anim-target='lever']) {
+  animation: labCandidateSysLever var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+@keyframes labCandidateSysLever {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  34%,
+  60% {
+    transform: rotate(-7deg);
+  }
+}
+
+/* Gears — meshed cogs turn in opposite directions. */
+:global(svg[data-anim='candidate-systems-gears'] [data-anim-target='gear-a']) {
+  animation: labCandidateSysSpin 7.2s linear infinite;
+}
+:global(svg[data-anim='candidate-systems-gears'] [data-anim-target='gear-b']) {
+  animation: labCandidateSysSpinReverse 5.4s linear infinite;
+}
+@keyframes labCandidateSysSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes labCandidateSysSpinReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Iceberg — the berg bobs, the hidden loop turns, the tip pulses. */
+:global(svg[data-anim='candidate-systems-iceberg'] [data-anim-target='berg']) {
+  animation: labCandidateSysBob var(--lab-candidate-cycle) ease-in-out infinite;
+}
+:global(svg[data-anim='candidate-systems-iceberg'] [data-anim-target='loop']) {
+  animation: labCandidateSysSpin 9s linear infinite;
+}
+:global(svg[data-anim='candidate-systems-iceberg'] [data-anim-target='tip']) {
+  animation: labCandidateSysPulse var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+@keyframes labCandidateSysBob {
+  0%,
+  100% {
+    transform: translateY(-1.6px);
+  }
+  50% {
+    transform: translateY(1.6px);
+  }
+}
+
+/* Network — a current flows the edges and ripples the nodes. */
+:global(svg[data-anim='candidate-systems-network'] [data-anim-target='edge']) {
+  animation: labCandidateSysFlow 1.3s linear infinite;
+}
+:global(svg[data-anim='candidate-systems-network'] [data-anim-target='n']),
+:global(svg[data-anim='candidate-systems-network'] [data-anim-target='hub']) {
+  animation: labCandidateSysPulse var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+
+/* Equilibrium — the state swings in with damping and settles. */
+:global(
+  svg[data-anim='candidate-systems-equilibrium'] [data-anim-target='ball']
+) {
+  animation: labCandidateSysBall var(--lab-candidate-cycle) ease-in-out infinite;
+}
+@keyframes labCandidateSysBall {
+  0% {
+    transform: translate(-22px, -14px);
+  }
+  30% {
+    transform: translate(13px, -4.5px);
+  }
+  55% {
+    transform: translate(-8px, -1.5px);
+  }
+  78% {
+    transform: translate(4px, -0.4px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Nested systems — each boundary breathes; the core pulses. */
+:global(svg[data-anim='candidate-systems-nested'] [data-anim-target='ring']) {
+  animation: labCandidateSysRing var(--lab-candidate-cycle) ease-in-out infinite;
+}
+:global(svg[data-anim='candidate-systems-nested'] [data-anim-target='core']) {
+  animation: labCandidateSysPulse var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+@keyframes labCandidateSysRing {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+/* Overshoot — the response draws on, overshoots its goal, and settles. */
+:global(
+  svg[data-anim='candidate-systems-overshoot'] [data-anim-target='wave']
+) {
+  animation: labCandidateSysWave var(--lab-candidate-cycle) ease-in-out infinite;
+}
+:global(
+  svg[data-anim='candidate-systems-overshoot'] [data-anim-target='peak']
+) {
+  animation: labCandidateSysPulse var(--lab-candidate-cycle) ease-in-out
+    infinite;
+}
+@keyframes labCandidateSysWave {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  64%,
+  84% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 100;
+  }
+}
+
+/* Shared scale pulse for nodes, hubs, cores, tips, and peaks. */
+@keyframes labCandidateSysPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.16);
+  }
+}
+
 .cardTitle {
   flex: 0 0 auto;
   display: flex;

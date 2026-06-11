@@ -16,9 +16,8 @@ export function EquationContent() {
 
       <p>
         That gives you four levers. The point of view this frame nudges you
-        toward is that{' '}
-        <em>there exist inputs that produce really good outputs</em> &mdash; the
-        job is finding them. So how do you actually pull each lever?
+        toward is that <em>there exist inputs that produce great outputs</em>{' '}
+        &mdash; the job is finding them. So how do you actually pull each lever?
       </p>
 
       <Lever name='TOOL' tagline='Use a tool that was built for this.'>
@@ -31,11 +30,10 @@ export function EquationContent() {
           The frontier here isn&apos;t subtle: <strong>Cursor</strong>,{' '}
           <strong>Claude Code</strong>, and <strong>Codex</strong> are
           meaningfully better at this than VSCode (with stock Copilot) or
-          Antigravity. They&apos;re not magic &mdash; they&apos;re just designed
-          for the shape of agent work. They slice files into context smarter,
-          manage long-running tasks, persist conversation state, and inject
-          project-aware system prompts. Same model, different tool, different
-          ceiling.
+          Antigravity. They&apos;re built for the shape of agent work: they
+          slice files into context smarter, manage long-running tasks, persist
+          conversation state, and inject project-aware system prompts. Same
+          model, different tool, different ceiling.
         </p>
         <p>
           You don&apos;t have to commit to one forever. Try an agent-native tool
@@ -97,9 +95,8 @@ export function EquationContent() {
           Thinking effort is the cheap dial &mdash; and it&apos;s becoming one
           of the more important ones to manage. Most tools expose four rungs:{' '}
           <strong>low</strong>, <strong>medium</strong>, <strong>high</strong>,{' '}
-          <strong>xhigh</strong>. They aren&apos;t &ldquo;quality&rdquo;
-          settings; they&apos;re budget for how long the model gets to
-          deliberate before answering.
+          <strong>xhigh</strong>. They&apos;re budget for how long the model
+          gets to deliberate before answering, not quality settings.
         </p>
 
         <div className={styles.modelGuide}>
@@ -224,9 +221,9 @@ export function EquationContent() {
           </li>
         </ul>
         <p>
-          Time spent loading the right context is the highest-leverage move you
-          can make. It&apos;s also the most boring one, which is why it&apos;s
-          underused.
+          Loading the right context is the strongest pull available on any of
+          the four levers. It&apos;s also the most boring one, which is why
+          it&apos;s underused.
         </p>
       </Lever>
 
@@ -246,9 +243,9 @@ export function EquationContent() {
         <DebugChecklist />
 
         <p>
-          Prompting and context management aren&apos;t gimmicks. They&apos;re
-          real skills with as much depth as anything else in the craft &mdash;
-          closer to chess than to magic words.
+          Prompting and context management are real skills, with as much depth
+          as anything else in the craft &mdash; closer to chess than to magic
+          words.
         </p>
       </div>
     </ChapterBody>

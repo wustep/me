@@ -439,7 +439,9 @@ export function SidePanel({
                                     external ? 'noopener noreferrer' : undefined
                                   }
                                 >
-                                  {shown.quote.cite}
+                                  <span className={styles.quoteCiteText}>
+                                    {shown.quote.cite}
+                                  </span>
                                   <span
                                     className={styles.quoteCiteArrow}
                                     data-external={external ? '' : undefined}

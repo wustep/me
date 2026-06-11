@@ -25,7 +25,7 @@ export function ColleagueContent() {
       <p>
         Same task, same model &mdash; what changes is how much the colleague was
         set up to succeed. The asymmetry between what <em>you</em> can see and
-        what <em>they</em> can see is where most of the leverage lives.
+        what <em>they</em> can see is where most of the skill lives.
       </p>
 
       <Lever name='ONBOARDING' tagline='Set them up before the work starts.'>
@@ -37,8 +37,8 @@ export function ColleagueContent() {
         <p>
           Most of this lives in a <code>CLAUDE.md</code> or{' '}
           <code>.cursorrules</code> at the project root. It&apos;s the
-          longest-leverage thing you can write, because the agent reads it on
-          every task. A useful rules file says things like:
+          highest-yield thing you can write in a codebase, because the agent
+          reads it on every task. A useful rules file says things like:
         </p>
         <ul className={styles.axisList}>
           <li>Use Tailwind classes; don&apos;t inline styles.</li>
