@@ -65,6 +65,12 @@ export default siteConfig({
   // (2024-11-18) disable search for now because it is not working.
   isSearchEnabled: false,
 
+  // use prod-style slug-only URLs in dev too, so shortlinks like
+  // /advice-students resolve the same locally as on prod
+  // (the starter kit defaults this to true in dev, which appends Notion IDs
+  // to canonical page URLs and breaks slug-only lookups)
+  includeNotionIdInUrls: false,
+
   // Giscus comments configuration (optional)
   // giscus: {
   //   repo: 'wustep/me',
