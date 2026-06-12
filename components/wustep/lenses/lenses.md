@@ -43,7 +43,7 @@ Agency is the capacity to identify desirable futures, notice the actions actuall
 
 It starts with realizing there are more choices on the table than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
 
-The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just call out and solve the elephant in the room, find alternative paths to solving a problem, or do things that aren’t considered your “role” because nobody else is doing them.
+The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.
 
 Lean on agency too hard and it turns into contempt for structural reality — some walls really are stone, and some fences are there for reasons you haven’t learned yet (Chesterton’s fence). Charging through either exhausts you or runs over the people around you. High agency includes humility: map the constraints accurately, then spend your effort where you can actually move the system.
 
@@ -51,7 +51,7 @@ Lean on agency too hard and it turns into contempt for structural reality — so
 
 id: attention
 category: Psychology
-tagline: You become what you keep looking at.
+tagline: Spent constantly, chosen rarely.
 bg: #24496A
 fg: #F6EAD8
 accent: #E6B64E
@@ -60,13 +60,13 @@ related: osmosis, energy, headspace
 quote: What information consumes is rather obvious: it consumes the attention of its recipients. Hence a wealth of information creates a poverty of attention.
 quote-cite: Herbert Simon
 
-Attention is the most concentrated form of energy a person spends, and it’s spent constantly — on phones, conversations, worries, screens, faces, ideas. Whatever you keep looking at trains the rest of you: taste, reactions, sense of what counts as normal, sense of what’s even possible.
+Attention is the scarcest thing you have, and it’s being spent right now — on this sentence, the tab behind it, the worry underneath. William James defined experience as “what I agree to attend to,” but most attention is never agreed to. Feeds, notifications, and other people’s urgencies take it, each engineered to win the next glance — so by default, the allocation goes to whoever bids loudest, not to what you’d endorse on reflection.
 
-This lens asks: _what is allowed to occupy my attention, and what isn’t?_ Or _how are others spending this currency, and what does it buy them?_
+This lens asks: _what is allowed to occupy my attention, and what gets in uninvited?_ It applies to people, too. Full attention — phone away, clock stopped — has gotten rare enough to read as love. Everyone can tell the difference between being looked at and being seen.
 
 Most regrets, on inspection, trace back to attention more than effort. You gave the wrong things the air and starved the right ones. Lost hours you can recover; what the looking trained you into is harder to undo.
 
-The failure mode is tunnel vision. Life rewards a certain amount of wandering, and locking attention down too hard makes you efficient at the wrong thing.
+The failure mode is tunnel vision — guarding the spotlight so tightly that nothing unplanned ever wanders in. Life rewards a certain amount of drift, and some of the best things in yours arrived through attention you never meant to pay.
 
 # Communication
 
@@ -78,16 +78,17 @@ fg: #F6EAD8
 accent: #F0B85F
 illustration: communication
 related: headspace, narrative, interface
+reading: Communication: A Simple Multi-Stage Model — LessWrong | https://www.lesswrong.com/posts/2GHxvfoRvNGZw4iFg/communication-a-simple-multi-stage-model
 quote: The single biggest problem in communication is the illusion that it has taken place.
 quote-cite: George Bernard Shaw
 
-Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted.
+Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted. Most of the time, “they’re wrong” and “they don’t care” mean _we are not in the same conversation_.
 
-Most of the time, “they’re wrong” and “they don’t care” just mean _we are not in the same conversation_. The fix is rarely a better argument. It’s usually a slower, more patient transfer of model, with enough questions to close the gap.
+It helps to see how far an idea has to travel: from the felt sense in your head into words, from your words into their head, and often onward — their retelling, a third person’s reading of it, and beyond. Every hop is lossy. The version in your head is rich with reasons you’ve never had to say out loud; the version in words keeps only what you managed to articulate; the version in their head is whatever their own experience could rebuild from those words. Telephone, played in earnest, by people who all think they’re being clear.
 
-So vague language gets expensive. The clearer you make your own model, and the better you read theirs, the faster you reach the actual crux.
+The trap is that both sides feel understood. You know what you meant, so your words seem transparent; they’ve matched your words to something they already know, so the message feels received. Two people nod and walk away from different conversations. The fix is mechanical, not heroic: say it back in your own words, ask for an example, check that the thing making sense to each of you is the same thing.
 
-Sometimes, though, the disagreement is real. Some conflicts of interest just wear misunderstanding’s clothes, and “let me explain better” becomes a way to dodge the harder fight. Assume translation first, but don’t assume it forever.
+Sometimes, though, the disagreement is real. Some conflicts of interest wear misunderstanding’s clothes, and “let me explain better” becomes a way to dodge the harder fight. Assume translation first, but don’t assume it forever.
 
 # Constraint
 
@@ -104,9 +105,11 @@ quote-cite: G.K. Chesterton
 
 Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each format gives its maker direction and freedom at once.
 
-An overwhelming choice is often a missing constraint. The blank canvas paralyzes. “Build anything” yields nothing in particular; _build this in a week with these three ideas_ runs as a generative engine. And pushing on a constraint you assumed was fixed is often where the real solution hides.
+An overwhelming choice is often a missing constraint. The blank canvas paralyzes; “build anything” yields nothing in particular, while _build this in a week, with these three ideas_ gets something made. The reverse move matters just as much: when a problem won’t budge, go looking for the constraint everyone assumed was fixed. Solutions hide behind walls nobody thought to push on.
 
-This lens helps you choose constraints on purpose. Self-imposed deadlines, fixed budgets, a smaller toolkit than you can afford — these don’t always shrink you. They give your taste somewhere to push against. Most ambitious work happens inside walls that someone chose to build.
+This lens helps you choose constraints on purpose — a deadline nobody imposed, a budget smaller than you can afford, one tool where you could have five. They give your taste somewhere to push against, and they make finishing possible: a bounded thing can be done well, an unbounded one only abandoned. Most ambitious work happens inside walls that someone chose to build.
+
+The wrong constraint strangles instead of sharpening, and constraints have a way of outliving their reasons — a rule written for last year’s crisis quietly runs this year’s show. The skill is telling chosen walls from inherited ones: keep the ones that give the work its shape, and test the rest.
 
 # Dopamine
 
@@ -578,6 +581,8 @@ Taste is a refined sense of what’s meaningful and worth pursuing — a filter 
 Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context. All three are trainable, and most people are uneven across them.
 
 Resonance without articulation is intuition you can’t share. Articulation without execution is a manifesto with nothing behind it. Execution without resonance is a closed loop — you make what you want, and no one else cares. Each one demands a different kind of work.
+
+Taste sharpened only by consumption curdles into snobbery — a refined palate with no kitchen. And the better your filter gets, the wider the gap between what you can admire and what you can make. Most people quit inside that gap; the ones with taste worth having kept working through it.
 
 # Utility
 

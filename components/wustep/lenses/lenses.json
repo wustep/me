@@ -23,13 +23,13 @@
       "text": "Between stimulus and response there is a space. In that space is our power to choose our response.",
       "cite": "Viktor Frankl"
     },
-    "body": "Agency is the capacity to identify desirable futures, notice the actions actually available, and execute — despite uncertainty, friction, or external constraints. High agency is a habit of reshaping yourself and your environment rather than treating either as fixed.\n\nIt starts with realizing there are more choices on the table than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.\n\nThe questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just call out and solve the elephant in the room, find alternative paths to solving a problem, or do things that aren’t considered your “role” because nobody else is doing them.\n\nLean on agency too hard and it turns into contempt for structural reality — some walls really are stone, and some fences are there for reasons you haven’t learned yet (Chesterton’s fence). Charging through either exhausts you or runs over the people around you. High agency includes humility: map the constraints accurately, then spend your effort where you can actually move the system."
+    "body": "Agency is the capacity to identify desirable futures, notice the actions actually available, and execute — despite uncertainty, friction, or external constraints. High agency is a habit of reshaping yourself and your environment rather than treating either as fixed.\n\nIt starts with realizing there are more choices on the table than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.\n\nThe questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.\n\nLean on agency too hard and it turns into contempt for structural reality — some walls really are stone, and some fences are there for reasons you haven’t learned yet (Chesterton’s fence). Charging through either exhausts you or runs over the people around you. High agency includes humility: map the constraints accurately, then spend your effort where you can actually move the system."
   },
   {
     "id": "attention",
     "category": "Psychology",
     "title": "Attention",
-    "tagline": "You become what you keep looking at.",
+    "tagline": "Spent constantly, chosen rarely.",
     "bg": "#24496A",
     "fg": "#F6EAD8",
     "accent": "#E6B64E",
@@ -43,7 +43,7 @@
       "text": "What information consumes is rather obvious: it consumes the attention of its recipients. Hence a wealth of information creates a poverty of attention.",
       "cite": "Herbert Simon"
     },
-    "body": "Attention is the most concentrated form of energy a person spends, and it’s spent constantly — on phones, conversations, worries, screens, faces, ideas. Whatever you keep looking at trains the rest of you: taste, reactions, sense of what counts as normal, sense of what’s even possible.\n\nThis lens asks: _what is allowed to occupy my attention, and what isn’t?_ Or _how are others spending this currency, and what does it buy them?_\n\nMost regrets, on inspection, trace back to attention more than effort. You gave the wrong things the air and starved the right ones. Lost hours you can recover; what the looking trained you into is harder to undo.\n\nThe failure mode is tunnel vision. Life rewards a certain amount of wandering, and locking attention down too hard makes you efficient at the wrong thing."
+    "body": "Attention is the scarcest thing you have, and it’s being spent right now — on this sentence, the tab behind it, the worry underneath. William James defined experience as “what I agree to attend to,” but most attention is never agreed to. Feeds, notifications, and other people’s urgencies take it, each engineered to win the next glance — so by default, the allocation goes to whoever bids loudest, not to what you’d endorse on reflection.\n\nThis lens asks: _what is allowed to occupy my attention, and what gets in uninvited?_ It applies to people, too. Full attention — phone away, clock stopped — has gotten rare enough to read as love. Everyone can tell the difference between being looked at and being seen.\n\nMost regrets, on inspection, trace back to attention more than effort. You gave the wrong things the air and starved the right ones. Lost hours you can recover; what the looking trained you into is harder to undo.\n\nThe failure mode is tunnel vision — guarding the spotlight so tightly that nothing unplanned ever wanders in. Life rewards a certain amount of drift, and some of the best things in yours arrived through attention you never meant to pay."
   },
   {
     "id": "communication",
@@ -59,11 +59,17 @@
       "narrative",
       "interface"
     ],
+    "readings": [
+      {
+        "label": "Communication: A Simple Multi-Stage Model — LessWrong",
+        "href": "https://www.lesswrong.com/posts/2GHxvfoRvNGZw4iFg/communication-a-simple-multi-stage-model"
+      }
+    ],
     "quote": {
       "text": "The single biggest problem in communication is the illusion that it has taken place.",
       "cite": "George Bernard Shaw"
     },
-    "body": "Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted.\n\nMost of the time, “they’re wrong” and “they don’t care” just mean _we are not in the same conversation_. The fix is rarely a better argument. It’s usually a slower, more patient transfer of model, with enough questions to close the gap.\n\nSo vague language gets expensive. The clearer you make your own model, and the better you read theirs, the faster you reach the actual crux.\n\nSometimes, though, the disagreement is real. Some conflicts of interest just wear misunderstanding’s clothes, and “let me explain better” becomes a way to dodge the harder fight. Assume translation first, but don’t assume it forever."
+    "body": "Almost every problem between two people is, at root, a translation problem. Different vocabularies, different unsaid assumptions, different stakes — the gap widens until it surfaces as conflict, drift, or a bad outcome neither person wanted. Most of the time, “they’re wrong” and “they don’t care” mean _we are not in the same conversation_.\n\nIt helps to see how far an idea has to travel: from the felt sense in your head into words, from your words into their head, and often onward — their retelling, a third person’s reading of it, and beyond. Every hop is lossy. The version in your head is rich with reasons you’ve never had to say out loud; the version in words keeps only what you managed to articulate; the version in their head is whatever their own experience could rebuild from those words. Telephone, played in earnest, by people who all think they’re being clear.\n\nThe trap is that both sides feel understood. You know what you meant, so your words seem transparent; they’ve matched your words to something they already know, so the message feels received. Two people nod and walk away from different conversations. The fix is mechanical, not heroic: say it back in your own words, ask for an example, check that the thing making sense to each of you is the same thing.\n\nSometimes, though, the disagreement is real. Some conflicts of interest wear misunderstanding’s clothes, and “let me explain better” becomes a way to dodge the harder fight. Assume translation first, but don’t assume it forever."
   },
   {
     "id": "constraint",
@@ -83,7 +89,7 @@
       "text": "Art is limitation; the essence of every picture is the frame.",
       "cite": "G.K. Chesterton"
     },
-    "body": "Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each format gives its maker direction and freedom at once.\n\nAn overwhelming choice is often a missing constraint. The blank canvas paralyzes. “Build anything” yields nothing in particular; _build this in a week with these three ideas_ runs as a generative engine. And pushing on a constraint you assumed was fixed is often where the real solution hides.\n\nThis lens helps you choose constraints on purpose. Self-imposed deadlines, fixed budgets, a smaller toolkit than you can afford — these don’t always shrink you. They give your taste somewhere to push against. Most ambitious work happens inside walls that someone chose to build."
+    "body": "Freedom is not the absence of structure. The right constraint creates expression, focus, improvisation, and agency. Sonnets, haiku, jazz standards — each format gives its maker direction and freedom at once.\n\nAn overwhelming choice is often a missing constraint. The blank canvas paralyzes; “build anything” yields nothing in particular, while _build this in a week, with these three ideas_ gets something made. The reverse move matters just as much: when a problem won’t budge, go looking for the constraint everyone assumed was fixed. Solutions hide behind walls nobody thought to push on.\n\nThis lens helps you choose constraints on purpose — a deadline nobody imposed, a budget smaller than you can afford, one tool where you could have five. They give your taste somewhere to push against, and they make finishing possible: a bounded thing can be done well, an unbounded one only abandoned. Most ambitious work happens inside walls that someone chose to build.\n\nThe wrong constraint strangles instead of sharpening, and constraints have a way of outliving their reasons — a rule written for last year’s crisis quietly runs this year’s show. The skill is telling chosen walls from inherited ones: keep the ones that give the work its shape, and test the rest."
   },
   {
     "id": "dopamine",
@@ -217,7 +223,7 @@
     ],
     "quote": {
       "text": "We cannot solve our problems with the same thinking we used when we created them.",
-      "cite": "Albert Einstein"
+      "cite": "Attributed to Albert Einstein"
     },
     "body": "Every person operates from an internal world-model — beliefs, emotional state, identity constraints, a sense of what matters — that shapes what they even notice. To understand behavior, enter that headspace first.\n\nIn a confusing interaction, “why are they doing this?” becomes _what would a person have to believe, feel, and fear_ for this to be the obvious move? Most disagreements aren’t about facts. They’re about which facts feel real, urgent, and self-relevant.\n\nThe skill is provisional empathy — building someone’s headspace well enough to predict their next sentence, without committing to live there. You don’t have to agree with the model. You do have to be able to run it.\n\nDone to excess, this becomes empathy without end, where you understand everyone so well you can’t act against anyone. Ignore headspace, though, and you get very efficient at solving the wrong problem."
   },
@@ -315,6 +321,10 @@
       "osmosis",
       "status"
     ],
+    "quote": {
+      "text": "Man is the creature who does not know what to desire, and he turns to others in order to make up his mind.",
+      "cite": "René Girard"
+    },
     "body": "Ideas, beliefs, formats, and aesthetics compete to spread, the way organisms compete to reproduce. The ones you see most owe their visibility to transmissibility, not truth. Catchy beats correct; sticky beats subtle; shareable beats nuanced, almost every time.\n\nFor any viral take, ask less _is this idea right?_ and more _why is this winning now, and what does it give the people spreading it?_ Movements, fashions, and opinions read clearly this way long before they make sense any other way.\n\nYour own taste is downstream of this. A surprising amount of what you _believe_ is just what your information diet kept feeding you, lightly adapted. Spot the meme structure under an opinion and you can decide, separately, whether you still want to hold it.\n\nPopularity isn’t always emptiness, and obscurity isn’t always depth; sometimes the mainstream is right and the contrarian is just lonely. But confuse virality with validity and you become a passenger in your own beliefs."
   },
   {
@@ -449,6 +459,10 @@
       "systems",
       "probabilistic"
     ],
+    "quote": {
+      "text": "We can never do merely one thing. Any intrusion into nature has numerous effects, many of which are unpredictable.",
+      "cite": "Garrett Hardin"
+    },
     "body": "Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.\n\nThe honest question about any decision is rarely _does this solve the problem?_ It’s _what does this produce downstream?_ Rent control reduces rent, then reduces housing supply. A metric rewards a behavior, then corrupts it. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is what people argue about; the second-order answer is what actually matters.\n\nThe skill is forcing yourself to ask _and then what?_ three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.\n\nTaken too far, it becomes paralysis. Every move has an infinite downstream, and you can always invent a scary second-order story for any change. The lens also favors the status quo, because the consequences of _not acting_ are less legible than the consequences of acting. But people who think only in first-order effects build systems that solve the visible problem and create three invisible ones, over and over, for decades."
   },
   {
@@ -485,6 +499,10 @@
       "evo-psych",
       "narrative"
     ],
+    "quote": {
+      "text": "The desire of the esteem of others is as real a want of nature as hunger.",
+      "cite": "John Adams, Discourses on Davila"
+    },
     "body": "Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. A surprising amount of human behavior is about status — relative standing within the groups we care about. Not money, not power directly, but where you sit in the local pecking order, and the movement of that position over time. The local part is the trick. People will burn months of comfort for a half-step inside a group of forty.\n\nIt’s why people pick the cars they pick, why office layouts matter, why a small slight outrages and a large compliment soothes. Whole industries — luxury, fashion, academia, much of social media — exist mostly to allocate position.\n\nIt explains the quiet ones, too. People who seem indifferent to money or career usually have a status game running somewhere else: a scene, a craft, a friend group, a way of dressing that signals to exactly the right thirty people. Everyone’s playing. The only question is which board.\n\nNot that status is everything. Love, curiosity, craft, and play are real and irreducible, and reducing them to position-jockeying is its own kind of poverty. But ignore status and half of what people do stays baffling."
   },
   {
@@ -522,7 +540,7 @@
       "minimalism",
       "legibility"
     ],
-    "body": "Taste is a refined sense of what’s meaningful and worth pursuing — a filter built from aesthetic, moral, and cultural values that helps you predict what will resonate. Useful for movies, food, and furniture. Also for product decisions, hires, and who you spend time with.\n\nGood taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context. All three are trainable, and most people are uneven across them.\n\nResonance without articulation is intuition you can’t share. Articulation without execution is a manifesto with nothing behind it. Execution without resonance is a closed loop — you make what you want, and no one else cares. Each one demands a different kind of work."
+    "body": "Taste is a refined sense of what’s meaningful and worth pursuing — a filter built from aesthetic, moral, and cultural values that helps you predict what will resonate. Useful for movies, food, and furniture. Also for product decisions, hires, and who you spend time with.\n\nGood taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context. All three are trainable, and most people are uneven across them.\n\nResonance without articulation is intuition you can’t share. Articulation without execution is a manifesto with nothing behind it. Execution without resonance is a closed loop — you make what you want, and no one else cares. Each one demands a different kind of work.\n\nTaste sharpened only by consumption curdles into snobbery — a refined palate with no kitchen. And the better your filter gets, the wider the gap between what you can admire and what you can make. Most people quit inside that gap; the ones with taste worth having kept working through it."
   },
   {
     "id": "utility",
