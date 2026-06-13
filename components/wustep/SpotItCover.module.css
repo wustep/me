@@ -26,6 +26,14 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) draws the
+   match ring just like hover. */
+.cover:focus-within .matchRing,
+:global(.group):focus-within .matchRing {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
 .matchRing {
   fill: none;
   stroke: #ffec4a;

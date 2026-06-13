@@ -5,11 +5,12 @@ import * as React from 'react'
 /**
  * StarrySequencerCover
  *
- *   The cover is a still poster at rest and only animates while hovered.
+ *   The cover is a still poster at rest and animates while hovered (pointer
+ *   devices) or focused (tap/keyboard — covers touch, where there's no hover).
  *   Animated WebP can't be paused via the DOM, so we swap the <img> src:
  *   poster ⇄ animated WebP. Re-assigning the animated src restarts it from
- *   the first frame, so each hover plays the loop fresh. Honors reduced
- *   motion and non-hover (touch) devices by staying on the poster.
+ *   the first frame, so each play runs the loop fresh. Honors reduced motion
+ *   by staying on the poster.
  */
 
 const POSTER = '/playground/covers/starry-sequencer-poster.webp'
@@ -27,19 +28,28 @@ export function StarrySequencerCover() {
     const hoverTarget = img.closest('.group') ?? img
 
     const play = () => {
-      if (reduceMotion.matches || !canHover.matches) return
+      if (reduceMotion.matches) return
       img.src = ANIMATED
     }
     const stop = () => {
       img.src = POSTER
     }
 
-    hoverTarget.addEventListener('pointerenter', play)
-    hoverTarget.addEventListener('pointerleave', stop)
+    // Hover drives playback on pointer devices...
+    if (canHover.matches) {
+      hoverTarget.addEventListener('pointerenter', play)
+      hoverTarget.addEventListener('pointerleave', stop)
+    }
+    // ...and focus drives it everywhere — covers touch, where tapping the card
+    // focuses it and there's no hover to trigger the animation.
+    hoverTarget.addEventListener('focusin', play)
+    hoverTarget.addEventListener('focusout', stop)
 
     return () => {
       hoverTarget.removeEventListener('pointerenter', play)
       hoverTarget.removeEventListener('pointerleave', stop)
+      hoverTarget.removeEventListener('focusin', play)
+      hoverTarget.removeEventListener('focusout', stop)
     }
   }, [])
 

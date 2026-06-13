@@ -66,6 +66,17 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
+   same animation. */
+.cover:focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target]),
+:global(.group):focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+  animation-play-state: running;
+}
+
 @keyframes lensesCoverLid {
   0%,
   100% {

@@ -90,6 +90,18 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) drops the
+   tokens just like hover. */
+.cover:focus-within .word,
+:global(.group):focus-within .word {
+  animation: fall-word 1000ms forwards;
+}
+
+.cover:focus-within .slashes,
+:global(.group):focus-within .slashes {
+  animation: fall-slashes 920ms 60ms forwards;
+}
+
 /*
  * Gravity drop with angular momentum.
  * - translateY: cqh so fall distance is relative to the cover height.

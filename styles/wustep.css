@@ -1017,6 +1017,14 @@ span[class*='_background'] {
   }
 }
 
+/* Playground cards (marked with `group`) have no hover on touch, so mirror the
+   lift on focus — tapping or tabbing to a card gives the same affordance. */
+.group.notion-collection-card:focus-within {
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+  border-color: var(--divider-hover);
+}
+
 .notion-collection-card-cover {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   overflow: hidden;
@@ -1038,6 +1046,15 @@ span[class*='_background'] {
   .notion-collection-card:hover .notion-collection-card-cover img {
     transform: scale(1.02);
   }
+}
+
+/* Focus mirror for playground cards (see above) — applies on touch/keyboard. */
+.group.notion-collection-card:focus-within .notion-collection-card-cover {
+  border-color: var(--divider-hover);
+}
+
+.group.notion-collection-card:focus-within .notion-collection-card-cover img {
+  transform: scale(1.02);
 }
 
 .notion-collection-card-body {

@@ -75,6 +75,28 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
+   rising notes and key presses just like hover. */
+:global(.group):focus-within .bar,
+.cover:focus-within .bar {
+  animation: rise 2.6s linear infinite;
+}
+:global(.group):focus-within .bar:nth-child(1),
+.cover:focus-within .bar:nth-child(1) { animation-delay: 0s; }
+:global(.group):focus-within .bar:nth-child(2),
+.cover:focus-within .bar:nth-child(2) { animation-delay: 0.05s; }
+:global(.group):focus-within .bar:nth-child(3),
+.cover:focus-within .bar:nth-child(3) { animation-delay: 0.1s; }
+
+:global(.group):focus-within .whitePressed,
+.cover:focus-within .whitePressed {
+  animation: whiteKeyPress 2.6s linear infinite;
+}
+:global(.group):focus-within .blackPressed,
+.cover:focus-within .blackPressed {
+  animation: blackKeyPress 2.6s linear infinite;
+}
+
 /* Two phases, split so the top edge moves at one constant speed across both:
    0%–46%   = key held: bar grows in place (scaleY 0→1), top rises by 1 height
    46%–100% = key released: bar travels up (translateY 0→-115%)

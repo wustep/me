@@ -44,8 +44,10 @@ export function LensesIllustrationLabCover() {
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)')
-    // Animate on the same hover surface as the rest of the cover — the
-    // playground card wrapper (`.group`), falling back to the cover root.
+    // Animate on the same surface as the rest of the cover — the playground
+    // card wrapper (`.group`), falling back to the cover root. Hover drives it
+    // on pointer devices; focus drives it everywhere (covers touch, where
+    // tapping focuses the card and there's no hover).
     const hoverTarget = cover.closest('.group') ?? cover
 
     let matrixTimer: ReturnType<typeof setInterval> | undefined
@@ -95,7 +97,7 @@ export function LensesIllustrationLabCover() {
     }
 
     const start = () => {
-      if (matrixTimer || reduceMotion.matches || !canHover.matches) return
+      if (matrixTimer || reduceMotion.matches) return
       pressRandom()
       matrixTimer = setInterval(pressRandom, PRESS_INTERVAL)
       // The card starts green, so show green as the selected color. The
@@ -124,12 +126,18 @@ export function LensesIllustrationLabCover() {
       preview.style.backgroundColor = ''
     }
 
-    hoverTarget.addEventListener('pointerenter', start)
-    hoverTarget.addEventListener('pointerleave', stop)
+    if (canHover.matches) {
+      hoverTarget.addEventListener('pointerenter', start)
+      hoverTarget.addEventListener('pointerleave', stop)
+    }
+    hoverTarget.addEventListener('focusin', start)
+    hoverTarget.addEventListener('focusout', stop)
 
     return () => {
       hoverTarget.removeEventListener('pointerenter', start)
       hoverTarget.removeEventListener('pointerleave', stop)
+      hoverTarget.removeEventListener('focusin', start)
+      hoverTarget.removeEventListener('focusout', stop)
       stop()
     }
   }, [])

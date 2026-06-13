@@ -219,6 +219,27 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) settles the
+   workbench and runs the bow animation just like hover. */
+.cover:focus-within .workbench,
+:global(.group):focus-within .workbench {
+  transform: rotate(0deg) translateY(-2px);
+}
+
+.cover:focus-within .previewCard,
+:global(.group):focus-within .previewCard {
+  transform: translateY(-4px) rotate(0deg);
+}
+
+.cover:focus-within
+  .illustration
+  :global(svg[data-anim='expertise'] [data-anim-target]),
+:global(.group):focus-within
+  .illustration
+  :global(svg[data-anim='expertise'] [data-anim-target]) {
+  animation-play-state: running;
+}
+
 @keyframes labCoverPress {
   0%,
   100% {
@@ -300,7 +321,11 @@
   .cover:hover .previewCard,
   .cover:hover .illustration :global(svg[data-anim='expertise'] [data-anim-target]),
   :global(.group):hover .previewCard,
-  :global(.group):hover .illustration :global(svg[data-anim='expertise'] [data-anim-target]) {
+  :global(.group):hover .illustration :global(svg[data-anim='expertise'] [data-anim-target]),
+  .cover:focus-within .previewCard,
+  .cover:focus-within .illustration :global(svg[data-anim='expertise'] [data-anim-target]),
+  :global(.group):focus-within .previewCard,
+  :global(.group):focus-within .illustration :global(svg[data-anim='expertise'] [data-anim-target]) {
     animation: none;
   }
 }

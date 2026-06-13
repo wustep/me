@@ -77,6 +77,13 @@
   }
 }
 
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) tilts the
+   token just like hover. */
+.cover:focus-within .ino,
+:global(.group):focus-within .ino {
+  transform: translateY(-2px) rotate(-3deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ino {
     transition: none;
