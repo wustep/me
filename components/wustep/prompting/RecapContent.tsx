@@ -38,7 +38,7 @@ export function RecapContent() {
 
       <RecapItem index={3} title='Techniques' href='/prompting/techniques'>
         <p className={styles.recapTechniquesIntro}>
-          Eight moves worth practicing &mdash;
+          Practice a repertoire of techniques, like:
         </p>
         <ul className={styles.recapList}>
           <li>What questions should you ask me before starting?</li>

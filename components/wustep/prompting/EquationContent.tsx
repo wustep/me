@@ -29,16 +29,14 @@ export function EquationContent() {
         <p>
           The frontier here isn&apos;t subtle: <strong>Cursor</strong>,{' '}
           <strong>Claude Code</strong>, and <strong>Codex</strong> are
-          meaningfully better at this than VSCode (with stock Copilot) or
-          Antigravity. They&apos;re built for the shape of agent work: they
-          slice files into context smarter, manage long-running tasks, persist
-          conversation state, and inject project-aware system prompts. Same
-          model, different tool, different ceiling.
+          significantly better than VSCode (with stock Copilot) or Antigravity.
+          At times, this is comparable to having a junior vs a senior engineer
+          helping you.
         </p>
         <p>
-          You don&apos;t have to commit to one forever. Try an agent-native tool
-          for a week. If your day-to-day doesn&apos;t get noticeably easier, go
-          back. It probably will.
+          You don&apos;t have to commit to one forever. Try a new coding agent
+          for a few weeks. If your day-to-day doesn&apos;t get noticeably
+          easier, go back.
         </p>
       </Lever>
 
@@ -53,7 +51,7 @@ export function EquationContent() {
               Fast and cost-friendly
             </span>
             <span className={styles.modelGuidePick}>
-              Sonnet 4.7 · Composer 2
+              Sonnet 4.7 · Composer 2.5
             </span>
           </div>
           <div className={styles.modelGuideRow}>
@@ -81,22 +79,24 @@ export function EquationContent() {
           explanations they reach for, where they cut corners under ambiguity.
           If you&apos;re newer to AI coding, you&apos;ll attune faster by
           staying with one model for a while and learning its tics. Hopping
-          between models before you have a feel for any of them mostly trains
-          you to blame the model when half the issue is unfamiliarity.
+          between models before you have a feel for any of them slows down your
+          learning.
         </p>
         <p>
-          The biggest trap is <strong>&quot;Auto&quot;</strong> mode. Tools love
-          offering it because it sounds helpful. In practice, &quot;Auto&quot;
-          is usually optimized for the platform&apos;s margin, not your output
-          &mdash; it quietly picks a cheaper model when it thinks it can get
-          away with it. Override it whenever the work matters.
+          For many tools, <strong>&quot;Auto&quot; mode is a trap</strong>.
+          Tools love offering it because it sounds helpful and is an easy
+          default. In practice, &quot;Auto&quot; is optimized for the
+          platform&apos;s margin, not your output &mdash; Cursor quietly picks a
+          cheaper model (Composer). Choosing your model manually helps you
+          attune to models faster and learn the right model for the job.
         </p>
         <p>
-          Thinking effort is the cheap dial &mdash; and it&apos;s becoming one
-          of the more important ones to manage. Most tools expose four rungs:{' '}
+          Thinking effort is another dial &mdash; and is becoming one of the
+          more important ones to manage. Most tools expose four rungs:{' '}
           <strong>low</strong>, <strong>medium</strong>, <strong>high</strong>,{' '}
-          <strong>xhigh</strong>. They&apos;re budget for how long the model
-          gets to deliberate before answering, not quality settings.
+          <strong>xhigh</strong>. Default to <strong>high</strong> (or medium,
+          if more cost-sensitive) and try dialing it down or up when the model
+          lets you down by overthinking or underthinking.
         </p>
 
         <div className={styles.modelGuide}>
@@ -116,7 +116,7 @@ export function EquationContent() {
             <span className={styles.modelGuidePick}>High</span>
             <span className={styles.modelGuideWhen}>
               Underspecced problems &mdash; planning through constraints,
-              tradeoffs, real decisions
+              tradeoffs, real decisions. Also a good default.
             </span>
           </div>
           <div className={styles.modelGuideRow}>
@@ -127,25 +127,13 @@ export function EquationContent() {
             </span>
           </div>
         </div>
-
-        <p>
-          More isn&apos;t always better. Crank xhigh on a simple task and the
-          model will overthink &mdash; second-guess obvious choices, invent edge
-          cases, ship something baroque. Leave medium on a gnarly one and
-          it&apos;ll underthink &mdash; miss a constraint, settle for the first
-          plausible plan. Calibrate to how much thinking <em>you&apos;d</em>{' '}
-          need to solve it, and match.
-        </p>
       </Lever>
 
       <Lever
         name='PROMPT'
         tagline='Be specific. Show the model what good looks like.'
       >
-        <p>
-          The prompt is the smallest of the four levers, but it&apos;s the one
-          people obsess over. The patterns that consistently help are unsexy:
-        </p>
+        <p>Prompting is a skill. Some patterns that help:</p>
         <ul className={styles.axisList}>
           <li>
             <strong>Concrete over abstract.</strong> &quot;Make this

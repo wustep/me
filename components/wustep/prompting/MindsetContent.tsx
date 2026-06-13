@@ -19,8 +19,8 @@ export function MindsetContent() {
         AI coding is roughly three years old. Chess is five hundred. Three years
         of chess might get you to 1200 ELO &mdash; past most casual players,
         nowhere near expert. A grandmaster beats a 1200 every single game. The
-        frontier of AI coding might be 10x as effective as your average senior
-        engineer.
+        developers at the frontier of AI coding might be 10x or more as
+        effective as your average senior engineer.
       </p>
 
       <p>
@@ -36,8 +36,8 @@ export function MindsetContent() {
       <p>
         Sooner or later the model will let you down. It writes the wrong code.
         Picks the wrong abstraction. Hallucinates an API. Confidently does the
-        opposite of what you asked. How you react in that moment shapes
-        everything that follows.
+        opposite of what you asked. How you react in that moment shapes your
+        learning curve.
       </p>
 
       <div className={styles.mindsetPair}>
@@ -65,18 +65,17 @@ export function MindsetContent() {
       <p>
         Gaming culture has a useful phrase for this: <em>skill issue</em>. When
         your character keeps dying, the level isn&apos;t broken, you&apos;re
-        missing something. It sounds flippant, but the move underneath is
-        serious: assume, provisionally, that the bottleneck is you. It
-        isn&apos;t always true. But this assumption helps you grow when it is.
+        unskilled. It sounds flippant, but the move underneath is serious:
+        assume, provisionally, that the bottleneck is you. It isn&apos;t always
+        true. But this assumption helps you grow when it is.
       </p>
 
       <p>
         Most of the time, the model isn&apos;t the limit. Your prompt is. Your
         context is. Your patience is. With the bottleneck-is-me stance, the same
-        frustrating moment turns into a small lab: which lever would have
-        changed the result? Each answer is a piece of edge other people
-        aren&apos;t collecting &mdash; they&apos;ve already decided the tool is
-        bad.
+        frustrating moment turns into a puzzle: which lever would have changed
+        the result? Each answer is an edge others may not be collecting &mdash;
+        they&apos;ve already decided that it&apos;s the tool&apos;s fault.
       </p>
 
       <h3 className={styles.mindsetForkHeading}>Every failure is a rep</h3>

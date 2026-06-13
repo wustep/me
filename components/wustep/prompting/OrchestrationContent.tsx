@@ -9,10 +9,10 @@ export function OrchestrationContent() {
   return (
     <ChapterBody>
       <p>
-        Watch yourself for a few minutes. Short prompt, short response. Short
-        prompt, short response. It feels like flow, but the agent finishes in
-        seconds and you spend the next ninety thinking, scanning, retyping.
-        You&apos;re the bottleneck.
+        Watch yourself for a few minutes. Short prompt, response. Short prompt,
+        response. It feels like flow, but the agent finishes in seconds and you
+        spend the next ninety thinking, scanning, retyping. You are the
+        bottleneck.
       </p>
 
       <PingPongDiagram />

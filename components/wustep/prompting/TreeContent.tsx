@@ -7,11 +7,11 @@ export function TreeContent() {
   return (
     <ChapterBody>
       <p>
-        Coding work isn&apos;t flat. Every change lives somewhere on a 2D map
-        &mdash; across the surface area of your codebase (<em>breadth</em>), and
-        at some level of abstraction (<em>depth</em>). At any point on that map,
-        you have three moves you can make: <strong>ask</strong>,{' '}
-        <strong>plan</strong>, or <strong>delegate</strong>.
+        Every change lives somewhere on a 2D map &mdash; across the surface area
+        of your codebase (<em>breadth</em>), and at some level of abstraction (
+        <em>depth</em>). At any point on that map, you have three moves you can
+        make: <strong>ask</strong>, <strong>plan</strong>, or{' '}
+        <strong>delegate</strong>.
       </p>
 
       <TreeDemo />
