@@ -456,6 +456,16 @@
   border-top-color: rgba(255, 255, 255, 0.08);
 }
 
+/* Stack prev/next on phones — two long chapter labels side-by-side get
+   cramped below ~560px. Each slot keeps its own edge alignment (prev
+   left, next right) so the pair still reads as a back/forward pair. */
+@media (max-width: 560px) {
+  .chapterNav {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
 /* ===== Table of contents (floating, hover-reveal) ===== */
 
 .toc {
@@ -3355,6 +3365,53 @@
     rgba(232, 144, 66, 0.16) 100%
   );
   border-color: rgba(193, 74, 48, 0.4);
+}
+
+/*
+ * The 2D map on phones. At desktop the grid is held at min-width 480px
+ * (so it scrolls sideways on a narrow screen) and each Ask/Plan/Delegate
+ * button carries an icon + verb subtitle that crowd three-across. Below
+ * 640px: let the grid fit the viewport, drop the decorative icons, verbs
+ * and row hints (all already aria-hidden / decorative), and lean on the
+ * labels alone. Click behaviour is untouched.
+ */
+@media (max-width: 640px) {
+  .treeGrid {
+    min-width: 0;
+    grid-template-columns: minmax(58px, 0.7fr) repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .treeColLabel {
+    padding: 6px 2px;
+    font-size: 0.66rem;
+    letter-spacing: 0.02em;
+  }
+
+  .treeActionIcon,
+  .treeActionVerb,
+  .treeRowLabelHint {
+    display: none;
+  }
+
+  .treeActionButton {
+    justify-content: center;
+    padding: 9px 8px;
+  }
+
+  .treeActionText {
+    align-items: center;
+  }
+
+  .treeRowLabel {
+    padding: 6px 4px;
+    font-size: 0.8rem;
+  }
+
+  .treeCell {
+    min-height: 44px;
+    border-radius: 7px;
+  }
 }
 
 /* ===== Prompt input demo ===== */
