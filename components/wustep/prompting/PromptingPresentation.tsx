@@ -1107,7 +1107,7 @@ function ToolLeverVisual() {
 
 function ModelLeverVisual() {
   const rows: Array<{ when: string; pick: string; accent?: boolean }> = [
-    { when: 'fast and cost-friendly edits', pick: 'Sonnet 4.7 · Composer 2.5' },
+    { when: 'fast and cost-friendly edits', pick: 'Sonnet 4.6 · Composer 2.5' },
     {
       when: 'taste: writing, docs, PRs, UI',
       pick: 'Opus 4.8'

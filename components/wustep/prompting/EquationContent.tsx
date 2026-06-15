@@ -51,7 +51,7 @@ export function EquationContent() {
               Fast and cost-friendly
             </span>
             <span className={styles.modelGuidePick}>
-              Sonnet 4.7 · Composer 2.5
+              Sonnet 4.6 · Composer 2.5
             </span>
           </div>
           <div className={styles.modelGuideRow}>
