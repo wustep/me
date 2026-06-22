@@ -801,7 +801,9 @@
 }
 
 @media (hover: hover) {
-  .lenses:hover .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+  .lenses:hover
+    .lensesArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
     animation-duration: 2.2s;
   }
 }
@@ -820,67 +822,52 @@
   transition: transform 300ms ease;
 }
 
-.book:nth-child(1) {
-  animation: bookBob 3.2s ease-in-out 0s infinite;
-}
-.book:nth-child(2) {
-  animation: bookBob 3.2s ease-in-out 0.3s infinite;
-}
-.book:nth-child(3) {
-  animation: bookBob 3.2s ease-in-out 0.6s infinite;
-}
-.book:nth-child(4) {
-  animation: bookBob 3.2s ease-in-out 0.9s infinite;
-}
-.book:nth-child(5) {
-  animation: bookBob 3.2s ease-in-out 1.2s infinite;
-}
-.book:nth-child(6) {
-  animation: bookBob 3.2s ease-in-out 1.5s infinite;
-}
-.book:nth-child(7) {
-  animation: bookBob 3.2s ease-in-out 1.8s infinite;
-}
-
-@keyframes bookBob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
 @media (hover: hover) {
   .bookshelf:hover .book:nth-child(1) {
-    animation: none;
     transform: translateY(-3px) rotate(-2deg);
   }
   .bookshelf:hover .book:nth-child(2) {
-    animation: none;
     transform: translateY(-5px);
   }
   .bookshelf:hover .book:nth-child(3) {
-    animation: none;
     transform: translateY(-2px) rotate(1deg);
   }
   .bookshelf:hover .book:nth-child(4) {
-    animation: none;
     transform: translateY(-6px) rotate(-1deg);
   }
   .bookshelf:hover .book:nth-child(5) {
-    animation: none;
     transform: translateY(-4px) rotate(2deg);
   }
   .bookshelf:hover .book:nth-child(6) {
-    animation: none;
     transform: translateY(-3px) rotate(-1deg);
   }
   .bookshelf:hover .book:nth-child(7) {
-    animation: none;
     transform: translateY(-5px) rotate(1deg);
   }
+}
+
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) lifts the
+   books just like hover. */
+.bookshelf:focus-within .book:nth-child(1) {
+  transform: translateY(-3px) rotate(-2deg);
+}
+.bookshelf:focus-within .book:nth-child(2) {
+  transform: translateY(-5px);
+}
+.bookshelf:focus-within .book:nth-child(3) {
+  transform: translateY(-2px) rotate(1deg);
+}
+.bookshelf:focus-within .book:nth-child(4) {
+  transform: translateY(-6px) rotate(-1deg);
+}
+.bookshelf:focus-within .book:nth-child(5) {
+  transform: translateY(-4px) rotate(2deg);
+}
+.bookshelf:focus-within .book:nth-child(6) {
+  transform: translateY(-3px) rotate(-1deg);
+}
+.bookshelf:focus-within .book:nth-child(7) {
+  transform: translateY(-5px) rotate(1deg);
 }
 
 .writing {
@@ -1183,9 +1170,13 @@
   .page .dominoTitle,
   .page .dominoBlock,
   .page .spotItSymbol,
-  .page .book,
   .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
     animation: none;
+  }
+
+  /* Bookshelf books lift only on hover/focus now — make that instant. */
+  .page .book {
+    transition: none;
   }
 
   /* Don't cross-fade the eye's color on theme toggle either. */
