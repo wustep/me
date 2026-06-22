@@ -18,8 +18,7 @@ export function TreeContent() {
 
       <p>
         Prompting is navigating this tree. The axes are usually fixed by the
-        task &mdash; the interesting choice is which of the three moves you
-        make.
+        task. The interesting choice is which of the three moves you make.
       </p>
 
       <Lever name='ASK' tagline="When you don't know yet.">
@@ -101,8 +100,8 @@ export function TreeContent() {
           <li>
             <strong>If you&apos;re burning loops, zoom out.</strong>{' '}
             Delegate-reject-reprompt cycles are almost always a context problem,
-            not a model problem. The cell you&apos;re in is wrong &mdash; move
-            up the tree.
+            not a model problem. The cell you&apos;re in is wrong. Move up the
+            tree.
           </li>
           <li>
             <strong>

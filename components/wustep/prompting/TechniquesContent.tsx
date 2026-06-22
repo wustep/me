@@ -7,16 +7,11 @@ export function TechniquesContent() {
   return (
     <ChapterBody>
       <p>
-        Mental models tell you <em>where</em> to push. Techniques are the actual
-        phrases that do the pushing &mdash; the openings, tactics, and endgame
-        moves of this craft.
-      </p>
-
-      <p>
-        Chess players build a repertoire &mdash; openings, tactical patterns
-        (forks, pins, skewers, discovered attacks), endgame studies. Most of it
-        learned from other players, none of it secret. The same vocabulary is
-        forming for prompting. Here are some moves worth adding to yours.
+        Mental models tell you <em>where</em> to push. Techniques are the
+        phrases that do the pushing. Chess players build a repertoire &mdash;
+        openings, tactics, endgame studies, most of it learned from other
+        players and none of it secret. The same vocabulary is forming for
+        prompting. Here are some moves worth adding to yours.
       </p>
 
       <TechniqueGroup heading='Before you start'>
@@ -89,8 +84,8 @@ export function TechniquesContent() {
         <Technique prompt='Update CLAUDE.md with what you just learned.'>
           <p>
             Capture the lesson in the project rules so the next agent (or
-            future-you) doesn&apos;t have to relearn it. Five minutes of
-            investment that pays back forever.
+            future-you) doesn&apos;t have to relearn it. Five minutes of work
+            that saves every future session.
           </p>
         </Technique>
       </TechniqueGroup>
@@ -138,21 +133,6 @@ export function TechniquesContent() {
             </span>
           </a>
         </div>
-        <p>
-          The techniques above turn into one-liners in that file. A useful rules
-          file looks something like:
-        </p>
-        <pre className={styles.skillsExample}>
-          {`- Before any non-trivial task, ask what's unclear before writing code.
-- When asked to plan, propose 3 options ranked by trade-off.
-- After delegating, list what was skipped or glossed over.
-- Match the patterns in components/PostCard.tsx for new card UIs.`}
-        </pre>
-        <p>
-          Now those moves are the agent&apos;s defaults instead of yours. You
-          stop carrying the techniques in your head and start accumulating an
-          edge that compounds with every task.
-        </p>
       </div>
 
       <div className={styles.synthesis}>
@@ -168,8 +148,8 @@ export function TechniquesContent() {
           and the shape is still being mapped.
         </p>
         <p>
-          We&apos;re all early at this. The next thousand ELO points are wide
-          open.
+          The best moves are the ones you&apos;ll find yourself. Start
+          collecting them.
         </p>
       </div>
     </ChapterBody>

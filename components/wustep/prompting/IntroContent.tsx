@@ -90,9 +90,8 @@ export function IntroContent() {
 
         <p className={styles.bodyItem} style={bodyDelay(2)}>
           You don&apos;t write code so much as describe what you want and watch
-          it appear. The job is shifting from typing semicolons to describing
-          intent &mdash; from writing the code to talking to the thing that
-          writes it.
+          it appear. The job is shifting from writing the code to talking to the
+          thing that writes it.
         </p>
 
         <p className={styles.bodyItem} style={bodyDelay(3)}>

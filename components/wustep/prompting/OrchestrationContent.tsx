@@ -11,7 +11,7 @@ export function OrchestrationContent() {
       <p>
         Watch yourself for a few minutes. Short prompt, response. Short prompt,
         response. It feels like flow, but the agent finishes in seconds and you
-        spend the next ninety thinking, scanning, retyping. You are the
+        spend the next ninety seconds thinking, scanning, retyping. You are the
         bottleneck.
       </p>
 
@@ -145,17 +145,6 @@ export function OrchestrationContent() {
         branch, not a half-finished conversation.
       </p>
 
-      <h3 className={styles.orchSectionHeading}>The conductor&apos;s job</h3>
-
-      <p>
-        With multiple agents going, your job changes shape. You&apos;re
-        triaging, not typing. Which branch needs a decision? Which run is stuck?
-        What&apos;s ready to merge? The skills that matter are reading diffs
-        fast, holding several threads, killing runs that have gone sideways, and
-        writing briefs that don&apos;t need follow-ups. These are management
-        skills &mdash; learnable, and they compound.
-      </p>
-
       <div className={styles.synthesis}>
         <h3 className={styles.synthesisHeading}>
           <span className={styles.synthesisSymbol} aria-hidden='true'>
@@ -164,14 +153,17 @@ export function OrchestrationContent() {
           Command the fleet
         </h3>
         <p>
-          One agent makes you faster. The shift in orchestration is bigger than
-          that: suddenly you have access to a whole team &mdash; cheap, fast,
-          and always available. The bottleneck is <em>you</em> &mdash; how well
-          you brief them, unblock them, and keep several moving at once.
+          With several agents going, the job changes shape: you&apos;re
+          triaging, not typing. Which branch needs a decision? Which run is
+          stuck? What&apos;s ready to merge? One agent makes you faster; a fleet
+          gives you a whole team &mdash; cheap, fast, always available. The
+          bottleneck stops being the model and becomes <em>you</em>.
         </p>
         <p>
-          That&apos;s the skill to invest in. Optimize the hour, not the
-          message. Chain steps. Fan out independent work. Specialize roles. Let
+          So that&apos;s the skill to invest in: reading diffs fast, holding
+          several threads, killing runs that have gone sideways, and writing
+          briefs that don&apos;t need follow-ups. Optimize the hour, not the
+          message. Chain steps, fan out independent work, specialize roles, let
           long jobs run. The conductor&apos;s edge is patient briefing and clean
           handoffs &mdash; nothing else.
         </p>

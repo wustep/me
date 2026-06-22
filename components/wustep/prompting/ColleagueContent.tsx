@@ -73,8 +73,8 @@ export function ColleagueContent() {
           recently?&quot; and you&apos;d answer. Include the answers up front.
         </p>
         <p>
-          The longer the task, the more the briefing pays back. Five extra
-          minutes of setup saves 30 minutes of clarifying turns later.
+          The longer the task, the more that setup is worth: five extra minutes
+          up front saves 30 minutes of clarifying turns later.
         </p>
       </Lever>
 

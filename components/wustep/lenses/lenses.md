@@ -39,7 +39,7 @@ reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.
 quote: Between stimulus and response there is a space. In that space is our power to choose our response.
 quote-cite: Viktor Frankl
 
-Agency is the capacity to identify desirable futures, notice the actions actually available, and execute — despite uncertainty, friction, or external constraints. High agency is a habit of reshaping yourself and your environment rather than treating either as fixed.
+Agency is seeing a future you want, noticing the moves actually on the table, and taking one — despite friction or constraint. The habit is treating yourself and your situation as things you can reshape, not facts you’re stuck with.
 
 It starts with realizing there are more choices on the table than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
 
@@ -127,7 +127,7 @@ quote-cite-href: https://amzn.to/4283g1X
 
 A lot of human behavior makes more sense as _internal-state regulation._ People are seeking novelty, reward, relief, control, connection, or a sense of meaning — and the brain’s dopamine system is orchestrating most of it underneath the conscious story.
 
-Scrolling, snacking, gambling, refreshing email, picking fights, falling in love, starting a new project: flavors of one loop, the brain chasing the dopamine it already anticipates.
+Scrolling, snacking, gambling, falling in love, starting a new project: flavors of one loop, the brain chasing the dopamine it already anticipates.
 
 Shame doesn’t fix it. Shame is itself a state, and a costly one — it hides the loop without changing it. The real move is upstream: change what’s available to reach for, what the room rewards, what the day looks like before the urge arrives.
 
@@ -146,11 +146,11 @@ related: headspace, interface, constraint
 
 Motivation isn’t purely moral. It’s biochemical, environmental, social, and narrative. Sleep, food, light, exercise, recent wins, who you saw yesterday — all of it sets the ceiling on today. Done right, work and life don’t compete for the same battery; both sides charge you.
 
-“Why am I being lazy?” and “why am I feeling tired?” usually have concrete answers. Find them, and your energy stops feeling like a battery draining toward empty; it becomes something you refill on purpose.
+“Why am I being lazy?” and “why am I feeling tired?” usually have concrete answers. Find them, and energy stops being a mood that happens to you; it becomes something you arrange in advance.
 
 This changes what counts as serious work. Going to bed on time is serious work. Eating before the meeting is serious work. The walk after lunch isn’t a break from the project; it’s part of how the project gets done. So is finding work that motivates you and shaping it so you can flow. Designing around energy beats negotiating with it.
 
-The trap is endless self-management — turning every day into a tuning exercise where the tuning itself burns the battery. But ignoring energy produces shame, and shame is an expensive fuel.
+The trap is endless self-management — turning every day into a tuning exercise, where the tuning itself is what wears you down. Ignore energy, though, and you end up blaming your character for what was really a missed lunch and a bad night’s sleep.
 
 # Epistemic pragmatism
 
@@ -210,7 +210,7 @@ Every skill is a long curve, and people sit all over it. Obvious for cooking or 
 
 “I’m not good at conflict” really means _I’m on the early part of that curve._ The annoying coworker has a different skill mix, not a different species. The genuinely impressive person stops being a wonder and becomes a question: _which curve are they far along, and how did they get there?_
 
-Treating every quality as a skill papers over temperament and circumstance, and some abilities really are gated by talent. But _I’m early on that curve_ opens doors that _I’m not good at this_ keeps shut.
+Treating every quality as a skill papers over temperament and circumstance, and some abilities really are gated by talent. But _I’m early on that curve_ opens doors that _I’m not built for this_ keeps shut.
 
 # Game theory
 
@@ -223,7 +223,7 @@ accent: #F0B85F
 illustration: game-theory
 related: incentives, utility, interface
 
-Life, products, and organizations get shaped by their rules, rewards, feedback loops, and affordances. The best of them make the right behavior _feel playable_ — clear objective, visible progress, fair odds, meaningful choice at every turn.
+Anything with people in it — a product, a team, a friendship — runs on its rules, rewards, and feedback. The good ones make the right move _feel playable_: you can see the goal, you can see you’re making progress, and the odds feel fair.
 
 The question shifts from _how do I make people behave?_ to _what game am I putting them in?_ Bad games punish the right move and reward the easy one; good games line up effort, skill, and reward so the right thing is also the most engaging thing.
 
@@ -332,7 +332,7 @@ A thing that can’t be named, explained, or made visible is hard to improve. Wr
 
 Articulation _is_ a key part of the work. The team that writes its values down lives them more clearly than the team that just “has them.” The bug you can reproduce is already half-fixed. A dashboard reshapes decisions even when no one is looking at it.
 
-Legibility is also how others come to know you. Reputation, credibility, and rewards accrue to what is _visible_ — people can only judge, trust, or champion what they can actually see. The unshowy excellent engineer and the loud mediocre one often trade places in the org’s memory because one shipped legibility and the other did not. Making your work, your reasoning, and your standards readable to others is how people back you and your ideas in the first place. Calling it self-promotion misses what’s actually being exchanged.
+Legibility is also how others come to know you. People can only judge, trust, or champion what they can see — so the unshowy excellent engineer and the loud mediocre one keep trading places in the org’s memory, because one shipped legibility and the other didn’t. Making your work and your reasoning readable is how people come to back you. Calling it self-promotion misses what’s being exchanged.
 
 Legibility can flatten what matters into what fits in a chart, and metrics get gamed the moment they start to count. The judgment is in choosing what to make legible — and what to leave as quiet execution.
 
@@ -355,7 +355,7 @@ For any viral take, ask less _is this idea right?_ and more _why is this winning
 
 Your own taste is downstream of this. A surprising amount of what you _believe_ is just what your information diet kept feeding you, lightly adapted. Spot the meme structure under an opinion and you can decide, separately, whether you still want to hold it.
 
-Popularity isn’t always emptiness, and obscurity isn’t always depth; sometimes the mainstream is right and the contrarian is just lonely. But confuse virality with validity and you become a passenger in your own beliefs.
+How far an idea travels says nothing about whether it’s true: _viral_ marks it as fit, not as right or wrong. Once you see that, the tempting fix is to distrust anything popular on principle — but that’s a trap of its own. Define yourself against the crowd and it still picks your beliefs, just with the sign flipped; the contrarian is as tied to the mainstream as the follower is.
 
 # Minimalism
 
@@ -370,7 +370,7 @@ related: constraint, primitives, interface
 quote: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
 quote-cite: Antoine de Saint-Exupéry
 
-Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Value comes from what remains after you remove the unnecessary. Not aesthetic austerity for its own sake, but a discipline of asking _what is the smallest thing that still does the job?_ — and then making that thing exceptional.
+Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Value comes from what remains after you remove the unnecessary. This is a discipline, not a style: ask _what’s the smallest thing that still does the job?_, then make that thing exceptional.
 
 Complexity is a tax. Every feature, possession, obligation, abstraction, and relationship carries a hidden cost — cognitive, maintenance, emotional, financial. You rarely see it at the moment of acquisition; it shows up later, as friction, clutter, and the slow erosion of attention. Subtraction is creative work, usually the harder half of it.
 
@@ -438,7 +438,7 @@ Ten features collapse into three building blocks. Five competing tools collapse 
 
 Good design looks different once you see this. The impressive system has fewer knobs than expected, and the knobs it keeps all derive from a smaller, cleaner core. Software, writing, organizations: most things get simpler and better once someone finds the primitive the surface was hiding.
 
-Chasing primitives can become procrastination dressed as architecture, and reality sometimes refuses to factor cleanly — some domains are messy underneath. But almost every elegant system is one good primitive away from being simpler.
+Chasing primitives can become procrastination dressed as architecture, and some domains really are messy all the way down — they refuse to factor cleanly no matter how hard you look. Most elegant systems, though, are one good primitive away from being simpler than they are.
 
 # Probabilistic thinking
 
@@ -451,13 +451,13 @@ accent: #E6B64E
 illustration: probabilistic
 related: epistemic, systems, second-order
 
-The world doesn’t deliver outcomes; it delivers _distributions_ of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary (will/won’t, true/false, safe/risky) is the most common and most expensive cognitive error.
+The world doesn’t deliver outcomes; it delivers _distributions_ of outcomes. Most events aren’t certain or impossible — they’re a shape, a range, a tail. Treating uncertain things as binary — will or won’t, safe or risky — is where most of the expensive mistakes start.
 
 _What will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. A 70% chance is a posture, not a promise: lean toward action, stay ready to be wrong, update as evidence arrives. Updating is half the skill.
 
 Which bets count as smart gets reordered, too. A move that wins 80% of the time and loses everything the other 20% is worse than one that wins 55% with bounded losses. Outcome-watchers call the first bold and the second timid; people who see distributions call them what they are and price the expected value.
 
-Conviction beats probability sometimes — now and then the move is to commit hard to a thin chance and self-fulfill it. But mistake the average for the outcome and variance will mug you eventually.
+Conviction beats probability sometimes — now and then the move is to commit hard to a thin chance and self-fulfill it. The rest of the time, mistake the average for the outcome and variance will mug you.
 
 # Projection
 
@@ -493,9 +493,9 @@ related: incentives, systems, probabilistic
 quote: We can never do merely one thing. Any intrusion into nature has numerous effects, many of which are unpredictable.
 quote-cite: Garrett Hardin
 
-Every action has a direct effect and a ripple of effects that follow from it. The direct effect is what you intended; the ripples are what actually shape the world. Price a thing lower, and usage goes up, and the people using it change, and the culture around it shifts, and the thing itself becomes something different — none of which shows up in the pitch deck. Most of history’s biggest surprises, scandals, and own-goals are second-order effects that someone could have seen but didn’t bother to.
+Every action has a direct effect and a ripple of effects behind it. The direct effect is what you intended; the ripples are what shape the world. Price a thing lower and usage goes up, and the people using it change, and the culture around it shifts, until the thing itself becomes something else — none of which showed up in the pitch deck. Most of history’s biggest surprises and own-goals were second-order effects someone could have seen and didn’t.
 
-The honest question about any decision is rarely _does this solve the problem?_ It’s _what does this produce downstream?_ Rent control reduces rent, then reduces housing supply. A metric rewards a behavior, then corrupts it. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is what people argue about; the second-order answer is what actually matters.
+So the honest question about a decision is rarely _does this solve the problem?_ It’s _what does this set in motion?_ Rent control reduces rent, then reduces housing supply. A feature adds a capability, then reshapes how people use the whole product. The first-order answer is what people argue about; the second-order answer is what they live with.
 
 The skill is forcing yourself to ask _and then what?_ three times in a row. The first answer is usually the goal. The second is usually plausible. The third is where the surprises live — and where most of the value, or most of the damage, of a decision actually sits.
 
@@ -535,7 +535,7 @@ related: mimetics, evo-psych, narrative
 quote: The desire of the esteem of others is as real a want of nature as hunger.
 quote-cite: John Adams, Discourses on Davila
 
-Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. A surprising amount of human behavior is about status — relative standing within the groups we care about. Not money, not power directly, but where you sit in the local pecking order, and the movement of that position over time. The local part is the trick. People will burn months of comfort for a half-step inside a group of forty.
+Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. A surprising amount of human behavior is about status: where you sit in the pecking order of the groups you care about, and how that position moves over time. Money and power matter mostly as proxies for it. The local part is the trick — people will burn months of comfort for a half-step inside a group of forty.
 
 It’s why people pick the cars they pick, why office layouts matter, why a small slight outrages and a large compliment soothes. Whole industries — luxury, fashion, academia, much of social media — exist mostly to allocate position.
 
@@ -557,13 +557,13 @@ quote: A system is more than the sum of its parts. It may exhibit adaptive, dyna
 quote-cite: Donella Meadows, Thinking in Systems
 quote-cite-href: https://amzn.to/4w6VpPF
 
-Outcomes are rarely caused by one thing. They emerge from feedback loops, bottlenecks, delays, constraints, and second-order effects. The visible event is the tip; the system is everything underneath producing it, again and again.
+Outcomes are rarely caused by one thing. They emerge from feedback loops, bottlenecks, and delays — and from the second-order effects those produce. The visible event is the tip; the system is everything underneath producing it, again and again.
 
 Blame gets less interesting than _structure_. Why does this team keep missing deadlines? Why do diets fail? Why does the same kind of meeting keep getting scheduled? Look at the loop, the lag, the limit — not the last person who acted.
 
 The most useful move is finding leverage points: the one valve that, turned slightly, changes everything downstream. They’re rarely the obvious ones. The biggest lever is often a delay no one notices, a goal no one wrote down, or a feedback signal that arrives too late to matter.
 
-It can become an alibi — “the system did it” — letting people who genuinely chose badly off the hook. Used honestly, though, it shows you the few places where a small push moves everything downstream.
+It can become an alibi — “the system did it” — letting people who genuinely chose badly off the hook. Used honestly, though, it shows you the few places where a small push moves the whole system.
 
 # Taste
 
@@ -576,7 +576,7 @@ accent: #A63763
 illustration: taste
 related: expertise, minimalism, legibility
 
-Taste is a refined sense of what’s meaningful and worth pursuing — a filter built from aesthetic, moral, and cultural values that helps you predict what will resonate. Useful for movies, food, and furniture. Also for product decisions, hires, and who you spend time with.
+Taste is a refined sense of what’s worth pursuing — a filter that helps you predict what will land. It works on movies and furniture, and just as much on product decisions, hires, and who you spend your time with.
 
 Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context. All three are trainable, and most people are uneven across them.
 

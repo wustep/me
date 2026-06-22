@@ -8,11 +8,6 @@ import styles from './PromptingPage.module.css'
 export function RecapContent() {
   return (
     <ChapterBody>
-      <p>
-        Six reminders before you go. Skim on the way out, or come back when
-        something feels off.
-      </p>
-
       <RecapItem
         index={1}
         title='The beginner’s mindset'
@@ -100,7 +95,7 @@ export function RecapContent() {
           1200 is wide open &mdash; and the most useful move is paying attention
           while everyone else assumes they&apos;ve figured it out.
         </p>
-        <p>Thanks for reading. Go talk to a machine.</p>
+        <p>Go talk to a machine.</p>
       </div>
     </ChapterBody>
   )

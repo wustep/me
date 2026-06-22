@@ -1,5 +1,5 @@
 import { ChapterBody } from './ChapterBody'
-import { DebugChecklist, EquationDemo } from './EquationDemo'
+import { EquationDemo } from './EquationDemo'
 import { Lever } from './parts'
 import styles from './PromptingPage.module.css'
 
@@ -15,9 +15,9 @@ export function EquationContent() {
       <EquationDemo />
 
       <p>
-        That gives you four levers. The point of view this frame nudges you
-        toward is that <em>there exist inputs that produce great outputs</em>{' '}
-        &mdash; the job is finding them. So how do you actually pull each lever?
+        That gives you four levers.{' '}
+        <em>There exist inputs that produce great outputs</em> &mdash; the job
+        is finding them.
       </p>
 
       <Lever name='TOOL' tagline='Use a tool that was built for this.'>
@@ -42,7 +42,8 @@ export function EquationContent() {
 
       <Lever name='MODEL' tagline='Pick the smartest model the work warrants.'>
         <p>
-          Calibrate to the stakes of the task, not your defaults. A rough guide:
+          Calibrate to the stakes of the task, not your defaults. A rough guide,
+          as of mid-2026 (the specifics shift every few months):
         </p>
 
         <div className={styles.modelGuide}>
@@ -75,7 +76,7 @@ export function EquationContent() {
         </div>
 
         <p>
-          Models also have distinct styles &mdash; how they structure code, what
+          Models also have distinct styles: how they structure code, what
           explanations they reach for, where they cut corners under ambiguity.
           If you&apos;re newer to AI coding, you&apos;ll attune faster by
           staying with one model for a while and learning its tics. Hopping
@@ -83,16 +84,18 @@ export function EquationContent() {
           learning.
         </p>
         <p>
-          For many tools, <strong>&quot;Auto&quot; mode is a trap</strong>.
-          Tools love offering it because it sounds helpful and is an easy
-          default. In practice, &quot;Auto&quot; is optimized for the
-          platform&apos;s margin, not your output &mdash; Cursor quietly picks a
-          cheaper model (Composer). Choosing your model manually helps you
-          attune to models faster and learn the right model for the job.
+          Avoid <strong>&quot;Auto&quot; mode</strong>. Pick the model yourself,
+          and keep bumping it to the latest one. A few reasons. First, Auto is
+          optimized for the platform&apos;s margin, not your output &mdash;
+          Cursor reaches for a cheaper model (Composer) unless you say
+          otherwise, and if you&apos;re not cost-sensitive you can usually do
+          better. Second, choosing yourself tunes your eye for each model&apos;s
+          style. Third, your results get more consistent, so you actually learn
+          which model to reach for when.
         </p>
         <p>
-          Thinking effort is another dial &mdash; and is becoming one of the
-          more important ones to manage. Most tools expose four rungs:{' '}
+          Thinking effort is another dial, and becoming one of the more
+          important ones to manage. Most tools expose four rungs:{' '}
           <strong>low</strong>, <strong>medium</strong>, <strong>high</strong>,{' '}
           <strong>xhigh</strong>. Default to <strong>high</strong> (or medium,
           if more cost-sensitive) and try dialing it down or up when the model
@@ -174,10 +177,7 @@ export function EquationContent() {
         </p>
       </Lever>
 
-      <Lever
-        name='CONTEXT'
-        tagline='The biggest lever. Load what the agent needs to see.'
-      >
+      <Lever name='CONTEXT' tagline='Load what the agent needs to see.'>
         <p>
           Most &quot;the model is dumb today&quot; moments are actually
           &quot;the model can&apos;t see the thing it needs.&quot; The prompt is
@@ -225,10 +225,32 @@ export function EquationContent() {
         <p>
           Treat the output as something you partially authored. Whatever came
           back, you were part of why it came back that way. When something feels
-          off, walk through the levers and find the one you didn&apos;t pull.
+          off, walk these four questions and find the lever you didn&apos;t
+          pull:
         </p>
 
-        <DebugChecklist />
+        <ul className={styles.axisList}>
+          <li>
+            <strong>Did I communicate clearly?</strong> Rewrite the prompt with
+            concrete details &mdash; paste the error, name the file, say what
+            good looks like and what to avoid.
+          </li>
+          <li>
+            <strong>Could the agent see what it needed?</strong> Load the files,
+            screenshots, docs, and project rules. &quot;The model is dumb
+            today&quot; is almost always &quot;the model can&apos;t see the
+            thing it needs.&quot;
+          </li>
+          <li>
+            <strong>Was this the right model?</strong> Reach for something more
+            capable on tricky work, and override &quot;Auto&quot; &mdash; that
+            mode optimizes for cost, not for you.
+          </li>
+          <li>
+            <strong>Was thinking on?</strong> For ambiguous, multi-step, or
+            stuck moments, turn it up. Drop it back when the work is mechanical.
+          </li>
+        </ul>
 
         <p>
           Prompting and context management are real skills, with as much depth

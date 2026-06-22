@@ -19,15 +19,16 @@ export function MindsetContent() {
         AI coding is roughly three years old. Chess is five hundred. Three years
         of chess might get you to 1200 ELO &mdash; past most casual players,
         nowhere near expert. A grandmaster beats a 1200 every single game. The
-        developers at the frontier of AI coding might be 10x or more as
-        effective as your average senior engineer.
+        gap in AI coding isn&apos;t that wide, but the people at its frontier
+        are already getting far more done than the ones who decided they&apos;d
+        figured it out.
       </p>
 
       <p>
         The danger of calling yourself an expert too early is that your learning
         stalls. You stop reading tutorials, skip the bootcamp, ignore the
         patterns the model enabled last week. Look at where your workflow was
-        twelve months ago, then project that forward &mdash; most of the meta
+        twelve months ago, then project that forward. Most of the meta
         hasn&apos;t been uncovered yet.
       </p>
 
@@ -74,8 +75,8 @@ export function MindsetContent() {
         Most of the time, the model isn&apos;t the limit. Your prompt is. Your
         context is. Your patience is. With the bottleneck-is-me stance, the same
         frustrating moment turns into a puzzle: which lever would have changed
-        the result? Each answer is an edge others may not be collecting &mdash;
-        they&apos;ve already decided that it&apos;s the tool&apos;s fault.
+        the result? Each answer is an edge others aren&apos;t collecting;
+        they&apos;ve already decided it&apos;s the tool&apos;s fault.
       </p>
 
       <h3 className={styles.mindsetForkHeading}>Every failure is a rep</h3>
@@ -83,7 +84,8 @@ export function MindsetContent() {
       <p>
         Treat each disappointment like a chess puzzle: try something, notice
         what actually worked, update your repertoire. One a day and the curve
-        climbs &mdash; slowly, then all at once.
+        climbs. You won&apos;t feel it in a week; you&apos;ll feel it in a
+        quarter.
       </p>
 
       <PracticeLoop />

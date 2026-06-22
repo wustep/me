@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useInView } from '@/lib/use-in-view'
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion'
 
-import { ChevronIcon, ReplayIcon } from './icons'
+import { ReplayIcon } from './icons'
 import styles from './PromptingPage.module.css'
 
 const LEVER_DETAILS: Record<string, { label: string; examples: string }> = {
@@ -13,7 +13,7 @@ const LEVER_DETAILS: Record<string, { label: string; examples: string }> = {
   },
   MODEL: {
     label: 'Model',
-    examples: 'Opus 4.7 Thinking, Sonnet 12, GPT-7o, Gemini 5.'
+    examples: 'Opus 4.8, GPT-5.5, Sonnet 4.6, Gemini 3.'
   },
   PROMPT: {
     label: 'Prompt',
@@ -232,72 +232,5 @@ export function LeverChip({
         <span className={styles.leverPopoverText}>{detail.examples}</span>
       </span>
     </button>
-  )
-}
-
-const DEBUG_QUESTIONS: Array<{
-  q: string
-  lever: string
-  fix: string
-}> = [
-  {
-    q: 'Did I communicate clearly?',
-    lever: 'PROMPT',
-    fix: "Rewrite with concrete details. Paste the error. Name the file. Say what good looks like and what to avoid. If you've rewritten the same prompt five times, the lever you actually need is context."
-  },
-  {
-    q: 'What did the agent get to see?',
-    lever: 'CONTEXT',
-    fix: "Load the relevant files, screenshots, design docs, and project rules. The model can't reason about what it can't read. 'The model is dumb today' is almost always 'the model can't see the thing it needs.'"
-  },
-  {
-    q: 'Was this the right model?',
-    lever: 'MODEL',
-    fix: 'Upgrade to a more capable model for tricky work. If the tool offered "Auto," override it — that mode optimizes for cost, not for you.'
-  },
-  {
-    q: 'Was thinking on?',
-    lever: 'MODEL',
-    fix: 'For ambiguous, multi-step, or stuck moments, turn thinking up. The cheap dial pays the most often. Drop it back when the work is mechanical.'
-  }
-]
-
-export function DebugChecklist() {
-  const [openIndex, setOpenIndex] = React.useState<number | null>(null)
-
-  return (
-    <div className={styles.debug} role='list'>
-      {DEBUG_QUESTIONS.map((item, i) => {
-        const open = openIndex === i
-        return (
-          <div
-            key={item.q}
-            className={`${styles.debugItem} ${open ? styles.debugItemOpen : ''}`}
-            role='listitem'
-          >
-            <button
-              type='button'
-              className={styles.debugQuestion}
-              onClick={() => setOpenIndex(open ? null : i)}
-              aria-expanded={open}
-            >
-              <span className={styles.debugIndex} aria-hidden='true'>
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span className={styles.debugQuestionText}>{item.q}</span>
-              <span className={styles.debugLever} aria-hidden='true'>
-                {item.lever}
-              </span>
-              <span className={styles.debugChevron} aria-hidden='true'>
-                <ChevronIcon />
-              </span>
-            </button>
-            <div className={styles.debugAnswer}>
-              <div className={styles.debugAnswerInner}>{item.fix}</div>
-            </div>
-          </div>
-        )
-      })}
-    </div>
   )
 }
