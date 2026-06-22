@@ -24,47 +24,69 @@
   width: 9px;
   border-radius: 2px 2px 0 0;
   transition: transform 250ms ease-out;
-  animation: bookBob 5.8s ease-in-out infinite;
-}
-
-@keyframes bookBob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
 }
 
 @media (hover: hover) {
   .cover:hover .book:nth-child(1),
-  :global(.group):hover .book:nth-child(1) { animation: none; transform: translateY(-3px) rotate(-2deg); }
+  :global(.group):hover .book:nth-child(1) {
+    transform: translateY(-3px) rotate(-2deg);
+  }
   .cover:hover .book:nth-child(2),
-  :global(.group):hover .book:nth-child(2) { animation: none; transform: translateY(-5px); }
+  :global(.group):hover .book:nth-child(2) {
+    transform: translateY(-5px);
+  }
   .cover:hover .book:nth-child(3),
-  :global(.group):hover .book:nth-child(3) { animation: none; transform: translateY(-2px) rotate(1deg); }
+  :global(.group):hover .book:nth-child(3) {
+    transform: translateY(-2px) rotate(1deg);
+  }
   .cover:hover .book:nth-child(4),
-  :global(.group):hover .book:nth-child(4) { animation: none; transform: translateY(-6px) rotate(-1deg); }
+  :global(.group):hover .book:nth-child(4) {
+    transform: translateY(-6px) rotate(-1deg);
+  }
   .cover:hover .book:nth-child(5),
-  :global(.group):hover .book:nth-child(5) { animation: none; transform: translateY(-4px) rotate(2deg); }
+  :global(.group):hover .book:nth-child(5) {
+    transform: translateY(-4px) rotate(2deg);
+  }
   .cover:hover .book:nth-child(6),
-  :global(.group):hover .book:nth-child(6) { animation: none; transform: translateY(-3px) rotate(-1deg); }
+  :global(.group):hover .book:nth-child(6) {
+    transform: translateY(-3px) rotate(-1deg);
+  }
   .cover:hover .book:nth-child(7),
-  :global(.group):hover .book:nth-child(7) { animation: none; transform: translateY(-5px) rotate(1deg); }
+  :global(.group):hover .book:nth-child(7) {
+    transform: translateY(-5px) rotate(1deg);
+  }
 }
 
 /* Touch + keyboard: with no hover, focus (tapping the card / Tab) lifts the
    books just like hover. */
 .cover:focus-within .book:nth-child(1),
-:global(.group):focus-within .book:nth-child(1) { animation: none; transform: translateY(-3px) rotate(-2deg); }
+:global(.group):focus-within .book:nth-child(1) {
+  transform: translateY(-3px) rotate(-2deg);
+}
 .cover:focus-within .book:nth-child(2),
-:global(.group):focus-within .book:nth-child(2) { animation: none; transform: translateY(-5px); }
+:global(.group):focus-within .book:nth-child(2) {
+  transform: translateY(-5px);
+}
 .cover:focus-within .book:nth-child(3),
-:global(.group):focus-within .book:nth-child(3) { animation: none; transform: translateY(-2px) rotate(1deg); }
+:global(.group):focus-within .book:nth-child(3) {
+  transform: translateY(-2px) rotate(1deg);
+}
 .cover:focus-within .book:nth-child(4),
-:global(.group):focus-within .book:nth-child(4) { animation: none; transform: translateY(-6px) rotate(-1deg); }
+:global(.group):focus-within .book:nth-child(4) {
+  transform: translateY(-6px) rotate(-1deg);
+}
 .cover:focus-within .book:nth-child(5),
-:global(.group):focus-within .book:nth-child(5) { animation: none; transform: translateY(-4px) rotate(2deg); }
+:global(.group):focus-within .book:nth-child(5) {
+  transform: translateY(-4px) rotate(2deg);
+}
 .cover:focus-within .book:nth-child(6),
-:global(.group):focus-within .book:nth-child(6) { animation: none; transform: translateY(-3px) rotate(-1deg); }
+:global(.group):focus-within .book:nth-child(6) {
+  transform: translateY(-3px) rotate(-1deg);
+}
 .cover:focus-within .book:nth-child(7),
-:global(.group):focus-within .book:nth-child(7) { animation: none; transform: translateY(-5px) rotate(1deg); }
+:global(.group):focus-within .book:nth-child(7) {
+  transform: translateY(-5px) rotate(1deg);
+}
 
 .title {
   margin: 0;
@@ -76,7 +98,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .book {
-    animation: none;
-    transform: none;
+    transition: none;
   }
 }

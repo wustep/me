@@ -37,16 +37,14 @@
   letter-spacing: -0.03em;
   white-space: nowrap;
   transform-origin: center center;
-  will-change: transform;
 }
 
-/* Rest state — mid-height, slight asymmetric tilts, gentle drift. */
+/* Rest state — still, with slight asymmetric tilts. Tokens fall on hover/focus. */
 .word {
   left: 24%;
   top: 32%;
   font-size: clamp(1.4rem, 11cqw, 2.2rem);
   transform: rotate(-3deg);
-  animation: float-word 4.8s ease-in-out infinite;
 }
 
 .slashes {
@@ -55,38 +53,19 @@
   font-size: clamp(1.4rem, 11cqw, 2.2rem);
   color: rgba(255, 255, 255, 0.78);
   transform: rotate(5deg);
-  animation: float-slashes 5.4s ease-in-out -1.4s infinite;
-}
-
-@keyframes float-word {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(-3deg);
-  }
-  50% {
-    transform: translate(0, -3px) rotate(-2deg);
-  }
-}
-
-@keyframes float-slashes {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(5deg);
-  }
-  50% {
-    transform: translate(0, -3px) rotate(6deg);
-  }
 }
 
 @media (hover: hover) {
   .cover:hover .word,
   :global(.group):hover .word {
     animation: fall-word 1000ms forwards;
+    will-change: transform;
   }
 
   .cover:hover .slashes,
   :global(.group):hover .slashes {
     animation: fall-slashes 920ms 60ms forwards;
+    will-change: transform;
   }
 }
 
@@ -95,11 +74,13 @@
 .cover:focus-within .word,
 :global(.group):focus-within .word {
   animation: fall-word 1000ms forwards;
+  will-change: transform;
 }
 
 .cover:focus-within .slashes,
 :global(.group):focus-within .slashes {
   animation: fall-slashes 920ms 60ms forwards;
+  will-change: transform;
 }
 
 /*
@@ -162,9 +143,17 @@
   }
 }
 
+/* Disable the fall under reduced motion. These selectors match the
+   hover/focus rules' specificity and come later in source, so they win. */
 @media (prefers-reduced-motion: reduce) {
-  .word,
-  .slashes {
+  .cover:hover .word,
+  .cover:hover .slashes,
+  .cover:focus-within .word,
+  .cover:focus-within .slashes,
+  :global(.group):hover .word,
+  :global(.group):hover .slashes,
+  :global(.group):focus-within .word,
+  :global(.group):focus-within .slashes {
     animation: none;
   }
 }
