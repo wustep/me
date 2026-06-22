@@ -546,18 +546,6 @@
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--about-accent);
-  animation: dominoFloat 4s ease-in-out infinite;
-  animation-play-state: paused;
-}
-
-@keyframes dominoFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
 }
 
 .dominoBlock {
@@ -568,33 +556,20 @@
   background: var(--about-accent);
   color: var(--about-bg);
   border-radius: 6px;
-  animation: dominoRock 3s ease-in-out infinite;
-  animation-play-state: paused;
+  transform: rotate(2deg);
   transition: transform 250ms ease-out;
 }
 
-@keyframes dominoRock {
-  0%,
-  100% {
-    transform: rotate(2deg);
-  }
-  50% {
-    transform: rotate(-1deg);
-  }
-}
-
+/* Matches the playground DOM-ino cover: the block sits tilted at rest and
+   lifts/counter-tilts on hover/focus — a simple transition, no idle loop. */
 @media (hover: hover) {
-  .domino:hover .dominoTitle,
   .domino:hover .dominoBlock {
-    animation-play-state: running;
+    transform: translateY(-2px) rotate(-3deg);
   }
 }
 
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
-   float just like hover. */
-.domino:focus-within .dominoTitle,
 .domino:focus-within .dominoBlock {
-  animation-play-state: running;
+  transform: translateY(-2px) rotate(-3deg);
 }
 
 .spotIt {
@@ -793,17 +768,17 @@
     stroke 300ms ease;
 }
 
-/* The eye is still at rest; it blinks/dilates only while hovered or focused
-   (tap/keyboard), a touch faster than the old idle cadence. */
+/* Matches the playground Lenses cover: the eye is paused at rest and
+   blinks/dilates at a steady cadence while hovered or focused (tap/keyboard). */
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
-  animation: lensesCardLid 3.6s ease-in-out infinite;
+  animation: lensesCardLid 2.8s ease-in-out infinite;
   animation-play-state: paused;
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
 
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-  animation: lensesCardPupil 3.6s ease-in-out infinite;
+  animation: lensesCardPupil 2.8s ease-in-out infinite;
   animation-play-state: paused;
 }
 
@@ -827,12 +802,11 @@
   }
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lenses:hover
     .lensesArt
     :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
     animation-play-state: running;
-    animation-duration: 2.2s;
   }
 }
 
@@ -842,7 +816,6 @@
   .lensesArt
   :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
   animation-play-state: running;
-  animation-duration: 2.2s;
 }
 
 .bookshelfBooks {
@@ -1201,20 +1174,20 @@
     opacity: 1;
   }
 
-  /* Card decorations. These now sit paused at rest and only run on
-     hover/focus, but clear them outright under reduced motion: `animation:
-     none` drops the animation-name, so the hover/focus rules (which only flip
-     animation-play-state) have nothing left to run. The `.page` prefix
-     matches the per-child rules' specificity so these win by source order. */
-  .page .dominoTitle,
-  .page .dominoBlock,
+  /* Card decorations that loop on hover/focus — clear them outright under
+     reduced motion. `animation: none` drops the animation-name, so the
+     hover/focus rules (which only flip animation-play-state) have nothing left
+     to run. The `.page` prefix matches the per-child rules' specificity so
+     these win by source order. */
   .page .spotItSymbol,
   .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
     animation: none;
   }
 
-  /* Bookshelf books lift only on hover/focus now — make that instant. */
-  .page .book {
+  /* Bookshelf books and the DOM-ino block lift on hover/focus via a
+     transition — make those instant. */
+  .page .book,
+  .page .dominoBlock {
     transition: none;
   }
 
