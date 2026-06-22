@@ -88,7 +88,7 @@ It helps to see how far an idea has to travel: from the felt sense in your head 
 
 The trap is that both sides feel understood. You know what you meant, so your words seem transparent; they’ve matched your words to something they already know, so the message feels received. Two people nod and walk away from different conversations. The fix is mechanical, not heroic: say it back in your own words, ask for an example, check that the thing making sense to each of you is the same thing.
 
-Sometimes, though, the disagreement is real. Some conflicts of interest wear misunderstanding’s clothes, and “let me explain better” becomes a way to dodge the harder fight. Assume translation first, but don’t assume it forever.
+Sometimes, though, both people understand each other perfectly and want opposite things anyway. That’s a genuine conflict of interest, and an endless “let me explain better” can become translation theater — a way to keep dodging the harder conversation. Assume translation first; just don’t assume it forever.
 
 # Constraint
 
