@@ -37,6 +37,10 @@
      the bottom rounds into a full pill only at the very end (see @keyframes). */
   border-radius: var(--r, 999px) var(--r, 999px) 0 0;
   will-change: transform, opacity, border-radius;
+  /* Declared up front and paused so hovering out/in pauses and resumes the
+     notes mid-rise instead of restarting them from the bottom each time. */
+  animation: rise 2.6s linear infinite;
+  animation-play-state: paused;
 }
 
 .barAccent {
@@ -50,51 +54,44 @@
 /* Equal heights so every note rises at the same speed — scaleY/translateY in
    the rise animation are relative to each bar's own height, so differing
    heights would make taller notes travel faster over the same duration. */
-.bar { height: 62%; }
+.bar {
+  height: 62%;
+}
 
+/* Staggered starts so the three notes don't rise in lockstep. The delays live
+   on the base rules (not the hover rules) so they're part of the paused
+   timeline that hover simply resumes. */
+.bar:nth-child(1) {
+  animation-delay: 0s;
+}
+.bar:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.bar:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+/* Hover / focus only flips the timeline to running — the notes and the synced
+   key presses pick up from wherever they were paused. Focus covers touch and
+   keyboard, where there's no hover. */
 @media (hover: hover) {
   :global(.group):hover .bar,
-  .cover:hover .bar {
-    animation: rise 2.6s linear infinite;
-  }
-  :global(.group):hover .bar:nth-child(1),
-  .cover:hover .bar:nth-child(1) { animation-delay: 0s; }
-  :global(.group):hover .bar:nth-child(2),
-  .cover:hover .bar:nth-child(2) { animation-delay: 0.05s; }
-  :global(.group):hover .bar:nth-child(3),
-  .cover:hover .bar:nth-child(3) { animation-delay: 0.1s; }
-
-  /* Animate the pressed state of the chord keys in sync */
+  .cover:hover .bar,
   :global(.group):hover .whitePressed,
-  .cover:hover .whitePressed {
-    animation: whiteKeyPress 2.6s linear infinite;
-  }
+  .cover:hover .whitePressed,
   :global(.group):hover .blackPressed,
   .cover:hover .blackPressed {
-    animation: blackKeyPress 2.6s linear infinite;
+    animation-play-state: running;
   }
 }
 
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
-   rising notes and key presses just like hover. */
 :global(.group):focus-within .bar,
-.cover:focus-within .bar {
-  animation: rise 2.6s linear infinite;
-}
-:global(.group):focus-within .bar:nth-child(1),
-.cover:focus-within .bar:nth-child(1) { animation-delay: 0s; }
-:global(.group):focus-within .bar:nth-child(2),
-.cover:focus-within .bar:nth-child(2) { animation-delay: 0.05s; }
-:global(.group):focus-within .bar:nth-child(3),
-.cover:focus-within .bar:nth-child(3) { animation-delay: 0.1s; }
-
+.cover:focus-within .bar,
 :global(.group):focus-within .whitePressed,
-.cover:focus-within .whitePressed {
-  animation: whiteKeyPress 2.6s linear infinite;
-}
+.cover:focus-within .whitePressed,
 :global(.group):focus-within .blackPressed,
 .cover:focus-within .blackPressed {
-  animation: blackKeyPress 2.6s linear infinite;
+  animation-play-state: running;
 }
 
 /* Two phases, split so the top edge moves at one constant speed across both:
@@ -131,9 +128,17 @@
   }
 }
 
-/* Pressed key sync — fully pressed during phase 1, released during phase 2 */
+/* Pressed key sync — released at 0%/100% so a paused keyboard reads as idle,
+   then pressed across phase 1 (note held) and released through phase 2. */
 @keyframes whiteKeyPress {
-  0%, 46% {
+  0% {
+    background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
+    box-shadow: none;
+    border-bottom-width: 3px;
+    transform: translateY(0);
+  }
+  6%,
+  46% {
     background: linear-gradient(180deg, #00d4b1 0%, #33ffe0 100%);
     box-shadow:
       inset 0 8px 14px rgba(0, 0, 0, 0.18),
@@ -141,7 +146,8 @@
     border-bottom-width: 1px;
     transform: translateY(1px);
   }
-  56%, 100% {
+  56%,
+  100% {
     background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
     box-shadow: none;
     border-bottom-width: 3px;
@@ -153,21 +159,36 @@
    key behind it at the top, which reads as a white gap. The press is conveyed
    by the teal fill and glow instead, with the key's top staying anchored. */
 @keyframes blackKeyPress {
-  0%, 46% {
+  0% {
+    background: linear-gradient(180deg, #2a2a2a 0%, #444 100%);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.55);
+  }
+  6%,
+  46% {
     background: linear-gradient(180deg, #018470 0%, #01483e 100%);
     box-shadow:
       inset 0 -3px 6px rgba(0, 0, 0, 0.5),
       0 0 12px rgba(0, 212, 177, 0.45);
   }
-  56%, 100% {
+  56%,
+  100% {
     background: linear-gradient(180deg, #2a2a2a 0%, #444 100%);
     box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.55);
   }
 }
 
-/* .whitePressed / .blackPressed are markers for which keys belong to the chord.
-   Pressed visuals are applied only during the hover animation — at rest the
-   keyboard looks idle. */
+/* .whitePressed / .blackPressed mark the chord keys. Their press animations are
+   declared paused so they pause/resume in sync with the notes; the reordered
+   keyframes above (0% = released) keep the keyboard idle at rest. */
+.whitePressed {
+  animation: whiteKeyPress 2.6s linear infinite;
+  animation-play-state: paused;
+}
+
+.blackPressed {
+  animation: blackKeyPress 2.6s linear infinite;
+  animation-play-state: paused;
+}
 
 /* ---------- Piano ---------- */
 

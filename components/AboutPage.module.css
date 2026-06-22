@@ -547,6 +547,7 @@
   letter-spacing: -0.03em;
   color: var(--about-accent);
   animation: dominoFloat 4s ease-in-out infinite;
+  animation-play-state: paused;
 }
 
 @keyframes dominoFloat {
@@ -568,6 +569,7 @@
   color: var(--about-bg);
   border-radius: 6px;
   animation: dominoRock 3s ease-in-out infinite;
+  animation-play-state: paused;
   transition: transform 250ms ease-out;
 }
 
@@ -582,14 +584,17 @@
 }
 
 @media (hover: hover) {
-  .domino:hover .dominoTitle {
-    animation: none;
-  }
-
+  .domino:hover .dominoTitle,
   .domino:hover .dominoBlock {
-    animation: none;
-    transform: rotate(-3deg) translateY(-2px);
+    animation-play-state: running;
   }
+}
+
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
+   float just like hover. */
+.domino:focus-within .dominoTitle,
+.domino:focus-within .dominoBlock {
+  animation-play-state: running;
 }
 
 .spotIt {
@@ -676,6 +681,12 @@
   animation: symbolFloat 3.7s ease-in-out 0.7s infinite;
 }
 
+/* Paused at rest (this rule's later source order wins the play-state over the
+   shorthands above); the symbols float only while hovered/focused. */
+.spotIt .spotItSymbol {
+  animation-play-state: paused;
+}
+
 @keyframes symbolFloat {
   0%,
   100% {
@@ -697,8 +708,23 @@
   }
 
   .spotIt:hover .spotItSymbol {
-    animation: none;
+    animation-play-state: running;
   }
+}
+
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) shifts the
+   cards and floats the symbols just like hover. */
+.spotIt:focus-within .spotItCard:last-child {
+  transform: rotate(5deg) translate(-4px, -6px);
+}
+
+.spotIt:focus-within .spotItCardBack {
+  transform: rotate(-10deg) translate(4px, -2px);
+  opacity: 0.3;
+}
+
+.spotIt:focus-within .spotItSymbol {
+  animation-play-state: running;
 }
 
 .spotIt h3 {
@@ -767,17 +793,18 @@
     stroke 300ms ease;
 }
 
-/* The eye breathes at rest at a calm cadence — alive on touch and in
-   step with the neighboring cards — then focuses a touch faster on
-   hover. */
+/* The eye is still at rest; it blinks/dilates only while hovered or focused
+   (tap/keyboard), a touch faster than the old idle cadence. */
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
   animation: lensesCardLid 3.6s ease-in-out infinite;
+  animation-play-state: paused;
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
 
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
   animation: lensesCardPupil 3.6s ease-in-out infinite;
+  animation-play-state: paused;
 }
 
 @keyframes lensesCardLid {
@@ -804,8 +831,18 @@
   .lenses:hover
     .lensesArt
     :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+    animation-play-state: running;
     animation-duration: 2.2s;
   }
+}
+
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
+   eye just like hover. */
+.lenses:focus-within
+  .lensesArt
+  :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+  animation-play-state: running;
+  animation-duration: 2.2s;
 }
 
 .bookshelfBooks {
@@ -1164,9 +1201,11 @@
     opacity: 1;
   }
 
-  /* Decorative ambient loops that run without user intent. The `.page`
-     prefix matches the specificity of the per-child animation rules so
-     these win by source order without needing `!important`. */
+  /* Card decorations. These now sit paused at rest and only run on
+     hover/focus, but clear them outright under reduced motion: `animation:
+     none` drops the animation-name, so the hover/focus rules (which only flip
+     animation-play-state) have nothing left to run. The `.page` prefix
+     matches the per-child rules' specificity so these win by source order. */
   .page .dominoTitle,
   .page .dominoBlock,
   .page .spotItSymbol,
