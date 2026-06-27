@@ -334,17 +334,8 @@
   height: 1em;
 }
 
-.playgroundLink {
-  color: #237fbf;
-  background: color-mix(in srgb, #2795e9 11%, var(--about-card));
-}
-
-@media (hover: hover) {
-  .playgroundLink:hover {
-    color: #1378bd;
-    background: color-mix(in srgb, #2795e9 19%, var(--about-card));
-  }
-}
+/* Playground button has no color at rest; the shared .sectionLink:hover
+   rule supplies the blue tint on hover. */
 
 .designLink {
   opacity: 0;
@@ -365,6 +356,11 @@
   .sectionHeader:hover .designLink {
     opacity: 1;
     transform: scale(1) rotate(0);
+  }
+
+  .designLink:hover {
+    color: #b58100;
+    background: color-mix(in srgb, #f5c518 20%, var(--about-card));
   }
 }
 
