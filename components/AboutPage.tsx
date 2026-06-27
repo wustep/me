@@ -6,6 +6,7 @@ import * as React from 'react'
 import { github, linkedin, x } from '@/lib/config'
 
 import styles from './AboutPage.module.css'
+import { DesignButton } from './wustep/DesignButton'
 import { LabsButton } from './wustep/LabsButton'
 import { Illustration } from './wustep/lenses/illustrations'
 import { ThemeToggle } from './wustep/ThemeToggle'
@@ -260,8 +261,13 @@ export function AboutPage() {
               <h2>Projects</h2>
             </Link>
             <div className={styles.sectionLinks}>
+              <DesignButton
+                className={`${styles.sectionLink} ${styles.designLink}`}
+              />
               <Tooltip label='Check out my playground of lil tech demos'>
-                <LabsButton className={styles.sectionLink} />
+                <LabsButton
+                  className={`${styles.sectionLink} ${styles.playgroundLink}`}
+                />
               </Tooltip>
               <Link
                 href='/projects'

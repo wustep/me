@@ -11,9 +11,10 @@ import {
   Type
 } from 'lucide-react'
 import Head from 'next/head'
-import Link from 'next/link'
 import * as React from 'react'
 
+import { DesignWorkbenchNav } from '@/components/design/DesignWorkbench'
+import { designPreviewPages } from '@/lib/design-preview-pages'
 import {
   type DesignFont,
   designFontPairs,
@@ -24,18 +25,6 @@ import {
 } from '@/lib/fonts/design-fonts'
 
 import styles from './fonts.module.css'
-
-const previewPages = [
-  { label: 'Home', path: '/' },
-  { label: 'Prompting', path: '/prompting' },
-  { label: 'Advice for students', path: '/advice-students' },
-  { label: 'Graphs of knowledge', path: '/cs-knowledge-graph' },
-  { label: "Don't thrash the user", path: '/thrash' },
-  { label: 'Headspace', path: '/headspace' },
-  { label: 'Foraging', path: '/foraging' },
-  { label: 'On philosophy', path: '/philosophy' },
-  { label: "October '25", path: '/oct-25' }
-]
 
 const storageKey = 'design-font-tester-settings'
 
@@ -272,6 +261,15 @@ export default function FontTesterPage() {
     }
   }, [applyPreviewTypography])
 
+  React.useEffect(() => {
+    if (
+      isReady &&
+      iframeRef.current?.contentDocument?.readyState === 'complete'
+    ) {
+      handleFrameLoad()
+    }
+  }, [handleFrameLoad, isReady])
+
   const applyPair = (sans: string, serif: string) => {
     setSansId(sans)
     setSerifId(serif)
@@ -289,14 +287,16 @@ export default function FontTesterPage() {
     window.setTimeout(() => setCopied(false), 1600)
   }
 
-  const selectedPage = previewPages.some((page) => page.path === previewPath)
+  const selectedPage = designPreviewPages.some(
+    (page) => page.path === previewPath
+  )
     ? previewPath
     : 'custom'
 
   return (
     <>
       <Head>
-        <title>Font pairer · Design room</title>
+        <title>Font pairer · Design workbench</title>
         <meta
           name='description'
           content='Test font pairings against real pages on wustep.me.'
@@ -304,311 +304,318 @@ export default function FontTesterPage() {
         <meta name='robots' content='noindex,nofollow' />
       </Head>
 
-      <main className={`${styles.lab} ${sidebarOpen ? '' : styles.compact}`}>
-        <aside className={styles.sidebar} aria-label='Font controls'>
-          <div className={styles.sidebarHeader}>
-            <div>
-              <Link href='/design' className={styles.backLink}>
-                <ArrowLeft aria-hidden='true' /> Design
-              </Link>
-              <div className={styles.titleRow}>
-                <div>
-                  <h1>Font pairer</h1>
-                  <p>
-                    {designSansFonts.length} sans · {designSerifFonts.length}{' '}
-                    serif
-                  </p>
-                </div>
-              </div>
-            </div>
-            <button
-              type='button'
-              className={styles.iconButton}
-              onClick={() => setSidebarOpen(false)}
-              aria-label='Close controls'
-            >
-              <PanelLeftClose aria-hidden='true' />
-            </button>
-          </div>
-
-          <div className={styles.controls}>
-            <section className={styles.controlSection}>
-              <h2 className={styles.sectionTitle}>Preview page</h2>
-              <select
-                id='preview-page'
-                className={styles.select}
-                aria-label='Preview page'
-                value={selectedPage}
-                onChange={(event) => {
-                  if (event.target.value !== 'custom') {
-                    navigateTo(event.target.value)
-                  }
-                }}
-              >
-                {previewPages.map((page) => (
-                  <option key={page.path} value={page.path}>
-                    {page.label}
-                  </option>
-                ))}
-                <option value='custom' disabled={selectedPage !== 'custom'}>
-                  Custom path
-                </option>
-              </select>
-
-              <form
-                className={styles.pathForm}
-                onSubmit={(event) => {
-                  event.preventDefault()
-                  navigateTo(draftPath)
-                }}
-              >
-                <div className={styles.pathInputRow}>
-                  <input
-                    id='preview-path'
-                    aria-label='Custom preview path'
-                    placeholder='/any-page'
-                    value={draftPath}
-                    onChange={(event) => setDraftPath(event.target.value)}
-                    spellCheck={false}
-                    aria-invalid={Boolean(pathError)}
-                  />
-                  <button type='submit' aria-label='Load path'>
-                    <ArrowRight aria-hidden='true' />
-                  </button>
-                </div>
-                {pathError && <p className={styles.error}>{pathError}</p>}
-              </form>
-            </section>
-
-            <section className={styles.fontBrowserSection}>
-              <div
-                className={styles.panelTabs}
-                role='tablist'
-                aria-label='Fonts'
-              >
-                <button
-                  type='button'
-                  role='tab'
-                  aria-selected={panelMode === 'pairs'}
-                  className={panelMode === 'pairs' ? styles.activeTab : ''}
-                  onClick={() => setPanelMode('pairs')}
-                >
-                  Pairs
-                  <span>{designFontPairs.length}</span>
-                </button>
-                <button
-                  type='button'
-                  role='tab'
-                  aria-selected={panelMode === 'library'}
-                  className={panelMode === 'library' ? styles.activeTab : ''}
-                  onClick={() => setPanelMode('library')}
-                >
-                  Library
-                  <span>
-                    {designSansFonts.length + designSerifFonts.length}
-                  </span>
-                </button>
-              </div>
-
-              {panelMode === 'pairs' ? (
-                <div className={styles.pairList} role='tabpanel'>
-                  {designFontPairs.map((pair) => {
-                    const isActive = pair.id === activePair?.id
-                    const pairSans = getDesignFont(
-                      designSansFonts,
-                      pair.sansId,
-                      'inter'
-                    )
-                    const pairSerif = getDesignFont(
-                      designSerifFonts,
-                      pair.serifId,
-                      'crimson-pro'
-                    )
-
-                    return (
-                      <button
-                        key={pair.id}
-                        type='button'
-                        className={`${styles.pairButton} ${isActive ? styles.activePair : ''}`}
-                        onClick={() => applyPair(pair.sansId, pair.serifId)}
-                        aria-pressed={isActive}
-                      >
-                        <span
-                          className={styles.pairSample}
-                          style={{ fontFamily: pairSerif.family }}
-                          aria-hidden='true'
-                        >
-                          Ag
-                        </span>
-                        <span className={styles.pairCopy}>
-                          <strong style={{ fontFamily: pairSans.family }}>
-                            {pair.name}
-                          </strong>
-                          <small>{pair.note}</small>
-                        </span>
-                        <span className={styles.pairCheck} aria-hidden='true'>
-                          {isActive && <Check />}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className={styles.library} role='tabpanel'>
-                  <label className={styles.searchField}>
-                    <Search aria-hidden='true' />
-                    <span className={styles.visuallyHidden}>Search fonts</span>
-                    <input
-                      type='search'
-                      value={fontSearch}
-                      onChange={(event) => setFontSearch(event.target.value)}
-                      placeholder={`Search ${designSansFonts.length + designSerifFonts.length} fonts`}
-                    />
-                  </label>
-
-                  <div className={styles.fontGroup}>
-                    <div className={styles.fontGroupHeading}>
-                      <h2>Sans-serif</h2>
-                      <span>{filteredSansFonts.length}</span>
-                    </div>
-                    <FontOptionList
-                      fonts={filteredSansFonts}
-                      selectedId={sansFont.id}
-                      onSelect={setSansId}
-                      emptyLabel='No sans-serif matches.'
-                    />
-                  </div>
-
-                  <div className={styles.fontGroup}>
-                    <div className={styles.fontGroupHeading}>
-                      <h2>Serif</h2>
-                      <span>{filteredSerifFonts.length}</span>
-                    </div>
-                    <FontOptionList
-                      fonts={filteredSerifFonts}
-                      selectedId={serifFont.id}
-                      onSelect={setSerifId}
-                      emptyLabel='No serif matches.'
-                    />
+      <div className={styles.page}>
+        <DesignWorkbenchNav
+          activeTool='fonts'
+          status={isLoading ? 'Loading' : copied ? 'Copied' : 'Ready'}
+        />
+        <main className={`${styles.lab} ${sidebarOpen ? '' : styles.compact}`}>
+          <aside className={styles.sidebar} aria-label='Font controls'>
+            <div className={styles.sidebarHeader}>
+              <div>
+                <div className={styles.titleRow}>
+                  <div>
+                    <h1>Font pairer</h1>
+                    <p>
+                      {designSansFonts.length} sans · {designSerifFonts.length}{' '}
+                      serif · real site preview
+                    </p>
                   </div>
                 </div>
-              )}
-            </section>
-
-            <section className={styles.scaleSection}>
-              <div className={styles.scaleField}>
-                <span className={styles.scaleLabel}>
-                  <label className={styles.fieldLabel} htmlFor='font-scale'>
-                    Type scale
-                  </label>
-                  <output>{Math.round(scale * 100)}%</output>
-                </span>
-                <input
-                  id='font-scale'
-                  type='range'
-                  min='0.9'
-                  max='1.15'
-                  step='0.01'
-                  value={scale}
-                  onChange={(event) => setScale(Number(event.target.value))}
-                />
-                <span className={styles.rangeLabels} aria-hidden='true'>
-                  <span>90</span>
-                  <span>100</span>
-                  <span>115</span>
-                </span>
               </div>
-            </section>
-          </div>
-
-          <div className={styles.sidebarFooter}>
-            <button type='button' onClick={resetSettings}>
-              <RotateCcw aria-hidden='true' /> Reset
-            </button>
-            <button type='button' onClick={copyShareLink}>
-              {copied ? (
-                <Check aria-hidden='true' />
-              ) : (
-                <Copy aria-hidden='true' />
-              )}
-              {copied ? 'Copied' : 'Copy setup'}
-            </button>
-          </div>
-        </aside>
-
-        <section className={styles.stage} aria-label='Site preview'>
-          <header className={styles.stageToolbar}>
-            {!sidebarOpen && (
               <button
                 type='button'
                 className={styles.iconButton}
-                onClick={() => setSidebarOpen(true)}
-                aria-label='Open controls'
+                onClick={() => setSidebarOpen(false)}
+                aria-label='Close controls'
               >
-                <PanelLeftOpen aria-hidden='true' />
-              </button>
-            )}
-            <div className={styles.browserButtons}>
-              <button
-                type='button'
-                onClick={() => iframeRef.current?.contentWindow?.history.back()}
-                aria-label='Go back in preview'
-              >
-                <ArrowLeft aria-hidden='true' />
-              </button>
-              <button
-                type='button'
-                onClick={() =>
-                  iframeRef.current?.contentWindow?.history.forward()
-                }
-                aria-label='Go forward in preview'
-              >
-                <ArrowRight aria-hidden='true' />
+                <PanelLeftClose aria-hidden='true' />
               </button>
             </div>
-            <div className={styles.location} title={previewPath}>
-              <span
-                className={isLoading ? styles.loadingDot : styles.readyDot}
-              />
-              <span>wustep.me{previewPath}</span>
-            </div>
-            <div className={styles.currentFonts}>
-              <Type aria-hidden='true' />
-              <span>{sansFont.name}</span>
-              <span className={styles.fontPlus}>+</span>
-              <span>{serifFont.name}</span>
-            </div>
-            <button
-              type='button'
-              className={styles.openPageButton}
-              onClick={() =>
-                window.open(previewPath, '_blank', 'noopener,noreferrer')
-              }
-              aria-label='Open original page in a new tab'
-            >
-              <ExternalLink aria-hidden='true' />
-            </button>
-          </header>
 
-          <div className={styles.canvas}>
-            <div className={styles.browserFrame}>
-              <iframe
-                ref={iframeRef}
-                src={previewPath}
-                title={`Typography preview of ${previewPath}`}
-                onLoad={handleFrameLoad}
-              />
+            <div className={styles.controls}>
+              <section className={styles.controlSection}>
+                <h2 className={styles.sectionTitle}>Preview page</h2>
+                <select
+                  id='preview-page'
+                  className={styles.select}
+                  aria-label='Preview page'
+                  value={selectedPage}
+                  onChange={(event) => {
+                    if (event.target.value !== 'custom') {
+                      navigateTo(event.target.value)
+                    }
+                  }}
+                >
+                  {designPreviewPages.map((page) => (
+                    <option key={page.path} value={page.path}>
+                      {page.label}
+                    </option>
+                  ))}
+                  <option value='custom' disabled={selectedPage !== 'custom'}>
+                    Custom path
+                  </option>
+                </select>
+
+                <form
+                  className={styles.pathForm}
+                  onSubmit={(event) => {
+                    event.preventDefault()
+                    navigateTo(draftPath)
+                  }}
+                >
+                  <div className={styles.pathInputRow}>
+                    <input
+                      id='preview-path'
+                      aria-label='Custom preview path'
+                      placeholder='/any-page'
+                      value={draftPath}
+                      onChange={(event) => setDraftPath(event.target.value)}
+                      spellCheck={false}
+                      aria-invalid={Boolean(pathError)}
+                    />
+                    <button type='submit' aria-label='Load path'>
+                      <ArrowRight aria-hidden='true' />
+                    </button>
+                  </div>
+                  {pathError && <p className={styles.error}>{pathError}</p>}
+                </form>
+              </section>
+
+              <section className={styles.fontBrowserSection}>
+                <div
+                  className={styles.panelTabs}
+                  role='tablist'
+                  aria-label='Fonts'
+                >
+                  <button
+                    type='button'
+                    role='tab'
+                    aria-selected={panelMode === 'pairs'}
+                    className={panelMode === 'pairs' ? styles.activeTab : ''}
+                    onClick={() => setPanelMode('pairs')}
+                  >
+                    Pairs
+                    <span>{designFontPairs.length}</span>
+                  </button>
+                  <button
+                    type='button'
+                    role='tab'
+                    aria-selected={panelMode === 'library'}
+                    className={panelMode === 'library' ? styles.activeTab : ''}
+                    onClick={() => setPanelMode('library')}
+                  >
+                    Library
+                    <span>
+                      {designSansFonts.length + designSerifFonts.length}
+                    </span>
+                  </button>
+                </div>
+
+                {panelMode === 'pairs' ? (
+                  <div className={styles.pairList} role='tabpanel'>
+                    {designFontPairs.map((pair) => {
+                      const isActive = pair.id === activePair?.id
+                      const pairSans = getDesignFont(
+                        designSansFonts,
+                        pair.sansId,
+                        'inter'
+                      )
+                      const pairSerif = getDesignFont(
+                        designSerifFonts,
+                        pair.serifId,
+                        'crimson-pro'
+                      )
+
+                      return (
+                        <button
+                          key={pair.id}
+                          type='button'
+                          className={`${styles.pairButton} ${isActive ? styles.activePair : ''}`}
+                          onClick={() => applyPair(pair.sansId, pair.serifId)}
+                          aria-pressed={isActive}
+                        >
+                          <span
+                            className={styles.pairSample}
+                            style={{ fontFamily: pairSerif.family }}
+                            aria-hidden='true'
+                          >
+                            Ag
+                          </span>
+                          <span className={styles.pairCopy}>
+                            <strong style={{ fontFamily: pairSans.family }}>
+                              {pair.name}
+                            </strong>
+                            <small>{pair.note}</small>
+                          </span>
+                          <span className={styles.pairCheck} aria-hidden='true'>
+                            {isActive && <Check />}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className={styles.library} role='tabpanel'>
+                    <label className={styles.searchField}>
+                      <Search aria-hidden='true' />
+                      <span className={styles.visuallyHidden}>
+                        Search fonts
+                      </span>
+                      <input
+                        type='search'
+                        value={fontSearch}
+                        onChange={(event) => setFontSearch(event.target.value)}
+                        placeholder={`Search ${designSansFonts.length + designSerifFonts.length} fonts`}
+                      />
+                    </label>
+
+                    <div className={styles.fontGroup}>
+                      <div className={styles.fontGroupHeading}>
+                        <h2>Sans-serif</h2>
+                        <span>{filteredSansFonts.length}</span>
+                      </div>
+                      <FontOptionList
+                        fonts={filteredSansFonts}
+                        selectedId={sansFont.id}
+                        onSelect={setSansId}
+                        emptyLabel='No sans-serif matches.'
+                      />
+                    </div>
+
+                    <div className={styles.fontGroup}>
+                      <div className={styles.fontGroupHeading}>
+                        <h2>Serif</h2>
+                        <span>{filteredSerifFonts.length}</span>
+                      </div>
+                      <FontOptionList
+                        fonts={filteredSerifFonts}
+                        selectedId={serifFont.id}
+                        onSelect={setSerifId}
+                        emptyLabel='No serif matches.'
+                      />
+                    </div>
+                  </div>
+                )}
+              </section>
+
+              <section className={styles.scaleSection}>
+                <div className={styles.scaleField}>
+                  <span className={styles.scaleLabel}>
+                    <label className={styles.fieldLabel} htmlFor='font-scale'>
+                      Type scale
+                    </label>
+                    <output>{Math.round(scale * 100)}%</output>
+                  </span>
+                  <input
+                    id='font-scale'
+                    type='range'
+                    min='0.9'
+                    max='1.15'
+                    step='0.01'
+                    value={scale}
+                    onChange={(event) => setScale(Number(event.target.value))}
+                  />
+                  <span className={styles.rangeLabels} aria-hidden='true'>
+                    <span>90</span>
+                    <span>100</span>
+                    <span>115</span>
+                  </span>
+                </div>
+              </section>
             </div>
-            <div className={styles.canvasMeta} aria-hidden='true'>
-              <span>LIVE / SAME-ORIGIN</span>
-              <span>
-                SANS {sansFont.name.toUpperCase()} · SERIF{' '}
-                {serifFont.name.toUpperCase()}
-              </span>
+
+            <div className={styles.sidebarFooter}>
+              <button type='button' onClick={resetSettings}>
+                <RotateCcw aria-hidden='true' /> Reset
+              </button>
+              <button type='button' onClick={copyShareLink}>
+                {copied ? (
+                  <Check aria-hidden='true' />
+                ) : (
+                  <Copy aria-hidden='true' />
+                )}
+                {copied ? 'Copied' : 'Copy setup'}
+              </button>
             </div>
-          </div>
-        </section>
-      </main>
+          </aside>
+
+          <section className={styles.stage} aria-label='Site preview'>
+            <header className={styles.stageToolbar}>
+              {!sidebarOpen && (
+                <button
+                  type='button'
+                  className={styles.iconButton}
+                  onClick={() => setSidebarOpen(true)}
+                  aria-label='Open controls'
+                >
+                  <PanelLeftOpen aria-hidden='true' />
+                </button>
+              )}
+              <div className={styles.browserButtons}>
+                <button
+                  type='button'
+                  onClick={() =>
+                    iframeRef.current?.contentWindow?.history.back()
+                  }
+                  aria-label='Go back in preview'
+                >
+                  <ArrowLeft aria-hidden='true' />
+                </button>
+                <button
+                  type='button'
+                  onClick={() =>
+                    iframeRef.current?.contentWindow?.history.forward()
+                  }
+                  aria-label='Go forward in preview'
+                >
+                  <ArrowRight aria-hidden='true' />
+                </button>
+              </div>
+              <div className={styles.location} title={previewPath}>
+                <span
+                  className={isLoading ? styles.loadingDot : styles.readyDot}
+                />
+                <span>wustep.me{previewPath}</span>
+              </div>
+              <div className={styles.currentFonts}>
+                <Type aria-hidden='true' />
+                <span>{sansFont.name}</span>
+                <span className={styles.fontPlus}>+</span>
+                <span>{serifFont.name}</span>
+              </div>
+              <button
+                type='button'
+                className={styles.openPageButton}
+                onClick={() =>
+                  window.open(previewPath, '_blank', 'noopener,noreferrer')
+                }
+                aria-label='Open original page in a new tab'
+              >
+                <ExternalLink aria-hidden='true' />
+              </button>
+            </header>
+
+            <div className={styles.canvas}>
+              <div className={styles.browserFrame}>
+                <iframe
+                  ref={iframeRef}
+                  src={previewPath}
+                  title={`Typography preview of ${previewPath}`}
+                  onLoad={handleFrameLoad}
+                />
+              </div>
+              <div className={styles.canvasMeta} aria-hidden='true'>
+                <span>LIVE / SAME-ORIGIN</span>
+                <span>
+                  SANS {sansFont.name.toUpperCase()} · SERIF{' '}
+                  {serifFont.name.toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
     </>
   )
 }

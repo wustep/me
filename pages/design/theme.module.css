@@ -1,0 +1,384 @@
+.controlSection,
+.tokenSection,
+.contrastSection {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--dw-rule);
+}
+
+.controlSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlLabel,
+.sectionHeading {
+  color: var(--dw-label-ink);
+  font-size: 0.75rem;
+  font-weight: var(--dw-label-weight);
+}
+
+.select,
+.pathForm input {
+  width: 100%;
+  height: var(--dw-field-h);
+  border: 1px solid var(--dw-field-border);
+  border-radius: var(--dw-radius-control);
+  outline: 0;
+  color: var(--dw-ink);
+  background: var(--dw-raised);
+  font-size: 0.75rem;
+}
+
+.select {
+  padding: 0 30px 0 10px;
+  cursor: pointer;
+}
+
+.select:focus,
+.pathForm:focus-within input {
+  border-color: var(--dw-accent);
+  box-shadow: 0 0 0 3px rgba(33, 103, 213, 0.12);
+}
+
+.pathForm {
+  display: flex;
+}
+
+.pathForm input {
+  min-width: 0;
+  padding: 0 10px;
+  border-radius: 8px 0 0 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+}
+
+.pathForm button {
+  display: grid;
+  width: var(--dw-field-h);
+  height: var(--dw-field-h);
+  flex: 0 0 var(--dw-field-h);
+  place-items: center;
+  border: 0;
+  border-radius: 0 8px 8px 0;
+  color: white;
+  background: var(--dw-accent);
+  cursor: pointer;
+}
+
+.pathForm button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.pathError {
+  margin: 0;
+  color: var(--dw-danger);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+}
+
+.modeSwitch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--dw-radius-segment);
+  background: var(--dw-segment-track);
+}
+
+.modeSwitch button {
+  display: flex;
+  gap: 7px;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--dw-radius-control-sm);
+  color: var(--dw-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.modeSwitch button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.modeSwitch .selectedMode {
+  color: var(--dw-accent-ink);
+  background: white;
+  box-shadow: 0 1px 3px rgba(20, 21, 19, 0.1);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.sectionHeading span:last-child {
+  color: var(--dw-meta-ink);
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+.tokenList {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--dw-rule);
+}
+
+.tokenRow {
+  display: grid;
+  grid-template-columns: 1fr 132px;
+  gap: 12px;
+  min-height: 44px;
+  align-items: center;
+  border-bottom: 1px solid var(--dw-rule);
+}
+
+.tokenRow > label {
+  color: var(--dw-label-ink);
+  font-size: 0.75rem;
+}
+
+.colorControl {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--dw-field-border);
+  border-radius: var(--dw-radius-control-sm);
+  background: white;
+}
+
+.colorControl:focus-within {
+  border-color: var(--dw-accent);
+  box-shadow: 0 0 0 3px rgba(33, 103, 213, 0.12);
+}
+
+.colorControl input[type='color'] {
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+  border: 0;
+  border-right: 1px solid #d8d9d4;
+  background: transparent;
+  cursor: pointer;
+}
+
+.colorControl input:last-child {
+  width: 100%;
+  min-width: 0;
+  padding: 0 8px;
+  border: 0;
+  outline: 0;
+  color: var(--dw-ink);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+}
+
+.contrastSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contrastSection .sectionHeading {
+  margin-bottom: 2px;
+}
+
+.contrastRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #62645e;
+  font-size: 0.75rem;
+}
+
+.contrastRow strong {
+  padding: 3px 6px;
+  border-radius: 5px;
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pass {
+  color: #245e26;
+  background: #e3f4df;
+}
+
+.fail {
+  color: #922f23;
+  background: #f9e4e0;
+}
+
+.footerActions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.footerActions button {
+  display: flex;
+  gap: 6px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  color: var(--dw-ink);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.footerActions button + button {
+  border-left: 1px solid var(--dw-rule);
+}
+
+.footerActions button:hover {
+  background: #f0f0ed;
+}
+
+.footerActions svg {
+  width: 13px;
+  height: 13px;
+}
+
+.openPage {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: var(--dw-radius-control);
+  color: #aeb0a8;
+  background: transparent;
+  cursor: pointer;
+}
+
+.openPage:hover {
+  color: white;
+  background: #2d2f2a;
+}
+
+.openPage svg {
+  width: 16px;
+  height: 16px;
+}
+
+.previewIdentity {
+  display: flex;
+  min-width: 0;
+  gap: 8px;
+  align-items: center;
+  overflow: hidden;
+  color: #8f928a;
+  font-size: 0.75rem;
+}
+
+.previewIdentity strong {
+  max-width: 34ch;
+  overflow: hidden;
+  color: #d5d7d0;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readyDot,
+.loadingDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--dw-ready);
+}
+
+.loadingDot {
+  background: #e8a54b;
+  animation: blink 800ms ease-in-out infinite alternate;
+}
+
+@keyframes blink {
+  to {
+    opacity: 0.35;
+  }
+}
+
+.toolbarSwatches {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.toolbarSwatches span {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+}
+
+.toolbarMode {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #979a92;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.toolbarMode svg {
+  width: 14px;
+  height: 14px;
+}
+
+.browserFrame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.browserFrame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+}
+
+.previewLoading {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #999c94;
+  background: #22231f;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .toolbarSwatches,
+  .toolbarMode {
+    display: none;
+  }
+
+  .browserFrame {
+    padding: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingDot {
+    animation: none;
+  }
+}

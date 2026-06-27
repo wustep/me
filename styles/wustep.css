@@ -39,6 +39,24 @@
   --radius-lg: 12px;
   --font-serif: 'Crimson Pro', 'Georgia', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Design playground (dw) primitives — shared by every /design tool */
+  --dw-field-h: 36px; /* canonical control height */
+  --dw-field-border: #c8cac4; /* input / select / search outline */
+  --dw-label-ink: #555751; /* section / field label text */
+  --dw-meta-ink: #858781; /* counts + de-emphasized secondary text */
+  --dw-danger: #9d2f20; /* inline error text */
+  --dw-accent: #2167d5; /* primary + selected fill */
+  --dw-accent-ink: #164d9c; /* selected text on a soft accent bg */
+  --dw-accent-soft: #e8f1ff;
+  --dw-focus: #4a98ec; /* focus ring on light surfaces */
+  --dw-focus-dark: #69b7f2; /* focus ring on dark surfaces */
+  --dw-segment-track: #e3e4e0; /* segmented-control track */
+  --dw-label-weight: 650; /* section / field label weight */
+  --dw-radius-control: 8px; /* inputs, search fields */
+  --dw-radius-control-sm: 7px; /* chips, icon buttons, segment items */
+  --dw-radius-segment: 9px; /* segmented-control track */
+  --dw-radius-card: 12px;
 }
 
 /* Dark mode */

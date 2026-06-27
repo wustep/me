@@ -6,7 +6,7 @@
   --muted: #929292;
   --faint: #686868;
   --border: rgba(255, 255, 255, 0.11);
-  --focus: #69b7f2;
+  --focus: var(--dw-focus-dark);
   min-height: 100vh;
   padding: 0 24px;
   color: var(--text);
@@ -16,10 +16,17 @@
 
 .header,
 .intro,
-.studies {
+.directory {
   width: min(680px, 100%);
   margin-right: auto;
   margin-left: auto;
+}
+
+.directory {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding-bottom: 72px;
 }
 
 .header {
@@ -66,6 +73,12 @@
   font-weight: 550;
 }
 
+.studyList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .studyCard {
   display: flex;
   gap: 16px;
@@ -73,7 +86,7 @@
   min-height: 92px;
   padding: 18px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--dw-radius-card);
   background: var(--surface);
   transition:
     border-color 160ms ease,
@@ -143,7 +156,7 @@
 
   .studyCard:hover .openIcon {
     color: var(--text);
-    transform: translate(2px, -2px);
+    transform: translateX(2px);
   }
 }
 

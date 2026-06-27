@@ -1,0 +1,315 @@
+.controlSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--dw-rule);
+}
+
+.searchField {
+  display: flex;
+  gap: 8px;
+  height: var(--dw-field-h);
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid var(--dw-field-border);
+  border-radius: var(--dw-radius-control);
+  color: var(--dw-muted);
+  background: var(--dw-raised);
+}
+
+.searchField:focus-within {
+  border-color: var(--dw-accent);
+  box-shadow: 0 0 0 3px rgba(33, 103, 213, 0.12);
+}
+
+.searchField svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.searchField input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  color: var(--dw-ink);
+  background: transparent;
+  font-size: 0.75rem;
+}
+
+.searchField input::placeholder {
+  color: #737570;
+  opacity: 1;
+}
+
+.searchField kbd {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.filterList {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterList button {
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--dw-radius-control-sm);
+  color: var(--dw-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.filterList button:hover {
+  color: var(--dw-ink);
+  background: #e8e8e5;
+}
+
+.filterList .selectedFilter {
+  border-color: #b7cee9;
+  color: var(--dw-accent-ink);
+  background: var(--dw-accent-soft);
+}
+
+.controlLabel,
+.indexHeader {
+  color: var(--dw-label-ink);
+  font-size: 0.75rem;
+  font-weight: var(--dw-label-weight);
+}
+
+.segmented,
+.iconSegments,
+.viewportControls {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  padding: 3px;
+  border-radius: var(--dw-radius-segment);
+  background: var(--dw-segment-track);
+}
+
+.segmented button,
+.iconSegments button,
+.viewportControls button {
+  display: flex;
+  gap: 7px;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--dw-radius-control-sm);
+  color: var(--dw-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.segmented svg,
+.iconSegments svg,
+.viewportControls svg {
+  width: 15px;
+  height: 15px;
+}
+
+.segmented .selectedSegment,
+.iconSegments .selectedIcon,
+.viewportControls .selectedViewport {
+  color: var(--dw-accent-ink);
+  background: var(--dw-raised);
+  box-shadow: 0 1px 3px rgba(20, 21, 19, 0.1);
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--dw-muted);
+  font-size: 0.75rem;
+}
+
+.iconSegments {
+  width: 150px;
+}
+
+.iconSegments button {
+  min-height: 30px;
+  padding: 0;
+}
+
+.blockIndex {
+  padding: 14px 10px 24px;
+}
+
+.indexHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px 9px;
+}
+
+.indexHeader span:last-child {
+  color: var(--dw-meta-ink);
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+.blockIndex button {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--dw-radius-control-sm);
+  color: #555751;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.blockIndex button:hover {
+  color: var(--dw-ink);
+  background: #e8e8e5;
+}
+
+.blockIndex button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.emptyIndex {
+  margin: 8px;
+  color: var(--dw-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.toolbarLabel {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: #b9bbb4;
+  font-size: 0.75rem;
+}
+
+.localDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dw-ready);
+}
+
+.viewportControls {
+  margin-left: auto;
+  padding: 2px;
+  background: #181916;
+}
+
+.viewportControls button {
+  width: 32px;
+  min-height: 28px;
+  padding: 0;
+  color: #8f918a;
+}
+
+.viewportControls .selectedViewport {
+  color: #8fc8f4;
+  background: #30322d;
+  box-shadow: none;
+}
+
+.toolbarSummary {
+  color: #777a73;
+  font-size: 0.6875rem;
+  text-transform: capitalize;
+}
+
+.previewSurface {
+  width: 100%;
+  min-height: 100%;
+  background: var(--dw-canvas);
+}
+
+.rendererFrame {
+  width: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  background: var(--background);
+  transition: width 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.previewLoading {
+  display: grid;
+  min-height: 320px;
+  place-items: center;
+  color: var(--dw-muted);
+  font-size: 0.75rem;
+}
+
+.tablet {
+  width: min(100%, 768px);
+}
+
+.phone {
+  width: min(100%, 390px);
+}
+
+.rendererFrame :global(.notion-app),
+.rendererFrame :global(.notion-frame),
+.rendererFrame :global(.notion-page-scroller) {
+  min-height: 100%;
+}
+
+.rendererFrame :global(.notion-page-scroller) {
+  overflow: visible;
+}
+
+.phone :global(.notion-page) {
+  padding-right: 14px;
+  padding-left: 14px;
+}
+
+.phone :global(.notion-row) {
+  flex-direction: column;
+}
+
+.phone :global(.notion-row .notion-column) {
+  width: 100% !important;
+}
+
+.phone :global(.notion-row .notion-spacer) {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .toolbarSummary {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rendererFrame {
+    transition: none;
+  }
+}

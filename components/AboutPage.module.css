@@ -334,6 +334,47 @@
   height: 1em;
 }
 
+.playgroundLink {
+  color: #237fbf;
+  background: color-mix(in srgb, #2795e9 11%, var(--about-card));
+}
+
+@media (hover: hover) {
+  .playgroundLink:hover {
+    color: #1378bd;
+    background: color-mix(in srgb, #2795e9 19%, var(--about-card));
+  }
+}
+
+.designLink {
+  opacity: 0;
+  transform: scale(0.86) rotate(-6deg);
+  transition:
+    opacity 180ms ease-out,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.designLink:focus-visible {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+
+@media (hover: hover) {
+  .sectionHeader:hover .designLink {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@media (hover: none) {
+  .designLink {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .work {
   display: flex;
   flex-direction: column;
