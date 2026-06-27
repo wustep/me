@@ -48,9 +48,9 @@ import {
 /* Bumped when hover mechanics changed. Old saved sessions can preserve a
    lift/scale pair that lets the bottom edge move off the cursor, causing
    hover oscillation. Starting fresh adopts the stable defaults and hover
-   guard; v5 adopts the redesigned card shape and tighter hover motion.
+   guard; v6 adopts the polished card material, type, and motion defaults.
    Saved slots use their own keys and are unaffected. */
-const STORAGE_KEY = 'lenses:design-panel:v5'
+const STORAGE_KEY = 'lenses:design-panel:v6'
 const COLLAPSED_KEY = 'lenses:design-panel:collapsed:v1'
 const SLOT_KEY = (n: number) => `lenses:design-panel:slot:${n}:v1`
 

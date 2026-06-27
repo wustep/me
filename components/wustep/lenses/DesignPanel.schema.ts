@@ -342,8 +342,7 @@ export const SECTIONS: Section[] = [
         label: 'Selection style',
         dataAttr: 'selection',
         options: [
-          { value: 'ring', label: 'Accent ring (default)' },
-          { value: 'glow', label: 'Soft glow halo' },
+          { value: 'ring', label: 'Neutral ring (default)' },
           { value: 'underline', label: 'Underline title' },
           { value: 'invert', label: 'Invert card' },
           { value: 'spotlight', label: 'Spotlight (others dim)' }
@@ -388,7 +387,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 60,
         step: 1,
-        default: 10
+        default: 8
       },
       {
         kind: 'slider',
@@ -399,7 +398,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 100,
         step: 1,
-        default: 22
+        default: 16
       },
       {
         kind: 'slider',
@@ -448,16 +447,17 @@ export const SECTIONS: Section[] = [
       {
         kind: 'select',
         id: 'titleWeight',
-        label: 'Title weight',
-        cssVar: '--design-title-weight',
+        label: 'Card title weight',
+        cssVar: '--design-card-title-weight',
         options: [
           { value: '400', label: 'Regular' },
           { value: '500', label: 'Medium' },
           { value: '600', label: 'Semibold' },
+          { value: '650', label: 'Semibold+ (default)' },
           { value: '700', label: 'Bold' },
           { value: '800', label: 'Extrabold' }
         ],
-        default: '600'
+        default: '650'
       },
       {
         kind: 'slider',
@@ -854,8 +854,7 @@ export const SECTIONS: Section[] = [
             value: 'cubic-bezier(0.2, 0.9, 0.2, 1)',
             label: 'Snap (default)'
           },
-          { value: 'cubic-bezier(0.34, 1.56, 0.64, 1)', label: 'Spring snap' },
-          { value: 'cubic-bezier(0.34, 1.4, 0.4, 1)', label: 'Spring soft' },
+          { value: 'cubic-bezier(0.16, 1, 0.3, 1)', label: 'Expo' },
           { value: 'cubic-bezier(0.165, 0.84, 0.44, 1)', label: 'Quart' },
           { value: 'cubic-bezier(0.23, 1, 0.32, 1)', label: 'Quint' },
           { value: 'cubic-bezier(0.4, 0, 0.2, 1)', label: 'Material standard' },

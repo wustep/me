@@ -29,13 +29,22 @@
 .frame {
   --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-spring-soft: cubic-bezier(0.34, 1.4, 0.4, 1);
-  --ease-spring-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   /* Sharp ease-out that lands *cleanly*. Second control point
      at (0.2, 1) means ~80% travel by 50% time, then the last
      20% completes quickly instead of trailing. The curve to use
      for short hover/press transforms. */
   --ease-out-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
+  /* Legacy aliases keep the existing interaction rules readable
+     while removing overshoot from the motion system. */
+  --ease-spring-soft: var(--ease-out-expo);
+  --ease-spring-snap: var(--ease-out-snap);
+  --card-cast-shadow: rgba(
+    32,
+    24,
+    18,
+    calc(0.42 * var(--design-shadow-strength, 0.9))
+  );
 }
 
 /* Shared focus ring: neutral outlines only, with consistent sizing
@@ -47,7 +56,6 @@
 .dialog button:focus-visible {
   outline: 2px solid #1a1a1a;
   outline-offset: 3px;
-  border-radius: 6px;
 }
 
 :global(.dark-mode) .frame button:focus-visible,
@@ -99,6 +107,12 @@
 }
 
 :global(.dark-mode) .frame {
+  --card-cast-shadow: rgba(
+    0,
+    0,
+    0,
+    calc(0.62 * var(--design-shadow-strength, 0.9))
+  );
   background:
     linear-gradient(
       180deg,
@@ -449,17 +463,29 @@
  *     Transform: rest = scale(1); lifted = translateY(-4px) scale(1.03);
  *                press dampens the lift.
  *     Shadow:    cheap inset rest shadow on the card itself; the
- *                heavy ambient cast shadow lives on `::before` and
+ *                compact neutral cast shadow lives on `::before` and
  *                fades in with opacity (GPU-only) when lifted.
- *     Selection: layers a quiet accent ring on top of the lift. No
+ *     Selection: layers a quiet neutral ring on top of the lift. No
  *                outer halo — the lift + ring is enough signal.
  *     Timing:    one duration (160ms) for everything except press
- *                (80ms). Entrance uses a bouncier spring (360ms). */
+ *                (80ms). Entrance uses a smooth exponential rise. */
 
 .card {
   --card-bg: #1f2a5c;
   --card-fg: #f5f1e8;
   --card-accent: #f2c04a;
+  --card-pad-inline: var(
+    --design-card-pad-x,
+    clamp(10px, 0.3px + 0.95cqi, 14px)
+  );
+  --card-pad-block-start: var(
+    --design-card-pad-y,
+    clamp(10px, 2.7px + 0.71cqi, 13px)
+  );
+  --card-pad-block-end: var(
+    --design-card-pad-y,
+    clamp(12px, 9.6px + 0.24cqi, 13px)
+  );
 
   position: relative;
   z-index: 1;
@@ -476,9 +502,8 @@
      the title rests visually centered on its baseline rather than
      hugging the bottom edge. Fluid via clamp so tightening from
      wide to 1019px is smooth. */
-  padding: var(--design-card-pad-y, clamp(10px, 2.7px + 0.71cqi, 13px))
-    var(--design-card-pad-x, clamp(10px, 0.3px + 0.95cqi, 14px))
-    clamp(12px, 9.6px + 0.24cqi, 13px);
+  padding: var(--card-pad-block-start) var(--card-pad-inline)
+    var(--card-pad-block-end);
   background:
     linear-gradient(
       180deg,
@@ -493,14 +518,13 @@
      broad UA/reset styles. */
   border: 0;
   border-radius: var(--design-card-radius, 12px);
-  /* Rest shadow — cheap inset layers only. Cast shadow lives on
-     `::before` so hover/selected can fade it in via opacity
-     (GPU-only) instead of repainting the whole shadow stack. */
+  /* The card face carries only its pressed edge. A single neutral
+     cast shadow lives on `::before`, keeping the colored surfaces
+     matte rather than making each palette emit its own aura. */
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
-    0 1px 1px rgba(0, 0, 0, 0.08);
+    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset;
   /* Hue/saturation/contrast/grayscale tweaks come from the design
      panel only — at defaults this is the identity filter. */
   filter: saturate(var(--design-card-saturation, 1))
@@ -535,34 +559,17 @@
       var(--design-ease, var(--ease-out-snap));
 }
 
-/* Cast-shadow layer. Opacity 0 at rest, 1 when lifted.
-   Light mode wants definition without a colored aura, so the shadow
-   keeps a neutral base and borrows only modest card tint through the
-   middle/deep tiers. Costs nothing — same paint layer that was
-   already here. */
+/* One compact neutral cast shadow. It is already faintly present at
+   rest, then deepens through opacity alone when the card lifts. */
 .card::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  box-shadow:
-    0 2px 3px rgba(44, 32, 18, calc(0.12 * var(--design-shadow-strength, 0.9))),
-    0 calc(var(--design-shadow-y, 10px))
-      calc(var(--design-shadow-blur, 22px)) -10px
-      color-mix(
-        in oklab,
-        var(--card-bg) 10%,
-        rgba(44, 32, 18, calc(0.28 * var(--design-shadow-strength, 0.9)))
-      ),
-    0 calc(var(--design-shadow-y, 10px) * 2)
-      calc(var(--design-shadow-blur, 22px) * 1.7) -22px
-      color-mix(
-        in oklab,
-        var(--card-bg) 8%,
-        rgba(44, 32, 18, calc(0.22 * var(--design-shadow-strength, 0.9)))
-      );
-  opacity: 0;
+  box-shadow: 0 var(--design-shadow-y, 8px) var(--design-shadow-blur, 16px) -8px
+    var(--card-cast-shadow);
+  opacity: 0.28;
   transition: opacity var(--design-hover-out, 180ms)
     var(--design-ease, var(--ease-out-snap));
 }
@@ -634,7 +641,7 @@
 }
 
 .cardSelected::before {
-  opacity: 1;
+  opacity: 0.78;
 }
 
 /* Dark-mode: flip the ring + gap colors to match the dark canvas
@@ -657,13 +664,6 @@
    Defaults stay = `ring`. Each override re-defines the selected
    state's expression while leaving the lift/transform alone so
    keyboard focus + open-panel cues still align spatially. */
-:global(html[data-design-selection='glow']) .cardSelected {
-  box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
-    0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.16) inset,
-    0 0 28px 4px var(--card-accent);
-}
 :global(html[data-design-selection='underline']) .cardSelected {
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
@@ -732,7 +732,7 @@
   }
 
   .cardInteractionReady:hover::before {
-    opacity: 1;
+    opacity: 0.78;
     transition: opacity var(--design-hover-in, 90ms)
       var(--design-ease, var(--ease-out-snap));
   }
@@ -747,13 +747,25 @@
      gets, so it has to register. The inner stroke stays at full
      strength — that's the card's edge, not its lift. */
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, var(--card-knock-inner-stroke)) inset,
+    0 0 0 0.5px
+      rgba(
+        0,
+        0,
+        0,
+        var(--card-knock-inner-stroke, var(--design-inner-stroke, 0.22))
+      )
+      inset,
     0 0.5px 0 rgba(255, 255, 255, 0.06) inset,
-    0 -0.5px 0 rgba(0, 0, 0, 0.06) inset,
-    0 0.5px 0.5px rgba(0, 0, 0, 0.04);
+    0 -0.5px 0 rgba(0, 0, 0, 0.06) inset;
   transition:
     transform 80ms var(--design-ease, var(--ease-out-snap)),
     box-shadow 80ms var(--design-ease, var(--ease-out-snap));
+}
+
+.card:active::before,
+.cardInteractionReady:hover:active::before {
+  opacity: 0.12;
+  transition: opacity 80ms var(--design-ease, var(--ease-out-snap));
 }
 
 .cardHoverGuard {
@@ -787,8 +799,8 @@
      preserving the visual inset via max-width / max-height. */
   width: 100%;
   height: auto;
-  max-width: calc(92% * var(--design-illus-scale, 1));
-  max-height: calc(92% * var(--design-illus-scale, 1));
+  max-width: calc(94% * var(--design-illus-scale, 1));
+  max-height: calc(94% * var(--design-illus-scale, 1));
 }
 
 .cardTitle {
@@ -824,7 +836,7 @@
   );
   --cardtitle-shrink: 1;
   font-size: calc(var(--cardtitle-size) * var(--cardtitle-shrink));
-  font-weight: var(--design-title-weight, 650);
+  font-weight: var(--design-card-title-weight, 650);
   letter-spacing: var(--design-title-tracking, -0.006em);
   text-transform: var(--design-title-transform, none);
   text-align: var(--design-title-align, left);
@@ -859,7 +871,7 @@
   hyphens: none;
   /* Eases the hover/focus fade-out that hands the space to the
      tagline, in both directions (the reveal rules only set opacity). */
-  transition: opacity 180ms var(--ease-out-snap);
+  transition: opacity 140ms var(--ease-out-quart);
 }
 
 /* Inner clamp element — caps the visible line count to 2 so
@@ -925,8 +937,8 @@
   letter-spacing: -0.012em;
 }
 .card[data-title-length='long'] {
-  padding-left: calc(var(--design-card-pad-x, 14px) - 2px);
-  padding-right: calc(var(--design-card-pad-x, 14px) - 2px);
+  padding-left: calc(var(--card-pad-inline) - 2px);
+  padding-right: calc(var(--card-pad-inline) - 2px);
 }
 
 /* ── Design-panel-driven layout flips ──────────────────────────────
@@ -946,7 +958,7 @@
 
 :global(html[data-design-card-align='overlay']) .card .cardTitle {
   position: absolute;
-  inset: auto var(--design-card-pad-x, 14px) var(--design-card-pad-y, 13px);
+  inset: auto var(--card-pad-inline) var(--card-pad-block-end);
   /* Subtle scrim so light titles don't melt into bright cards. */
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
@@ -961,20 +973,19 @@
 .cardHoverTagline {
   display: block;
   position: absolute;
-  inset: auto var(--design-card-pad-x, 14px) var(--design-card-pad-y, 13px);
+  inset: auto var(--card-pad-inline) var(--card-pad-block-end);
   font-family: var(--design-serif, var(--font-serif, Georgia, serif));
   font-style: italic;
   font-size: 0.74rem;
   line-height: 1.32;
   color: var(--card-fg);
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(3px);
   transition:
-    opacity 180ms var(--ease-out-snap),
-    transform 180ms var(--ease-out-snap);
+    opacity 160ms var(--ease-out-quart),
+    transform 180ms var(--ease-out-quint);
   pointer-events: none;
   text-wrap: balance;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Keyboard reveal — un-gated by pointer media so tabbing/arrowing
@@ -983,7 +994,7 @@
    reveal too, so the "current" lens always shows its line. */
 .cardInteractionReady:focus-visible .cardHoverTagline,
 .cardSelected .cardHoverTagline {
-  opacity: 0.95;
+  opacity: 1;
   transform: translateY(0);
 }
 .cardInteractionReady:focus-visible .cardTitle,
@@ -993,7 +1004,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .cardInteractionReady:hover .cardHoverTagline {
-    opacity: 0.95;
+    opacity: 1;
     transform: translateY(0);
   }
   .cardInteractionReady:hover .cardTitle {
@@ -1003,7 +1014,7 @@
 
 /* Dev: pin the tagline permanently visible (no hover) for inspection. */
 :global(html[data-design-card-tagline='on']) .cardHoverTagline {
-  opacity: 0.95;
+  opacity: 1;
   transform: translateY(0);
 }
 :global(html[data-design-card-tagline='on']) .cardTitle {
@@ -1012,8 +1023,8 @@
 
 /* ===== Center "Lenses" card — spans the middle 2×2 of the grid =====
    Lives in `grid-column: 4 / 6; grid-row: 2 / 4;` so it's
-   prominently centered without leaving a hole. Bigger radius and
-   deeper shadow than regular cards mark it as the featured card. */
+   prominently centered without leaving a hole. Scale and content,
+   rather than a different surface treatment, establish hierarchy. */
 
 .centerCard {
   position: relative;
@@ -1041,9 +1052,7 @@
      wide defaults so the focal card doesn't snap at the breakpoint. */
   padding: clamp(18px, 8.3px + 0.95cqi, 22px)
     clamp(20px, 10.3px + 0.95cqi, 24px) clamp(22px, 12.3px + 0.95cqi, 26px);
-  /* Match the lens cards' subtle ambient gradient. Hierarchy
-     against neighboring cards comes from the larger radius and
-     deeper rest cast shadow, not from a stronger highlight. */
+  /* Match the lens cards' subtle ambient gradient. */
   background:
     linear-gradient(
       180deg,
@@ -1058,19 +1067,12 @@
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
   border-radius: var(--design-center-card-radius, 16px);
-  /* Featured-card REST shadow — inset layers + the *resting*
-     cast shadow (kept short, ~14px ambient). The deeper hover
-     cast shadow lives on .centerCard::before with opacity
-     transitions, so hover-in stays paint-free (GPU only).
-     Same architecture as .card except the focal card needs a
-     visible rest cast shadow to read as elevated even when
-     idle, where lens cards can sit flatter. */
+  /* Match the lens cards' material: edge definition on the face,
+     one neutral cast shadow on `::before`. */
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.4) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.12) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.4) inset,
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    0 14px 26px -14px rgba(20, 14, 8, 0.46);
+    0 -1.5px 0 rgba(0, 0, 0, 0.4) inset;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -1083,36 +1085,23 @@
     transform 160ms var(--ease-out-snap);
 }
 
-/* Center card cast-shadow layer. Sits at opacity 0 at rest;
-   .centerCard:hover bumps it to 1. GPU-only opacity transition
-   (no box-shadow paint cost) — same architecture as .card::before. */
+/* The focal card uses the same one-shadow system, slightly stronger
+   at rest to retain hierarchy without a deeper multi-tier shadow. */
 .centerCard::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  /* Hover-state cast shadow — visible only when opacity hits 1. */
-  box-shadow:
-    0 2px 3px rgba(0, 0, 0, 0.18),
-    0 20px 40px -16px rgba(0, 0, 0, 0.5),
-    0 40px 80px -28px rgba(0, 0, 0, 0.6);
-  opacity: 0;
+  box-shadow: 0 calc(var(--design-shadow-y, 8px) + 2px)
+    calc(var(--design-shadow-blur, 16px) + 2px) -9px var(--card-cast-shadow);
+  opacity: 0.36;
   transition: opacity 160ms var(--ease-out-snap);
 }
 
-:global(.dark-mode) .centerCard::before {
-  box-shadow:
-    0 2px 3px rgba(0, 0, 0, 0.45),
-    0 20px 40px -16px rgba(0, 0, 0, 0.65),
-    0 40px 80px -28px rgba(0, 0, 0, 0.75);
-}
-
 :global(.dark-mode) .centerCard {
-  /* Dark-mode center card lifts to a dusty optical-blue so the focal
-     card separates from the dark canvas instead of dissolving into
-     it. A gentle top-down gradient keeps the card in one hue family
-     (no fade-to-black at the title) while still giving it volume. */
+  /* The graphite center stays distinct from the dark canvas without
+     introducing a second colored material into the deck. */
   background:
     linear-gradient(
       180deg,
@@ -1126,16 +1115,14 @@
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.7) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.18) inset,
-    0 1px 2px rgba(0, 0, 0, 0.42),
-    0 14px 26px -14px rgba(0, 0, 0, 0.55);
+    0 -1.5px 0 rgba(0, 0, 0, 0.18) inset;
 }
 
 .centerCardVisible {
   opacity: 1;
   transform: scale(1);
-  /* Bouncy entrance only; afterwards we use the calm ease-out
-     from the base rule. */
+  /* The entrance gets a longer exponential ease; afterwards the
+     base rule owns the shorter interaction timing. */
   transition:
     opacity 700ms var(--ease-out-quint),
     transform 420ms var(--ease-spring-soft);
@@ -1172,7 +1159,7 @@
   }
 
   .centerCard:hover::before {
-    opacity: 1;
+    opacity: 0.82;
     transition: opacity 90ms var(--ease-out-snap);
   }
 }
@@ -1180,6 +1167,11 @@
 .centerCard:active {
   transform: scale(0.98);
   transition: transform 80ms var(--ease-out-snap);
+}
+
+.centerCard:active::before {
+  opacity: 0.14;
+  transition: opacity 80ms var(--ease-out-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -4203,12 +4195,21 @@
      composition where every card had to fit; now that we're
      auto-flowing, cards have more room. */
   .card {
-    padding: 13px 14px 14px;
+    --card-pad-inline: var(--design-card-pad-x, 14px);
+    --card-pad-block-start: var(--design-card-pad-y, 13px);
+    --card-pad-block-end: var(--design-card-pad-y, 14px);
   }
 
   .cardTitle {
-    --cardtitle-size: 0.86rem;
+    --cardtitle-size: 0.875rem;
     min-height: 2.3rem;
+  }
+
+  /* Auto-flow cards have enough width to stop shrinking long labels.
+     This restores a consistent 14px title size on touch layouts. */
+  .card[data-title-length='long-word'] .cardTitle,
+  .card[data-title-length='long'] .cardTitle {
+    --cardtitle-shrink: 1;
   }
 
   .card {
