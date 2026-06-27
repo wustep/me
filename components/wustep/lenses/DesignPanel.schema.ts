@@ -216,7 +216,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 36,
         step: 1,
-        default: 16
+        default: 12
       },
       {
         kind: 'slider',
@@ -227,7 +227,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 40,
         step: 1,
-        default: 22
+        default: 16
       },
       {
         kind: 'slider',
@@ -238,7 +238,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 20,
         step: 1,
-        default: 2
+        default: 4
       },
       {
         kind: 'slider',
@@ -249,7 +249,7 @@ export const SECTIONS: Section[] = [
         min: 1,
         max: 1.15,
         step: 0.005,
-        default: 1.06
+        default: 1.03
       },
       {
         kind: 'slider',
@@ -377,7 +377,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 0.2,
         step: 0.01,
-        default: 0.06
+        default: 0.08
       },
       {
         kind: 'slider',
@@ -388,7 +388,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 60,
         step: 1,
-        default: 14
+        default: 10
       },
       {
         kind: 'slider',
@@ -399,7 +399,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 100,
         step: 1,
-        default: 28
+        default: 22
       },
       {
         kind: 'slider',
@@ -410,7 +410,7 @@ export const SECTIONS: Section[] = [
         min: 0,
         max: 0.4,
         step: 0.005,
-        default: 0.06
+        default: 0.075
       },
       {
         kind: 'slider',
@@ -1030,58 +1030,14 @@ export const SECTIONS: Section[] = [
   {
     id: 'content',
     label: 'Content & copy',
-    hint: 'Card text, eyebrow, body length.',
+    hint: 'Card preview and body length.',
     params: [
-      {
-        kind: 'toggle',
-        id: 'cardEyebrow',
-        label: 'Show category on cards',
-        dataAttr: 'card-eyebrow',
-        default: false
-      },
       {
         kind: 'toggle',
         id: 'cardTagline',
         label: 'Pin tagline (always visible)',
         dataAttr: 'card-tagline',
         default: false
-      },
-      {
-        kind: 'select',
-        id: 'eyebrowCase',
-        label: 'Eyebrow case',
-        cssVar: '--design-eyebrow-case',
-        options: [
-          { value: 'uppercase', label: 'UPPERCASE (default)' },
-          { value: 'lowercase', label: 'lowercase' },
-          { value: 'capitalize', label: 'Title Case' },
-          { value: 'none', label: 'As written' }
-        ],
-        default: 'uppercase'
-      },
-      {
-        kind: 'slider',
-        id: 'eyebrowTracking',
-        label: 'Eyebrow tracking',
-        cssVar: '--design-eyebrow-tracking',
-        cssUnit: 'em',
-        min: 0,
-        max: 0.32,
-        step: 0.005,
-        default: 0.18
-      },
-      {
-        kind: 'select',
-        id: 'eyebrowWeight',
-        label: 'Eyebrow weight',
-        cssVar: '--design-eyebrow-weight',
-        options: [
-          { value: '400', label: 'Regular' },
-          { value: '500', label: 'Medium (default)' },
-          { value: '600', label: 'Semibold' },
-          { value: '700', label: 'Bold' }
-        ],
-        default: '500'
       },
       {
         kind: 'select',

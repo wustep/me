@@ -446,7 +446,7 @@
  *
  *   Interaction model — deliberately simple:
  *     States:    rest → lifted (hover OR selected) → press
- *     Transform: rest = scale(1); lifted = translateY(-2px) scale(1.06);
+ *     Transform: rest = scale(1); lifted = translateY(-4px) scale(1.03);
  *                press dampens the lift.
  *     Shadow:    cheap inset rest shadow on the card itself; the
  *                heavy ambient cast shadow lives on `::before` and
@@ -482,17 +482,17 @@
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, var(--design-highlight, 0.06)) 0%,
+      rgba(255, 255, 255, var(--design-highlight, 0.075)) 0%,
       rgba(255, 255, 255, 0) 32%,
       rgba(0, 0, 0, 0) 68%,
-      rgba(0, 0, 0, var(--design-card-shade, 0.06)) 100%
+      rgba(0, 0, 0, var(--design-card-shade, 0.085)) 100%
     ),
     var(--card-bg);
   color: var(--card-fg);
   /* `border: 0` keeps native button borders from resurfacing under
      broad UA/reset styles. */
   border: 0;
-  border-radius: var(--design-card-radius, 16px);
+  border-radius: var(--design-card-radius, 12px);
   /* Rest shadow — cheap inset layers only. Cast shadow lives on
      `::before` so hover/selected can fade it in via opacity
      (GPU-only) instead of repainting the whole shadow stack. */
@@ -547,20 +547,20 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    0 2px 3px rgba(44, 32, 18, calc(0.1 * var(--design-shadow-strength, 0.9))),
-    0 calc(var(--design-shadow-y, 13px))
-      calc(var(--design-shadow-blur, 32px)) -12px
+    0 2px 3px rgba(44, 32, 18, calc(0.12 * var(--design-shadow-strength, 0.9))),
+    0 calc(var(--design-shadow-y, 10px))
+      calc(var(--design-shadow-blur, 22px)) -10px
       color-mix(
         in oklab,
-        var(--card-bg) 13%,
-        rgba(44, 32, 18, calc(0.26 * var(--design-shadow-strength, 0.9)))
+        var(--card-bg) 10%,
+        rgba(44, 32, 18, calc(0.28 * var(--design-shadow-strength, 0.9)))
       ),
-    0 calc(var(--design-shadow-y, 13px) * 2.25)
-      calc(var(--design-shadow-blur, 32px) * 2.05) -26px
+    0 calc(var(--design-shadow-y, 10px) * 2)
+      calc(var(--design-shadow-blur, 22px) * 1.7) -22px
       color-mix(
         in oklab,
-        var(--card-bg) 12%,
-        rgba(44, 32, 18, calc(0.24 * var(--design-shadow-strength, 0.9)))
+        var(--card-bg) 8%,
+        rgba(44, 32, 18, calc(0.22 * var(--design-shadow-strength, 0.9)))
       );
   opacity: 0;
   transition: opacity var(--design-hover-out, 180ms)
@@ -608,8 +608,8 @@
      must outrank hover, never the other way around). The ring +
      gap below provide the unique selected signal — the lift just
      needs to be at-least the hover amount. */
-  transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
-    scale(var(--design-hover-scale, 1.06));
+  transform: translateY(calc(var(--design-hover-lift, 4px) * -1))
+    scale(var(--design-hover-scale, 1.03));
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, var(--design-inner-stroke, 0.22)) inset,
     0 1.5px 0 rgba(255, 255, 255, 0.18) inset,
@@ -713,8 +713,8 @@
        the top edge, the bottom edge only moves downward as the card
        grows; the translate would need to exceed the full added height
        before a low cursor could fall out of hover. */
-    transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
-      scale(var(--design-hover-scale, 1.06))
+    transform: translateY(calc(var(--design-hover-lift, 4px) * -1))
+      scale(var(--design-hover-scale, 1.03))
       rotate(var(--design-card-tilt, 0deg));
     /* Snap up under the cursor — short enough that the lift
        feels caused by the pointer, not chased by it. */
@@ -726,8 +726,8 @@
   /* Tilt direction alternates per-cell so the deck doesn't lean
      all one way under the cursor. */
   .cardInteractionReady:nth-child(even):hover {
-    transform: translateY(calc(var(--design-hover-lift, 2px) * -1))
-      scale(var(--design-hover-scale, 1.06))
+    transform: translateY(calc(var(--design-hover-lift, 4px) * -1))
+      scale(var(--design-hover-scale, 1.03))
       rotate(calc(var(--design-card-tilt, 0deg) * -1));
   }
 
@@ -760,16 +760,16 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc((var(--design-hover-lift, 2px) + 8px) * -1);
-  height: calc(var(--design-hover-lift, 2px) + 12px);
+  bottom: calc((var(--design-hover-lift, 4px) + 8px) * -1);
+  height: calc(var(--design-hover-lift, 4px) + 12px);
   pointer-events: auto;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .cardInteractionReady:hover:active,
   .cardInteractionReady.cardSelected:hover:active {
-    transform: translateY(calc(var(--design-hover-lift, 2px) * -0.4))
-      scale(calc(var(--design-hover-scale, 1.06) * 0.97));
+    transform: translateY(calc(var(--design-hover-lift, 4px) * -0.4))
+      scale(calc(var(--design-hover-scale, 1.03) * 0.97));
   }
 }
 
@@ -955,32 +955,9 @@
   margin: 0;
 }
 
-/* Optional category eyebrow on each card. The string is sourced
-   from `data-lens-category` set on the card button (see cards.tsx)
-   so we don't need to fork the template per category. */
-.cardEyebrow {
-  display: none;
-  font-family: var(
-    --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
-  );
-  font-size: 0.6rem;
-  font-weight: var(--design-eyebrow-weight, 500);
-  text-transform: var(--design-eyebrow-case, uppercase);
-  letter-spacing: var(--design-eyebrow-tracking, 0.18em);
-  opacity: 0.65;
-  margin-bottom: 4px;
-  text-align: var(--design-title-align, left);
-  color: var(--card-fg);
-}
-:global(html[data-design-card-eyebrow='on']) .cardEyebrow {
-  display: block;
-}
-
-/* Tagline preview. Hidden at rest, fades up on hover and on keyboard
-   focus so the deck is browsable without opening every card. Absolutely
-   positioned + pointer-events:none → revealing it causes no layout
-   shift; the title slides up (transform) to make room. */
+/* Tagline preview. Hidden at rest, then swaps with the title in the fixed
+   bottom slot. The illustration remains fully visible and can keep
+   animating, so previewing copy never mutes the card's main character. */
 .cardHoverTagline {
   display: block;
   position: absolute;
@@ -996,6 +973,7 @@
     opacity 180ms var(--ease-out-snap),
     transform 180ms var(--ease-out-snap);
   pointer-events: none;
+  text-wrap: balance;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -1018,7 +996,6 @@
     opacity: 0.95;
     transform: translateY(0);
   }
-  /* Fade the title out so the tagline takes its place without colliding. */
   .cardInteractionReady:hover .cardTitle {
     opacity: 0;
   }
@@ -1080,10 +1057,7 @@
   border: 0;
   /* Generous radius matches the lens-card scale-up; the focal
      card stays one step rounder than its neighbors. */
-  border-radius: var(
-    --design-center-card-radius,
-    clamp(18px, 8.3px + 0.95cqi, 22px)
-  );
+  border-radius: var(--design-center-card-radius, 16px);
   /* Featured-card REST shadow — inset layers + the *resting*
      cast shadow (kept short, ~14px ambient). The deeper hover
      cast shadow lives on .centerCard::before with opacity
@@ -1240,12 +1214,11 @@
   flex: 0 0 auto;
 }
 
-/* Tagline only renders inside the hero (narrow-width) layout —
-   on the 2×2 card we lean on the bigger illustration to do the
-   work, no need to crowd it with copy. The media query below
-   flips this to `display: block`. */
+/* The deck promise stays visible in every composition. On the large
+   focal card it turns the center from a logo tile into a clear entry
+   point; on narrow layouts it becomes the hero's supporting line. */
 .centerCardTagline {
-  display: none;
+  display: block;
   font-family: var(--font-serif, 'Crimson Pro', serif);
   font-size: 0.94rem;
   font-style: italic;
@@ -1624,7 +1597,11 @@
 }
 
 :global(.dark-mode) .panelBody em {
-  --em-underline-color: color-mix(in srgb, var(--panel-accent) 80%, transparent);
+  --em-underline-color: color-mix(
+    in srgb,
+    var(--panel-accent) 80%,
+    transparent
+  );
 
   color: #f8f4e8;
 }
@@ -4252,7 +4229,7 @@
     height: auto;
     min-height: 132px;
     padding: 22px 28px;
-    border-radius: 22px;
+    border-radius: 16px;
     /* Override the column flex layout — center card hero is a row. */
     flex-direction: row;
     align-items: center;
@@ -4314,7 +4291,7 @@
     min-height: 116px;
     padding: 18px 20px;
     gap: 18px;
-    border-radius: 18px;
+    border-radius: 14px;
   }
 
   .centerCard .cardArt {
@@ -4628,8 +4605,8 @@
    state until the next tap elsewhere. */
 @media (hover: hover) and (pointer: fine) {
   :global(html[data-design-magnetic='on']) .cardInteractionReady:hover {
-    transform: translateY(calc(var(--design-hover-lift, 2px) * -1.3))
-      scale(calc(var(--design-hover-scale, 1.06) * 1.01))
+    transform: translateY(calc(var(--design-hover-lift, 4px) * -1.3))
+      scale(calc(var(--design-hover-scale, 1.03) * 1.01))
       rotate(calc(var(--design-card-tilt, 0deg) * 1.5));
   }
 }

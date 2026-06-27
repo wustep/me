@@ -149,16 +149,9 @@ function LensCardImpl({
       aria-label={`Open lens: ${lens.title}`}
       aria-pressed={selected}
       data-lens-id={lens.id}
-      data-lens-category={lens.category}
       data-lens-selected={selected ? 'true' : undefined}
       data-title-length={titleBucket}
     >
-      {/* Hidden by default; the design panel can flip a data
-          attribute on <html> to reveal it. Keeps the markup
-          uniform between standard/dev modes. */}
-      <span className={styles.cardEyebrow} aria-hidden='true'>
-        {lens.category}
-      </span>
       <span className={styles.cardArt} aria-hidden='true'>
         {previewOverride ? (
           previewOverride.renderIllustration(previewOverride.palette)
@@ -180,8 +173,8 @@ function LensCardImpl({
             the outer's flex layout. */}
         <span className={styles.cardTitleClamp}>{lens.title}</span>
       </span>
-      {/* Tagline preview only renders in design-panel mode. Sits
-          absolute so it doesn't affect layout when hidden. */}
+      {/* The tagline replaces the title at the bottom on hover/focus,
+          leaving the illustration fully visible and animated. */}
       <span className={styles.cardHoverTagline} aria-hidden='true'>
         {lens.tagline}
       </span>
