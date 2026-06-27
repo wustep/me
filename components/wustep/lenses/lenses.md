@@ -125,32 +125,32 @@ quote: From dopamine’s point of view, having things is uninteresting. It’s o
 quote-cite: Daniel Z. Lieberman & Michael E. Long, The Molecule of More
 quote-cite-href: https://amzn.to/4283g1X
 
-A lot of human behavior makes more sense as _internal-state regulation._ People are seeking novelty, reward, relief, control, connection, or a sense of meaning — and the brain’s dopamine system is orchestrating most of it underneath the conscious story.
+A feed keeps offering one more video. The possibility that the next one will be better can hold your attention long after the current one has stopped being enjoyable.
 
-Scrolling, snacking, gambling, falling in love, starting a new project: flavors of one loop, the brain chasing the dopamine it already anticipates.
+A useful oversimplification is that dopamine organizes wanting. It makes novelty, pursuit, and the possibility of reward feel worth acting on. Snacking, gambling, falling in love, starting another project — different objects, a familiar loop.
 
-Shame doesn’t fix it. Shame is itself a state, and a costly one — it hides the loop without changing it. The real move is upstream: change what’s available to reach for, what the room rewards, what the day looks like before the urge arrives.
+By the time you’re fighting an urge, much of the loop is already built. Shame adds another bad state without changing it. Change what’s within reach, what the room rewards, and what the day looks like before the urge arrives.
 
-Reducing all behavior to neurotransmitters erases real meaning, and “your dopamine made you do it” can become a way to dodge responsibility. But once you can see the loop, a lot of baffling behavior — yours especially — stops being baffling.
+The model is narrow. It can help you work with wanting; it can’t tell you what something means to you or absolve you of what you do inside the loop.
 
 # Energy
 
 id: energy
 category: Psychology
-tagline: Low energy is a symptom, not a cause.
+tagline: Tired usually has a cause.
 bg: #526D2B
 fg: #F6EAD8
 accent: #F0D04D
 illustration: energy
 related: headspace, interface, constraint
 
-Motivation isn’t purely moral. It’s biochemical, environmental, social, and narrative. Sleep, food, light, exercise, recent wins, who you saw yesterday — all of it sets the ceiling on today. Done right, work and life don’t compete for the same battery; both sides charge you.
+You can spend a whole day barely leaving the couch and still feel exhausted. Another day, you walk several miles and come home more awake. Energy doesn’t behave like a single battery.
 
-“Why am I being lazy?” and “why am I feeling tired?” usually have concrete answers. Find them, and energy stops being a mood that happens to you; it becomes something you arrange in advance.
+_Tired_ can describe at least three systems: physical fatigue and fuel, sleep and circadian rhythm, and motivation or stimulation. A nap can help sleep pressure and do nothing for boredom. A walk can cost physical energy and restore mental energy. Dinner with friends can wake you up one night and drain you the next.
 
-This changes what counts as serious work. Going to bed on time is serious work. Eating before the meeting is serious work. The walk after lunch isn’t a break from the project; it’s part of how the project gets done. So is finding work that motivates you and shaping it so you can flow. Designing around energy beats negotiating with it.
+When energy is low, ask which system is speaking. Sometimes you need rest. Sometimes you need a warm-up: light, food, one small task, something worth anticipating. Going to bed on time is serious work. So is eating before the meeting and taking the walk after lunch.
 
-The trap is endless self-management — turning every day into a tuning exercise, where the tuning itself is what wears you down. Ignore energy, though, and you end up blaming your character for what was really a missed lunch and a bad night’s sleep.
+The trap is turning every day into a tuning exercise. But without the distinction, you end up napping through boredom, drinking coffee through sleep debt, or calling a missed lunch laziness.
 
 # Epistemic pragmatism
 
@@ -206,11 +206,11 @@ accent: #EDAC55
 illustration: expertise
 related: taste, legibility, osmosis
 
-Every skill is a long curve, and people sit all over it. Obvious for cooking or chess — but it’s also true for the things we don’t usually call skills: patience, listening, taste, charisma, attention, knowing when to stop. The world becomes much more legible the moment you treat these as _practiced abilities_ rather than fixed traits.
+You expect to be bad at chess before you learn chess. We’re less generous about patience, conflict, taste, charisma, attention, or knowing when to stop. Struggling with one of those feels personal in a way losing your first chess game doesn’t.
 
-“I’m not good at conflict” really means _I’m on the early part of that curve._ The annoying coworker has a different skill mix, not a different species. The genuinely impressive person stops being a wonder and becomes a question: _which curve are they far along, and how did they get there?_
+These abilities have learning curves too. _I’m bad at conflict_ may mean _I’m early on that curve._ An impressive person becomes less of a wonder and more of a question: _which curve are they far along, and how did they get there?_
 
-Treating every quality as a skill papers over temperament and circumstance, and some abilities really are gated by talent. But _I’m early on that curve_ opens doors that _I’m not built for this_ keeps shut.
+Not every quality is infinitely malleable. Temperament, talent, and circumstance matter. But _I’m early_ points toward practice, teachers, and feedback. _I’m not built for this_ points nowhere.
 
 # Game theory
 
@@ -245,13 +245,13 @@ reading: Headspace | /headspace
 quote: We cannot solve our problems with the same thinking we used when we created them.
 quote-cite: Attributed to Albert Einstein
 
-Every person operates from an internal world-model — beliefs, emotional state, identity constraints, a sense of what matters — that shapes what they even notice. To understand behavior, enter that headspace first.
+Imagine an infinitely dimensional space whose axes are personality traits, ideas, beliefs, emotions, and skills. You are a blob occupying some region of it. The blob shifts and reshapes as you learn, pay attention, and experience the world.
 
-In a confusing interaction, “why are they doing this?” becomes _what would a person have to believe, feel, and fear_ for this to be the obvious move? Most disagreements aren’t about facts. They’re about which facts feel real, urgent, and self-relevant.
+Experience also gives it edges. We call them personality, comfort zones, or identity: _I’m terrible at public speaking. I’m not creative. I could never get that job._ A description of the past hardens into a boundary on the future.
 
-The skill is provisional empathy — building someone’s headspace well enough to predict their next sentence, without committing to live there. You don’t have to agree with the model. You do have to be able to run it.
+Growth asks for two things: a belief that you could inhabit a new part of the space, and an environment that helps you expand into it. Friends and teachers can pull you beyond a familiar edge. Books let you temporarily inhabit the headspace of someone who has already grown in a direction you want to go.
 
-Done to excess, this becomes empathy without end, where you understand everyone so well you can’t act against anyone. Ignore headspace, though, and you get very efficient at solving the wrong problem.
+Empathy is another kind of reshaping. You loosen your own assumptions until someone else’s conclusion feels natural from inside the headspace that produced it. You don’t have to keep the shape. Each perspective you can inhabit gives your headspace another degree of freedom.
 
 # Identity
 
@@ -336,7 +336,7 @@ Legibility is also how others come to know you. People can only judge, trust, or
 
 Legibility can flatten what matters into what fits in a chart, and metrics get gamed the moment they start to count. The judgment is in choosing what to make legible — and what to leave as quiet execution.
 
-# Mimetics
+# Memetics
 
 id: mimetics
 category: Social
@@ -346,16 +346,14 @@ fg: #F6EAD8
 accent: #F0D04D
 illustration: mimetics
 related: narrative, osmosis, status
-quote: Man is the creature who does not know what to desire, and he turns to others in order to make up his mind.
-quote-cite: René Girard
 
-Ideas, beliefs, formats, and aesthetics compete to spread, the way organisms compete to reproduce. The ones you see most owe their visibility to transmissibility, not truth. Catchy beats correct; sticky beats subtle; shareable beats nuanced, almost every time.
+You hear a phrase once, then three more times that week, then catch yourself using it. Ideas reproduce by becoming easy to remember, repeat, and display.
 
-For any viral take, ask less _is this idea right?_ and more _why is this winning now, and what does it give the people spreading it?_ Movements, fashions, and opinions read clearly this way long before they make sense any other way.
+What you encounter most has survived selection for transmissibility. Catchy beats correct; sticky beats subtle; shareable beats nuanced. Your information diet supplies much of the material that later feels like your own taste.
 
-Your own taste is downstream of this. A surprising amount of what you _believe_ is just what your information diet kept feeding you, lightly adapted. Spot the meme structure under an opinion and you can decide, separately, whether you still want to hold it.
+For any viral take, ask: _why is this winning now, and what does repeating it give the person spreading it?_ The answer may explain its reach before it says anything about whether the idea is right.
 
-How far an idea travels says nothing about whether it’s true: _viral_ marks it as fit, not as right or wrong. Once you see that, the tempting fix is to distrust anything popular on principle — but that’s a trap of its own. Define yourself against the crowd and it still picks your beliefs, just with the sign flipped; the contrarian is as tied to the mainstream as the follower is.
+How far an idea travels marks it as fit, not true or false. Distrusting everything popular doesn’t free you from the crowd either. It lets the crowd choose your beliefs with the sign flipped.
 
 # Minimalism
 
@@ -370,13 +368,13 @@ related: constraint, primitives, interface
 quote: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
 quote-cite: Antoine de Saint-Exupéry
 
-Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Value comes from what remains after you remove the unnecessary. This is a discipline, not a style: ask _what’s the smallest thing that still does the job?_, then make that thing exceptional.
+Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but better. Minimalism is the discipline of finding the smallest thing that still does the job, then making that thing exceptional.
 
-Complexity is a tax. Every feature, possession, obligation, abstraction, and relationship carries a hidden cost — cognitive, maintenance, emotional, financial. You rarely see it at the moment of acquisition; it shows up later, as friction, clutter, and the slow erosion of attention. Subtraction is creative work, usually the harder half of it.
+Every addition arrives alone. Its maintenance bill comes later. A feature adds code to maintain and another place to break. A possession needs space and care. A commitment keeps asking for time after the excitement of saying yes has passed.
 
-The lens applies as much to a life as to a product. What you make, but also what you own, what you commit to, who you say yes to, what you let onto your calendar, what you allow into your head. A clean surface is downstream of a hundred small refusals. The minimalist’s remaining things — projects, possessions, people, beliefs — have all earned their place. Default accumulation runs the other direction automatically; staying lean takes intent.
+The same discipline applies to a calendar, a room, a product, or a set of beliefs. Decide what has earned its place. A clean surface sits downstream of a hundred small refusals; accumulation needs no help.
 
-Some problems are irreducibly complex, and over-pruned systems are brittle. Aestheticized minimalism can harden into performance — empty rooms, empty calendars, empty work, where the subtraction becomes the point instead of the means. But as a counterweight to default accumulation, the lens is nearly always corrective: less, but better, applied to almost anything.
+Some complexity is irreducible, and over-pruned systems become brittle. Judge the result by how well the remainder works; sparseness alone proves nothing.
 
 # Narrative
 
@@ -391,13 +389,13 @@ related: mimetics, headspace, status
 quote: The most powerful person in the world is the storyteller.
 quote-cite: Steve Jobs
 
-Humans don’t just optimize; they story-tell. A good frame can change what people perceive as possible, admirable, embarrassing, or inevitable — without changing a single underlying fact. The story does the work the data never could.
+Two people can quit the same job. One tells the story as a brave leap; the other, as a reckless mistake. The facts match, but the frame changes which next step feels available.
 
-In movements, companies, and personal change, the narrative is the leading indicator, not the trailing one. The same career pivot is a “brave leap” or a “reckless mistake” depending entirely on the surrounding tale. Framing shifts before behavior does, every time.
+Narratives turn facts into direction. They shape what feels possible, admirable, embarrassing, or inevitable. In a person, a company, or a movement, the story often shifts before the behavior does.
 
 The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the narrative and behavior follows.
 
-Stories can outrun reality, and good narratives have buried bad decisions for as long as there have been stories to tell. But operating without one is its own kind of story — usually a thinner one, and rarely the one you’d have chosen.
+A strong story can carry a bad decision farther than the facts ever could. A useful narrative gives you direction while remaining answerable to reality. When the facts change, the story should change with them.
 
 # Osmosis
 
@@ -432,13 +430,11 @@ illustration: primitives
 related: minimalism, systems, legibility
 reading: The Pragmatic Programmer — Andrew Hunt & David Thomas | https://amzn.to/4odvous
 
-Composable units live beneath complex systems. Many things that look different are the same underlying thing wearing different clothes. Identify and solve the primitive problem and you solve the more complex problems for free.
+When several problems keep arriving together, they may be one problem wearing different clothes. Missed deadlines, avoided conversations, and silence after a plan slips can all grow from the same fear of disappointing people. Fixing each incident leaves the generator intact.
 
-Ten features collapse into three building blocks. Five competing tools collapse into one missing abstraction. A tangle of edge cases collapses into the single rule generating them. The work is noticing: _what is actually moving here, under all the surface variety?_
+A primitive is a smaller thing that produces several larger patterns. In a product, one permission model can replace five narrow features. In a person, one belief can keep recreating conflicts that look unrelated. Ask: _what smaller thing keeps generating this?_
 
-Good design looks different once you see this. The impressive system has fewer knobs than expected, and the knobs it keeps all derive from a smaller, cleaner core. Software, writing, organizations: most things get simpler and better once someone finds the primitive the surface was hiding.
-
-Chasing primitives can become procrastination dressed as architecture, and some domains really are messy all the way down — they refuse to factor cleanly no matter how hard you look. Most elegant systems, though, are one good primitive away from being simpler than they are.
+Don’t force every mess into one elegant root cause. Test the candidate: change it and see whether several things above it change too. Otherwise, it’s a satisfying explanation rather than the thing underneath.
 
 # Probabilistic thinking
 
@@ -535,13 +531,13 @@ related: mimetics, evo-psych, narrative
 quote: The desire of the esteem of others is as real a want of nature as hunger.
 quote-cite: John Adams, Discourses on Davila
 
-Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. A surprising amount of human behavior is about status: where you sit in the pecking order of the groups you care about, and how that position moves over time. Money and power matter mostly as proxies for it. The local part is the trick — people will burn months of comfort for a half-step inside a group of forty.
+Status is local. Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. The practical stakes can be small while the position they imply feels enormous.
 
-It’s why people pick the cars they pick, why office layouts matter, why a small slight outrages and a large compliment soothes. Whole industries — luxury, fashion, academia, much of social media — exist mostly to allocate position.
+People trade money, comfort, and time for a half-step inside a group of forty. This is why a minor slight can hurt more than a larger material loss: it says something about where you stand among people whose opinion matters to you.
 
-It explains the quiet ones, too. People who seem indifferent to money or career usually have a status game running somewhere else: a scene, a craft, a friend group, a way of dressing that signals to exactly the right thirty people. Everyone’s playing. The only question is which board.
+Opting out of one status game often means joining another. Someone indifferent to money or career may care deeply about standing in a craft, a scene, or a friend group that matters to exactly thirty people.
 
-Not that status is everything. Love, curiosity, craft, and play are real and irreducible, and reducing them to position-jockeying is its own kind of poverty. But ignore status and half of what people do stays baffling.
+Love, curiosity, craft, and play aren’t disguised bids for rank. But when a reaction seems wildly disproportionate to the visible stakes, ask which group’s esteem is at stake.
 
 # Systems
 
@@ -598,10 +594,10 @@ reading: The Elephant in the Brain — Kevin Simler & Robin Hanson | https://amz
 quote: Man is not a rational animal; he is a rationalizing animal.
 quote-cite: Robert Heinlein
 
-Every person behaves _exactly_ according to a personal utility function that they’re maximizing in every choice. Not approximately, not most of the time — exactly. The model assumes the function fully describes them, and the interesting question is what the function actually contains.
+When a choice looks irrational, assume for a minute that the person is optimizing something you haven’t priced. The interesting question becomes: _what belongs in their utility function?_
 
-Utility can contain far more than the utilitarian’s ledger of pain and pleasure. People also pay for identity, status, belonging, coherence, dignity, the feeling of being right, the feeling of having chosen. Costs that look irrational on a spreadsheet — staying in a bad job, picking the absurdly expensive gym, refusing the cheap win — make sense the moment you allow the utility function to weigh those terms.
+The function can contain pleasure and pain, but also identity, status, belonging, dignity, coherence, the feeling of being right, or the feeling of having chosen. Staying in a bad job or refusing an easy compromise may make sense once you include the terms the person is using.
 
-“They’re being irrational” almost always means _their utility function has terms mine doesn’t_. The middle manager is pricing risk to her standing, not failing to think clearly. The friend who’d rather be right than let it go has identity in the function, and the function is doing its job. Pin down even a rough sketch of someone’s dominant weights — yours included — and strange behavior turns ordinary.
+Calling someone irrational ends the inquiry. Reconstructing the function gives you a hypothesis. The middle manager may value safety more than speed. The friend who won’t let an argument go may be protecting an identity, not the point being argued.
 
-Humans aren’t fully coherent maximizers, and shoehorning every motive into a single scalar loses things that deserve their own dimension. Utility functions also drift over time and under stress, and assuming stability when it doesn’t hold is a common error. But as a first pass at predicting behavior, the model is accurate more often than it deserves to be.
+This model is easy to cheat: after any choice, invent another term that explains it. A useful utility function should help predict the next choice, not only explain the last one.
