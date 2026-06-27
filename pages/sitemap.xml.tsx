@@ -43,6 +43,11 @@ const createSitemap = (siteMap: SiteMap) =>
     </url>
 
     ${Object.keys(siteMap.canonicalPageMap)
+      .filter(
+        (canonicalPagePath) =>
+          canonicalPagePath !== 'design' &&
+          !canonicalPagePath.startsWith('design/')
+      )
       .map((canonicalPagePath) =>
         `
           <url>

@@ -82,6 +82,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}</style>
       <div
+        data-font-root
         className={`${inter.variable} ${crimsonPro.variable} ${geist.variable}`}
       >
         <Component {...pageProps} />

@@ -19,7 +19,7 @@ export const inter = Inter({
 
 export const geist = Geist({
   subsets: ['latin'],
-  weight: ['500', '700'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-geist',
   display: 'swap',
   preload: false,
