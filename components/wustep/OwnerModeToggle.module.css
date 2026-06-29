@@ -12,12 +12,9 @@
   pointer-events: none;
   cursor: pointer;
   appearance: none;
-  transform: scale(0.92);
-  transition:
-    color 150ms ease,
-    opacity 150ms ease,
-    transform 150ms ease,
-    visibility 0s linear 150ms;
+  /* Show/hide is instant (no opacity/visibility transition) to match the
+   * sibling theme toggle, which only animates color. Only color eases. */
+  transition: color 150ms ease;
 }
 
 .ownerModeToggle svg {
@@ -58,8 +55,6 @@
   pointer-events: auto;
   outline: 2px solid currentColor;
   outline-offset: 2px;
-  transform: scale(1);
-  transition-delay: 0s;
 }
 
 .ownerModeToggle:disabled {
@@ -73,8 +68,6 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: scale(1);
-    transition-delay: 0s;
   }
 
   .ownerModeToggle:hover svg {

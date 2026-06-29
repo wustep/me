@@ -155,7 +155,7 @@ function LayoutContent({
       className='transition-[padding] duration-200 bg-background'
       style={insetStyle as React.CSSProperties}
     >
-      <header className='flex h-[55px] shrink-0 items-center gap-2 border-b px-4 pr-3 bg-background'>
+      <header className='owner-mode-toggle-reveal-group flex h-[55px] shrink-0 items-center gap-2 border-b px-4 pr-3 bg-background'>
         <SidebarTrigger className='-ml-1' />
         <Separator
           orientation='vertical'
@@ -188,7 +188,7 @@ function LayoutContent({
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <div className='owner-mode-toggle-reveal-group relative ml-auto flex items-center gap-2'>
+        <div className='relative ml-auto flex items-center gap-2'>
           <Link
             href='/'
             className='playground-home-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
