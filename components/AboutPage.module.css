@@ -154,7 +154,7 @@
   position: absolute;
   top: 0;
   left: -44px;
-  border: 1px solid var(--about-border);
+  border: 0;
   color: var(--about-muted);
   background: transparent;
 }

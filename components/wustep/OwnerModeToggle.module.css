@@ -63,8 +63,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :global(.owner-mode-toggle-reveal-group:hover) .ownerModeToggle,
-  :global(.owner-mode-toggle-reveal-group:focus-within) .ownerModeToggle {
+  /* Reveal only on hover (not group focus-within) so clicking the toggle and
+   * then moving the mouse away hides it, matching the theme toggle. Keyboard
+   * users still get it via the :focus-visible rule above. */
+  :global(.owner-mode-toggle-reveal-group:hover) .ownerModeToggle {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
