@@ -9,6 +9,7 @@ import styles from './AboutPage.module.css'
 import { DesignButton } from './wustep/DesignButton'
 import { LabsButton } from './wustep/LabsButton'
 import { Illustration } from './wustep/lenses/illustrations'
+import { OwnerModeToggle } from './wustep/OwnerModeToggle'
 import { ThemeToggle } from './wustep/ThemeToggle'
 
 export const bioText = `I'm Stephen, a product engineer building software in San Francisco, CA. I like to write about software engineering, design, philosophy, and life.`
@@ -154,7 +155,7 @@ export function AboutPage() {
       <div className={styles.glow} aria-hidden='true' />
 
       <div className={styles.container}>
-        <header className={styles.header}>
+        <header className={`${styles.header} owner-mode-toggle-reveal-group`}>
           <div className={styles.headerLeft}>
             <div className={styles.nameRow}>
               <Link href='/' className={styles.wordmark}>
@@ -169,6 +170,9 @@ export function AboutPage() {
               isDark={isDark}
               onToggle={() => setIsDark(!isDark)}
               className={styles.themeToggle}
+            />
+            <OwnerModeToggle
+              className={`${styles.navIcon} ${styles.ownerModeToggle}`}
             />
             {x && (
               <a

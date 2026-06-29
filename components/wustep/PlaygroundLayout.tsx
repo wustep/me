@@ -19,6 +19,7 @@ import {
   SidebarTrigger,
   useSidebar
 } from '@/components/ui/sidebar'
+import { OwnerModeToggle } from '@/components/wustep/OwnerModeToggle'
 import { PlaygroundSidebar } from '@/components/wustep/PlaygroundSidebar'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { useDarkMode } from '@/lib/use-dark-mode'
@@ -187,7 +188,7 @@ function LayoutContent({
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <div className='ml-auto flex items-center gap-2'>
+        <div className='owner-mode-toggle-reveal-group relative ml-auto flex items-center gap-2'>
           <Link
             href='/'
             className='playground-home-button playground-action-button inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors'
@@ -195,6 +196,7 @@ function LayoutContent({
           >
             <HouseFillIcon className='playground-home-icon h-4 w-4' />
           </Link>
+          <OwnerModeToggle className='playground-owner-mode-toggle playground-action-button h-8 w-8 rounded-md text-base' />
           <ThemeToggle
             isDark={hasMounted ? isDarkMode : false}
             onToggle={toggleDarkMode}

@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   SidebarRail
 } from '@/components/ui/sidebar'
+import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
 import { playgroundSections } from '@/playground/registry'
 
 const defaultDescription = "Welcome to Stephen's code playground."
@@ -32,8 +33,19 @@ export function PlaygroundSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
+  const { isOwner } = useOwnerMode()
+  const visibleSections = React.useMemo(
+    () =>
+      playgroundSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((item) => !item.ownerOnly || isOwner)
+        }))
+        .filter((section) => section.items.length > 0),
+    [isOwner]
+  )
   const activeItem =
-    playgroundSections
+    visibleSections
       .flatMap((section) => section.items)
       .find((item) => {
         return item.url === router.pathname
@@ -109,11 +121,20 @@ export function PlaygroundSidebar({
             >
               by wustep
             </Link>
+            {isOwner ? (
+              <Link
+                href='/owner'
+                className='rounded-full bg-lime-300/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-lime-700 transition-colors hover:bg-lime-300/25 dark:text-lime-300'
+                aria-label='Owner mode settings'
+              >
+                Owner
+              </Link>
+            ) : null}
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {playgroundSections.map((section) => (
+        {visibleSections.map((section) => (
           <SidebarGroup key={section.title}>
             <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
             <SidebarGroupContent>

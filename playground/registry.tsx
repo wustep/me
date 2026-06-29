@@ -17,6 +17,8 @@ export type PlaygroundEntry = {
   date?: string
   year?: string
   disabled?: boolean
+  /** Hidden from Playground navigation unless owner mode is active. */
+  ownerOnly?: boolean
   article?: string
   source?: string
   gradient?: string
@@ -33,6 +35,17 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Experiments',
     items: [
+      {
+        title: 'StageBench',
+        url: 'https://stagebench.vercel.app/',
+        description:
+          'A benchmark for evaluating models by having them generate a replica of the Nord Stage 4.',
+        summary: 'Evaluating models through Nord Stage 4 replicas',
+        date: 'Jun 2026',
+        year: '2026',
+        ownerOnly: true,
+        gradient: 'from-red-600 via-red-950 to-zinc-950'
+      },
       {
         title: 'Lenses',
         url: '/playground/lenses',

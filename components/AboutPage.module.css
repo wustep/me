@@ -145,8 +145,17 @@
 }
 
 .nav {
+  position: relative;
   display: flex;
   gap: 4px;
+}
+
+.navIcon.ownerModeToggle {
+  position: absolute;
+  top: 0;
+  left: -44px;
+  border: 1px solid var(--about-border);
+  background: transparent;
 }
 
 .navIcon {

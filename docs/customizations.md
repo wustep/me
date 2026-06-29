@@ -53,8 +53,14 @@ A standalone section at `/playground` for interactive experiments — demos that
 - Each entry has its own page under [`pages/playground/<slug>.tsx`](../pages/playground/).
 - Custom cover components: [`components/wustep/BookshelfCover.tsx`](../components/wustep/BookshelfCover.tsx), [`components/wustep/DominoCover.tsx`](../components/wustep/DominoCover.tsx).
 - Layout + nav: [`components/wustep/PlaygroundLayout.tsx`](../components/wustep/PlaygroundLayout.tsx), [`components/wustep/PlaygroundSidebar.tsx`](../components/wustep/PlaygroundSidebar.tsx).
+- Entries with `ownerOnly: true` are shown only while owner mode is active.
 
 Playground pages are outside the Notion routing pipeline — they're ordinary Next.js pages. `getSiteMap` does not cover them; they ship via the default Next.js file-based routing.
+
+`ownerOnly` controls discovery in the Playground index and sidebar; it is not an
+authorization boundary. Protect sensitive APIs with `isOwnerRequest` from
+`lib/owner-mode-server.ts`, and add an equivalent server-side check to any page
+whose direct URL must be private.
 
 ## Custom homepage
 

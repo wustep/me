@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import * as React from 'react'
 
+import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { playgroundEntries } from '@/playground/registry'
 
@@ -11,11 +13,20 @@ const parseDate = (dateStr?: string): Date => {
   return new Date(Number.parseInt(year), monthIndex)
 }
 
-const projects = playgroundEntries
-  .filter((project) => !project.disabled)
-  .toSorted((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime())
-
 export default function PlaygroundPage() {
+  const { isOwner } = useOwnerMode()
+  const projects = React.useMemo(
+    () =>
+      playgroundEntries
+        .filter(
+          (project) => !project.disabled && (!project.ownerOnly || isOwner)
+        )
+        .toSorted(
+          (a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()
+        ),
+    [isOwner]
+  )
+
   return (
     <PlaygroundLayout title='Playground'>
       <p className='text-muted-foreground mb-8'>

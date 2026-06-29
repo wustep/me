@@ -254,6 +254,12 @@ h6 {
     color 180ms ease;
 }
 
+.playground-owner-mode-toggle {
+  position: absolute !important;
+  top: 0;
+  left: -2.5rem;
+}
+
 @media (hover: hover) {
   .playground-action-button:hover {
     background-color: var(--fg-color-0);
