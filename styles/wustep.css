@@ -254,10 +254,12 @@ h6 {
     color 180ms ease;
 }
 
+/* Sits flush against the action-button group (its width === the 2rem offset) so
+ * there is no dead gap between the hover-reveal trigger and the revealed button. */
 .playground-owner-mode-toggle {
   position: absolute !important;
   top: 0;
-  left: -2.5rem;
+  left: -2rem;
 }
 
 @media (hover: hover) {

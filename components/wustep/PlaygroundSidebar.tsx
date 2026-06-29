@@ -121,15 +121,6 @@ export function PlaygroundSidebar({
             >
               by wustep
             </Link>
-            {isOwner ? (
-              <Link
-                href='/owner'
-                className='rounded-full bg-lime-300/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-lime-700 transition-colors hover:bg-lime-300/25 dark:text-lime-300'
-                aria-label='Owner mode settings'
-              >
-                Owner
-              </Link>
-            ) : null}
           </div>
         </div>
       </SidebarHeader>
