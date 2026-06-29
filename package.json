@@ -13,9 +13,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "pnpm notion:index",
     "build": "next build",
     "start": "next start",
     "deploy": "vercel deploy",
+    "notion:index": "node scripts/sync-notion-index.mjs",
     "lenses:sync": "node scripts/sync-lenses.mjs",
     "deps:upgrade": "[ -z $GITHUB_ACTIONS ] && pnpm up -L notion-client notion-types notion-utils react-notion-x || echo 'Skipping deps:update on CI'",
     "deps:link": "[ -z $GITHUB_ACTIONS ] && run-s deps:link:* || echo 'Skipping deps:update on CI'",

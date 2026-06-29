@@ -11,7 +11,8 @@ Local setup, commands, and conventions.
 
 ```bash
 pnpm dev                  # next dev (http://localhost:3000)
-pnpm build                # next build — crawls the site map via buildNotion
+pnpm notion:index         # refresh the generated slug index and static sitemap
+pnpm build                # refresh the index, then run next build
 pnpm start                # next start (serve the production build)
 pnpm deploy               # vercel deploy
 pnpm test                 # lint + prettier in parallel
@@ -66,7 +67,7 @@ npx simple-git-hooks
 - **Page not resolving?** Check `site.config.ts` → `pageUrlOverrides`, then whether the page is `Public` in Notion (public pages only; see `getSiteMap` filter).
 - **Stale images?** The `.amazonaws.com` strip in `getPage` should prevent this. If you see expired signed URLs, check that `lib/notion.ts` ran (vs. a direct `notion.getPage` call).
 - **429s in dev?** The runtime client only retries once. If you're hammering a lot of pages (crawling), either restart (to reset the in-memory caches) or temporarily use `buildNotion` which serializes requests.
-- **Build taking forever?** `buildNotion` enforces a 1.1s gap per fetch. For a site with N pages, expect at least `N × 1.1s` for site map construction.
+- **Build taking forever?** The prebuild indexer deliberately serializes Notion fetches with a 1.1s gap. The crawl can take several minutes, but it runs once per build and never during a user request.
 - **`NODE_ENV=development` with UUIDs in URLs:** `includeNotionIdInUrls` defaults to `true` in dev so you can round-trip any Notion URL locally. Toggle via `site.config.ts` if that's annoying.
 
 ## Testing

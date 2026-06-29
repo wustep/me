@@ -9,6 +9,8 @@ Notion workspace
     ↓ (unofficial API via `notion-client`)
 lib/notion-api.ts        ← retry + rate-limit wrappers
     ↓
+lib/generated/notion-index.json ← slug → page ID, generated before build
+    ↓
 lib/notion.ts            ← getPage / search with TTL caches
     ↓
 lib/resolve-notion-page.ts
@@ -22,30 +24,31 @@ Browser (HTML + hydrated React)
 
 ## Directory layout
 
-| Path | Purpose |
-|---|---|
-| `site.config.ts` | User-facing site configuration (page IDs, domain, social links, etc.) |
-| `lib/config.ts` | Normalizes `site.config.ts` + env vars into typed exports |
-| `lib/notion-api.ts` | `notion` (runtime) and `buildNotion` (build-time, rate-limited) clients |
-| `lib/notion.ts` | `getPage` and `search` wrappers with in-memory TTL caches |
-| `lib/resolve-notion-page.ts` | URL → pageId → recordMap pipeline, with Redis URI cache |
-| `lib/get-site-map.ts` | Fans out from root page to build `pageMap` + `canonicalPageMap` |
-| `lib/preview-images.ts` | LQIP placeholder generation for images, stored via Keyv |
-| `lib/acl.ts` | Workspace-scoping check (rejects pages from other Notion workspaces) |
-| `lib/map-page-url.ts` | pageId → URL mapping (honors `pageUrlOverrides`) |
-| `pages/[pageId].tsx` | The catch-all Notion page route |
-| `pages/index.tsx` | Custom homepage (static, no Notion fetch) |
-| `pages/feed.tsx` | RSS feed from the Posts collection |
-| `pages/sitemap.xml.tsx` | Sitemap generated from `getSiteMap()` |
-| `pages/api/search-notion.ts` | Proxy for Notion search (currently disabled via config) |
-| `pages/api/social-image.tsx` | Edge-runtime OG image generator (uses `next/og`) |
-| `components/NotionPage.tsx` | The main page shell wrapping `react-notion-x` |
+| Path                         | Purpose                                                                 |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| `site.config.ts`             | User-facing site configuration (page IDs, domain, social links, etc.)   |
+| `lib/config.ts`              | Normalizes `site.config.ts` + env vars into typed exports               |
+| `lib/notion-api.ts`          | `notion` (runtime) and `buildNotion` (build-time, rate-limited) clients |
+| `lib/notion.ts`              | `getPage` and `search` wrappers with in-memory TTL caches               |
+| `lib/resolve-notion-page.ts` | URL → generated page ID → recordMap pipeline                            |
+| `lib/get-site-map.ts`        | Fans out from root page to build `pageMap` + `canonicalPageMap`         |
+| `notion-index.config.ts`     | Build-time crawl that generates the slug index and static sitemap       |
+| `lib/preview-images.ts`      | LQIP placeholder generation for images, stored via Keyv                 |
+| `lib/acl.ts`                 | Workspace-scoping check (rejects pages from other Notion workspaces)    |
+| `lib/map-page-url.ts`        | pageId → URL mapping (honors `pageUrlOverrides`)                        |
+| `pages/[pageId].tsx`         | The catch-all Notion page route                                         |
+| `pages/index.tsx`            | Custom homepage (static, no Notion fetch)                               |
+| `pages/feed.tsx`             | RSS feed from the Posts collection                                      |
+| `public/sitemap.xml`         | Static sitemap generated before each build                              |
+| `pages/api/search-notion.ts` | Proxy for Notion search (currently disabled via config)                 |
+| `pages/api/social-image.tsx` | Edge-runtime OG image generator (uses `next/og`)                        |
+| `components/NotionPage.tsx`  | The main page shell wrapping `react-notion-x`                           |
 
 ## Rendering modes
 
 - **Homepage (`/`)** — pure static, no Notion data. See [`pages/index.tsx`](../pages/index.tsx).
-- **Notion pages (`/[pageId]`)** — ISR with 24h revalidate. Built paths come from `getSiteMap()`; unknown slugs fall through to `fallback: true`.
-- **Sitemap / feed** — `getServerSideProps` with long CDN `Cache-Control`. They never execute per-request under normal load.
+- **Notion pages (`/[pageId]`)** — ISR with 24h revalidate. Built paths come from the generated Notion index; unknown slugs fall through to `fallback: true`.
+- **Sitemap** — static XML generated before the build. **Feed** — `getServerSideProps` with long CDN `Cache-Control`.
 - **Social image** — edge API route using `next/og`, regenerated on demand and cached by the CDN.
 - **Search** — client calls `/api/search-notion`, which proxies to Notion. Currently disabled (`isSearchEnabled: false`).
 
@@ -60,9 +63,10 @@ This site uses [`notion-client`](https://github.com/NotionX/react-notion-x/tree/
 
 ## Build vs. runtime
 
-Two distinct phases use different Notion clients:
+Three distinct phases handle Notion data:
 
-- **Build time** (`next build`): `getStaticPaths` calls `getSiteMap()`, which walks every page. Uses `buildNotion` — serializes all fetches 1.1s apart and retries 429s up to 5× with exponential backoff.
+- **Prebuild** (`pnpm notion:index`): walks every page once using `buildNotion`, which serializes fetches 1.1s apart and retries 429s up to 5× with exponential backoff. It writes the index consumed by `getStaticPaths` and the static sitemap.
+- **Build time** (`next build`): reads the generated index and renders pages one at a time to avoid a burst of Notion requests.
 - **Runtime** (ISR revalidation, API routes): Uses `notion` — retries once after 1.1s on 429/5xx.
 
 See [`lib/notion-api.ts`](../lib/notion-api.ts).

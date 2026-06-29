@@ -12,6 +12,12 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default withBundleAnalyzer({
   staticPageGenerationTimeout: 300,
+  experimental: {
+    // Notion's public API is rate-limited. Keep each route's static paths in a
+    // single batch and render one at a time after the index crawl completes.
+    staticGenerationMaxConcurrency: 1,
+    staticGenerationMinPagesPerWorker: 100
+  },
   turbopack: {
     root: dirname
   },

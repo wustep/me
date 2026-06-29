@@ -33,10 +33,11 @@ const getAllPages = pMemoize(getAllPagesImpl, {
 const getPage = async (pageId: string, opts?: any) => {
   console.log('\nnotion getPage', uuidToId(pageId))
   return buildNotion.getPage(pageId, {
-    kyOptions: {
+    ...opts,
+    ofetchOptions: {
+      retry: 0,
       timeout: 30_000
-    },
-    ...opts
+    }
   })
 }
 

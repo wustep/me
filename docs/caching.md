@@ -6,27 +6,27 @@ This site pulls content from the Notion API, which rate-limits to ~300 requests 
 
 Notion pages are rendered by [`pages/[pageId].tsx`](../pages/[pageId].tsx) with `getStaticProps` + `revalidate: 86_400`.
 
-- Pages are statically generated at build time (see `getStaticPaths` → `getSiteMap()`).
+- Pages are statically generated at build time from the generated Notion index.
 - After deploy, each page is served from Vercel's edge cache.
 - A page is re-rendered on-demand at most once per 24 hours per region, and only when someone requests it.
 - `fallback: true` means pages not in the sitemap can still be generated on first request.
 - Error responses use `revalidate: 10` so transient failures clear quickly.
 
-**Effect:** normal page traffic almost never hits Notion. Most of the other caches exist to keep the *revalidation path* fast and to protect the build/sitemap path.
+**Effect:** normal page traffic almost never hits Notion. Most of the other caches exist to keep the _revalidation path_ fast and to protect the build/sitemap path.
 
 ## Layer 2 — HTTP cache headers (CDN)
 
 Server-rendered routes set `Cache-Control` so Vercel's edge can absorb traffic without re-invoking the function.
 
-| Route | Header | Notes |
-|---|---|---|
-| [`pages/sitemap.xml.tsx`](../pages/sitemap.xml.tsx) | `public, max-age=28800, s-maxage=28800, stale-while-revalidate=28800` | 8h CDN cache. `s-maxage` is required for Vercel's CDN to cache — without it every crawler hit would rebuild the full sitemap. |
-| [`pages/feed.tsx`](../pages/feed.tsx) | `public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400` | 24h CDN cache for the RSS feed. |
-| [`pages/api/search-notion.ts`](../pages/api/search-notion.ts) | `public, s-maxage=300, max-age=60, stale-while-revalidate=3600` | 5min at CDN, 1h SWR. Tuned so repeated search queries don't hit Notion. |
+| Route                                                         | Header                                                                | Notes                                                                         |
+| ------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`public/sitemap.xml`](../public/sitemap.xml)                 | Static asset                                                          | Generated once before each production build; serving it never invokes Notion. |
+| [`pages/feed.tsx`](../pages/feed.tsx)                         | `public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400` | 24h CDN cache for the RSS feed.                                               |
+| [`pages/api/search-notion.ts`](../pages/api/search-notion.ts) | `public, s-maxage=300, max-age=60, stale-while-revalidate=3600`       | 5min at CDN, 1h SWR. Tuned so repeated search queries don't hit Notion.       |
 
 ## Layer 3 — In-memory caches (per serverless instance)
 
-These live in Node memory inside a single Vercel serverless instance. They are cleared on cold start and do not sync across instances. They primarily help during ISR revalidation, sitemap generation, and warm-instance burst traffic.
+These live in Node memory inside a single Vercel serverless instance. They are cleared on cold start and do not sync across instances. They primarily help during ISR revalidation and warm-instance burst traffic.
 
 ### `getPage` TTL cache — [`lib/notion.ts`](../lib/notion.ts)
 
@@ -42,12 +42,12 @@ These live in Node memory inside a single Vercel serverless instance. They are c
 - Keyed by `JSON.stringify(params)`.
 - Same Promise-sharing behaviour as the page cache.
 
-### `getAllPages` / site map — [`lib/get-site-map.ts`](../lib/get-site-map.ts)
+### Generated page index — [`lib/generated/notion-index.json`](../lib/generated/notion-index.json)
 
-- Wrapped in `pMemoize` (no TTL — lives for the lifetime of the process).
-- Cache key: `JSON.stringify([rootNotionPageId, rootNotionSpaceId, opts])`.
-- Called by `getStaticPaths`, `sitemap.xml`, and fallback URL resolution in `[pageId].tsx`.
-- A cold start rebuilds the entire map, which fans out to a `getPage` call per page — this is the most API-heavy operation in the codebase.
+- `pnpm notion:index` performs one serialized, rate-limited crawl before `next build`.
+- The crawl writes both the slug-to-page-ID index and `public/sitemap.xml`.
+- `getStaticPaths`, runtime slug resolution, and fallback URLs all read the generated index without calling Notion.
+- The generated files are committed so local development can resolve existing slugs without first crawling Notion.
 
 ### Navigation link pages — [`lib/notion.ts`](../lib/notion.ts)
 
@@ -61,14 +61,14 @@ These live in Node memory inside a single Vercel serverless instance. They are c
 - Uses `pMemoize` with `ExpiryMap(10_000)` — 10s TTL keyed on query string.
 - Stops a user's keystroke-by-keystroke typing from sending duplicate requests.
 
-## Layer 4 — Redis (URI → pageId mappings, optional)
+## Layer 4 — Redis (preview image and tweet data, optional)
 
-[`lib/db.ts`](../lib/db.ts) wraps Keyv. Redis is controlled by `isRedisEnabled` in [`site.config.ts`](../site.config.ts). **Currently disabled.** With Redis off, Keyv falls back to an in-memory store — meaning the URI→pageId cache in [`lib/resolve-notion-page.ts`](../lib/resolve-notion-page.ts) is effectively per-instance and dies on cold start.
+[`lib/db.ts`](../lib/db.ts) wraps Keyv. Redis is controlled by `isRedisEnabled` in [`site.config.ts`](../site.config.ts). **Currently disabled.** With Redis off, Keyv falls back to an in-memory store that is cleared on every serverless cold start.
 
 What the Redis cache stores today:
 
-- `uri-to-page-id:<domain>:<env>:<normalized-uri>` → Notion `pageId`. No TTL.
-- Used by `resolveNotionPage` so we can skip the full site map lookup for known canonical paths.
+- LQIP preview image data keyed by normalized image URL.
+- Hydrated tweet data keyed by tweet ID.
 
 To enable Redis, set `isRedisEnabled: true` plus `REDIS_HOST`/`REDIS_PASSWORD` env vars. See [`.env.example`](../.env.example).
 
@@ -86,7 +86,7 @@ To enable Redis, set `isRedisEnabled: true` plus `REDIS_HOST`/`REDIS_PASSWORD` e
 
 - Serializes every fetch through a Promise queue with a **1.1s minimum gap** → stays under 300 req / 300s.
 - Retries `429/5xx` up to **5 times** with exponential backoff (5s → 60s cap).
-- Used by `getAllPages` / `getSiteMap` during build and sitemap generation.
+- Used by the prebuild Notion indexer.
 
 ## Request flow cheat sheet
 
@@ -103,25 +103,24 @@ Zero Notion API calls.
 ```
 User → Vercel CDN (stale) → serverless fn
   → resolveNotionPage
-    → db.get(uri-to-page-id)           [hit or miss]
+    → generated slug index             [local O(1) lookup]
     → getPage(pageId)
       → pageCache.get(pageId)          [hit = 0 API calls]
       → notion.getPage(pageId)         [miss = 1 Notion call + retry policy]
 ```
 
-**A sitemap.xml request (cache miss):**
+**A sitemap.xml request:**
 
 ```
-Crawler → serverless fn
-  → getSiteMap()
-    → pMemoize hit                     [warm instance = 0 calls]
-    → getAllPagesInSpace               [cold = N Notion calls via buildNotion,
-                                         rate-limited to 1.1s each]
+Crawler → static public/sitemap.xml
 ```
+
+Zero function invocations and zero Notion API calls.
 
 ## Where to tune
 
 - **Staleness tolerance too low?** Drop `revalidate` in `[pageId].tsx` or the `PAGE_CACHE_TTL_MS` / `SEARCH_CACHE_TTL_MS` constants in `lib/notion.ts`.
 - **Hitting 429s during builds?** Increase `BUILD_MIN_FETCH_INTERVAL_MS` in `lib/notion-api.ts`.
-- **Want cross-instance persistence?** Enable Redis and extend `db` usage beyond URI mappings (e.g., wrap `getPage` with a Keyv-backed cache).
-- **Crawlers causing load?** Increase `s-maxage` on `sitemap.xml` / `feed.tsx`.
+- **Added, renamed, or removed a Notion page?** Run `pnpm notion:index`, or deploy—the `prebuild` lifecycle refreshes the index automatically.
+- **Want cross-instance persistence?** Enable Redis for preview images and tweets, and optionally wrap `getPage` with a Keyv-backed cache.
+- **Crawlers causing load?** `sitemap.xml` is static; tune the CDN headers on dynamic feeds and API routes instead.

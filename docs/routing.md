@@ -25,20 +25,16 @@ Logic lives in [`lib/resolve-notion-page.ts`](../lib/resolve-notion-page.ts). Fo
    pageUrlOverrides[rawPath]          ← from site.config.ts
    pageUrlAdditions[rawPath]
 
-4. If still no UUID, check the Redis URI cache
-   db.get("uri-to-page-id:<domain>:<env>:<path>")
+4. If still no UUID, check the generated page index
+   canonicalPageMap[rawPath]
 
-5. If still no UUID, fall back to the site map
-   getSiteMap().canonicalPageMap[rawPath]
-   — on hit, write result back to Redis for step 4 next time
-
-6. If resolved, fetch
+5. If resolved, fetch
    getPage(pageId) → ExtendedRecordMap
 
-7. Run ACL check (lib/acl.ts) to reject pages from other workspaces
+6. Run ACL check (lib/acl.ts) to reject pages from other workspaces
 ```
 
-If nothing resolves, return a 404. 404 lookups are intentionally **not** cached so newly-added pages appear without waiting for a TTL.
+If nothing resolves, return a 404. Newly-added or renamed pages appear after `pnpm notion:index` runs, which also happens automatically before a production build.
 
 ## `pageUrlOverrides` vs. `pageUrlAdditions`
 
@@ -60,7 +56,7 @@ pageUrlOverrides: {
 
 ## Canonical slug generation
 
-For pages *not* in `pageUrlOverrides`, the URL is built from the Notion page title by [`lib/get-canonical-page-id.ts`](../lib/get-canonical-page-id.ts) → `notion-utils`' `getCanonicalPageId`. In production this produces slugs like `my-post-title` (no UUID). In dev, `includeNotionIdInUrls` appends the UUID for easier debugging.
+For pages _not_ in `pageUrlOverrides`, the URL is built from the Notion page title by [`lib/get-canonical-page-id.ts`](../lib/get-canonical-page-id.ts) → `notion-utils`' `getCanonicalPageId`. In production this produces slugs like `my-post-title` (no UUID). In dev, `includeNotionIdInUrls` appends the UUID for easier debugging.
 
 The outbound URL mapper lives in [`lib/map-page-url.ts`](../lib/map-page-url.ts) and is handed to `react-notion-x` via `NotionPage` so internal links render correctly.
 
@@ -69,27 +65,26 @@ The outbound URL mapper lives in [`lib/map-page-url.ts`](../lib/map-page-url.ts)
 `getStaticPaths` in [`pages/[pageId].tsx`](../pages/[pageId].tsx) builds the full set of paths to pre-render:
 
 ```ts
-const siteMap = await getSiteMap()
 const allPageIds = [
   ...new Set([
-    ...Object.keys(siteMap.canonicalPageMap),  // every public page
-    ...Object.keys(pageUrlOverrides)           // + manual overrides
+    ...Object.keys(canonicalPageMap), // every public page
+    ...Object.keys(pageUrlOverrides) // + manual overrides
   ])
 ]
 ```
 
 - `fallback: true` — paths outside this set still work; they're rendered on first request and cached from then on.
-- In dev, `paths: []` with `fallback: true` skips the upfront crawl.
+- In dev, `paths: []` with `fallback: true` skips pre-rendering; slug resolution still uses the committed generated index.
 
 ## Site map construction
 
-[`lib/get-site-map.ts`](../lib/get-site-map.ts) calls `notion-utils`' `getAllPagesInSpace`, which walks from `rootNotionPageId` outward, following links and collections up to `maxDepth: 1`. For each discovered page:
+Before a build, [`notion-index.config.ts`](../notion-index.config.ts) calls [`lib/get-site-map.ts`](../lib/get-site-map.ts), which walks from `rootNotionPageId` outward, following links and collections up to `maxDepth: 1`. For each discovered page:
 
 - Skip if the page's `Public` property is `false`.
 - Compute a canonical ID and insert into `canonicalPageMap`.
 - Warn (and skip the duplicate) if two pages collide on canonical ID.
 
-This is the most API-heavy operation in the codebase — one `getPage` per discovered page, all serialized through the build-time rate limiter.
+This is the most API-heavy operation in the codebase—one `getPage` per discovered page, all serialized through the build-time rate limiter. Its output is written to [`lib/generated/notion-index.json`](../lib/generated/notion-index.json), and the same pass writes `public/sitemap.xml`.
 
 ## Workspace scoping
 

@@ -1,12 +1,16 @@
-import { type GetStaticProps } from 'next'
+import { type GetStaticProps, type PageConfig } from 'next'
 import { parsePageId } from 'notion-utils'
 
 import { NotionPage } from '@/components/NotionPage'
 import { domain, isDev, pageUrlAdditions, pageUrlOverrides } from '@/lib/config'
-import { getSiteMap } from '@/lib/get-site-map'
 import { normalizePageIdPath } from '@/lib/normalize-page-id-path'
+import { canonicalPageMap } from '@/lib/notion-index'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import { type PageProps, type Params } from '@/lib/types'
+
+export const config: PageConfig = {
+  maxDuration: 60
+}
 
 async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
   const normalizedRawPageId = normalizePageIdPath(rawPageId)
@@ -18,14 +22,8 @@ async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
     parsePageId(normalizedRawPageId, { uuid: false })
 
   if (!notionPageId) {
-    try {
-      const siteMap = await getSiteMap()
-      notionPageId =
-        siteMap.canonicalPageMap[rawPageId] ||
-        siteMap.canonicalPageMap[normalizedRawPageId]
-    } catch (err) {
-      console.warn('error resolving notion fallback URL', rawPageId, err)
-    }
+    notionPageId =
+      canonicalPageMap[rawPageId] || canonicalPageMap[normalizedRawPageId]
   }
 
   if (!notionPageId) return null
@@ -47,6 +45,13 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
     return { props, revalidate: 86_400 }
   } catch (err: unknown) {
     console.error('page error', domain, requestedPageId, err)
+
+    if (
+      context.revalidateReason === 'stale' ||
+      context.revalidateReason === 'on-demand'
+    ) {
+      throw err
+    }
 
     const fallbackUrl = await getNotionFallbackUrl(normalizedPageId)
 
@@ -71,13 +76,11 @@ export async function getStaticPaths() {
     }
   }
 
-  const siteMap = await getSiteMap()
-
   // Combine sitemap paths with URL overrides (e.g., /articles, /notes)
   // URL overrides might not be in the sitemap if not directly linked from root
   const allPageIds = [
     ...new Set([
-      ...Object.keys(siteMap.canonicalPageMap),
+      ...Object.keys(canonicalPageMap),
       ...Object.keys(pageUrlOverrides)
     ])
   ]
