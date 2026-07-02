@@ -37,15 +37,15 @@ illustration: agency
 related: self-fulfilling, narrative, constraint
 reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.com/p/how-to-be-more-agentic
 quote: Between stimulus and response there is a space. In that space is our power to choose our response.
-quote-cite: Viktor Frankl
+quote-cite: Attributed to Viktor Frankl
 
 Agency is seeing a future you want, noticing the moves actually available, and taking one — despite friction or constraint. The habit is treating yourself and your situation as things you can reshape, not facts you’re stuck with.
 
 It starts with realizing you have more choices than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
 
-The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.
-
 Some constraints are real, and some rules have reasons you don’t understand yet. Agency without humility wastes effort or harms people. Distinguish what you can change from what you need to work around.
+
+The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.
 
 # Attention
 
@@ -80,7 +80,7 @@ illustration: communication
 related: headspace, narrative, interface
 reading: Communication: A Simple Multi-Stage Model — LessWrong | https://www.lesswrong.com/posts/2GHxvfoRvNGZw4iFg/communication-a-simple-multi-stage-model
 quote: The single biggest problem in communication is the illusion that it has taken place.
-quote-cite: George Bernard Shaw
+quote-cite: Attributed to George Bernard Shaw
 
 A surprising number of problems between two people are translation failures. Different vocabularies, unsaid assumptions, and stakes can turn a small misunderstanding into conflict or an outcome neither person wanted. “They’re wrong” and “they don’t care” often mean _we are not in the same conversation_.
 
@@ -129,9 +129,9 @@ A feed keeps offering one more video. The possibility that the next one will be 
 
 A useful oversimplification is that dopamine organizes wanting. It makes novelty, pursuit, and the possibility of reward feel worth acting on. Snacking, gambling, falling in love, starting another project — different objects, a familiar loop.
 
-By the time you’re fighting an urge, much of the loop is already built. Shame adds another bad state without changing it. Change what’s within reach, what your environment rewards, and what the day looks like before the urge arrives.
-
 The model is narrow. It can help you work with wanting; it can’t tell you what something means to you or absolve you of what you do inside the loop.
+
+By the time you’re fighting an urge, much of the loop is already built. Shame adds another bad state without changing it. Change what’s within reach, what your environment rewards, and what the day looks like before the urge arrives.
 
 # Energy
 
@@ -288,11 +288,11 @@ quote-cite-href: https://amzn.to/4fqMKBY
 
 After New York and Pennsylvania began publishing cardiac-surgery report cards, providers became more selective and sicker patients were less likely to receive surgery. Public scores created a reason to avoid difficult cases even though improving care was the goal. People and organizations adapt to what gets rewarded — in money, attention, or social approval — even when the resulting behavior defeats the original goal.
 
-“Why does this keep happening?” often resolves into _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. Changing the outcome usually requires changing what gets rewarded.
-
 Measures also determine what gets neglected. A team measured on tickets closed will close tickets. A team measured on customer satisfaction will spend more time hearing from customers. Work left out of the measure becomes easier to deprioritize without an explicit decision.
 
 Incentives don’t explain every choice. People leave money on the table for status, identity, loyalty, or inertia. Treat incentives as a strong pressure rather than a complete theory of motivation.
+
+“Why does this keep happening?” often resolves into _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. Changing the outcome usually requires changing what gets rewarded.
 
 # Interface
 
@@ -383,16 +383,16 @@ fg: #F6EAD8
 accent: #F3C35F
 illustration: narrative
 related: mimetics, headspace, status
-quote: The most powerful person in the world is the storyteller.
-quote-cite: Steve Jobs
+quote: We tell ourselves stories in order to live.
+quote-cite: Joan Didion, The White Album
 
 Two people can quit the same job. One tells the story as a brave leap; the other, as a reckless mistake. The facts match, but the frame changes which next step feels available.
 
 Narratives turn facts into direction. They shape what feels possible, admirable, embarrassing, or inevitable. In a person, a company, or a movement, the story often shifts before the behavior does.
 
-The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the narrative and behavior follows.
-
 A strong story can carry a bad decision farther than the facts ever could. A useful narrative gives you direction while remaining answerable to reality. When the facts change, the story should change with them.
+
+The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the narrative and behavior follows.
 
 # Osmosis
 
@@ -409,9 +409,9 @@ quote-cite: Jim Rohn
 
 Spend enough time in a group and you start picking up its vocabulary, standards, and sense of what is normal. You notice what people praise, what they reject, and what they do without needing to discuss it.
 
-Exposure can teach what advice cannot. “Have higher standards” is vague; watching someone revise a piece of work five times shows you what those standards require. Repeated contact gradually changes what you notice in your own work.
-
 You absorb bad norms as readily as good ones. Pay attention to what becomes normal around the people, work, and media you encounter repeatedly.
+
+Exposure can teach what advice cannot. “Have higher standards” is vague; watching someone revise a piece of work five times shows you what those standards require. Repeated contact gradually changes what you notice in your own work.
 
 # Primitives
 
@@ -446,9 +446,9 @@ The forecast says a 70% chance of rain. If the day stays dry, the forecast wasn�
 
 Most uncertain things have a shape, a range, and a tail. Treating them as binary — will or won’t, safe or risky — creates expensive mistakes. _What will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. Updating is half the skill.
 
-The lens also reorders which bets count as smart. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
-
 Sometimes the answer is to commit hard to a small chance and help improve it. Most decisions still require planning for a range of outcomes rather than assuming the average case will happen.
+
+The lens also reorders which bets count as smart. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
 
 # Projection
 
@@ -501,7 +501,7 @@ accent: #EEC15C
 illustration: self-fulfilling
 related: agency, narrative, identity
 quote: Whether you think you can, or you think you can’t — you’re right.
-quote-cite: Henry Ford
+quote-cite: Attributed to Henry Ford
 
 Believing you can do a thing changes how you approach it. Expect the interview to go badly and you show up guarded and tight. Expect to belong and you ask for the referral, prepare like it matters, and walk in calm enough to give yourself a chance. The forecast helps write the outcome it claims to foresee.
 
@@ -550,9 +550,9 @@ Outcomes are rarely caused by one thing. Repeated outcomes usually come from fee
 
 When a team keeps missing deadlines, blaming the last person who acted explains little. Look at when decisions are made, where work waits, which goal takes priority, and what information arrives too late.
 
-To change the system, look for a leverage point — a condition with disproportionate effects. An approval may arrive too late. A goal may be missing. A metric may reward the wrong behavior. Change one condition, then watch whether the recurring outcome changes with it.
-
 A systems explanation can also excuse individual choices. People still make decisions and remain responsible for them. The lens is most useful when it helps prevent the same failure from happening again.
+
+To change the system, look for a leverage point — a condition with disproportionate effects. An approval may arrive too late. A goal may be missing. A metric may reward the wrong behavior. Change one condition, then watch whether the recurring outcome changes with it.
 
 # Taste
 
@@ -569,9 +569,9 @@ Taste is a refined sense of what’s worth pursuing — a filter that helps you 
 
 Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context.
 
-The three develop unevenly. You might know what people will like but struggle to explain why, describe the standard precisely but lack the craft to meet it, or execute consistently against a standard nobody else values. Knowing which part is weak tells you what to practice.
-
 Taste can become narrow or driven by status. Preference is not proof of quality, and consensus is not proof either. Useful taste is specific enough to guide a decision and flexible enough to change when the context changes.
+
+The three develop unevenly. You might know what people will like but struggle to explain why, describe the standard precisely but lack the craft to meet it, or execute consistently against a standard nobody else values. Knowing which part is weak tells you what to practice.
 
 # Utility
 

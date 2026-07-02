@@ -92,13 +92,12 @@ export function CenterDialog({
                 A lens is a way of looking.
               </DialogPrimitive.Title>
               <p className={styles.dialogLede}>
-                Hold many, lightly. No single frame explains the world — each
-                lens reveals something and hides the rest, so keep a few in
-                rotation.
+                You’re already looking through one; you just didn’t choose it.
+                No single lens explains the world — each shows you something the
+                others hide. The deck is for switching on purpose.
               </p>
               <p className={styles.dialogLede}>
-                Pull a card. Try it on the situation in front of you. Set it
-                down.
+                Pull one. Look through it. Put it back.
               </p>
             </div>
             <DialogPrimitive.Close
