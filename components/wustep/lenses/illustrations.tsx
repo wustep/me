@@ -25,7 +25,7 @@ type IllustrationProps = {
   accent: string
 }
 
-export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
+export function Illustration({ id, fg, accent }: IllustrationProps) {
   switch (id) {
     case 'second-order':
       return <ArtSecondOrder fg={fg} accent={accent} />
@@ -86,7 +86,7 @@ export function Illustration({ id, fg, bg, accent }: IllustrationProps) {
     case 'identity':
       return <ArtIdentity fg={fg} accent={accent} />
     case 'lenses-deck':
-      return <ArtLensesDeck fg={fg} accent={accent} bg={bg} />
+      return <ArtLensesDeck fg={fg} accent={accent} />
   }
 }
 
@@ -1888,32 +1888,56 @@ function ArtPrimitives({ fg, accent }: { fg: string; accent: string }) {
  *   The eye keeps the index card direct and iconic, with the accent
  *   reserved for the pupil so the viewer's gaze lands in the center.
  *
- *   On hover the eyelid opens a touch wider and the pupil gently
- *   focuses. The motion stays restrained because the center card is
- *   always visible and should feel like an instrument, not a mascot.
+ *   The lid is DRAWN at its resting squint (the almond a paused
+ *   animation used to fake via scaleY(0.86)), so the no-motion pose —
+ *   what reduced-motion users and static renders see — is the
+ *   canonical composition, with pixel-true stroke weight.
+ *
+ *   Motion contract (keyframes live in each consuming stylesheet):
+ *     • 'lid'   — outer pose group. Awake contexts *transition* it to
+ *                 scaleY(~1.16), so leaving hover settles the eye home
+ *                 instead of freezing mid-cycle.
+ *     • 'blink' — the lid path itself; a mostly-identity loop dips it
+ *                 for one soft blink per cycle while awake.
+ *     • 'pupil' — outer pose group for iris + pupil; awake contexts
+ *                 transition it to scale(0.9) — a slight constriction,
+ *                 an instrument focusing rather than a startled eye.
+ *     • 'gaze'  — inner group; while awake it drifts a few units left
+ *                 and right, a lens trying angles.
+ *
+ *   The iris is a disc + hairline ring (rather than the old bare
+ *   0.12-alpha smudge) so it keeps a readable edge at card size, and
+ *   at r=9 it clears the squinted lid contour with air to spare.
  */
-function ArtLensesDeck({
-  accent,
-  fg
-}: {
-  fg: string
-  accent: string
-  bg: string
-}) {
+function ArtLensesDeck({ accent, fg }: { fg: string; accent: string }) {
   return (
     <svg {...SVG_BASE} aria-hidden='true' data-anim='lenses-deck'>
-      <path
-        data-anim-target='lid'
-        d='M 14 50 C 24 31 76 31 86 50 C 76 69 24 69 14 50 Z'
-        fill='none'
-        stroke={fg}
-        strokeWidth={ART_STROKE.medium}
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
+      <g data-anim-target='lid' style={{ transformOrigin: '50px 50px' }}>
+        <path
+          data-anim-target='blink'
+          d='M 14 50 C 24 33.7 76 33.7 86 50 C 76 66.3 24 66.3 14 50 Z'
+          fill='none'
+          stroke={fg}
+          strokeWidth={ART_STROKE.medium}
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          style={{ transformOrigin: '50px 50px' }}
+        />
+      </g>
       <g data-anim-target='pupil' style={{ transformOrigin: '50px 50px' }}>
-        <circle cx='50' cy='50' r='12' fill={fg} opacity={ART_OPACITY.wash} />
-        <circle cx='50' cy='50' r={ART_DOT.large} fill={accent} />
+        <g data-anim-target='gaze'>
+          <circle cx='50' cy='50' r='9' fill={fg} opacity={ART_OPACITY.wash} />
+          <circle
+            cx='50'
+            cy='50'
+            r='9'
+            fill='none'
+            stroke={fg}
+            strokeWidth={ART_STROKE.hairline}
+            opacity={ART_OPACITY.quiet}
+          />
+          <circle cx='50' cy='50' r={ART_DOT.large} fill={accent} />
+        </g>
       </g>
     </svg>
   )

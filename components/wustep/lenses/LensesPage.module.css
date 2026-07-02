@@ -1101,7 +1101,13 @@
 
 :global(.dark-mode) .centerCard {
   /* The graphite center stays distinct from the dark canvas without
-     introducing a second colored material into the deck. */
+     introducing a second colored material into the deck. Deep slate
+     (same violet-tinged hue family as the light card's #222226)
+     rather than mid-gray: the card's fixed cream/amber illustration
+     palette was drawn for a dark face, and on mid-gray the title fell
+     to ~2.7:1, the tagline to ~2.6:1, and the amber pupil to ~1.7:1.
+     On this slate the cream lede clears AA (tagline ≈5:1 at its 0.78
+     opacity) and the amber pupil reads again (≈3.5:1). */
   background:
     linear-gradient(
       180deg,
@@ -1110,12 +1116,12 @@
       rgba(0, 0, 0, 0) 70%,
       rgba(0, 0, 0, 0.06) 100%
     ),
-    linear-gradient(180deg, #9c9c9c 0%, #7d7d7d 100%);
+    linear-gradient(180deg, #616168 0%, #4b4b52 100%);
   color: #f6ead8;
   box-shadow:
     0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
-    0 1.5px 0 rgba(255, 255, 255, 0.7) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.18) inset;
+    0 1.5px 0 rgba(255, 255, 255, 0.28) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.24) inset;
 }
 
 .centerCardVisible {
@@ -3479,31 +3485,93 @@
   animation-direction: reverse;
 }
 
-/* Lenses deck — the center eye opens a touch wider and focuses. */
+/* Lenses deck — the center eye. Unlike the other illustrations
+   (infinite keyframes gated by animation-play-state), the eye's wake
+   is a POSE: awake contexts *transition* the lid open and the pupil
+   into a slight focusing constriction, so leaving hover settles the
+   eye back to its drawn resting squint instead of freezing mid-cycle.
+   Two mostly-idle loops run only while awake — the gaze drifts
+   sideways (a lens trying angles) and the lid takes one soft blink
+   per cycle. Because the loops are context-applied rather than
+   play-state-toggled, the design-panel "Always animate" var doesn't
+   reach them; the hover/play-button/touch contexts below do. */
 :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
-  animation: lensDeckEyeLid 4.8s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
+  transform: scaleY(1);
+  transition: transform 340ms var(--ease-out-quint);
 }
 :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-  animation: lensDeckEyePupil 4.8s ease-in-out infinite;
+  transform: scale(1);
+  /* The pupil focuses just after the lid opens — the slight delay is
+     the phase offset that makes it read as a response, not a tween. */
+  transition: transform 300ms var(--ease-out-quint) 100ms;
 }
-@keyframes lensDeckEyeLid {
-  0%,
-  100% {
-    transform: scaleY(0.86);
+@media (hover: hover) and (pointer: fine) {
+  .centerCard:hover
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']),
+  .frame[data-animations='playing']
+    .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+    transform: scaleY(1.16);
   }
-  50% {
-    transform: scaleY(1.03);
+  .centerCard:hover
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']),
+  .frame[data-animations='playing']
+    .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+    transform: scale(0.9);
+  }
+  .centerCard:hover
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']),
+  .frame[data-animations='playing']
+    .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+    animation: lensDeckGaze 7.2s ease-in-out infinite;
+  }
+  .centerCard:hover
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']),
+  .frame[data-animations='playing']
+    .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+    animation: lensDeckBlink 7.2s ease-in-out infinite;
   }
 }
-@keyframes lensDeckEyePupil {
+@keyframes lensDeckGaze {
   0%,
-  100% {
-    transform: scale(1);
+  16% {
+    transform: translateX(0);
   }
-  50% {
-    transform: scale(1.12);
+  26%,
+  42% {
+    transform: translateX(-3.4px);
+  }
+  52%,
+  70% {
+    transform: translateX(2.8px);
+  }
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes lensDeckBlink {
+  0%,
+  60% {
+    transform: scaleY(1);
+  }
+  65% {
+    transform: scaleY(0.74);
+  }
+  70%,
+  100% {
+    transform: scaleY(1);
   }
 }
 
@@ -4025,9 +4093,29 @@
     animation-duration: 9s;
   }
 
-  :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']),
-  :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-    animation-duration: 7.2s;
+  /* The eye is awake at rest on touch — lid open, pupil focused —
+     and its gaze/blink loops are applied here directly (they're
+     context-applied, not play-state-gated) at the same 1.5× ambient
+     cadence as the rest of the deck. */
+  .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+    transform: scaleY(1.16);
+  }
+  .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+    transform: scale(0.9);
+  }
+  .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+    animation: lensDeckGaze 10.8s ease-in-out infinite;
+  }
+  .centerCard
+    .cardArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+    animation: lensDeckBlink 10.8s ease-in-out infinite;
   }
 
   :global(svg[data-anim='projection'] [data-anim-target='1']) {
@@ -4111,6 +4199,13 @@
   .homeBackArrow {
     animation: none !important;
     transition: none !important;
+  }
+
+  /* The eye's wake is a transform pose (not an animation), so pin
+     every eye group to its drawn resting squint — otherwise the
+     hover/touch pose rules would snap it open with no transition. */
+  .cardArt :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
+    transform: none !important;
   }
 
   /* Hover and active transforms also off — otherwise the page
@@ -4265,6 +4360,11 @@
   .centerCard .cardArt :global(svg) {
     width: 100%;
     height: 100%;
+    /* The eye glyph only occupies ~72×38 of its 100-unit viewBox, so
+       at slot size it reads undersized next to the hero title. Scale
+       the rendered SVG up; the glyph still fits inside the slot's
+       visual footprint and the overflow is empty viewBox margin. */
+    transform: scale(1.28);
   }
 
   .centerCardTitle {

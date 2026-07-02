@@ -1,7 +1,8 @@
 /* LensesCover — frames the shared `lenses-deck` illustration on the same
-   dark charcoal surface as the main Lenses card. The eye blinks/dilates
-   on hover, mirroring the live card's hover animation (whose keyframes
-   live in LensesPage.module.css, not loaded here) but a touch faster. */
+   dark charcoal surface as the main Lenses card. The eye wakes on hover
+   (lid opens, pupil focuses, gaze drifts, one soft blink per cycle),
+   mirroring the live card's behavior (whose rules live in
+   LensesPage.module.css, not loaded here) at a touch faster cadence. */
 
 .cover {
   --cover-bg: #222226;
@@ -42,63 +43,139 @@
   display: block;
 }
 
-/* ── Hover animation. The deck's eye is paused at rest and dilates +
-   blinks while the cover (or the playground card wrapper) is hovered,
-   mirroring the live Lenses card. */
+/* ── Wake behavior. The eye rests at its drawn squint; hovering the
+   cover (or the playground card wrapper) *transitions* it awake — lid
+   open, pupil in a slight focusing constriction — and applies the
+   gaze/blink loops. Pose-via-transition means un-hovering settles the
+   eye home instead of freezing it mid-cycle. */
 .art :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
-  animation: lensesCoverLid 2.8s ease-in-out infinite;
-  animation-play-state: paused;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
+  transform: scaleY(1);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .art :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-  animation: lensesCoverPupil 2.8s ease-in-out infinite;
-  animation-play-state: paused;
+  transform: scale(1);
+  /* Focus lands just after the lid opens — a response, not a tween. */
+  transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1) 90ms;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .cover:hover .art :global(svg[data-anim='lenses-deck'] [data-anim-target]),
+  .cover:hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']),
   :global(.group):hover
     .art
-    :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-    animation-play-state: running;
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+    transform: scaleY(1.16);
+  }
+
+  .cover:hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']),
+  :global(.group):hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+    transform: scale(0.9);
+  }
+
+  .cover:hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']),
+  :global(.group):hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+    animation: lensesCoverGaze 6s ease-in-out infinite;
+  }
+
+  .cover:hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']),
+  :global(.group):hover
+    .art
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+    animation: lensesCoverBlink 6s ease-in-out infinite;
   }
 }
 
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
-   same animation. */
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) wakes
+   the eye the same way. */
 .cover:focus-within
   .art
-  :global(svg[data-anim='lenses-deck'] [data-anim-target]),
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']),
 :global(.group):focus-within
   .art
-  :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-  animation-play-state: running;
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+  transform: scaleY(1.16);
 }
 
-@keyframes lensesCoverLid {
+.cover:focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']),
+:global(.group):focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+  transform: scale(0.9);
+}
+
+.cover:focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']),
+:global(.group):focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+  animation: lensesCoverGaze 6s ease-in-out infinite;
+}
+
+.cover:focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']),
+:global(.group):focus-within
+  .art
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+  animation: lensesCoverBlink 6s ease-in-out infinite;
+}
+
+/* Same choreography shape as LensesPage.module.css (lensDeckGaze /
+   lensDeckBlink), compressed to the cover's faster cadence. */
+@keyframes lensesCoverGaze {
   0%,
-  100% {
-    transform: scaleY(0.86);
+  16% {
+    transform: translateX(0);
   }
-  50% {
-    transform: scaleY(1.03);
+  26%,
+  42% {
+    transform: translateX(-3.4px);
+  }
+  52%,
+  70% {
+    transform: translateX(2.8px);
+  }
+  80%,
+  100% {
+    transform: translateX(0);
   }
 }
 
-@keyframes lensesCoverPupil {
+@keyframes lensesCoverBlink {
   0%,
-  100% {
-    transform: scale(1);
+  60% {
+    transform: scaleY(1);
   }
-  50% {
-    transform: scale(1.12);
+  65% {
+    transform: scaleY(0.74);
+  }
+  70%,
+  100% {
+    transform: scaleY(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .art :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
     animation: none;
+    transition: none;
+    /* The wake is a transform pose — pin it so hover/focus can't snap
+       the eye open when the user asked for stillness. */
+    transform: none !important;
   }
 }

@@ -815,54 +815,107 @@
     stroke 300ms ease;
 }
 
-/* Matches the playground Lenses cover: the eye is paused at rest and
-   blinks/dilates at a steady cadence while hovered or focused (tap/keyboard). */
+/* Matches the playground Lenses cover: the eye rests at its drawn
+   squint and *transitions* awake while hovered or focused
+   (tap/keyboard) — lid opens, pupil focuses, gaze drifts, one soft
+   blink per cycle. Pose-via-transition means leaving the card settles
+   the eye home instead of freezing it mid-cycle. */
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
-  animation: lensesCardLid 2.8s ease-in-out infinite;
-  animation-play-state: paused;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
+  transform: scaleY(1);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .lensesArt :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
-  animation: lensesCardPupil 2.8s ease-in-out infinite;
-  animation-play-state: paused;
+  transform: scale(1);
+  /* Focus lands just after the lid opens — a response, not a tween. */
+  transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1) 90ms;
 }
 
-@keyframes lensesCardLid {
+/* Same choreography shape as LensesPage.module.css (lensDeckGaze /
+   lensDeckBlink), at the project card's faster cadence. */
+@keyframes lensesCardGaze {
   0%,
-  100% {
-    transform: scaleY(0.86);
+  16% {
+    transform: translateX(0);
   }
-  50% {
-    transform: scaleY(1.03);
+  26%,
+  42% {
+    transform: translateX(-3.4px);
+  }
+  52%,
+  70% {
+    transform: translateX(2.8px);
+  }
+  80%,
+  100% {
+    transform: translateX(0);
   }
 }
 
-@keyframes lensesCardPupil {
+@keyframes lensesCardBlink {
   0%,
-  100% {
-    transform: scale(1);
+  60% {
+    transform: scaleY(1);
   }
-  50% {
-    transform: scale(1.12);
+  65% {
+    transform: scaleY(0.74);
+  }
+  70%,
+  100% {
+    transform: scaleY(1);
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .lenses:hover
     .lensesArt
-    :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-    animation-play-state: running;
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+    transform: scaleY(1.16);
+  }
+
+  .lenses:hover
+    .lensesArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+    transform: scale(0.9);
+  }
+
+  .lenses:hover
+    .lensesArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+    animation: lensesCardGaze 6s ease-in-out infinite;
+  }
+
+  .lenses:hover
+    .lensesArt
+    :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+    animation: lensesCardBlink 6s ease-in-out infinite;
   }
 }
 
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) plays the
-   eye just like hover. */
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) wakes
+   the eye just like hover. */
 .lenses:focus-within
   .lensesArt
-  :global(svg[data-anim='lenses-deck'] [data-anim-target]) {
-  animation-play-state: running;
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='lid']) {
+  transform: scaleY(1.16);
+}
+
+.lenses:focus-within
+  .lensesArt
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='pupil']) {
+  transform: scale(0.9);
+}
+
+.lenses:focus-within
+  .lensesArt
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='gaze']) {
+  animation: lensesCardGaze 6s ease-in-out infinite;
+}
+
+.lenses:focus-within
+  .lensesArt
+  :global(svg[data-anim='lenses-deck'] [data-anim-target='blink']) {
+  animation: lensesCardBlink 6s ease-in-out infinite;
 }
 
 .bookshelfBooks {
@@ -1229,6 +1282,14 @@
   .page .spotItSymbol,
   .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
     animation: none;
+  }
+
+  /* The eye's wake is a transform pose driven by hover/focus — pin it
+     (and its transition) so the eye stays at its drawn resting squint
+     when the user asked for stillness. */
+  .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
+    transition: none;
+    transform: none !important;
   }
 
   /* Bookshelf books and the DOM-ino block lift on hover/focus via a
