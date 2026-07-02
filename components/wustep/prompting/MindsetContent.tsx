@@ -18,9 +18,9 @@ export function MindsetContent() {
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
         of chess might get you to 1200 ELO &mdash; past most casual players,
-        nowhere near expert. A grandmaster beats a 1200 every single game. The
-        gap in AI coding isn&apos;t that wide, but the people at its frontier
-        are already getting far more done than the ones who decided they&apos;d
+        nowhere near expert. A grandmaster beats a 1200 every game. The gap in
+        AI coding isn&apos;t that wide, but the people at its frontier are
+        already getting far more done than the ones who decided they&apos;d
         figured it out.
       </p>
 
@@ -72,11 +72,12 @@ export function MindsetContent() {
       </p>
 
       <p>
-        Most of the time, the model isn&apos;t the limit. Your prompt is. Your
-        context is. Your patience is. With the bottleneck-is-me stance, the same
-        frustrating moment turns into a puzzle: which lever would have changed
-        the result? Each answer is an edge others aren&apos;t collecting;
-        they&apos;ve already decided it&apos;s the tool&apos;s fault.
+        Most of the time the model isn&apos;t the limit &mdash; your prompt is,
+        or your context, or your patience. With the bottleneck-is-me stance, the
+        same frustrating moment turns into a puzzle: which lever would have
+        changed the result? Each answer is an edge others aren&apos;t
+        collecting; they&apos;ve already decided it&apos;s the tool&apos;s
+        fault.
       </p>
 
       <h3 className={styles.mindsetForkHeading}>Every failure is a rep</h3>

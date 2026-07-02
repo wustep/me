@@ -95,8 +95,8 @@ export function IntroContent() {
         </p>
 
         <p className={styles.bodyItem} style={bodyDelay(3)}>
-          So here&apos;s the question: what does it mean to be good at talking
-          to Claude, Codex, or whatever comes next?
+          So what does it mean to be good at talking to Claude, Codex, or
+          whatever comes next?
         </p>
 
         <div

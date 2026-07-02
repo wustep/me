@@ -8,9 +8,9 @@ export function ColleagueContent() {
     <ChapterBody>
       <p>
         The most useful mental shift I&apos;ve found is treating the agent as a{' '}
-        <em>colleague</em> &mdash; specifically, a fast, knowledgeable,
-        infinitely patient <s>junior</s> senior who has only seen what
-        you&apos;ve shown them and forgets between sessions.
+        <em>colleague</em> &mdash; specifically, a fast, infinitely patient{' '}
+        <s>junior</s> senior who has only seen what you&apos;ve shown them and
+        forgets between sessions.
       </p>
 
       <p>
@@ -56,7 +56,7 @@ export function ColleagueContent() {
           </li>
         </ul>
         <p>
-          The same paragraph that gets a new hire from &quot;lost&quot; to
+          The paragraph that gets a new hire from &quot;lost&quot; to
           &quot;useful&quot; in a week does the same for the agent.
         </p>
       </Lever>
@@ -74,15 +74,15 @@ export function ColleagueContent() {
         </p>
         <p>
           The longer the task, the more that setup is worth: five extra minutes
-          up front saves 30 minutes of clarifying turns later.
+          up front saves thirty minutes of clarifying turns later.
         </p>
       </Lever>
 
       <Lever name='REVIEWING' tagline='The diff is a proposal, not an answer.'>
         <p>
-          The output is a proposal. Same as a colleague&apos;s PR &mdash; not
-          the final answer, your job to evaluate. Read the diff. Run the code.
-          Check the cases you&apos;d check on a junior&apos;s PR.
+          Whatever comes back is a colleague&apos;s PR, not a final answer
+          &mdash; your job is to evaluate it. Read the diff. Run the code. Check
+          the cases you&apos;d check on a junior&apos;s PR.
         </p>
         <p>
           Don&apos;t accept what you can&apos;t verify. If you can&apos;t tell

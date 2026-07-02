@@ -17,7 +17,7 @@ export function TreeContent() {
       <TreeDemo />
 
       <p>
-        Prompting is navigating this tree. The axes are usually fixed by the
+        Prompting is moving around this map. The axes are usually fixed by the
         task. The interesting choice is which of the three moves you make.
       </p>
 
@@ -43,20 +43,19 @@ export function TreeContent() {
 
       <Lever name='PLAN' tagline='When you know roughly what, but not how.'>
         <p>
-          <strong>Plan</strong> pays for itself the most often. The model
-          proposes an approach; you push back on bad assumptions; you converge;{' '}
-          <em>then</em> code gets written. Much cheaper to revise a paragraph
-          than a refactor.
+          <strong>Plan</strong> is the move that pays for itself most often. The
+          model proposes an approach; you push back on bad assumptions; you
+          converge; <em>then</em> code gets written. Much cheaper to revise a
+          paragraph than a refactor.
         </p>
         <ExamplePrompt
           note='Cross-cutting change with multiple plausible approaches. Plan first, code later.'
           text={`I want to migrate our notification logic out of the request handlers into a queue. Don't write code yet — propose 2–3 approaches, then pick one and explain the trade-offs. Constraints: must keep delivery semantics at-least-once, must not block API responses, can use the existing Redis instance.`}
         />
         <p>
-          The trap is treating the first plan as binding. The model will commit
-          to whatever it proposed first unless you push back. Treat the first
-          plan as a draft and make it argue for the choices you&apos;re
-          skeptical of.
+          The trap is treating the first plan as binding. The model will defend
+          whatever it proposed first unless you push back &mdash; treat it as a
+          draft, and make it argue for the choices you&apos;re skeptical of.
         </p>
       </Lever>
 
@@ -89,7 +88,7 @@ export function TreeContent() {
           </span>
           Choosing your move
         </h3>
-        <p>A few heuristics for picking the right square:</p>
+        <p>A few heuristics for picking the right cell:</p>
         <ul className={styles.axisList}>
           <li>
             <strong>Start broad, end specific.</strong> Most non-trivial work
@@ -100,8 +99,8 @@ export function TreeContent() {
           <li>
             <strong>If you&apos;re burning loops, zoom out.</strong>{' '}
             Delegate-reject-reprompt cycles are almost always a context problem,
-            not a model problem. The cell you&apos;re in is wrong. Move up the
-            tree.
+            not a model problem. The cell you&apos;re in is wrong &mdash; back
+            out to plan, or all the way up to ask.
           </li>
           <li>
             <strong>

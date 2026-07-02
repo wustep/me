@@ -36,9 +36,9 @@ export function TechniquesContent() {
         <Technique prompt='Give me 3 options, rank them, name the trade-offs.'>
           <p>
             Forces breadth before depth. The model defaults to its first
-            plausible idea; this resets the floor. Useful for any decision where
-            you don&apos;t already know the right answer &mdash; algorithm
-            choice, library choice, schema design.
+            plausible idea; asking for three pushes it past that. Useful for any
+            decision where you don&apos;t already know the right answer &mdash;
+            algorithm choice, library choice, schema design.
           </p>
         </Technique>
 
@@ -55,9 +55,9 @@ export function TechniquesContent() {
         <Technique prompt='What did you skip?'>
           <p>
             After a delegated task, ask what was glossed over. The model often
-            owns things you&apos;d have missed &mdash; tests, error handling,
-            the &quot;TODO: revisit&quot; it left in line 47. Cheap two-second
-            move, high hit rate.
+            owns up to things you&apos;d have missed &mdash; tests, error
+            handling, the &quot;TODO: revisit&quot; it left on line 47. Cheap
+            two-second move, high hit rate.
           </p>
         </Technique>
 

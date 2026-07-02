@@ -87,23 +87,24 @@ export function OrchestrationContent() {
         Three things to notice. The purple bars never overlap &mdash;
         that&apos;s your hands, and there&apos;s only one of you. The pink bars
         do, freely; the agents don&apos;t wait for each other. And after every
-        agent finishes, there&apos;s a small grey gap before you come back: real
-        attention costs, and you can only spend it on one thread at a time.
+        agent finishes, there&apos;s a small grey gap before you come back:
+        attention is a real cost, and you can only spend it on one thread at a
+        time.
       </p>
 
       <h3 className={styles.orchSectionHeading}>Fan out</h3>
 
       <p>
-        One agent works on one thing at a time. You don&apos;t. The moment a
-        task is independent of another, run them side-by-side &mdash; separate
-        tabs, separate worktrees, separate windows.
+        One agent works on one thing at a time. You don&apos;t. The moment two
+        tasks are independent of each other, run them side by side &mdash;
+        separate tabs, separate worktrees, separate windows.
       </p>
 
       <FanOutDiagram />
 
       <p>
         Good candidates: tests in parallel with the implementation, five
-        unrelated bugs at once, three library spikes side-by-side. Bad
+        unrelated bugs at once, three library spikes side by side. Bad
         candidates: anything where agent B reads what agent A produced &mdash;
         don&apos;t parallelize a chain. Budget for the merge too; three branches
         become one review queue.
@@ -156,8 +157,8 @@ export function OrchestrationContent() {
           With several agents going, the job changes shape: you&apos;re
           triaging, not typing. Which branch needs a decision? Which run is
           stuck? What&apos;s ready to merge? One agent makes you faster; a fleet
-          gives you a whole team &mdash; cheap, fast, always available. The
-          bottleneck stops being the model and becomes <em>you</em>.
+          gives you a whole team, cheap and always available. The bottleneck
+          stops being the model and becomes <em>you</em>.
         </p>
         <p>
           So that&apos;s the skill to invest in: reading diffs fast, holding

@@ -39,9 +39,9 @@ reading: How to be more agentic — Cate Hall | https://usefulfictions.substack.
 quote: Between stimulus and response there is a space. In that space is our power to choose our response.
 quote-cite: Viktor Frankl
 
-Agency is seeing a future you want, noticing the moves actually on the table, and taking one — despite friction or constraint. The habit is treating yourself and your situation as things you can reshape, not facts you’re stuck with.
+Agency is seeing a future you want, noticing the moves actually available, and taking one — despite friction or constraint. The habit is treating yourself and your situation as things you can reshape, not facts you’re stuck with.
 
-It starts with realizing there are more choices on the table than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
+It starts with realizing you have more choices than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
 
 The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.
 
@@ -165,11 +165,11 @@ related: legibility, systems, narrative
 quote: All models are wrong, but some are useful.
 quote-cite: George Box
 
-A belief is useful when it helps you predict what will happen or decide what to do. Accuracy matters, but two explanations can fit the same facts and lead to different choices.
+The subway map gets the distances wrong, straightens every curve, and leaves out entire neighborhoods. It’s also the best tool ever made for not getting lost underground. Judge a belief the same way: by where it gets you, not only by how faithfully it draws the territory.
 
-When several explanations remain plausible, compare what each one helps you notice and what each would have you do next. You can use an explanation provisionally, keep track of the uncertainty, and replace it when it stops matching reality.
+Two explanations can fit the same facts and point to different choices. When several remain plausible, compare what each helps you notice and what each would have you do next. You can hold one provisionally, keep track of the uncertainty, and trade it in when it stops matching reality.
 
-Pragmatism becomes dishonest when _useful_ means _comforting_. Usefulness cannot substitute for accuracy. It matters when choosing among explanations that remain plausible.
+Pragmatism turns dishonest when _useful_ starts to mean _comforting_. The map is allowed to simplify; it isn’t allowed to draw a bridge that isn’t there.
 
 # Evolutionary psychology
 
@@ -187,7 +187,7 @@ quote-cite-href: https://amzn.to/4esTgqP
 
 Human brains developed under conditions far different from modern life. Traits that helped people survive, reproduce, and cooperate did not disappear when the environment changed.
 
-That mismatch offers hypotheses for why we crave sugar, care intensely about status, form coalitions, gossip, and respond strongly to social approval. Dating apps and social feeds can amplify tendencies that once operated inside smaller groups.
+That mismatch offers hypotheses for why we care so much about status, form coalitions, gossip, and respond strongly to social approval. Dating apps and social feeds can amplify tendencies that once operated inside groups of a few dozen people.
 
 Evolutionary explanations are easy to invent after the fact. A plausible story is not evidence, and culture, development, and individual experience may explain the same behavior better. Use the lens to generate questions rather than declare a behavior natural or inevitable.
 
@@ -292,7 +292,7 @@ After New York and Pennsylvania began publishing cardiac-surgery report cards, p
 
 Measures also determine what gets neglected. A team measured on tickets closed will close tickets. A team measured on customer satisfaction will spend more time hearing from customers. Work left out of the measure becomes easier to deprioritize without an explicit decision.
 
-Incentives do not explain every choice. People leave money on the table for status, identity, loyalty, or inertia. Treat incentives as a strong pressure rather than a complete theory of motivation.
+Incentives don’t explain every choice. People leave money on the table for status, identity, loyalty, or inertia. Treat incentives as a strong pressure rather than a complete theory of motivation.
 
 # Interface
 
@@ -312,7 +312,7 @@ Good interfaces reduce unnecessary steps. Put the journal on the desk. Make the 
 
 Friction can be useful too. Confirmation dialogs slow down destructive actions. Waiting periods create time to reconsider. The design question is where speed helps and where a pause improves the decision.
 
-An interface cannot resolve conflicting goals, missing trust, or bad incentives. Once people agree on what they want, though, better defaults and fewer steps can help them follow through.
+An interface can’t resolve conflicting goals, missing trust, or bad incentives. Once people agree on what they want, though, better defaults and fewer steps can help them follow through.
 
 # Legibility
 
@@ -446,7 +446,7 @@ The forecast says a 70% chance of rain. If the day stays dry, the forecast wasn�
 
 Most uncertain things have a shape, a range, and a tail. Treating them as binary — will or won’t, safe or risky — creates expensive mistakes. _What will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. Updating is half the skill.
 
-Which bets count as smart gets reordered, too. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
+The lens also reorders which bets count as smart. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
 
 Sometimes the answer is to commit hard to a small chance and help improve it. Most decisions still require planning for a range of outcomes rather than assuming the average case will happen.
 
@@ -465,9 +465,9 @@ quote-cite: Carl Jung
 
 People interpret others through their own history. The traits they notice first, the criticism they repeat, and the praise they give freely all reflect what they have learned to care about.
 
-When someone says _people in this industry are all so insecure,_ ask why insecurity was the pattern they noticed and why it felt important to mention. The same applies to praise: what someone admires tells you something about their values and aspirations.
+When someone says _people in this industry are all so insecure,_ ask why insecurity was the pattern they noticed and why it felt important to mention. The same applies to praise: what someone admires freely tells you what they value and what they’re reaching for — a compliment is a small self-portrait, too.
 
-Projection does not make an observation wrong. Feedback tells you something about your behavior and something about the person interpreting it. Consider both before deciding what to do with it.
+Projection doesn’t make an observation wrong. Feedback tells you something about your behavior and something about the person interpreting it. Consider both before deciding what to do with it.
 
 # Second-order effects
 
@@ -550,7 +550,7 @@ Outcomes are rarely caused by one thing. Repeated outcomes usually come from fee
 
 When a team keeps missing deadlines, blaming the last person who acted explains little. Look at when decisions are made, where work waits, which goal takes priority, and what information arrives too late.
 
-Change the system by finding a condition with disproportionate effects. An approval may arrive too late. A goal may be missing. A metric may reward the wrong behavior. Change one condition, then watch whether the recurring outcome changes with it.
+To change the system, look for a leverage point — a condition with disproportionate effects. An approval may arrive too late. A goal may be missing. A metric may reward the wrong behavior. Change one condition, then watch whether the recurring outcome changes with it.
 
 A systems explanation can also excuse individual choices. People still make decisions and remain responsible for them. The lens is most useful when it helps prevent the same failure from happening again.
 
@@ -567,9 +567,9 @@ related: expertise, minimalism, legibility
 
 Taste is a refined sense of what’s worth pursuing — a filter that helps you predict what will land. It works on movies and furniture. It also works on product decisions, hires, and who you spend your time with.
 
-Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context. All three are trainable, and most people are uneven across them.
+Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context.
 
-The three skills can develop unevenly. You might know what people will like but struggle to explain why. You might describe the standard precisely but lack the craft to meet it. Or you might execute consistently against a standard that nobody else values. Knowing which part is weak tells you what to practice.
+The three develop unevenly. You might know what people will like but struggle to explain why, describe the standard precisely but lack the craft to meet it, or execute consistently against a standard nobody else values. Knowing which part is weak tells you what to practice.
 
 Taste can become narrow or driven by status. Preference is not proof of quality, and consensus is not proof either. Useful taste is specific enough to guide a decision and flexible enough to change when the context changes.
 

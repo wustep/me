@@ -53,7 +53,7 @@ export function RecapContent() {
         <RecapTreeViz />
         <p>
           Every change lives somewhere on a 2D map: <em>breadth</em> (which area
-          of code) × <em>depth</em> (how zoomed in). At any node, three moves:{' '}
+          of code) × <em>depth</em> (how zoomed in). At any cell, three moves:{' '}
           <strong>ask</strong>, <strong>plan</strong>, <strong>delegate</strong>
           . Most non-trivial work moves through all three.
         </p>

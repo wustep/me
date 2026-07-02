@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "me-dev",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": ["-lc", "pnpm dev"],
       "port": 3000,
       "autoPort": true
     }

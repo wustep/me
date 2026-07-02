@@ -30,8 +30,7 @@ export function EquationContent() {
           The frontier here isn&apos;t subtle: <strong>Cursor</strong>,{' '}
           <strong>Claude Code</strong>, and <strong>Codex</strong> are
           significantly better than VSCode (with stock Copilot) or Antigravity.
-          At times, this is comparable to having a junior vs a senior engineer
-          helping you.
+          The difference can feel like swapping a junior for a senior engineer.
         </p>
         <p>
           You don&apos;t have to commit to one forever. Try a new coding agent
@@ -80,8 +79,7 @@ export function EquationContent() {
           explanations they reach for, where they cut corners under ambiguity.
           If you&apos;re newer to AI coding, you&apos;ll attune faster by
           staying with one model for a while and learning its tics. Hopping
-          between models before you have a feel for any of them slows down your
-          learning.
+          between models before you have a feel for any of them slows you down.
         </p>
         <p>
           Avoid <strong>&quot;Auto&quot; mode</strong>. Pick the model yourself,
@@ -94,12 +92,12 @@ export function EquationContent() {
           which model to reach for when.
         </p>
         <p>
-          Thinking effort is another dial, and becoming one of the more
-          important ones to manage. Most tools expose four rungs:{' '}
-          <strong>low</strong>, <strong>medium</strong>, <strong>high</strong>,{' '}
-          <strong>xhigh</strong>. Default to <strong>high</strong> (or medium,
-          if more cost-sensitive) and try dialing it down or up when the model
-          lets you down by overthinking or underthinking.
+          Thinking effort is another dial, and an increasingly important one to
+          get right. Most tools expose four rungs: <strong>low</strong>,{' '}
+          <strong>medium</strong>, <strong>high</strong>, <strong>xhigh</strong>
+          . Default to <strong>high</strong> (or medium, if more cost-sensitive)
+          and try dialing it down or up when the model lets you down by
+          overthinking or underthinking.
         </p>
 
         <div className={styles.modelGuide}>
@@ -151,8 +149,8 @@ export function EquationContent() {
           </li>
           <li>
             <strong>Say what good looks like.</strong> Constraints, success
-            criteria, what to avoid. The agent will gravitate toward whatever
-            you tell it to.
+            criteria, what to avoid. The agent steers toward whatever you write
+            down.
           </li>
         </ul>
         <p>What consistently doesn&apos;t:</p>
