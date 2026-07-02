@@ -157,11 +157,11 @@ export function AboutPage() {
       <div className={styles.container}>
         <header className={`${styles.header} owner-mode-toggle-reveal-group`}>
           <div className={styles.headerLeft}>
-            <div className={styles.nameRow}>
+            <h1 className={styles.nameRow}>
               <Link href='/' className={styles.wordmark}>
                 Stephen Wu
               </Link>
-            </div>
+            </h1>
             <span className={styles.title}>Engineering at Notion</span>
           </div>
 
@@ -224,7 +224,7 @@ export function AboutPage() {
             <div
               key={company.company}
               className={styles.workGroup}
-              style={{ animationDelay: `${companyIndex * 80 + 500}ms` }}
+              style={{ animationDelay: `${companyIndex * 60 + 90}ms` }}
             >
               <div className={styles.workLeft}>
                 <span className={styles.workIcon}>
@@ -290,8 +290,10 @@ export function AboutPage() {
               >
                 <div className={styles.projectImage}>
                   <img
-                    src='https://pbs.twimg.com/media/HDQF_eVbQAImj2T?format=jpg&name=4096x4096'
+                    src='/dashboards-notion.jpg'
                     alt='Dashboards at Notion'
+                    width={2400}
+                    height={960}
                     draggable={false}
                   />
                 </div>
