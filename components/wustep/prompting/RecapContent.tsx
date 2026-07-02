@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { ChapterBody } from './ChapterBody'
 import { Bracket, Group, Op } from './EquationDemo'
+import { Note } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function RecapContent() {
@@ -83,20 +84,14 @@ export function RecapContent() {
         </p>
       </RecapItem>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          One more thing
-        </h3>
+      <Note title='One more thing'>
         <p>
           We&apos;re all early in this. Three years in. Maybe 1200 ELO. The next
           1200 is wide open &mdash; and the most useful move is paying attention
           while everyone else assumes they&apos;ve figured it out.
         </p>
         <p>Go talk to a machine.</p>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }
@@ -218,13 +213,6 @@ function RecapMindsetViz() {
         className={styles.recapMindsetSvg}
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='recapEloStroke' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#c14a30' />
-            <stop offset='100%' stopColor='#e89042' />
-          </linearGradient>
-        </defs>
-
         <line
           x1='6'
           y1='52'
@@ -310,19 +298,12 @@ function RecapOrchestrationViz() {
         className={styles.recapOrchSvg}
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='recapFanYou' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#c14a30' />
-            <stop offset='100%' stopColor='#e89042' />
-          </linearGradient>
-        </defs>
-
         <rect
           x='4'
           y='25'
           width='50'
           height='18'
-          rx='5'
+          rx='2'
           className={styles.recapOrchYou}
         />
         <text x='29' y='34.5' className={styles.recapOrchYouLabel}>
@@ -344,7 +325,7 @@ function RecapOrchestrationViz() {
               y={cy - 6}
               width={LANE_RIGHT - LANE_LEFT}
               height='12'
-              rx='4'
+              rx='1'
               className={styles.recapOrchAgent}
             />
             <circle

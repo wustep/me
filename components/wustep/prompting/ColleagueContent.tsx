@@ -1,6 +1,6 @@
 import { ChapterBody } from './ChapterBody'
 import { ColleagueDemo } from './ColleagueDemo'
-import { Lever } from './parts'
+import { Figure, Lever } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function ColleagueContent() {
@@ -20,7 +20,12 @@ export function ColleagueContent() {
         through ambiguity, review their work before merging.
       </p>
 
-      <ColleagueDemo />
+      <Figure
+        num='5.1'
+        caption='Toggle what you share; watch the answer sharpen.'
+      >
+        <ColleagueDemo />
+      </Figure>
 
       <p>
         Same task, same model &mdash; what changes is how much the colleague was
@@ -28,7 +33,11 @@ export function ColleagueContent() {
         what <em>they</em> can see is where most of the skill lives.
       </p>
 
-      <Lever name='ONBOARDING' tagline='Set them up before the work starts.'>
+      <Lever
+        num='5.1'
+        name='ONBOARDING'
+        tagline='Set them up before the work starts.'
+      >
         <p>
           Skills, project rules, conventions, examples &mdash; the same
           materials a new hire gets. What to use, what not to, where things
@@ -61,7 +70,7 @@ export function ColleagueContent() {
         </p>
       </Lever>
 
-      <Lever name='BRIEFING' tagline='Every task starts with context.'>
+      <Lever num='5.2' name='BRIEFING' tagline='Every task starts with context.'>
         <p>
           Onboarding is general. Briefing is per-task &mdash; what this specific
           piece of work is, which files matter, what good looks like, what to
@@ -78,7 +87,11 @@ export function ColleagueContent() {
         </p>
       </Lever>
 
-      <Lever name='REVIEWING' tagline='The diff is a proposal, not an answer.'>
+      <Lever
+        num='5.3'
+        name='REVIEWING'
+        tagline='The diff is a proposal, not an answer.'
+      >
         <p>
           Whatever comes back is a colleague&apos;s PR, not a final answer
           &mdash; your job is to evaluate it. Read the diff. Run the code. Check

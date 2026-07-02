@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useInView } from '@/lib/use-in-view'
 
 import { ChapterBody } from './ChapterBody'
+import { Figure, Note, SectionHeading } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function OrchestrationContent() {
@@ -15,7 +16,17 @@ export function OrchestrationContent() {
         bottleneck.
       </p>
 
-      <PingPongDiagram />
+      <Figure
+        num='6.1'
+        caption={
+          <>
+            Same work, very different wall-clock cost. The dashed blocks in
+            the top row are <em>you</em>, deciding what to type next.
+          </>
+        }
+      >
+        <PingPongDiagram />
+      </Figure>
 
       <p>
         Orchestration is the move from typist to conductor &mdash; from
@@ -23,7 +34,7 @@ export function OrchestrationContent() {
         tuning the next prompt and start tuning the next <em>hour</em>.
       </p>
 
-      <h3 className={styles.orchSectionHeading}>Chain, don&apos;t ping</h3>
+      <SectionHeading num='6.1'>Chain, don&apos;t ping</SectionHeading>
 
       <p>
         If you already know steps two through five before you send step one,
@@ -71,7 +82,7 @@ export function OrchestrationContent() {
         </strong>
       </p>
 
-      <h3 className={styles.orchSectionHeading}>Stagger and overlap</h3>
+      <SectionHeading num='6.2'>Stagger and overlap</SectionHeading>
 
       <p>
         You can only write one brief at a time. The agents don&apos;t all start
@@ -81,18 +92,23 @@ export function OrchestrationContent() {
         glance, send a follow-up, and the cycle continues.
       </p>
 
-      <StaggerDiagram />
+      <Figure
+        num='6.2'
+        caption='Briefs (red) cascade — you can only write one at a time. Agent work (ink) overlaps freely. Dashed gaps are the cost of switching attention.'
+      >
+        <StaggerDiagram />
+      </Figure>
 
       <p>
-        Three things to notice. The purple bars never overlap &mdash;
-        that&apos;s your hands, and there&apos;s only one of you. The pink bars
-        do, freely; the agents don&apos;t wait for each other. And after every
-        agent finishes, there&apos;s a small grey gap before you come back:
+        Three things to notice. The red bars never overlap &mdash; that&apos;s
+        your hands, and there&apos;s only one of you. The ink bars do, freely;
+        the agents don&apos;t wait for each other. And after every agent
+        finishes, there&apos;s a small dashed gap before you come back:
         attention is a real cost, and you can only spend it on one thread at a
         time.
       </p>
 
-      <h3 className={styles.orchSectionHeading}>Fan out</h3>
+      <SectionHeading num='6.3'>Fan out</SectionHeading>
 
       <p>
         One agent works on one thing at a time. You don&apos;t. The moment two
@@ -100,7 +116,18 @@ export function OrchestrationContent() {
         separate tabs, separate worktrees, separate windows.
       </p>
 
-      <FanOutDiagram />
+      <Figure
+        num='6.3'
+        caption={
+          <>
+            One brief fans out; three streams run in parallel; one merge to
+            review. Use this shape only when the tracks don&apos;t depend on
+            each other.
+          </>
+        }
+      >
+        <FanOutDiagram />
+      </Figure>
 
       <p>
         Good candidates: tests in parallel with the implementation, five
@@ -110,7 +137,7 @@ export function OrchestrationContent() {
         become one review queue.
       </p>
 
-      <h3 className={styles.orchSectionHeading}>Specialize the roles</h3>
+      <SectionHeading num='6.4'>Specialize the roles</SectionHeading>
 
       <p>
         Give different agents different jobs and let them hand work to each
@@ -120,7 +147,12 @@ export function OrchestrationContent() {
         enforces a discipline you&apos;d struggle to keep alone.
       </p>
 
-      <RolesDiagram />
+      <Figure
+        num='6.4'
+        caption='Each handoff is a concrete artifact — a plan, a diff. Name them and the seams between roles stop being fuzzy.'
+      >
+        <RolesDiagram />
+      </Figure>
 
       <p>
         Most modern tools support this directly &mdash; sub-agents, background
@@ -128,7 +160,7 @@ export function OrchestrationContent() {
         switching contexts in your own head.
       </p>
 
-      <h3 className={styles.orchSectionHeading}>Run long, check less</h3>
+      <SectionHeading num='6.5'>Run long, check less</SectionHeading>
 
       <p>
         The biggest leaps of the last year have been long-horizon tasks &mdash;
@@ -146,13 +178,7 @@ export function OrchestrationContent() {
         branch, not a half-finished conversation.
       </p>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          Command the fleet
-        </h3>
+      <Note title='Command the fleet'>
         <p>
           With several agents going, the job changes shape: you&apos;re
           triaging, not typing. Which branch needs a decision? Which run is
@@ -168,7 +194,7 @@ export function OrchestrationContent() {
           long jobs run. The conductor&apos;s edge is patient briefing and clean
           handoffs &mdash; nothing else.
         </p>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }
@@ -218,7 +244,7 @@ const PING_END = PING_SEGMENTS.at(-1)!.x + PING_SEGMENTS.at(-1)!.w
 function PingPongDiagram() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.3 })
   return (
-    <figure
+    <div
       ref={ref}
       className={`${styles.orchDiagram} ${inView ? styles.orchDiagramVisible : ''}`}
     >
@@ -226,20 +252,9 @@ function PingPongDiagram() {
         viewBox='0 0 600 180'
         className={styles.orchTimelineSvg}
         role='img'
-        aria-label='Two timelines on a shared time axis. Top: many small alternating user and agent turns separated by grey idle blocks. Bottom: one user brief and one longer agent response, done much sooner.'
+        aria-label='Two timelines on a shared time axis. Top: many small alternating user and agent turns separated by dashed idle blocks. Bottom: one user brief and one longer agent response, done much sooner.'
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='orchTimelineYou' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#6d28d9' />
-            <stop offset='100%' stopColor='#7c3aed' />
-          </linearGradient>
-          <linearGradient id='orchTimelineAgent' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#9d174d' />
-            <stop offset='100%' stopColor='#be185d' />
-          </linearGradient>
-        </defs>
-
         {/* Ping-pong row */}
         <text
           x='90'
@@ -256,17 +271,14 @@ function PingPongDiagram() {
             y='28'
             width={s.w}
             height='20'
-            rx='5'
-            ry='5'
-            fill={
-              s.kind === 'you'
-                ? 'url(#orchTimelineYou)'
-                : s.kind === 'agent'
-                  ? 'url(#orchTimelineAgent)'
-                  : undefined
-            }
+            rx='2'
+            ry='2'
             className={`${styles.orchTimelineBlock} ${
-              s.kind === 'idle' ? styles.orchTimelineIdle : ''
+              s.kind === 'you'
+                ? styles.orchBlockYou
+                : s.kind === 'agent'
+                  ? styles.orchBlockAgent
+                  : styles.orchTimelineIdle
             }`}
             style={{ animationDelay: `${i * 50}ms` }}
           >
@@ -291,10 +303,9 @@ function PingPongDiagram() {
           y='90'
           width='70'
           height='20'
-          rx='5'
-          ry='5'
-          fill='url(#orchTimelineYou)'
-          className={styles.orchTimelineBlock}
+          rx='2'
+          ry='2'
+          className={`${styles.orchTimelineBlock} ${styles.orchBlockYou}`}
           style={{ animationDelay: '500ms' }}
         >
           <title>{SEGMENT_TOOLTIPS.you}</title>
@@ -304,10 +315,9 @@ function PingPongDiagram() {
           y='90'
           width='200'
           height='20'
-          rx='5'
-          ry='5'
-          fill='url(#orchTimelineAgent)'
-          className={styles.orchTimelineBlock}
+          rx='2'
+          ry='2'
+          className={`${styles.orchTimelineBlock} ${styles.orchBlockAgent}`}
           style={{ animationDelay: '640ms' }}
         >
           <title>{SEGMENT_TOOLTIPS.agent}</title>
@@ -333,11 +343,7 @@ function PingPongDiagram() {
           time →
         </text>
       </svg>
-      <figcaption className={styles.orchCaption}>
-        Same work, very different wall-clock cost. The grey blocks in the top
-        row are <em>you</em>, deciding what to type next.
-      </figcaption>
-    </figure>
+    </div>
   )
 }
 
@@ -358,7 +364,7 @@ const FAN_TRACKS = [
 function FanOutDiagram() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.3 })
   return (
-    <figure
+    <div
       ref={ref}
       className={`${styles.orchDiagram} ${inView ? styles.orchDiagramVisible : ''}`}
     >
@@ -369,27 +375,15 @@ function FanOutDiagram() {
         aria-label='One conductor brief feeds three parallel agent tracks; the three streams converge at a single merge point on the right.'
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='orchFanYou' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#6d28d9' />
-            <stop offset='100%' stopColor='#7c3aed' />
-          </linearGradient>
-          <linearGradient id='orchFanAgent' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#9d174d' />
-            <stop offset='100%' stopColor='#be185d' />
-          </linearGradient>
-        </defs>
-
         {/* You · brief */}
         <rect
           x='40'
           y='20'
           width='130'
           height='22'
-          rx='6'
-          ry='6'
-          fill='url(#orchFanYou)'
-          className={styles.orchTimelineBlock}
+          rx='2'
+          ry='2'
+          className={`${styles.orchTimelineBlock} ${styles.orchBlockYou}`}
         >
           <title>{SEGMENT_TOOLTIPS.you}</title>
         </rect>
@@ -408,7 +402,7 @@ function FanOutDiagram() {
             key={`drop-${i}`}
             d={`M 170,42 C 200,42 195,${t.y + 11} 230,${t.y + 11}`}
             fill='none'
-            stroke='url(#orchFanYou)'
+            stroke='currentColor'
             strokeWidth='1.25'
             strokeLinecap='round'
             strokeDasharray='3 4'
@@ -429,9 +423,9 @@ function FanOutDiagram() {
               y={t.y}
               width={t.end - 230}
               height='22'
-              rx='6'
-              ry='6'
-              fill='url(#orchFanAgent)'
+              rx='2'
+              ry='2'
+              className={styles.orchBlockAgent}
             >
               <title>{SEGMENT_TOOLTIPS.agent}</title>
             </rect>
@@ -476,11 +470,7 @@ function FanOutDiagram() {
           time →
         </text>
       </svg>
-      <figcaption className={styles.orchCaption}>
-        One brief fans out; three streams run in parallel; one merge to review.
-        Use this shape only when the tracks don&apos;t depend on each other.
-      </figcaption>
-    </figure>
+    </div>
   )
 }
 
@@ -504,7 +494,7 @@ const ROLE_HANDOFFS = ['plan.md', 'diff'] as const
 function RolesDiagram() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.3 })
   return (
-    <figure
+    <div
       ref={ref}
       className={`${styles.orchDiagram} ${inView ? styles.orchDiagramVisible : ''}`}
     >
@@ -533,11 +523,7 @@ function RolesDiagram() {
           </React.Fragment>
         ))}
       </div>
-      <figcaption className={styles.orchCaption}>
-        Each handoff is a concrete artifact &mdash; a plan, a diff. Name them
-        and the seams between roles stop being fuzzy.
-      </figcaption>
-    </figure>
+    </div>
   )
 }
 
@@ -596,7 +582,7 @@ const STAGGER_TRACKS: ReadonlyArray<{
 function StaggerDiagram() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.3 })
   return (
-    <figure
+    <div
       ref={ref}
       className={`${styles.orchDiagram} ${inView ? styles.orchDiagramVisible : ''}`}
     >
@@ -604,20 +590,9 @@ function StaggerDiagram() {
         viewBox='0 0 600 130'
         className={styles.orchTimelineSvg}
         role='img'
-        aria-label='Three agent tracks running in parallel. Plans (purple) cascade because you can only write one brief at a time; agent work (pink) overlaps freely; grey idle blocks follow each agent turn before a follow-up plan and another agent block.'
+        aria-label='Three agent tracks running in parallel. Briefs cascade because you can only write one at a time; agent work overlaps freely; dashed idle blocks follow each agent turn before a follow-up brief and another agent block.'
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='orchStaggerYou' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#6d28d9' />
-            <stop offset='100%' stopColor='#7c3aed' />
-          </linearGradient>
-          <linearGradient id='orchStaggerAgent' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#9d174d' />
-            <stop offset='100%' stopColor='#be185d' />
-          </linearGradient>
-        </defs>
-
         {STAGGER_TRACKS.map((track, ti) => (
           <React.Fragment key={ti}>
             <text
@@ -635,17 +610,14 @@ function StaggerDiagram() {
                 y={track.y}
                 width={s.w}
                 height='14'
-                rx='4'
-                ry='4'
-                fill={
-                  s.kind === 'you'
-                    ? 'url(#orchStaggerYou)'
-                    : s.kind === 'agent'
-                      ? 'url(#orchStaggerAgent)'
-                      : undefined
-                }
+                rx='1'
+                ry='1'
                 className={`${styles.orchTimelineBlock} ${
-                  s.kind === 'idle' ? styles.orchTimelineIdle : ''
+                  s.kind === 'you'
+                    ? styles.orchBlockYou
+                    : s.kind === 'agent'
+                      ? styles.orchBlockAgent
+                      : styles.orchTimelineIdle
                 }`}
                 style={{ animationDelay: `${ti * 120 + si * 80}ms` }}
               >
@@ -672,11 +644,6 @@ function StaggerDiagram() {
           time →
         </text>
       </svg>
-      <figcaption className={styles.orchCaption}>
-        Plans (purple) cascade &mdash; you can only write one at a time. Agent
-        work (pink) overlaps freely. Grey is the small but real cost of
-        switching attention between threads.
-      </figcaption>
-    </figure>
+    </div>
   )
 }

@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useInView } from '@/lib/use-in-view'
 
 import { ChapterBody } from './ChapterBody'
+import { Figure, Note, SectionHeading } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function MindsetContent() {
@@ -13,7 +14,12 @@ export function MindsetContent() {
         be starting to feel competent. Don&apos;t trust the feeling.
       </p>
 
-      <EloChart />
+      <Figure
+        num='1.1'
+        caption='Most chess players sit in the 600–1000 range. Three years of practice gets you to about 1200.'
+      >
+        <EloChart />
+      </Figure>
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
@@ -32,7 +38,7 @@ export function MindsetContent() {
         hasn&apos;t been uncovered yet.
       </p>
 
-      <h3 className={styles.mindsetForkHeading}>Two responses</h3>
+      <SectionHeading num='1.1'>Two responses</SectionHeading>
 
       <p>
         Sooner or later the model will let you down. It writes the wrong code.
@@ -80,7 +86,7 @@ export function MindsetContent() {
         fault.
       </p>
 
-      <h3 className={styles.mindsetForkHeading}>Every failure is a rep</h3>
+      <SectionHeading num='1.2'>Every failure is a rep</SectionHeading>
 
       <p>
         Treat each disappointment like a chess puzzle: try something, notice
@@ -89,7 +95,12 @@ export function MindsetContent() {
         quarter.
       </p>
 
-      <PracticeLoop />
+      <Figure
+        num='1.2'
+        caption='The open loop climbs; the closed loop slides back.'
+      >
+        <PracticeLoop />
+      </Figure>
 
       <p>
         The beginner&apos;s mindset is the faster path. Three years in, the
@@ -98,19 +109,13 @@ export function MindsetContent() {
         when the model surprises them.
       </p>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          We&apos;re all beginners
-        </h3>
+      <Note title='We&apos;re all beginners'>
         <p>
           Closed minds blame the model. Open minds ask what they missed and find
           something to learn from each transcript. Only one of those is still
           gaining ELO a year from now.
         </p>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }
@@ -147,7 +152,7 @@ function EloChart() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.35 })
 
   return (
-    <figure
+    <div
       ref={ref}
       className={`${styles.eloChart} ${inView ? styles.eloChartVisible : ''}`}
     >
@@ -158,31 +163,18 @@ function EloChart() {
         aria-label='Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2840 ELO, far out in the right tail.'
         preserveAspectRatio='xMidYMid meet'
       >
-        <defs>
-          <linearGradient id='eloFill' x1='0' x2='0' y1='0' y2='1'>
-            <stop offset='0%' stopColor='#c14a30' stopOpacity='0.35' />
-            <stop offset='100%' stopColor='#e89042' stopOpacity='0.04' />
-          </linearGradient>
-          <linearGradient id='eloStroke' x1='0' x2='1' y1='0' y2='0'>
-            <stop offset='0%' stopColor='#c14a30' />
-            <stop offset='100%' stopColor='#e89042' />
-          </linearGradient>
-        </defs>
-
         <path
           d={CURVE_FILL_PATH}
-          fill='url(#eloFill)'
-          className={styles.eloChartCurveFill}
+          className={`${styles.eloChartCurveFill} ${styles.eloChartFillInk}`}
         />
 
         <path
           d={CURVE_PATH}
           fill='none'
-          stroke='url(#eloStroke)'
           strokeWidth='1.75'
           strokeLinecap='round'
           pathLength={100}
-          className={styles.eloChartCurveStroke}
+          className={`${styles.eloChartCurveStroke} ${styles.eloChartStrokeInk}`}
         />
 
         <line
@@ -238,12 +230,7 @@ function EloChart() {
           </text>
         </g>
       </svg>
-
-      <figcaption className={styles.eloChartCaption}>
-        Most chess players sit in the 600&ndash;1000 range. Three years of
-        practice gets you to about 1200.
-      </figcaption>
-    </figure>
+    </div>
   )
 }
 

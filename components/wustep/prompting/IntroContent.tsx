@@ -10,6 +10,7 @@ import {
   TITLE_WORDS
 } from './constants'
 import { DotMatrixIcon } from './DotMatrixIcon'
+import { Figure } from './parts'
 import styles from './PromptingPage.module.css'
 import { PromptInputDemo } from './PromptInputDemo'
 import { bodyDelay } from './types'
@@ -85,7 +86,12 @@ export function IntroContent() {
         </p>
 
         <div className={styles.bodyItem} style={bodyDelay(1)}>
-          <PromptInputDemo start={revealed} />
+          <Figure
+            num='0.1'
+            caption='The new surface of programming. Try sending it.'
+          >
+            <PromptInputDemo start={revealed} />
+          </Figure>
         </div>
 
         <p className={styles.bodyItem} style={bodyDelay(2)}>

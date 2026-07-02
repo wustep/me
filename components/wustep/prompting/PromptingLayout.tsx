@@ -9,6 +9,7 @@ import { useDarkMode } from '@/lib/use-dark-mode'
 
 import type { ChapterMeta } from './types'
 import { CHAPTERS, TOTAL_CHAPTERS } from './constants'
+import { manualMono, manualSans } from './fonts'
 import { TocIcon } from './icons'
 import styles from './PromptingPage.module.css'
 
@@ -16,8 +17,9 @@ import styles from './PromptingPage.module.css'
  * PromptingLayout — chrome that wraps every chapter page.
  *
  *   Provides the shared header (back-to-home + theme toggle), notion
- *   body class, and chapter-aware top/bottom rails (header with
- *   chapter index, footer with prev/next nav).
+ *   body class, and the manual's running rails: a ruled folio head with
+ *   the guide title + chapter mark, a chapter opener plate, and a ruled
+ *   prev/next footer.
  */
 export function PromptingLayout({
   chapter,
@@ -37,7 +39,9 @@ export function PromptingLayout({
     <>
       <BodyClassName className={isDarkMode ? 'notion dark-mode' : 'notion'} />
 
-      <div className={styles.frame}>
+      <div
+        className={`${styles.frame} ${manualSans.variable} ${manualMono.variable}`}
+      >
         <header className='notion-header'>
           <div className='notion-nav-header'>
             <Link
@@ -73,7 +77,7 @@ export function PromptingLayout({
 
 /**
  * TableOfContents — fixed-position icon in the upper-right of the
- * viewport that reveals a chapter list on hover/focus. Hidden on
+ * viewport that reveals the CONTENTS panel on hover/focus. Hidden on
  * narrower viewports via CSS (no room beside the centered page).
  */
 function TableOfContents() {
@@ -91,7 +95,7 @@ function TableOfContents() {
         <TocIcon className={styles.tocIcon} />
       </button>
       <div className={styles.tocPanel} role='menu'>
-        <div className={styles.tocPanelHeader}>Chapters</div>
+        <div className={styles.tocPanelHeader}>Contents</div>
         <ol className={styles.tocList}>
           {CHAPTERS.map((c) => {
             const isCurrent = c.href === currentPath
@@ -120,22 +124,29 @@ function TableOfContents() {
   )
 }
 
+/**
+ * ChapterHeader — the manual's folio head + chapter opener plate.
+ * A double-ruled running head carries the guide title and the chapter
+ * mark; below it, a large vermillion chapter numeral and the title.
+ */
 function ChapterHeader({ chapter }: { chapter: ChapterMeta }) {
   return (
     <header className={styles.chapterHeader}>
-      <Link href='/prompting' className={styles.chapterParentTitle}>
-        How to talk to coding agents
-      </Link>
-      <div className={styles.chapterMeta}>
-        <span className={styles.chapterMetaIndex}>
-          Chapter {String(chapter.index).padStart(2, '0')}
-        </span>
-        <span className={styles.chapterMetaSep}>of</span>
-        <span className={styles.chapterMetaTotal}>
+      <div className={styles.folio}>
+        <Link href='/prompting' className={styles.folioTitle}>
+          How to talk to coding agents
+        </Link>
+        <span className={styles.folioMark}>
+          CH.&nbsp;{String(chapter.index).padStart(2, '0')}&thinsp;/&thinsp;
           {String(TOTAL_CHAPTERS).padStart(2, '0')}
         </span>
       </div>
-      <h1 className={styles.chapterTitle}>{chapter.title}</h1>
+      <div className={styles.chapterPlate}>
+        <span className={styles.chapterNumeral} aria-hidden='true'>
+          {chapter.index}
+        </span>
+        <h1 className={styles.chapterTitle}>{chapter.title}</h1>
+      </div>
     </header>
   )
 }

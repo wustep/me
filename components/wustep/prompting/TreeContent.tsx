@@ -1,5 +1,5 @@
 import { ChapterBody } from './ChapterBody'
-import { ExamplePrompt, Lever } from './parts'
+import { ExamplePrompt, Figure, Lever, Note } from './parts'
 import styles from './PromptingPage.module.css'
 import { TreeDemo } from './TreeDemo'
 
@@ -14,14 +14,19 @@ export function TreeContent() {
         <strong>delegate</strong>.
       </p>
 
-      <TreeDemo />
+      <Figure
+        num='4.1'
+        caption='The 2D map: breadth across the codebase, depth of abstraction, and a generated prompt for the selected cell.'
+      >
+        <TreeDemo />
+      </Figure>
 
       <p>
         Prompting is moving around this map. The axes are usually fixed by the
         task. The interesting choice is which of the three moves you make.
       </p>
 
-      <Lever name='ASK' tagline="When you don't know yet.">
+      <Lever num='4.1' name='ASK' tagline="When you don't know yet.">
         <p>
           Use <strong>Ask</strong> when you need to understand something before
           you act. It&apos;s the cheapest move &mdash; a few seconds and a few
@@ -41,7 +46,11 @@ export function TreeContent() {
         </p>
       </Lever>
 
-      <Lever name='PLAN' tagline='When you know roughly what, but not how.'>
+      <Lever
+        num='4.2'
+        name='PLAN'
+        tagline='When you know roughly what, but not how.'
+      >
         <p>
           <strong>Plan</strong> is the move that pays for itself most often. The
           model proposes an approach; you push back on bad assumptions; you
@@ -60,6 +69,7 @@ export function TreeContent() {
       </Lever>
 
       <Lever
+        num='4.3'
         name='DELEGATE'
         tagline='When the path is clear and you can verify the result.'
       >
@@ -81,13 +91,7 @@ export function TreeContent() {
         </p>
       </Lever>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          Choosing your move
-        </h3>
+      <Note title='Choosing your move'>
         <p>A few heuristics for picking the right cell:</p>
         <ul className={styles.axisList}>
           <li>
@@ -110,7 +114,7 @@ export function TreeContent() {
             should have just done. Calibration is most of the skill.
           </li>
         </ul>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }

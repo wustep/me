@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { ChapterBody } from './ChapterBody'
+import { Note, SectionHeading } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function TechniquesContent() {
@@ -14,7 +15,7 @@ export function TechniquesContent() {
         prompting. Here are some moves worth adding to yours.
       </p>
 
-      <TechniqueGroup heading='Before you start'>
+      <TechniqueGroup num='3.1' heading='Before you start'>
         <Technique prompt='What questions should you ask me before starting?'>
           <p>
             Surfaces ambiguity instead of guessing. The model returns a list of
@@ -32,7 +33,7 @@ export function TechniquesContent() {
         </Technique>
       </TechniqueGroup>
 
-      <TechniqueGroup heading='Open the options'>
+      <TechniqueGroup num='3.2' heading='Open the options'>
         <Technique prompt='Give me 3 options, rank them, name the trade-offs.'>
           <p>
             Forces breadth before depth. The model defaults to its first
@@ -51,7 +52,7 @@ export function TechniquesContent() {
         </Technique>
       </TechniqueGroup>
 
-      <TechniqueGroup heading='Pressure-test it'>
+      <TechniqueGroup num='3.3' heading='Pressure-test it'>
         <Technique prompt='What did you skip?'>
           <p>
             After a delegated task, ask what was glossed over. The model often
@@ -71,7 +72,7 @@ export function TechniquesContent() {
         </Technique>
       </TechniqueGroup>
 
-      <TechniqueGroup heading='Pay it forward'>
+      <TechniqueGroup num='3.4' heading='Pay it forward'>
         <Technique prompt='Match the style of components/PostCard.tsx.'>
           <p>
             Anchor on something concrete &mdash; a path, a screenshot, a doc, a
@@ -135,13 +136,7 @@ export function TechniquesContent() {
         </div>
       </div>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          Keep climbing
-        </h3>
+      <Note title='Keep climbing'>
         <p>
           None of these are hard. Used regularly, they compound. Don&apos;t
           memorize them as a checklist &mdash; notice there&apos;s a craft here,
@@ -151,24 +146,23 @@ export function TechniquesContent() {
           The best moves are the ones you&apos;ll find yourself. Start
           collecting them.
         </p>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }
 
 function TechniqueGroup({
+  num,
   heading,
   children
 }: {
+  num: string
   heading: string
   children: React.ReactNode
 }) {
   return (
     <section className={styles.techniqueGroup}>
-      <h3 className={styles.techniqueGroupHeading}>
-        <span className={styles.techniqueGroupHeadingMark} aria-hidden='true' />
-        {heading}
-      </h3>
+      <SectionHeading num={num}>{heading}</SectionHeading>
       <div className={styles.techniqueGroupBody}>{children}</div>
     </section>
   )
@@ -183,15 +177,7 @@ function Technique({
 }) {
   return (
     <div className={styles.technique}>
-      <p className={styles.techniquePrompt}>
-        <span className={styles.techniqueQuoteMark} aria-hidden='true'>
-          “
-        </span>
-        {prompt}
-        <span className={styles.techniqueQuoteMark} aria-hidden='true'>
-          ”
-        </span>
-      </p>
+      <p className={styles.techniquePrompt}>{prompt}</p>
       <div className={styles.techniqueBody}>{children}</div>
     </div>
   )

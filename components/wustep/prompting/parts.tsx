@@ -5,13 +5,16 @@ import styles from './PromptingPage.module.css'
 /**
  * Lever — a labeled section with a heading + tagline + body. Used across
  * chapters to break content into clearly-named "moves" the reader can
- * pull (e.g. TOOL, MODEL, ASK, BRIEFING).
+ * pull (e.g. TOOL, MODEL, ASK, BRIEFING). `num` prints the manual-style
+ * section number ("2.1") before the name.
  */
 export function Lever({
+  num,
   name,
   tagline,
   children
 }: {
+  num?: string
   name: string
   tagline: string
   children: React.ReactNode
@@ -19,8 +22,12 @@ export function Lever({
   return (
     <div className={styles.leverSection}>
       <div className={styles.leverHeading}>
+        {num && (
+          <span className={styles.leverHeadingNum} aria-hidden='true'>
+            {num}
+          </span>
+        )}
         <span className={styles.leverHeadingName}>{name}</span>
-        <span className={styles.leverHeadingDivider} aria-hidden='true' />
         <span className={styles.leverHeadingTagline}>{tagline}</span>
       </div>
       <div className={styles.leverBody}>{children}</div>
@@ -29,8 +36,77 @@ export function Lever({
 }
 
 /**
- * ExamplePrompt — a quoted example prompt card with a "from the wild"
- * label and a short attribution / note below.
+ * SectionHeading — numbered manual section heading ("6.2 Stagger and
+ * overlap"). The number is decorative wayfinding; screen readers get
+ * the plain title.
+ */
+export function SectionHeading({
+  num,
+  children
+}: {
+  num: string
+  children: React.ReactNode
+}) {
+  return (
+    <h3 className={styles.manualHeading}>
+      <span className={styles.manualHeadingNum} aria-hidden='true'>
+        {num}
+      </span>
+      {children}
+    </h3>
+  )
+}
+
+/**
+ * Figure — the manual's rule-framed enclosure for every interactive
+ * demo and diagram, with a numbered caption plate below
+ * ("FIG. 4.1 — the 2D map").
+ */
+export function Figure({
+  num,
+  caption,
+  children
+}: {
+  num: string
+  caption: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <figure className={styles.manualFigure}>
+      <div className={styles.manualFigureBody}>{children}</div>
+      <figcaption className={styles.manualFigureCaption}>
+        <span className={styles.manualFigureNum}>FIG. {num}</span>
+        <span className={styles.manualFigureText}>{caption}</span>
+      </figcaption>
+    </figure>
+  )
+}
+
+/**
+ * Note — the manual's bordered NOTE block. Replaces the old ✦ synthesis
+ * card as the chapter-closing (or mid-chapter) callout.
+ */
+export function Note({
+  title,
+  children
+}: {
+  title: string
+  children: React.ReactNode
+}) {
+  return (
+    <aside className={styles.synthesis}>
+      <h3 className={styles.synthesisHeading}>
+        <span className={styles.synthesisTag}>NOTE</span>
+        {title}
+      </h3>
+      {children}
+    </aside>
+  )
+}
+
+/**
+ * ExamplePrompt — a specimen of a real prompt, set in typewriter with a
+ * caption note below.
  */
 export function ExamplePrompt({ note, text }: { note: string; text: string }) {
   return (

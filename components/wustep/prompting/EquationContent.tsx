@@ -1,6 +1,6 @@
 import { ChapterBody } from './ChapterBody'
 import { EquationDemo } from './EquationDemo'
-import { Lever } from './parts'
+import { Figure, Lever, Note } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function EquationContent() {
@@ -12,7 +12,12 @@ export function EquationContent() {
         you hand it.
       </p>
 
-      <EquationDemo />
+      <Figure
+        num='2.1'
+        caption='The output equation, expanded into its four levers.'
+      >
+        <EquationDemo />
+      </Figure>
 
       <p>
         That gives you four levers.{' '}
@@ -20,7 +25,7 @@ export function EquationContent() {
         is finding them.
       </p>
 
-      <Lever name='TOOL' tagline='Use a tool that was built for this.'>
+      <Lever num='2.1' name='TOOL' tagline='Use a tool that was built for this.'>
         <p>
           Most people are still defaulting to whatever editor they had before
           agents were a thing, and bolting AI on. That&apos;s leaving the
@@ -39,7 +44,11 @@ export function EquationContent() {
         </p>
       </Lever>
 
-      <Lever name='MODEL' tagline='Pick the smartest model the work warrants.'>
+      <Lever
+        num='2.2'
+        name='MODEL'
+        tagline='Pick the smartest model the work warrants.'
+      >
         <p>
           Calibrate to the stakes of the task, not your defaults. A rough guide,
           as of mid-2026 (the specifics shift every few months):
@@ -131,6 +140,7 @@ export function EquationContent() {
       </Lever>
 
       <Lever
+        num='2.3'
         name='PROMPT'
         tagline='Be specific. Show the model what good looks like.'
       >
@@ -175,7 +185,11 @@ export function EquationContent() {
         </p>
       </Lever>
 
-      <Lever name='CONTEXT' tagline='Load what the agent needs to see.'>
+      <Lever
+        num='2.4'
+        name='CONTEXT'
+        tagline='Load what the agent needs to see.'
+      >
         <p>
           Most &quot;the model is dumb today&quot; moments are actually
           &quot;the model can&apos;t see the thing it needs.&quot; The prompt is
@@ -213,13 +227,7 @@ export function EquationContent() {
         </p>
       </Lever>
 
-      <div className={styles.synthesis}>
-        <h3 className={styles.synthesisHeading}>
-          <span className={styles.synthesisSymbol} aria-hidden='true'>
-            ✦
-          </span>
-          Putting it all together
-        </h3>
+      <Note title='Putting it all together'>
         <p>
           Treat the output as something you partially authored. Whatever came
           back, you were part of why it came back that way. When something feels
@@ -255,7 +263,7 @@ export function EquationContent() {
           as anything else in the craft &mdash; closer to chess than to magic
           words.
         </p>
-      </div>
+      </Note>
     </ChapterBody>
   )
 }
