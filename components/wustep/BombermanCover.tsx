@@ -1,4 +1,9 @@
+'use client'
+
+import * as React from 'react'
+
 import styles from './BombermanCover.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 /**
  * BombermanCover — "Board vignette" (gameplay).
@@ -81,8 +86,11 @@ const P1 = { col: 10, row: 3 }
 const P2 = { col: 14, row: 1 }
 
 export function BombermanCover() {
+  const coverRef = React.useRef<HTMLDivElement>(null)
+  useCoverPlayback(coverRef)
+
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={coverRef}>
       {/* slice against an extra-wide board: the board's 5.3:1 outruns every
           real cover box (~1.6:1–4.7:1), so the full height always fits and
           widening a card just reveals more board at the sides. See the COLS

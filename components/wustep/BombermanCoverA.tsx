@@ -1,4 +1,9 @@
+'use client'
+
+import { useRef } from 'react'
+
 import styles from './BombermanCoverA.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 /**
  * BombermanCoverA — "Prompt → game" (vibe-coding meta). Unshipped variant,
@@ -37,8 +42,11 @@ const tileX = (col: number) => GRID_X + col * TILE
 const tileY = (row: number) => GRID_Y + row * TILE
 
 export function BombermanCoverA() {
+  const coverRef = useRef<HTMLDivElement>(null)
+  useCoverPlayback(coverRef)
+
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={coverRef}>
       <svg
         className={styles.svg}
         viewBox='0 0 640 360'

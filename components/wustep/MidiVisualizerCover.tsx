@@ -3,6 +3,7 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
 
 import styles from './MidiVisualizerCover.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 // The board fits roughly one white key per this many px of cover width, so wider
 // covers show more (and thinner) keys/notes instead of fat ones.
@@ -47,6 +48,8 @@ function buildKeyboard(whiteKeys: number) {
 export function MidiVisualizerCover() {
   const ref = useRef<HTMLDivElement>(null)
   const [whiteKeys, setWhiteKeys] = useState(14)
+
+  useCoverPlayback(ref)
 
   useEffect(() => {
     const el = ref.current

@@ -329,3 +329,36 @@
     animation: none;
   }
 }
+
+/* The bow's paused rule is scoped through the illustration's SVG, so it
+   outranks the generic play rule below — mirror the hover rules at that
+   specificity. The workbench/preview poses come along so an on-screen cover
+   settles the same way a hovered one does. */
+.cover[data-playing] .workbench {
+  transform: rotate(0deg) translateY(-2px);
+}
+
+.cover[data-playing] .previewCard {
+  transform: translateY(-4px) rotate(0deg);
+}
+
+.cover[data-playing]
+  .illustration
+  :global(svg[data-anim='expertise'] [data-anim-target]) {
+  animation-play-state: running;
+}
+
+/* ---------- Playback driven by useCoverPlayback ----------
+   Hover and focus already resume the loop above; the hook adds the case CSS
+   can't express — touch, where there is no hover and the card's only tappable
+   element is its navigation link, so the cover loops while it is on screen. */
+.cover[data-playing] * {
+  animation-play-state: running;
+}
+
+/* Stopping rewinds instead of pausing: one animation-less frame restarts the
+   loop at its idle pose, so leaving mid-blast doesn't strand the cover on that
+   frame (and resume there on the next hover). */
+.cover[data-resetting] * {
+  animation: none !important;
+}

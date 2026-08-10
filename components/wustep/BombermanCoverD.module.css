@@ -178,3 +178,18 @@
     animation: none !important;
   }
 }
+
+/* ---------- Playback driven by useCoverPlayback ----------
+   Hover and focus already resume the loop above; the hook adds the case CSS
+   can't express — touch, where there is no hover and the card's only tappable
+   element is its navigation link, so the cover loops while it is on screen. */
+.cover[data-playing] * {
+  animation-play-state: running;
+}
+
+/* Stopping rewinds instead of pausing: one animation-less frame restarts the
+   loop at its idle pose, so leaving mid-blast doesn't strand the cover on that
+   frame (and resume there on the next hover). */
+.cover[data-resetting] * {
+  animation: none !important;
+}

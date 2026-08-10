@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import { Illustration } from './lenses/illustrations'
 import styles from './LensesIllustrationLabCover.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 const SWATCHES = ['#B43A2E', '#243449', '#204A40', '#A75B22', '#8F3E62']
 /** The preview card's resting background — the green swatch. */
@@ -21,6 +22,15 @@ export function LensesIllustrationLabCover() {
   const matrixRef = React.useRef<HTMLDivElement>(null)
   const swatchesRef = React.useRef<HTMLDivElement>(null)
   const previewRef = React.useRef<HTMLDivElement>(null)
+  // The timers below are set up in an effect that owns the DOM refs, so
+  // useCoverPlayback reaches them through this handle rather than the other
+  // way round.
+  const timers = React.useRef<{ start?: () => void; stop?: () => void }>({})
+
+  useCoverPlayback(coverRef, {
+    onPlay: () => timers.current.start?.(),
+    onStop: () => timers.current.stop?.()
+  })
 
   React.useEffect(() => {
     const matrix = matrixRef.current
@@ -43,12 +53,6 @@ export function LensesIllustrationLabCover() {
     }
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)')
-    // Animate on the same surface as the rest of the cover — the playground
-    // card wrapper (`.group`), falling back to the cover root. Hover drives it
-    // on pointer devices; focus drives it everywhere (covers touch, where
-    // tapping focuses the card and there's no hover).
-    const hoverTarget = cover.closest('.group') ?? cover
 
     let matrixTimer: ReturnType<typeof setInterval> | undefined
     let colorTimer: ReturnType<typeof setInterval> | undefined
@@ -126,18 +130,10 @@ export function LensesIllustrationLabCover() {
       preview.style.backgroundColor = ''
     }
 
-    if (canHover.matches) {
-      hoverTarget.addEventListener('pointerenter', start)
-      hoverTarget.addEventListener('pointerleave', stop)
-    }
-    hoverTarget.addEventListener('focusin', start)
-    hoverTarget.addEventListener('focusout', stop)
+    timers.current = { start, stop }
 
     return () => {
-      hoverTarget.removeEventListener('pointerenter', start)
-      hoverTarget.removeEventListener('pointerleave', stop)
-      hoverTarget.removeEventListener('focusin', start)
-      hoverTarget.removeEventListener('focusout', stop)
+      timers.current = {}
       stop()
     }
   }, [])

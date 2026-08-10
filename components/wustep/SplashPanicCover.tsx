@@ -1,6 +1,9 @@
-import { type CSSProperties, useId } from 'react'
+'use client'
+
+import { type CSSProperties, useId, useRef } from 'react'
 
 import styles from './SplashPanicCover.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 /**
  * SplashPanicCover — "Meadow standoff" (gameplay vignette).
@@ -192,11 +195,14 @@ const DROPS: Array<{ x: number; y: number; r: number }> = [
 ]
 
 export function SplashPanicCover() {
+  const coverRef = useRef<HTMLDivElement>(null)
+  useCoverPlayback(coverRef)
+
   const uid = useId().replaceAll(':', '')
   const id = (name: string) => `spa-${name}-${uid}`
 
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={coverRef}>
       {/* slice against an extra-wide stage: the stage's 5.3:1 outruns every
           real cover box (~1.6:1–4.7:1), so the full height always fits and
           widening a card just reveals more meadow at the sides. See the

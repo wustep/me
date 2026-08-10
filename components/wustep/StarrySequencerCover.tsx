@@ -2,11 +2,13 @@
 
 import * as React from 'react'
 
+import { useCoverPlayback } from './useCoverPlayback'
+
 /**
  * StarrySequencerCover
  *
- *   The cover is a still poster at rest and animates while hovered (pointer
- *   devices) or focused (tap/keyboard — covers touch, where there's no hover).
+ *   The cover is a still poster at rest and animates while the card is played
+ *   (hover on pointer devices, on-screen on touch — see useCoverPlayback).
  *   Animated WebP can't be paused via the DOM, so we swap the <img> src:
  *   poster ⇄ animated WebP. Re-assigning the animated src restarts it from
  *   the first frame, so each play runs the loop fresh. Honors reduced motion
@@ -19,39 +21,14 @@ const ANIMATED = '/playground/covers/starry-sequencer.webp'
 export function StarrySequencerCover() {
   const imgRef = React.useRef<HTMLImageElement>(null)
 
-  React.useEffect(() => {
-    const img = imgRef.current
-    if (!img) return
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const hoverTarget = img.closest('.group') ?? img
-
-    const play = () => {
-      if (reduceMotion.matches) return
-      img.src = ANIMATED
+  useCoverPlayback(imgRef, {
+    onPlay: () => {
+      if (imgRef.current) imgRef.current.src = ANIMATED
+    },
+    onStop: () => {
+      if (imgRef.current) imgRef.current.src = POSTER
     }
-    const stop = () => {
-      img.src = POSTER
-    }
-
-    // Hover drives playback on pointer devices...
-    if (canHover.matches) {
-      hoverTarget.addEventListener('pointerenter', play)
-      hoverTarget.addEventListener('pointerleave', stop)
-    }
-    // ...and focus drives it everywhere — covers touch, where tapping the card
-    // focuses it and there's no hover to trigger the animation.
-    hoverTarget.addEventListener('focusin', play)
-    hoverTarget.addEventListener('focusout', stop)
-
-    return () => {
-      hoverTarget.removeEventListener('pointerenter', play)
-      hoverTarget.removeEventListener('pointerleave', stop)
-      hoverTarget.removeEventListener('focusin', play)
-      hoverTarget.removeEventListener('focusout', stop)
-    }
-  }, [])
+  })
 
   return (
     <img

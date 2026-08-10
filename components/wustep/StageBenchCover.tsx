@@ -1,6 +1,9 @@
-import { type CSSProperties, useId, useMemo } from 'react'
+'use client'
+
+import { type CSSProperties, useId, useMemo, useRef } from 'react'
 
 import styles from './StageBenchCover.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 /**
  * StageBenchCover
@@ -76,6 +79,9 @@ const KNOB_CY = 54
 const KNOB_R = 13
 
 export function StageBenchCover() {
+  const coverRef = useRef<HTMLDivElement>(null)
+  useCoverPlayback(coverRef)
+
   // Gradient/clip ids must be unique per instance (and colon-free so they
   // stay valid inside url(#…) references).
   const uid = useId().replaceAll(':', '')
@@ -112,7 +118,7 @@ export function StageBenchCover() {
   }, [uid])
 
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={coverRef}>
       <style dangerouslySetInnerHTML={{ __html: keyframes }} />
       <svg
         className={styles.svg}

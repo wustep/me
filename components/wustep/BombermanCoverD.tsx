@@ -1,4 +1,9 @@
+'use client'
+
+import { useRef } from 'react'
+
 import styles from './BombermanCoverD.module.css'
+import { useCoverPlayback } from './useCoverPlayback'
 
 /**
  * BombermanCoverD — "The bomb" (mechanic close-up). Unshipped variant,
@@ -22,8 +27,11 @@ const TOKENS = [
 ]
 
 export function BombermanCoverD() {
+  const coverRef = useRef<HTMLDivElement>(null)
+  useCoverPlayback(coverRef)
+
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div className={styles.cover} aria-hidden='true' ref={coverRef}>
       <svg
         className={styles.svg}
         viewBox='0 0 640 360'
