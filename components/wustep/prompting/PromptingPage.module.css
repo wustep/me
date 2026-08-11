@@ -3316,6 +3316,29 @@
   }
 }
 
+/* Working state — the agent visibly churning on a sent prompt before
+   it hits the wall. Same Drive loader + elapsed idiom as the intro's
+   Thinking state, scaled down to the input's caption size. */
+
+.promptWorking {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 4px 0;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: var(--fg-color, #1a1918);
+  animation: errorIn 220ms var(--ease-out-swift);
+}
+
+:global(.dark-mode) .promptWorking {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.promptWorkingText {
+  font-weight: 500;
+}
+
 .promptError {
   display: flex;
   align-items: center;

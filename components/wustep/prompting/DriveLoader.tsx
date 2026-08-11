@@ -43,14 +43,16 @@ export function DriveLoader({ className }: { className?: string }) {
 
 /**
  * Live elapsed readout for the loader, in the agent idiom: tenths of a
- * second in mono tabular figures. Ticks while `running`, then holds its
- * final value so the number doesn't jump during the reveal cross-fade.
+ * second in mono tabular figures. Resets when a run starts, ticks while
+ * `running`, then holds its final value so the number doesn't jump
+ * while the loader cross-fades away.
  */
 export function useElapsed(running: boolean): string {
   const [deciseconds, setDeciseconds] = React.useState(0)
 
   React.useEffect(() => {
     if (!running) return
+    setDeciseconds(0)
     const id = window.setInterval(() => setDeciseconds((d) => d + 1), 100)
     return () => window.clearInterval(id)
   }, [running])
