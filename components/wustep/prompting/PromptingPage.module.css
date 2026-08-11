@@ -211,11 +211,58 @@
   pointer-events: none;
 }
 
-.sparkle {
+/* Drive loader — 3×3 pixel grid, chevron wavefront driving right.
+   After Beautiful UI's Loading State. Sized in em so it tracks the
+   thinking label, with a small optical inset from the text. */
+
+.driveGrid {
   flex-shrink: 0;
-  width: 1em;
-  height: 1em;
-  color: currentColor;
+  display: grid;
+  grid-template-columns: repeat(3, 0.3em);
+  gap: 0.11em;
+  margin-right: 0.1em;
+}
+
+.driveCell {
+  width: 0.3em;
+  height: 0.3em;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.15;
+  animation: pixel-on 650ms ease-in-out infinite;
+}
+
+@keyframes pixel-on {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  18%,
+  42% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .driveCell {
+    animation: none;
+  }
+}
+
+.thinkingElapsed {
+  font-family: var(--font-mono);
+  font-size: 0.74em;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: var(--fg-color-3, rgba(26, 25, 24, 0.4));
+}
+
+:global(.dark-mode) .thinkingElapsed {
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .thinkingText {
@@ -3609,7 +3656,7 @@
     transition: none;
     animation: none;
   }
-  .sparkle,
+  .driveCell,
   .modelDot,
   .modelMenu {
     animation: none;
