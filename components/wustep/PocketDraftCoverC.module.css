@@ -1,0 +1,211 @@
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1c1228;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.prompt {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3.2px;
+  text-anchor: middle;
+  fill: #e8c36a;
+}
+
+.suit {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  fill: rgba(26, 20, 16, 0.5);
+}
+
+.name {
+  font-family: ui-serif, Georgia, serif;
+  font-size: 36px;
+  font-weight: 600;
+  fill: #1a1410;
+}
+
+.hint {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  fill: rgba(26, 20, 16, 0.55);
+}
+
+/* Rest: mid is the pick (lifted, gold rim). Hover slides the pick right. */
+.left,
+.mid,
+.right {
+  animation-duration: 3.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.left {
+  animation-name: leftIdle;
+}
+
+.mid {
+  animation-name: midToSide;
+}
+
+.right {
+  animation-name: rightToPick;
+}
+
+.left .rim,
+.right .rim {
+  opacity: 0;
+}
+
+.mid .rim {
+  opacity: 1;
+}
+
+.right .rim {
+  animation: rimOn 3.2s linear infinite;
+  animation-play-state: paused;
+}
+
+.mid .rim {
+  animation: rimOff 3.2s linear infinite;
+  animation-play-state: paused;
+}
+
+@keyframes leftIdle {
+  0%,
+  100% {
+    transform: translate(0, 10px);
+    opacity: 0.72;
+  }
+}
+
+@keyframes midToSide {
+  0%,
+  18% {
+    transform: translate(0, -14px);
+    opacity: 1;
+  }
+  42%,
+  70% {
+    transform: translate(0, 10px);
+    opacity: 0.72;
+  }
+  88%,
+  100% {
+    transform: translate(0, -14px);
+    opacity: 1;
+  }
+}
+
+@keyframes rightToPick {
+  0%,
+  18% {
+    transform: translate(0, 10px);
+    opacity: 0.72;
+  }
+  42%,
+  70% {
+    transform: translate(0, -14px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translate(0, 10px);
+    opacity: 0.72;
+  }
+}
+
+@keyframes rimOn {
+  0%,
+  18% {
+    opacity: 0;
+  }
+  42%,
+  70% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes rimOff {
+  0%,
+  18% {
+    opacity: 1;
+  }
+  42%,
+  70% {
+    opacity: 0;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .left,
+  .mid,
+  .right,
+  .right .rim,
+  .mid .rim {
+    animation: none !important;
+  }
+
+  .left,
+  .right {
+    opacity: 0.72;
+    transform: translate(0, 10px);
+  }
+
+  .mid {
+    opacity: 1;
+    transform: translate(0, -14px);
+  }
+
+  .left .rim,
+  .right .rim {
+    opacity: 0;
+  }
+
+  .mid .rim {
+    opacity: 1;
+  }
+}

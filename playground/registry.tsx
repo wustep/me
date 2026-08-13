@@ -6,6 +6,7 @@ import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
+import { PocketDraftCover } from '@/components/wustep/PocketDraftCover'
 import { ShadcnPhysicsCover } from '@/components/wustep/ShadcnPhysicsCover'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SpotItCover } from '@/components/wustep/SpotItCover'
@@ -116,6 +117,18 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Games',
     items: [
+      {
+        title: 'Pocket Draft',
+        url: '/playground/pocket-draft',
+        description:
+          'A tiny in-browser card-draft toy. Pick 1 of 3 cards for five rounds, then play a short recital against Silence. Same seed, same draft. Built with Cursor.',
+        summary: 'Draft a five-card pocket recital, then play it in one click',
+        date: 'Aug 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/me',
+        gradient: 'from-violet-950 via-purple-900 to-amber-400',
+        CoverComponent: PocketDraftCover
+      },
       {
         title: 'Splash Panic!',
         url: '/playground/splashpanic',

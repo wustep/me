@@ -5,6 +5,10 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
+import { PocketDraftCover } from '@/components/wustep/PocketDraftCover'
+import { PocketDraftCoverB } from '@/components/wustep/PocketDraftCoverB'
+import { PocketDraftCoverC } from '@/components/wustep/PocketDraftCoverC'
+import { PocketDraftCoverD } from '@/components/wustep/PocketDraftCoverD'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
 import { SplashPanicCoverC } from '@/components/wustep/SplashPanicCoverC'
@@ -35,6 +39,33 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'pocket-draft',
+    title: 'Pocket Draft',
+    summary: 'Draft a five-card pocket recital, then play it in one click',
+    covers: [
+      {
+        label: 'Draft table (shipped)',
+        hint: 'Hover: the middle card lifts, the others recede, a gold check stamps the pick.',
+        Cover: PocketDraftCover
+      },
+      {
+        label: 'B — Poster (unshipped)',
+        hint: 'Hover: the hero card tilts off the program, foil shimmers, Cadence peeks in.',
+        Cover: PocketDraftCoverB
+      },
+      {
+        label: 'C — Pick 1 of 3 (unshipped)',
+        hint: 'Rest: center card is the pick. Hover slides the gold rim to the right card.',
+        Cover: PocketDraftCoverC
+      },
+      {
+        label: 'D — Keybed table (unshipped)',
+        hint: 'Hover: the middle piano key dips and its card lifts off the keybed.',
+        Cover: PocketDraftCoverD
+      }
+    ]
+  },
   {
     id: 'splashpanic',
     title: 'Splash Panic!',

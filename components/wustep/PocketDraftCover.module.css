@@ -1,0 +1,197 @@
+/* Extra-wide velvet table (1920×360). `slice` keeps full height; wide cards
+   reveal more felt in the wings. Palette matches the Pocket Draft stage. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1c1228;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kicker {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  fill: #e8c36a;
+}
+
+.seedText {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-anchor: middle;
+  fill: #f3ead8;
+}
+
+.cardName {
+  font-family: ui-serif, Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  fill: #1a1410;
+}
+
+.cardStat {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  fill: rgba(26, 20, 16, 0.55);
+}
+
+.handName {
+  font-family: ui-serif, Georgia, serif;
+  font-size: 9px;
+  font-weight: 600;
+  fill: #1a1410;
+}
+
+/* One 2.8s pick: lift the middle card, recede the others, stamp a check. */
+.pickCard,
+.leftCard,
+.rightCard,
+.check,
+.seedChip {
+  animation-duration: 2.8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.pickCard {
+  animation-name: pickLift;
+}
+
+.leftCard {
+  animation-name: recedeLeft;
+}
+
+.rightCard {
+  animation-name: recedeRight;
+}
+
+.check {
+  opacity: 0;
+  animation-name: stampCheck;
+}
+
+.seedChip {
+  animation-name: chipGlow;
+}
+
+@keyframes pickLift {
+  0%,
+  12% {
+    transform: translate(0, 0);
+  }
+  32%,
+  62% {
+    transform: translate(0, -18px);
+  }
+  82%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes recedeLeft {
+  0%,
+  12%,
+  82%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  32%,
+  62% {
+    transform: translate(-10px, 6px);
+    opacity: 0.55;
+  }
+}
+
+@keyframes recedeRight {
+  0%,
+  12%,
+  82%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  32%,
+  62% {
+    transform: translate(10px, 6px);
+    opacity: 0.55;
+  }
+}
+
+@keyframes stampCheck {
+  0%,
+  28% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  40%,
+  62% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes chipGlow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.7;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pickCard,
+  .leftCard,
+  .rightCard,
+  .check,
+  .seedChip {
+    animation: none !important;
+  }
+
+  .check {
+    opacity: 0;
+  }
+}
