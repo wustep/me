@@ -1,7 +1,7 @@
 import { type Block } from 'notion-types'
 import { describe, expect, it } from 'vitest'
 
-import { mapImageUrl } from '../map-image-url'
+import { mapImageUrl, shouldUnoptimizeNotionImage } from '../map-image-url'
 
 const block = { id: '1285cb08-cf2c-806c-83d9-ce2bbaaa663f' } as Block
 
@@ -33,10 +33,46 @@ describe('mapImageUrl', () => {
     expect(mapped).toContain(encodeURIComponent(url))
   })
 
+  it('wraps attachment: sources (current Notion upload format) in the proxy', () => {
+    const url =
+      'attachment:d25020a5-cf96-4eee-bdca-e58e60fd4564:EADC0DE2-FEA6-4356-A7ED-52AEB8952AD1.heic'
+
+    const mapped = mapImageUrl(url, block)
+    expect(mapped).toContain('https://www.notion.so/image/')
+    expect(mapped).toContain(encodeURIComponent(url))
+    expect(mapped).toContain('id=1285cb08-cf2c-806c-83d9-ce2bbaaa663f')
+  })
+
   it('leaves Unsplash URLs alone', () => {
     const url =
       'https://images.unsplash.com/photo-1620121478247-ec786b9be2fa?ixlib=rb-4.0.3'
 
     expect(mapImageUrl(url, block)).toBe(url)
+  })
+})
+
+describe('shouldUnoptimizeNotionImage', () => {
+  it('unoptimizes Notion image-proxy URLs', () => {
+    expect(
+      shouldUnoptimizeNotionImage(
+        'https://www.notion.so/image/attachment%3Aabc%3Aphoto.heic?table=block&id=1'
+      )
+    ).toBe(true)
+  })
+
+  it('unoptimizes raw HEIC sources that next/image cannot decode', () => {
+    expect(
+      shouldUnoptimizeNotionImage(
+        'https://file.notion.com/f/f/abc/photo.heic?table=block&id=1'
+      )
+    ).toBe(true)
+  })
+
+  it('leaves Unsplash on the optimizer', () => {
+    expect(
+      shouldUnoptimizeNotionImage(
+        'https://images.unsplash.com/photo-1620121478247-ec786b9be2fa'
+      )
+    ).toBe(false)
   })
 })

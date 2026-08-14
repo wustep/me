@@ -36,8 +36,6 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   try {
     const props = await resolveNotionPage(domain, normalizedPageId)
 
-    // Notion-hosted file.notion.com URLs expire in ~1h. Rebuild often enough
-    // that next/image can fetch a still-valid signed URL.
     return { props, revalidate: 1800 }
   } catch (err: unknown) {
     console.error('page error', domain, requestedPageId, err)
