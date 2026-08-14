@@ -3,33 +3,29 @@ import { defaultMapImageUrl } from 'notion-utils'
 
 import { defaultPageCover, defaultPageIcon } from './config'
 
-/**
- * Notion file hosts that `www.notion.so/image/...` cannot proxy.
- * Wrapping these produces "Source image is unreachable" (HTTP 404) from the
- * image optimizer. Pass the signed file URL through instead.
- */
-const NOTION_FILE_HOSTS = new Set([
-  'file.notion.com',
-  'file.notion.so',
-  'img.notionusercontent.com'
-])
-
-export const isNotionFileHostUrl = (url: string): boolean => {
-  try {
-    return NOTION_FILE_HOSTS.has(new URL(url).hostname)
-  } catch {
-    return false
-  }
-}
-
 export const mapImageUrl = (url: string | undefined, block: Block) => {
   if (url === defaultPageCover || url === defaultPageIcon) {
     return url
   }
 
-  if (url && isNotionFileHostUrl(url)) {
-    return url
+  return defaultMapImageUrl(url, block)
+}
+
+/**
+ * `www.notion.so/image` now 302s to `img.notionusercontent.com`. next/image
+ * treats that redirect as an invalid upstream response, so those srcs must
+ * skip the optimizer and let the browser follow the redirect.
+ */
+export function shouldUnoptimizeNotionImage(
+  src: string | undefined | null
+): boolean {
+  if (!src) {
+    return false
   }
 
-  return defaultMapImageUrl(url, block)
+  return (
+    src.includes('notion.so/image') ||
+    src.includes('attachment:') ||
+    /\.heic(?:$|[?#])/i.test(src)
+  )
 }

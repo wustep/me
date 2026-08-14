@@ -4,27 +4,15 @@ Three somewhat-tangled concerns: **preview images (LQIP)**, **social/OG images**
 
 ## Signed-URL expiration fix
 
-Notion serves user-uploaded images from S3 via short-lived signed URLs (`*.amazonaws.com`). If we cache a record map that contains these URLs, the URLs expire and images 404 until the next ISR revalidation.
+Notion serves user-uploaded images via short-lived signed URLs (`*.amazonaws.com`, and now `file.notion.com`). If we cache a record map that contains these URLs, the URLs expire (~1h) and images 404 until the next ISR revalidation. Passing `file.notion.com` through `next/image` (PR #21) also leaves HEIC uploads as raw `.heic` files, which most browsers cannot display.
 
 ### Fix
 
-[`lib/notion.ts`](../lib/notion.ts) strips `.amazonaws.com` entries from `recordMap.signed_urls` after every `getPage` fetch:
+[`lib/notion.ts`](../lib/notion.ts) drops expiring signed hosts from `recordMap.signed_urls` after every `getPage` fetch (see [`lib/signed-file-urls.ts`](../lib/signed-file-urls.ts)). `react-notion-x` then falls back to the unsigned `attachment:` / S3 source, which [`mapImageUrl`](../lib/map-image-url.ts) wraps in Notion's image proxy. That proxy stays valid and converts HEIC → JPEG.
 
-```ts
-if (recordMap && recordMap.signed_urls) {
-  const signedUrls = recordMap.signed_urls
-  const newSignedUrls: Record<string, string> = {}
-  for (const url in signedUrls) {
-    if (signedUrls[url] && signedUrls[url].includes('.amazonaws.com')) {
-      continue  // drop it
-    }
-    newSignedUrls[url] = signedUrls[url]!
-  }
-  recordMap.signed_urls = newSignedUrls
-}
-```
+`www.notion.so/image` now 302s to `img.notionusercontent.com`. `next/image` treats that redirect as an invalid upstream response, so Notion-proxied (and HEIC) srcs are rendered `unoptimized` and the browser follows the redirect.
 
-`react-notion-x` then falls back to going through Notion's image proxy instead of the stale S3 URL. Credit to the upstream issue: [transitive-bullshit/nextjs-notion-starter-kit#279](https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818).
+Credit to the upstream S3-expiry approach: [transitive-bullshit/nextjs-notion-starter-kit#279](https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818).
 
 ## Preview images (LQIP)
 

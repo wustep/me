@@ -22,7 +22,7 @@ import {
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
 import { getExternalUrlMap } from '@/lib/get-external-url-map'
-import { mapImageUrl } from '@/lib/map-image-url'
+import { mapImageUrl, shouldUnoptimizeNotionImage } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
 import { searchNotion } from '@/lib/search-notion'
 import { useDarkMode } from '@/lib/use-dark-mode'
@@ -40,6 +40,16 @@ import { PageHead } from './PageHead'
 import styles from './styles.module.css'
 import { Comments } from './wustep/Comments'
 import { WustepFooter } from './wustep/WustepFooter'
+
+function NotionLegacyImage(props: React.ComponentProps<typeof Image>) {
+  const src = typeof props.src === 'string' ? props.src : undefined
+  return (
+    <Image
+      {...props}
+      unoptimized={props.unoptimized || shouldUnoptimizeNotionImage(src)}
+    />
+  )
+}
 
 // -----------------------------------------------------------------------------
 // dynamic imports for optional components
@@ -259,7 +269,7 @@ export function NotionPage({
 
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
-      nextLegacyImage: Image,
+      nextLegacyImage: NotionLegacyImage,
       nextLink: Link,
       Code,
       Collection,

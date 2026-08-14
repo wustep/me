@@ -16,6 +16,7 @@ import {
 import { getTweetsMap } from './get-tweets'
 import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
+import { filterSignedUrls } from './signed-file-urls'
 import { type ExtendedPreviewImagesRecordMap } from './types'
 
 // Every Notion read shares one caching primitive: pMemoize + ExpiryMap.
@@ -58,19 +59,14 @@ const getNavigationLinkPages = pMemoize(
 async function getPageUncached(pageId: string): Promise<ExtendedRecordMap> {
   let recordMap = await notion.getPage(pageId)
   /**
-   * @wustep: fix for expiring images by removing signed AWS urls
-   * from https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818
+   * Drop short-lived signed file URLs so react-notion-x falls back to the
+   * unsigned block source and Notion's image proxy (stable across the ~1h
+   * expiry). Covers both the older `*.amazonaws.com` host and the current
+   * `file.notion.com` signed host.
+   * @see https://github.com/transitive-bullshit/nextjs-notion-starter-kit/issues/279#issuecomment-1245467818
    */
-  if (recordMap && recordMap.signed_urls) {
-    const signedUrls = recordMap.signed_urls
-    const newSignedUrls: Record<string, string> = {}
-    for (const url in signedUrls) {
-      if (signedUrls[url] && signedUrls[url].includes('.amazonaws.com')) {
-        continue
-      }
-      newSignedUrls[url] = signedUrls[url]!
-    }
-    recordMap.signed_urls = newSignedUrls
+  if (recordMap?.signed_urls) {
+    recordMap.signed_urls = filterSignedUrls(recordMap.signed_urls)
   }
 
   if (navigationStyle !== 'default') {
