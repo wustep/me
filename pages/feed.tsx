@@ -12,6 +12,8 @@ import RSS from 'rss'
 import * as config from '@/lib/config'
 import { getSocialImageUrl } from '@/lib/get-social-image-url'
 import { notion } from '@/lib/notion-api'
+import { getPageSlug } from '@/lib/page-slug'
+import { getCollectionBlockIds } from '@/lib/posts-collection'
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   if (req.method !== 'GET') {
@@ -78,12 +80,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       return { props: {} }
     }
 
-    const collectionResult = collectionData.result
-    const collectionBlockIds =
-      collectionResult?.blockIds ??
-      collectionResult?.collection_group_results?.blockIds ??
-      collectionResult?.reducerResults?.collection_group_results?.blockIds ??
-      []
+    const collectionBlockIds = getCollectionBlockIds(collectionData)
 
     if (!collectionBlockIds.length) {
       const feedText = feed.xml({ indent: true })
@@ -126,13 +123,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         getPageProperty<string>('Description', block, recordMap) ||
         config.description
 
-      // Build the URL using the page slug or ID
-      const slug =
-        getPageProperty<string>('Slug', block, recordMap) ||
-        title
-          .toLowerCase()
-          .replaceAll(/[^a-z0-9]+/g, '-')
-          .replaceAll(/^-|-$/g, '')
+      const slug = getPageSlug(block, recordMap) || pageId
       const url = `${config.host}/${slug}`
 
       const lastUpdatedTime = getPageProperty<number>(

@@ -10,6 +10,7 @@ import * as config from './config'
 import { includeNotionIdInUrls } from './config'
 import { getCanonicalPageId } from './get-canonical-page-id'
 import { buildNotion } from './notion-api'
+import { collectPublicPageSlugs } from './page-slug'
 
 const uuid = !!includeNotionIdInUrls
 
@@ -102,6 +103,29 @@ async function getAllPagesImpl(
     },
     {}
   )
+
+  // Home collection views filter out "Hide from home". Override pages like
+  // /writing still list those public posts, so merge their slugs into the
+  // index or the cards 404.
+  for (const overridePageId of new Set(
+    Object.values(config.pageUrlOverrides)
+  )) {
+    try {
+      const recordMap = await getPage(overridePageId)
+      const extra = collectPublicPageSlugs(recordMap)
+      for (const [slug, pageId] of Object.entries(extra)) {
+        if (!canonicalPageMap[slug]) {
+          canonicalPageMap[slug] = pageId
+        }
+      }
+    } catch (err) {
+      console.warn(
+        'failed to index override page collections',
+        overridePageId,
+        err
+      )
+    }
+  }
 
   return {
     pageMap,

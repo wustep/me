@@ -1,12 +1,12 @@
 import { type ExtendedRecordMap } from 'notion-types'
-import { parsePageId } from 'notion-utils'
 
 import type { PageProps } from './types'
 import * as acl from './acl'
 import { pageUrlAdditions, pageUrlOverrides, site } from './config'
-import { normalizePageIdPath } from './normalize-page-id-path'
 import { getPage } from './notion'
 import { canonicalPageMap } from './notion-index'
+import { getOverrideCollectionSlugMap } from './posts-collection'
+import { lookupSlug, resolvePageIdFromMaps } from './resolve-page-id'
 
 export async function resolveNotionPage(
   domain: string,
@@ -16,27 +16,17 @@ export async function resolveNotionPage(
   let recordMap: ExtendedRecordMap
 
   if (rawPageId && rawPageId !== 'index') {
-    const normalizedRawPageId = normalizePageIdPath(rawPageId)
-    pageId = parsePageId(normalizedRawPageId)!
+    pageId = resolvePageIdFromMaps(rawPageId, {
+      pageUrlOverrides,
+      pageUrlAdditions,
+      canonicalPageMap
+    })
 
+    // Public posts hidden from the home crawl (e.g. /writing cards) are
+    // missing from the committed index. Resolve them from override-page
+    // collections so those hrefs don't 404.
     if (!pageId) {
-      // check if the site configuration provides an override or a fallback for
-      // the page's URI
-      const override =
-        pageUrlOverrides[rawPageId] ||
-        pageUrlAdditions[rawPageId] ||
-        pageUrlOverrides[normalizedRawPageId] ||
-        pageUrlAdditions[normalizedRawPageId]
-
-      if (override) {
-        pageId = parsePageId(override)!
-      }
-    }
-
-    if (!pageId) {
-      const mappedPageId =
-        canonicalPageMap[rawPageId] || canonicalPageMap[normalizedRawPageId]
-      pageId = mappedPageId ? parsePageId(mappedPageId)! : undefined
+      pageId = lookupSlug(rawPageId, await getOverrideCollectionSlugMap())
     }
 
     if (pageId) {

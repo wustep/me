@@ -58,6 +58,22 @@ describe('getPage caching', () => {
   // asserted here — this suite covers our wrapper: dedup, cache hits, and
   // that rejections aren't cached.
 
+  it('drops expiring file.notion.com and S3 signed URLs', async () => {
+    getPageMock.mockResolvedValue({
+      block: {},
+      signed_urls: {
+        a: 'https://file.notion.com/f/f/x/image.png?signature=1',
+        b: 'https://cdn.example.com/ok.png',
+        c: 'https://prod-files-secure.s3.us-west-2.amazonaws.com/x/y.png'
+      }
+    })
+
+    const page = await getPage('signed-urls')
+    expect(page.signed_urls).toEqual({
+      b: 'https://cdn.example.com/ok.png'
+    })
+  })
+
   it('does not cache a rejected fetch', async () => {
     getPageMock.mockRejectedValueOnce(new Error('boom'))
     await expect(getPage('flaky')).rejects.toThrow('boom')

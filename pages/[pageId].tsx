@@ -6,6 +6,7 @@ import { domain, isDev, pageUrlAdditions, pageUrlOverrides } from '@/lib/config'
 import { normalizePageIdPath } from '@/lib/normalize-page-id-path'
 import { canonicalPageMap } from '@/lib/notion-index'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
+import { resolvePageIdFromMaps } from '@/lib/resolve-page-id'
 import { type PageProps, type Params } from '@/lib/types'
 
 export const config: PageConfig = {
@@ -13,18 +14,11 @@ export const config: PageConfig = {
 }
 
 async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
-  const normalizedRawPageId = normalizePageIdPath(rawPageId)
-  let notionPageId =
-    pageUrlOverrides[rawPageId] ||
-    pageUrlAdditions[rawPageId] ||
-    pageUrlOverrides[normalizedRawPageId] ||
-    pageUrlAdditions[normalizedRawPageId] ||
-    parsePageId(normalizedRawPageId, { uuid: false })
-
-  if (!notionPageId) {
-    notionPageId =
-      canonicalPageMap[rawPageId] || canonicalPageMap[normalizedRawPageId]
-  }
+  const notionPageId = resolvePageIdFromMaps(rawPageId, {
+    pageUrlOverrides,
+    pageUrlAdditions,
+    canonicalPageMap
+  })
 
   if (!notionPageId) return null
   const normalizedNotionPageId = parsePageId(notionPageId, { uuid: false })
