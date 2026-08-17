@@ -6,6 +6,7 @@ export default function PlaygroundBombermanPage() {
       title='Bomberman'
       breadcrumbs={[{ label: 'Bomberman' }]}
       fullFrame
+      openHref='https://wustep-bomberman.vercel.app/'
     >
       <iframe
         src='https://wustep-bomberman.vercel.app/'
