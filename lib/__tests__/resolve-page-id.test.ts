@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { lookupSlug, resolvePageIdFromMaps } from '../resolve-page-id'
+import {
+  isResolvablePageSlug,
+  lookupSlug,
+  resolvePageIdFromMaps
+} from '../resolve-page-id'
 
 const maps = {
   pageUrlOverrides: {
@@ -48,5 +52,25 @@ describe('lookupSlug', () => {
         'rapid-prototyping-highlighty': '2bc5cb08-cf2c-810b-83af-c01fde10aefa'
       })
     ).toBe('2bc5cb08-cf2c-810b-83af-c01fde10aefa')
+  })
+})
+
+describe('isResolvablePageSlug', () => {
+  it('accepts slugs in the committed index', () => {
+    expect(isResolvablePageSlug('oct-25', maps)).toBe(true)
+  })
+
+  it('accepts slugs from override-page collections', () => {
+    expect(
+      isResolvablePageSlug('rapid-prototyping-highlighty', maps, {
+        'rapid-prototyping-highlighty': '2bc5cb08-cf2c-810b-83af-c01fde10aefa'
+      })
+    ).toBe(true)
+  })
+
+  it('rejects leftover posts that are not on any public listing', () => {
+    expect(
+      isResolvablePageSlug('rapid-prototyping-highlighty-part-2', maps)
+    ).toBe(false)
   })
 })
