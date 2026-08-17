@@ -1,7 +1,5 @@
-import { ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 
-import { buttonVariants } from '@/components/ui/button'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { cn } from '@/lib/utils'
 
@@ -16,26 +14,13 @@ export default function PlaygroundStarryNightPage() {
       title='Starry Night Sequencer'
       breadcrumbs={[{ label: 'Starry Night Sequencer' }]}
       fullFrame
+      openHref={PLAYER_URL}
     >
       <div className='flex min-h-0 min-w-0 flex-1 flex-col'>
-        <div className='flex shrink-0 flex-col gap-2 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between'>
-          <p className='text-muted-foreground text-sm'>
-            A MIDI visualizer I made in 2016, built with MIDI.js, jQuery UI, and
-            canvas. Best on desktop — mobile browsers often block the audio.
-          </p>
-          <a
-            href={PLAYER_URL}
-            target='_blank'
-            rel='noreferrer'
-            className={cn(
-              buttonVariants({ variant: 'outline', size: 'sm' }),
-              'shrink-0 self-start sm:self-auto'
-            )}
-          >
-            Open in its own tab
-            <ExternalLink aria-hidden='true' />
-          </a>
-        </div>
+        <p className='text-muted-foreground shrink-0 border-b px-4 py-3 text-sm'>
+          A MIDI visualizer I made in 2016, built with MIDI.js, jQuery UI, and
+          canvas. Best on desktop — mobile browsers often block the audio.
+        </p>
         <div className='relative min-h-0 flex-1 bg-[#1a2744]'>
           {!loaded && (
             <div
