@@ -195,6 +195,24 @@ function LayoutContent({
           </BreadcrumbList>
         </Breadcrumb>
         <div className='relative ml-auto flex items-center gap-2'>
+          {openHref ? (
+            <a
+              href={openHref}
+              target='_blank'
+              rel='noreferrer'
+              aria-label='Open in its own tab'
+              title='Open in its own tab'
+              className='playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md after:absolute after:-inset-1.5'
+            >
+              <ExternalLink className='h-4 w-4' aria-hidden='true' />
+            </a>
+          ) : (
+            <span aria-hidden='true' className='inline-flex h-8 w-8' />
+          )}
+          <Separator
+            orientation='vertical'
+            className='data-[orientation=vertical]:h-4'
+          />
           <Link
             href='/'
             className='playground-home-button playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors after:absolute after:-inset-1.5'
@@ -208,18 +226,6 @@ function LayoutContent({
             onToggle={toggleDarkMode}
             className='playground-theme-button playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md after:absolute after:-inset-1.5'
           />
-          {openHref ? (
-            <a
-              href={openHref}
-              target='_blank'
-              rel='noreferrer'
-              aria-label='Open in its own tab'
-              title='Open in its own tab'
-              className='playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md after:absolute after:-inset-1.5'
-            >
-              <ExternalLink className='h-4 w-4' aria-hidden='true' />
-            </a>
-          ) : null}
         </div>
       </header>
       {fullFrame ? (
