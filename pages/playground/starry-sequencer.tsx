@@ -1,4 +1,3 @@
-import { ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
@@ -17,21 +16,10 @@ export default function PlaygroundStarryNightPage() {
       fullFrame
     >
       <div className='flex min-h-0 min-w-0 flex-1 flex-col'>
-        <div className='text-muted-foreground flex shrink-0 items-baseline justify-between gap-3 border-b px-4 py-3 text-sm'>
-          <p>
-            A MIDI visualizer I made in 2016, built with MIDI.js, jQuery UI, and
-            canvas. Best on desktop — mobile browsers often block the audio.
-          </p>
-          <a
-            href={PLAYER_URL}
-            target='_blank'
-            rel='noreferrer'
-            className='inline-flex shrink-0 items-center gap-1 hover:underline'
-          >
-            Open in tab
-            <ExternalLink className='size-3' aria-hidden='true' />
-          </a>
-        </div>
+        <p className='text-muted-foreground shrink-0 border-b px-4 py-3 text-sm'>
+          A MIDI visualizer I made in 2016, built with MIDI.js, jQuery UI, and
+          canvas. Best on desktop — mobile browsers often block the audio.
+        </p>
         <div className='relative min-h-0 flex-1 bg-[#1a2744]'>
           {!loaded && (
             <div
