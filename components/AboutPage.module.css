@@ -10,6 +10,20 @@
   transition:
     background-color 300ms ease,
     color 300ms ease;
+
+  /* Light tokens are the CSS default. The inline noflash script in
+     _document.tsx sets body.dark-mode before first paint, so dark
+     visitors never flash through this light palette. */
+  --about-bg: #ffffff;
+  --about-text: #1a1a1a;
+  --about-muted: #666;
+  --about-accent: #000;
+  --about-border: rgba(0, 0, 0, 0.08);
+  --about-border-hover: rgba(0, 0, 0, 0.15);
+  --about-card: rgba(0, 0, 0, 0.03);
+  --about-card-hover: rgba(0, 0, 0, 0.06);
+  --about-lenses-fg: #4d4d4d;
+  --about-lenses-accent: #c2701f;
 }
 
 @keyframes pageFadeIn {
@@ -21,7 +35,7 @@
   }
 }
 
-.page.dark {
+:global(body.dark-mode) .page {
   --about-bg: #0d0d0d;
   --about-text: #e8e8e8;
   --about-muted: #888;
@@ -30,17 +44,8 @@
   --about-border-hover: rgba(255, 255, 255, 0.2);
   --about-card: rgba(255, 255, 255, 0.04);
   --about-card-hover: rgba(255, 255, 255, 0.08);
-}
-
-.page.light {
-  --about-bg: #ffffff;
-  --about-text: #1a1a1a;
-  --about-muted: #666;
-  --about-accent: #000;
-  --about-border: rgba(0, 0, 0, 0.08);
-  --about-border-hover: rgba(0, 0, 0, 0.15);
-  --about-card: rgba(0, 0, 0, 0.03);
-  --about-card-hover: rgba(0, 0, 0, 0.06);
+  --about-lenses-fg: #e8e8e8;
+  --about-lenses-accent: #f0a85a;
 }
 
 .glow {
@@ -49,16 +54,16 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse 80% 50% at 50% -10%,
-    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 200, 150, 0.12) 0%,
     transparent 60%
   );
   transition: opacity 300ms ease;
 }
 
-.light .glow {
+:global(body.dark-mode) .glow {
   background: radial-gradient(
     ellipse 80% 50% at 50% -10%,
-    rgba(255, 200, 150, 0.12) 0%,
+    rgba(255, 255, 255, 0.08) 0%,
     transparent 60%
   );
 }
@@ -214,14 +219,11 @@
   .navIcon:hover {
     background: var(--about-card);
     color: var(--about-accent);
-  }
-
-  .dark .navIcon:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .light .navIcon:hover {
     border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  :global(body.dark-mode) .navIcon:hover {
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -478,6 +480,18 @@ a.bioHint {
   height: 100%;
 }
 
+.iconOnDark {
+  display: none;
+}
+
+:global(body.dark-mode) .iconOnDark {
+  display: block;
+}
+
+:global(body.dark-mode) .iconOnLight {
+  display: none;
+}
+
 .workCompany {
   font-family: var(--font-sans);
   font-size: 0.88rem;
@@ -707,25 +721,25 @@ a.bioHint {
 }
 
 .spotItCardFill {
-  fill: white;
-  opacity: 0.03;
-}
-
-.light .spotItCardFill {
   fill: black;
   opacity: 0.03;
 }
 
-.spotItCardStroke {
-  stroke: white;
-  stroke-width: 0.75;
-  fill: none;
-  opacity: 0.07;
+:global(body.dark-mode) .spotItCardFill {
+  fill: white;
+  opacity: 0.03;
 }
 
-.light .spotItCardStroke {
+.spotItCardStroke {
   stroke: black;
+  stroke-width: 0.75;
+  fill: none;
   opacity: 0.08;
+}
+
+:global(body.dark-mode) .spotItCardStroke {
+  stroke: white;
+  opacity: 0.07;
 }
 
 .spotItCardBack {
