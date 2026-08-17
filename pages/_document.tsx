@@ -6,7 +6,21 @@ export default class MyDocument extends Document {
       <Html lang='en'>
         <Head>
           <link rel='shortcut icon' href='/favicon.ico' />
-          <link rel='icon' type='image/png' sizes='32x32' href='favicon.png' />
+          {/* Root-absolute hrefs: a relative favicon.png resolves to
+              /{slug}/favicon.png on nested routes and 404s. */}
+          <link
+            rel='icon'
+            type='image/png'
+            sizes='32x32'
+            href='/favicon-32x32.png'
+          />
+          <link
+            rel='icon'
+            type='image/png'
+            sizes='192x192'
+            href='/favicon-192x192.png'
+          />
+          <link rel='apple-touch-icon' href='/favicon-192x192.png' />
         </Head>
 
         <body>
