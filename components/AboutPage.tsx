@@ -365,9 +365,7 @@ export function AboutPage() {
             >
               <div className={styles.workLeft}>
                 <span className={styles.workIcon}>
-                  {company.icon === 'notion' && (
-                    <NotionIconSmall />
-                  )}
+                  {company.icon === 'notion' && <NotionIconSmall />}
                   {company.icon === 'facebook' && <FacebookIconSmall />}
                   {company.icon === 'osu' && <OhioStateIcon />}
                 </span>
