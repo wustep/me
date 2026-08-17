@@ -101,7 +101,7 @@ export function TechniquesContent() {
         </p>
         <div className={styles.skillsLinks}>
           <a
-            href='https://docs.claude.com/en/docs/claude-code/skills'
+            href='https://code.claude.com/docs/en/skills'
             className={styles.skillsLink}
             target='_blank'
             rel='noopener noreferrer'
@@ -112,7 +112,7 @@ export function TechniquesContent() {
             </span>
           </a>
           <a
-            href='https://docs.cursor.com/en/context/rules'
+            href='https://cursor.com/docs/rules'
             className={styles.skillsLink}
             target='_blank'
             rel='noopener noreferrer'
