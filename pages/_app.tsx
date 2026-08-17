@@ -20,25 +20,38 @@ import 'styles/wustep.css'
 import type { AppProps } from 'next/app'
 import { Analytics, type BeforeSendEvent } from '@vercel/analytics/react'
 import Head from 'next/head'
+import { useLayoutEffect } from 'react'
 
 import {
   OwnerModeProvider,
   useOwnerMode
 } from '@/components/wustep/OwnerModeProvider'
+import {
+  applyVaDisableQueryParam,
+  isVaDisableSet
+} from '@/lib/analytics-opt-out'
 import { crimsonPro, geist, inter } from '@/lib/fonts/fonts'
 import { shouldSkipAnalytics } from '@/lib/owner-mode'
 
-function filterOwnerAnalytics(event: BeforeSendEvent) {
+function filterAnalytics(event: BeforeSendEvent) {
+  if (isVaDisableSet()) return null
   return shouldSkipAnalytics(event.url) ? null : event
 }
 
 function SiteAnalytics() {
   const { status } = useOwnerMode()
 
+  // Persist `?va-disable=` before Analytics can send a pageview. Owner-mode
+  // starts as `checking`, so the first paint never mounts <Analytics />.
+  useLayoutEffect(() => {
+    applyVaDisableQueryParam()
+  }, [])
+
   // Vercel Analytics auto-tracks pageviews; render it only for visitors so
-  // owner-mode traffic is excluded, and drop the /owner route via beforeSend.
+  // owner-mode traffic is excluded. beforeSend drops /owner and browsers
+  // that set the official `va-disable` localStorage flag.
   return status === 'visitor' ? (
-    <Analytics beforeSend={filterOwnerAnalytics} />
+    <Analytics beforeSend={filterAnalytics} />
   ) : null
 }
 

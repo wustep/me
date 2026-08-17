@@ -93,7 +93,10 @@ Set in `.env.local` for development, Vercel project settings for production. All
 
 Analytics is [Vercel Analytics](https://vercel.com/analytics) only — enabled by
 the `@vercel/analytics` component in `_app.tsx`, no env var required. Owner-mode
-traffic is excluded. (Fathom, PostHog, and Google Analytics were removed.)
+traffic is excluded. To exclude a browser without owner mode (phones included),
+visit `https://wustep.me/?va-disable=1` once; `?va-disable=0` turns tracking
+back on. The flag is stored in same-origin `localStorage` as `va-disable`.
+(Fathom, PostHog, and Google Analytics were removed.)
 
 ### Owner mode
 
