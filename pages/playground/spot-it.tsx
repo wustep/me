@@ -6,6 +6,7 @@ export default function PlaygroundSpotItPage() {
       title='Spot it!'
       breadcrumbs={[{ label: 'Spot it!' }]}
       fullFrame
+      openHref='https://spot-its.vercel.app/'
     >
       <iframe
         src='https://spot-its.vercel.app/'

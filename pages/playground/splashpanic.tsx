@@ -6,6 +6,7 @@ export default function PlaygroundSplashPanicPage() {
       title='Splash Panic!'
       breadcrumbs={[{ label: 'Splash Panic!' }]}
       fullFrame
+      openHref='https://splashpanic.vercel.app/'
     >
       <iframe
         src='https://splashpanic.vercel.app/'
