@@ -1,6 +1,5 @@
 'use client'
 
-import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import * as React from 'react'
 
@@ -67,16 +66,13 @@ interface PlaygroundLayoutProps {
   breadcrumbs?: { label: string; href?: string }[]
   /** When true, children fill the entire frame (no padding, no title, no max-width) */
   fullFrame?: boolean
-  /** Standalone URL for iframe toys — shown as an "open in its own tab" header action. */
-  openHref?: string
 }
 
 export function PlaygroundLayout({
   children,
   title,
   breadcrumbs = [],
-  fullFrame = false,
-  openHref
+  fullFrame = false
 }: PlaygroundLayoutProps) {
   const [hasMounted, setHasMounted] = React.useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true)
@@ -119,7 +115,6 @@ export function PlaygroundLayout({
           isDarkMode={isDarkMode}
           toggleDarkMode={toggleDarkMode}
           fullFrame={fullFrame}
-          openHref={openHref}
         >
           {children}
         </LayoutContent>
@@ -141,8 +136,7 @@ function LayoutContent({
   hasMounted,
   isDarkMode,
   toggleDarkMode,
-  fullFrame,
-  openHref
+  fullFrame
 }: LayoutContentProps) {
   const { state, isMobile } = useSidebar()
   const insetStyle = React.useMemo(() => {
@@ -208,18 +202,6 @@ function LayoutContent({
             onToggle={toggleDarkMode}
             className='playground-theme-button playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md after:absolute after:-inset-1.5'
           />
-          {openHref ? (
-            <a
-              href={openHref}
-              target='_blank'
-              rel='noreferrer'
-              aria-label='Open in its own tab'
-              title='Open in its own tab'
-              className='playground-action-button relative inline-flex h-8 w-8 items-center justify-center rounded-md after:absolute after:-inset-1.5'
-            >
-              <ExternalLink className='h-4 w-4' aria-hidden='true' />
-            </a>
-          ) : null}
         </div>
       </header>
       {fullFrame ? (
