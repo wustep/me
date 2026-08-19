@@ -202,6 +202,8 @@
   font-weight: 550;
   font-size: 0.62em;
   letter-spacing: -0.01em;
+  /* Cap the inherited h1 leading so the label box matches the grid. */
+  line-height: 1;
 }
 
 .thinkingHidden {
@@ -221,9 +223,15 @@
   grid-template-columns: repeat(3, 0.3em);
   gap: 0.11em;
   margin-right: 0.1em;
+  /* Kill the page's 1.65–1.7 leading so the 3×3 box is just the cells.
+     Then sit it on the word's optical center — "Thinking" has a
+     descender, so a raw flex midpoint reads a few pixels high. */
+  line-height: 0;
+  translate: 0 0.1em;
 }
 
 .driveCell {
+  display: block;
   width: 0.3em;
   height: 0.3em;
   border-radius: 1px;
@@ -3327,6 +3335,9 @@
   margin: 6px 4px 0;
   padding: 6px 0;
   font-size: 0.85rem;
+  /* .page leading is 1.65 / 1.7; that tall line box sits the glyphs
+     low against the Drive grid even with align-items: center. */
+  line-height: 1;
   color: var(--fg-color, #1a1918);
   animation: errorIn 220ms var(--ease-out-swift);
 }
