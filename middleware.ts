@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { markdownContentType, prefersMarkdown } from '@/lib/accept'
-import { markdownForPath } from '@/lib/agent-content'
+import { prefersMarkdown } from '@/lib/accept'
 
 export const config = {
   matcher: [
@@ -25,24 +24,18 @@ function withVaryAccept(response: NextResponse) {
 }
 
 export function middleware(request: NextRequest) {
-  const accept = request.headers.get('accept')
-
-  if (!prefersMarkdown(accept)) {
+  if (!prefersMarkdown(request.headers.get('accept'))) {
     return withVaryAccept(NextResponse.next())
   }
 
-  const { body, status } = markdownForPath(request.nextUrl.pathname)
-  const headers = {
-    'Content-Type': markdownContentType(accept),
-    Vary: 'Accept',
-    'Cache-Control': 'public, max-age=0, s-maxage=3600'
-  }
-
-  // HEAD must still carry Content-Type — `curl -sI` and acceptmarkdown
-  // scanners use it. An empty body avoids some hosts stripping the header.
-  if (request.method === 'HEAD') {
-    return new NextResponse(null, { status, headers })
-  }
-
-  return new NextResponse(body, { status, headers })
+  // Rewrite to a pages API route. Vercel drops Content-Type from empty
+  // middleware HEAD bodies, which breaks `curl -sI` / acceptmarkdown.
+  // Pass the original path in a header — rewritten query strings do not
+  // reliably reach pages API routes.
+  const headers = new Headers(request.headers)
+  headers.set('x-markdown-path', request.nextUrl.pathname)
+  const url = request.nextUrl.clone()
+  url.pathname = '/api/site-markdown'
+  url.search = ''
+  return NextResponse.rewrite(url, { request: { headers } })
 }
