@@ -3,8 +3,9 @@ import type { GetServerSideProps } from 'next'
 import { getLlmsTxt } from '@/lib/agent-content'
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  if (req.method !== 'GET') {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.statusCode = 405
+    res.setHeader('Allow', 'GET, HEAD')
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     res.write(
       JSON.stringify({
@@ -17,9 +18,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return { props: {} }
   }
 
+  const body = getLlmsTxt()
   res.setHeader('Cache-Control', 'public, max-age=86400')
   res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-  res.write(getLlmsTxt())
+  res.setHeader('Content-Length', String(Buffer.byteLength(body)))
+  if (req.method === 'GET') {
+    res.write(body)
+  }
   res.end()
 
   return { props: {} }

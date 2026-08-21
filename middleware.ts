@@ -32,12 +32,17 @@ export function middleware(request: NextRequest) {
   }
 
   const { body, status } = markdownForPath(request.nextUrl.pathname)
-  return new NextResponse(body, {
-    status,
-    headers: {
-      'Content-Type': markdownContentType(accept),
-      Vary: 'Accept',
-      'Cache-Control': 'public, max-age=0, s-maxage=3600'
-    }
-  })
+  const headers = {
+    'Content-Type': markdownContentType(accept),
+    Vary: 'Accept',
+    'Cache-Control': 'public, max-age=0, s-maxage=3600'
+  }
+
+  // HEAD must still carry Content-Type — `curl -sI` and acceptmarkdown
+  // scanners use it. An empty body avoids some hosts stripping the header.
+  if (request.method === 'HEAD') {
+    return new NextResponse(null, { status, headers })
+  }
+
+  return new NextResponse(body, { status, headers })
 }
