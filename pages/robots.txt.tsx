@@ -26,12 +26,14 @@ Disallow: /api/get-tweet-ast/*
 Disallow: /api/search-notion
 
 Sitemap: ${host}/sitemap.xml
+# llms.txt: ${host}/llms.txt
 `)
   } else {
     res.write(`User-agent: *
 Disallow: /
 
 Sitemap: ${host}/sitemap.xml
+# llms.txt: ${host}/llms.txt
 `)
   }
 

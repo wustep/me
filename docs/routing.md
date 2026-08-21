@@ -6,8 +6,9 @@ How a URL like `/articles` or `/my-post-slug-2bc5cb08cf2c8036a1e3cddcb2c61d97` b
 
 - `/` — custom static homepage, [`pages/index.tsx`](../pages/index.tsx). Does not touch Notion.
 - `/[pageId]` — catch-all for every Notion page, [`pages/[pageId].tsx`](../pages/[pageId].tsx).
-- `/sitemap.xml`, `/feed`, `/robots.txt`, `/site`, `/404`, `/_error` — special pages.
-- `/api/search-notion`, `/api/social-image` — API routes.
+- `/sitemap.xml`, `/feed`, `/robots.txt`, `/llms.txt`, `/openapi.json`, `/privacy`, `/contact`, `/site`, `/404`, `/_error` — special pages.
+- `/api/search-notion`, `/api/social-image`, `/api/owner-mode` — API routes.
+- `/about` redirects to `/`.
 
 ## Resolving `[pageId]` → recordMap
 
@@ -73,8 +74,8 @@ const allPageIds = [
 ]
 ```
 
-- `fallback: true` — paths outside this set still work; they're rendered on first request and cached from then on.
-- In dev, `paths: []` with `fallback: true` skips pre-rendering; slug resolution still uses the committed generated index.
+- `fallback: 'blocking'` — paths outside this set are rendered on first request (the response waits for `getStaticProps`) and cached from then on. Unknown slugs return `{ notFound: true }` so the HTTP status is a real 404, not a 200 app shell.
+- In dev, `paths: []` with `fallback: 'blocking'` skips pre-rendering; slug resolution still uses the committed generated index.
 
 ## Site map construction
 

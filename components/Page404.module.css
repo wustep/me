@@ -75,9 +75,26 @@
   color: var(--w-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
-  margin: 0 0 2rem;
+  margin: 0 0 0.75rem;
   max-width: 320px;
   animation: fadeIn 800ms var(--ease-out-quart) 400ms both;
+}
+
+.hints {
+  color: var(--w-secondary);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  animation: fadeIn 800ms var(--ease-out-quart) 450ms both;
+}
+
+.hints a {
+  color: var(--w-secondary);
+}
+
+.hints a:hover,
+.hints a:focus-visible {
+  color: var(--w-primary);
 }
 
 .homeLink {

@@ -47,12 +47,6 @@ export default withBundleAnalyzer({
         permanent: true
       },
       {
-        source: '/contact',
-        destination:
-          'https://wustep.notion.site/1425cb08cf2c80cc89d4f322774aa02b',
-        permanent: true
-      },
-      {
         source: '/articles/:slug',
         destination: '/:slug',
         permanent: true
@@ -76,6 +70,30 @@ export default withBundleAnalyzer({
         headers: [
           { key: 'Access-Control-Allow-Origin', value: 'https://giscus.app' }
         ]
+      },
+      {
+        source: '/',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/privacy',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/contact',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/prompting',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/lenses',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/playground',
+        headers: [{ key: 'Vary', value: 'Accept' }]
       }
     ]
   },

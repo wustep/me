@@ -36,6 +36,10 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   try {
     const props = await resolveNotionPage(domain, normalizedPageId)
 
+    if (props.error?.statusCode === 404) {
+      return { notFound: true, revalidate: 10 }
+    }
+
     return { props, revalidate: 1800 }
   } catch (err: unknown) {
     console.error('page error', domain, requestedPageId, err)
@@ -70,7 +74,7 @@ export async function getStaticPaths() {
   if (isDev || process.env.SKIP_NOTION_STATIC_BUILD === 'true') {
     return {
       paths: [],
-      fallback: true
+      fallback: 'blocking'
     }
   }
 
@@ -85,7 +89,7 @@ export async function getStaticPaths() {
 
   const staticPaths = {
     paths: allPageIds.map((pageId) => ({ params: { pageId } })),
-    fallback: true
+    fallback: 'blocking'
   }
 
   return staticPaths

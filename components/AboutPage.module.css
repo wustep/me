@@ -92,6 +92,8 @@
   /* Semantic <h1>; the wordmark link owns all visual sizing, so strip the
      browser's default heading margin and font. */
   margin: 0;
+  font-size: inherit;
+  font-family: inherit;
   font-weight: inherit;
 }
 
@@ -1134,6 +1136,24 @@ a.bioHint {
   outline: 2px solid var(--about-accent);
   outline-offset: 4px;
   border-radius: 4px;
+  color: var(--about-accent);
+}
+
+.footerMeta {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
+.footerMeta a {
+  color: var(--about-muted);
+}
+
+.footerMeta a:hover,
+.footerMeta a:focus-visible {
   color: var(--about-accent);
 }
 
