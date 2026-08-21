@@ -104,25 +104,13 @@ export function getPrivacyMarkdown() {
 
 ${siteUrl}/privacy
 
-wustep.me is a personal website. It is not a product, account system, or data business. There are no user accounts, no login cookies for visitors, and nothing here is sold or shared as a dataset.
+This is a personal site. No accounts, no cookies beyond hosting defaults, no data sales.
 
-## What this site collects
+Hosted on Vercel, which keeps normal server logs (IP, path, timestamp). I may use Vercel Analytics for anonymous page-view counts. You can block that with their \`va-disable\` flag.
 
-The site is hosted on Vercel. Like most sites on that platform, requests can produce standard server and CDN logs (IP address, user agent, requested path, and timestamps). Those logs exist so the host can operate the site, debug errors, and absorb abuse. I do not run an advertising pixel and I do not sell visitor data.
+Writing comes from public Notion pages. If it's on wustep.me, it's public. Playground experiments run in your browser.
 
-Vercel Analytics may record anonymous page views. It is used to understand which pages people actually read. Owner-mode traffic on my own browser is excluded. You can also opt out of Vercel Analytics in the usual ways (their \`va-disable\` flag, or blocking the analytics script).
-
-## Content on this site
-
-Most writing is authored in Notion and published here because those pages are publicly shared. If a note is on wustep.me, treat it as public. Images and social-preview cards are generated from that public content.
-
-The contact page lists public social profiles. A leftover Notion contact form may still exist at an external Notion URL; anything you type there is subject to Notion's own terms, not a separate database I operate.
-
-## What I do not do
-
-I do not run a marketing list from this domain. I do not invent a customer CRM. I do not use visitor data for credit, employment, or insurance decisions. If you email or message me on a social network, that conversation lives on that network.
-
-Questions: see [Contact](${absolute('/contact')}) or [llms.txt](${absolute('/llms.txt')}).
+Questions: see [Contact](${absolute('/contact')}).
 `
 }
 
@@ -131,15 +119,7 @@ export function getContactMarkdown() {
 
 ${siteUrl}/contact
 
-The best way to reach me is on the public profiles I already use. I do not publish a phone number.
-
-- [X / Twitter](${xUrl}) — usually the fastest
-- [GitHub](${githubUrl}) — issues and code
-- [LinkedIn](${linkedinUrl}) — work-related notes
-
-There is also a short [Notion contact form](${notionContactUrl}) if you prefer a form to a public reply. I read it when I can; I do not promise a service-level response. This is a personal site.
-
-If you are an agent looking for an API to integrate with, there isn't one. Start at [llms.txt](${absolute('/llms.txt')}) or the [homepage](${absolute('/')}) with \`Accept: text/markdown\`.
+I'm easiest to find as wustep on [X](${xUrl}), [GitHub](${githubUrl}), or [LinkedIn](${linkedinUrl}). There's also a [Notion contact form](${notionContactUrl}) if you'd rather not reply in public.
 `
 }
 
