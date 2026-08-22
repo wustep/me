@@ -24,6 +24,14 @@ export function Page404({ site, pageId, error }: types.PageProps) {
             moved.
           </p>
 
+          <p className={styles.hints}>
+            <a href='/'>Home</a>
+            <span aria-hidden='true'> · </span>
+            <a href='/llms.txt'>llms.txt</a>
+            <span aria-hidden='true'> · </span>
+            <a href='/sitemap.xml'>sitemap.xml</a>
+          </p>
+
           <a className={styles.homeLink} href={config.host}>
             <svg
               viewBox='0 0 16 16'

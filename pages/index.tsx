@@ -1,7 +1,8 @@
 import Head from 'next/head'
 
-import { AboutPage, bioText } from '@/components/AboutPage'
+import { AboutPage } from '@/components/AboutPage'
 import { domain, host, name, x } from '@/lib/config'
+import { bioText, personJsonLd } from '@/lib/site-identity'
 
 const previewImage = `${host}/favicon-512x512.png`
 const canonicalUrl = `${host}/`
@@ -28,6 +29,10 @@ export default function IndexPage() {
         <meta name='twitter:title' content={name} />
         <meta name='twitter:description' content={bioText} />
         <meta name='twitter:image' content={previewImage} />
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}
+        />
       </Head>
       <AboutPage />
     </>

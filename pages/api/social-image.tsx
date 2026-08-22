@@ -11,6 +11,7 @@ import {
   parsePageId
 } from 'notion-utils'
 
+import { apiErrorResponse } from '@/lib/api-error'
 import * as libConfig from '@/lib/config'
 import interSemiBoldFont from '@/lib/fonts/inter-semibold'
 import { mapImageUrl } from '@/lib/map-image-url'
@@ -21,21 +22,30 @@ export const runtime = 'edge'
 
 export default async function OGImage(
   req: NextApiRequest,
-  res: NextApiResponse
+  _res: NextApiResponse
 ) {
   const { searchParams } = new URL(req.url!)
   const pageId = parsePageId(
     searchParams.get('id') || libConfig.rootNotionPageId
   )
   if (!pageId) {
-    return new Response('Invalid notion page id', { status: 400 })
+    return apiErrorResponse(400, 'invalid_page_id', 'Invalid notion page id')
   }
 
-  const pageInfoOrError = await getNotionPageInfo({ pageId })
+  let pageInfoOrError: Awaited<ReturnType<typeof getNotionPageInfo>>
+  try {
+    pageInfoOrError = await getNotionPageInfo({ pageId })
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : 'Could not load Notion page'
+    return apiErrorResponse(502, 'page_lookup_failed', message)
+  }
   if (pageInfoOrError.type === 'error') {
-    return res.status(pageInfoOrError.error.statusCode).send({
-      error: pageInfoOrError.error.message
-    })
+    return apiErrorResponse(
+      pageInfoOrError.error.statusCode,
+      'page_error',
+      pageInfoOrError.error.message ?? 'Could not render social image'
+    )
   }
   const pageInfo = pageInfoOrError.data
 

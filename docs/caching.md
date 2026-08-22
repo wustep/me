@@ -9,7 +9,7 @@ Notion pages are rendered by [`pages/[pageId].tsx`](../pages/[pageId].tsx) with 
 - Pages are statically generated at build time from the generated Notion index.
 - After deploy, each page is served from Vercel's edge cache.
 - A page is re-rendered on-demand at most once per 24 hours per region, and only when someone requests it.
-- `fallback: true` means pages not in the sitemap can still be generated on first request.
+- `fallback: 'blocking'` means pages not in the sitemap can still be generated on first request, without a 200 spinner shell. Missing pages return HTTP 404.
 - Error responses use `revalidate: 10` so transient failures clear quickly.
 
 **Effect:** normal page traffic almost never hits Notion. Most of the other caches exist to keep the _revalidation path_ fast and to protect the build/sitemap path.

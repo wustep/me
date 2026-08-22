@@ -1,9 +1,12 @@
-'use client'
-
 import Link from 'next/link'
 import * as React from 'react'
 
 import { github, linkedin, x } from '@/lib/config'
+import {
+  workHistory,
+  writingPersonal,
+  writingSoftware
+} from '@/lib/site-identity'
 
 import styles from './AboutPage.module.css'
 import { DesignButton } from './wustep/DesignButton'
@@ -12,78 +15,7 @@ import { Illustration } from './wustep/lenses/illustrations'
 import { OwnerModeToggle } from './wustep/OwnerModeToggle'
 import { ThemeToggle } from './wustep/ThemeToggle'
 
-// Plain-text mirror of the hero bio JSX below — used for meta descriptions.
-export const bioText = `I'm Stephen, a product & design engineer who now also manages engineers. I think a lot about tools for thought, software design, and personal philosophy. I grew up mostly in Toledo, Ohio, and live in San Francisco now. I also enjoy roguelike deckbuilders, piano improvisation, and making random web projects.`
-
-const workHistory = [
-  {
-    company: 'Notion',
-    icon: 'notion',
-    url: 'https://notion.com',
-    roles: [
-      { title: 'Tech Lead Manager', period: '2025–' },
-      { title: 'Software Engineer', period: '2022–2025' }
-    ]
-  },
-  {
-    company: 'Facebook',
-    icon: 'facebook',
-    roles: [{ title: 'Software Engineer', period: '2019–2022' }]
-  },
-  {
-    company: 'Ohio State',
-    icon: 'osu',
-    roles: [
-      { title: 'B.S. Computer Science & Engineering', period: '2015–2019' }
-    ]
-  }
-]
-
-const writingSoftware = [
-  {
-    title: 'Prompting',
-    href: '/prompting',
-    note: 'talking to coding agents'
-  },
-  {
-    title: 'Advice for students',
-    href: '/advice-students',
-    note: 'career pathfinding'
-  },
-  {
-    title: 'Graphs of knowledge',
-    href: '/cs-knowledge-graph',
-    note: 'careers as infinite trees'
-  },
-  {
-    title: "Don't thrash the user",
-    href: '/thrash',
-    note: 'empathetic ui/ux'
-  }
-]
-
-const writingPersonal = [
-  {
-    title: 'Headspace',
-    href: '/headspace',
-    note: 'identity, growth, thought-space'
-  },
-  {
-    title: 'Foraging',
-    href: '/foraging',
-    note: 'ADHD, dopamine, attention'
-  },
-  {
-    title: 'On philosophy',
-    href: '/philosophy',
-    note: 'moral philosophy, lenses'
-  },
-  {
-    title: "oct '25",
-    href: '/oct-25',
-    note: 'life update'
-  }
-]
+export { bioText } from '@/lib/site-identity'
 
 function Tooltip({
   children,
@@ -265,11 +197,9 @@ export function AboutPage() {
       <div className={styles.container}>
         <header className={`${styles.header} owner-mode-toggle-reveal-group`}>
           <div className={styles.headerLeft}>
-            <h1 className={styles.nameRow}>
-              <Link href='/' className={styles.wordmark}>
-                Stephen Wu
-              </Link>
-            </h1>
+            <Link href='/' className={styles.wordmark}>
+              <h1 className={styles.nameRow}>Stephen Wu</h1>
+            </Link>
             <span className={styles.title}>Engineering at Notion</span>
           </div>
 
@@ -696,6 +626,10 @@ export function AboutPage() {
               Get in touch →
             </a>
           </Tooltip>
+          <nav className={styles.footerMeta} aria-label='Site'>
+            <a href='/privacy'>Privacy</a>
+            <a href='/llms.txt'>llms.txt</a>
+          </nav>
         </footer>
       </div>
     </main>
