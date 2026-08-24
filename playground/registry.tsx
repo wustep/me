@@ -45,7 +45,7 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Contraptions',
         url: '/playground/contraptions',
         description:
-          'A generator for grids of tiny animated machines. Every cell is a small self-contained mechanism that loops forever — pendulums, gear pairs, marble runs, tipping buckets — and adjacent machines can be wired into chains that fire in sequence, so a signal visibly runs across the piece. 37 machines, 14 palettes, four layouts, and every composition is a shareable link. Built with Claude Opus 5.',
+          'A generator for grids of tiny animated machines — each cell a small mechanism that loops forever, with neighbours wired into chains that fire in sequence, so a signal visibly runs across the piece. After Okazz’s original: openprocessing.org/@okazz/2993522',
         summary: 'Generator for tiny animated machines',
         date: 'Aug 2026',
         year: '2026',
