@@ -6,7 +6,6 @@ import {
   BoxStep,
   CELL,
   Conveyor,
-  Dominoes,
   Gears,
   Hammer,
   Lamp,
@@ -18,8 +17,6 @@ import {
   Signal,
   Slope,
   Spring,
-  type ThemeName,
-  THEMES,
   Wavy,
   Windmill
 } from './ContraptionsMotifs'
@@ -29,6 +26,12 @@ import {
  * grid. At rest it is a still frame of the machines; hovering switches the
  * whole board on, each cell picking up on its own offset so the grid comes
  * alive in a shimmer rather than a single synchronised pulse.
+ *
+ * Every colour is a CSS custom property rather than a literal, so the board
+ * follows the site's theme: the generator's default ink-on-paper in light mode,
+ * and its Noir palette — where a single red carries nearly all the colour — in
+ * dark. The values live in the stylesheet because that is the only place that
+ * can respond to `body.dark-mode`.
  */
 
 // The stage is far wider than any card so wide cards reveal more grid rather
@@ -41,6 +44,16 @@ const ROWS = STAGE_H / CELL
 
 /** One loop for the whole board; per-cell offsets come out of the hash. */
 const LOOP_S = 4.2
+
+const INK = 'var(--cc-ink)'
+const BG = 'var(--cc-bg)'
+const PALETTE = [
+  'var(--cc-c0)',
+  'var(--cc-c1)',
+  'var(--cc-c2)',
+  'var(--cc-c3)',
+  'var(--cc-c4)'
+]
 
 const MACHINES: Motif[] = [
   Pendulum,
@@ -57,7 +70,6 @@ const MACHINES: Motif[] = [
   Bell,
   Hammer,
   Conveyor,
-  Dominoes,
   Lamp
 ]
 
@@ -74,14 +86,13 @@ const MOVES = new Map<Motif, string | undefined>([
   [Hammer, styles.strike],
   [BoxStep, styles.walk],
   [Conveyor, styles.march],
-  [Dominoes, styles.topple],
   [Lamp, styles.glow],
   [Signal, styles.blink]
 ])
 
 /**
  * Integer hash. Picking machines with `(row * 7 + col * 3) % n` lays them out in
- * visible diagonal stripes — the grid reads as a repeating wallpaper rather than
+ * visible diagonal stripes — the grid reads as repeating wallpaper rather than
  * as a generated piece. This scatters them while staying a pure function of the
  * cell index, so the board is identical on the server and the client.
  */
@@ -93,35 +104,21 @@ function hash(n: number): number {
 }
 
 export function ContraptionsCover() {
-  return <Board theme='noir' />
-}
-
-/**
- * The same board on the generator's default ink-on-paper palette. Unshipped,
- * kept for the covers-preview workbench so the comparison record survives.
- */
-export function ContraptionsCoverPaper() {
-  return <Board theme='okazz' />
-}
-
-function Board({ theme }: { theme: ThemeName }) {
-  const { ink, bg, palette } = THEMES[theme]
   // defs ids collide across card instances; colons break url(#…) refs.
   const uid = useId().replaceAll(':', '')
-  const clipId = `cc-${theme}-stage-${uid}`
+  const clipId = `cc-stage-${uid}`
 
   const cells = []
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const i = r * COLS + c
-      const h = hash(i)
-      const M = MACHINES[h % MACHINES.length]!
+      const M = MACHINES[hash(i) % MACHINES.length]!
       cells.push({
         key: `${r}-${c}`,
         x: c * CELL + CELL / 2,
         y: r * CELL + CELL / 2,
         Motif: M,
-        color: palette[hash(i * 3 + 11) % palette.length]!,
+        color: PALETTE[hash(i * 3 + 11) % PALETTE.length]!,
         move: MOVES.get(M),
         // Spread the starts across the loop so nothing beats in unison, and
         // mirror roughly half the board so repeated machines do not rhyme.
@@ -132,10 +129,7 @@ function Board({ theme }: { theme: ThemeName }) {
   }
 
   return (
-    <div
-      className={theme === 'noir' ? styles.coverNoir : styles.cover}
-      aria-hidden='true'
-    >
+    <div className={styles.cover} aria-hidden='true'>
       <svg
         className={styles.svg}
         viewBox={`0 0 ${STAGE_W} ${STAGE_H}`}
@@ -148,9 +142,9 @@ function Board({ theme }: { theme: ThemeName }) {
         </defs>
 
         <g clipPath={`url(#${clipId})`}>
-          <rect x='0' y='0' width={STAGE_W} height={STAGE_H} fill={bg} />
+          <rect x='0' y='0' width={STAGE_W} height={STAGE_H} fill={BG} />
           <g
-            stroke={ink}
+            stroke={INK}
             strokeWidth={1.8}
             strokeLinecap='round'
             strokeLinejoin='round'
@@ -162,7 +156,7 @@ function Board({ theme }: { theme: ThemeName }) {
                 transform={`translate(${x} ${y}) scale(${flip} 1)`}
                 style={{ '--delay': `-${delay.toFixed(2)}s` } as CSSProperties}
               >
-                <M c={color} move={move} bg={bg} />
+                <M c={color} move={move} bg={BG} />
               </g>
             ))}
           </g>

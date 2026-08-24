@@ -1,21 +1,38 @@
-/* Cover for Contraptions — a patch of the generator's grid on its Noir
-   palette. The scene is one extra-wide SVG (960×200) sliced to the cover box,
-   so the full height always fits and wider cards reveal more grid. The ground
-   is painted inside the SVG as well as on .cover so the letterboxing can never
-   show a mismatched edge. */
+/* Cover for Contraptions — a patch of the generator's grid. The scene is one
+   extra-wide SVG (960×200) sliced to the cover box, so the full height always
+   fits and wider cards reveal more grid.
+
+   Every colour the SVG paints comes from these variables, which is what lets
+   one board serve both themes: the generator's default ink-on-paper palette in
+   light mode, its Noir palette in dark. The SVG cannot respond to
+   `body.dark-mode` itself, so the palette lives here and the component only
+   ever refers to `var(--cc-*)`. */
 .cover {
+  --cc-ink: #212121;
+  --cc-bg: #ebf1f4;
+  --cc-c0: #fcb500;
+  --cc-c1: #007eb6;
+  --cc-c2: #009135;
+  --cc-c3: #e76b31;
+  --cc-c4: #eb335e;
+
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #ebf1f4;
+  background: var(--cc-bg);
 }
 
-/* Shipped ground. Only the backdrop differs — every other colour is threaded
-   through the SVG from the theme table, so both grounds share this stylesheet. */
-.coverNoir {
-  composes: cover;
-  background: #141414;
+/* Noir: bone ink on near-black, where a single red carries nearly all the
+   colour in the piece. */
+:global(body.dark-mode) .cover {
+  --cc-ink: #f0ede6;
+  --cc-bg: #141414;
+  --cc-c0: #e23636;
+  --cc-c1: #f0ede6;
+  --cc-c2: #8a8a8a;
+  --cc-c3: #c9a227;
+  --cc-c4: #4d4d4d;
 }
 
 .svg {
@@ -42,7 +59,6 @@
 .strike,
 .walk,
 .march,
-.topple,
 .glow,
 .blink {
   animation-duration: 4.2s;
@@ -92,11 +108,6 @@
 .march {
   animation-name: march;
   animation-timing-function: linear;
-}
-.topple {
-  animation-name: topple;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.7, 1);
-  transform-origin: 50% 100%;
 }
 .glow {
   animation-name: glow;
@@ -199,19 +210,6 @@
     transform: translateX(10px);
   }
 }
-@keyframes topple {
-  0%,
-  10% {
-    transform: rotate(0deg);
-  }
-  45%,
-  85% {
-    transform: rotate(52deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
 @keyframes glow {
   0%,
   60% {
@@ -273,7 +271,6 @@
   .strike,
   .walk,
   .march,
-  .topple,
   .glow,
   .blink {
     animation: none !important;

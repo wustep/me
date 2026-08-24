@@ -32,26 +32,6 @@ export type MotifProps = {
   bg?: string
 }
 
-/**
- * The generator's palettes. `okazz` is the app's default — ink on paper — and
- * `noir` is its dark counterpart, where a single red carries nearly all the
- * colour in the piece.
- */
-export const THEMES = {
-  okazz: {
-    ink: '#212121',
-    bg: '#ebf1f4',
-    palette: ['#fcb500', '#007eb6', '#009135', '#e76b31', '#eb335e']
-  },
-  noir: {
-    ink: '#f0ede6',
-    bg: '#141414',
-    palette: ['#e23636', '#f0ede6', '#8a8a8a', '#c9a227', '#4d4d4d']
-  }
-} as const
-
-export type ThemeName = keyof typeof THEMES
-
 export type Motif = (props: MotifProps) => ReactNode
 
 const H = CELL / 2
