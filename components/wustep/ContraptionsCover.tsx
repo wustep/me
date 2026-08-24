@@ -2,6 +2,7 @@ import { type CSSProperties, useId } from 'react'
 
 import styles from './ContraptionsCover.module.css'
 import {
+  Abacus,
   Bell,
   BoxStep,
   CELL,
@@ -70,7 +71,8 @@ const MACHINES: Motif[] = [
   Bell,
   Hammer,
   Conveyor,
-  Lamp
+  Lamp,
+  Abacus
 ]
 
 /** Which machines move at all, and which class drives each. */
@@ -86,6 +88,7 @@ const MOVES = new Map<Motif, string | undefined>([
   [Hammer, styles.strike],
   [BoxStep, styles.walk],
   [Conveyor, styles.march],
+  [Abacus, styles.slide],
   [Lamp, styles.glow],
   [Signal, styles.blink]
 ])
