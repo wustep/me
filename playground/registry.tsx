@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
@@ -161,6 +162,18 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Visualizations',
     items: [
+      {
+        title: 'Contraptions',
+        url: '/playground/contraptions',
+        description:
+          'A generator for grids of tiny animated machines — each cell a small mechanism that loops forever, with neighbours wired into chains that fire in sequence, so a signal visibly runs across the piece. After Okazz’s original: openprocessing.org/@okazz/2993522',
+        summary: 'Generator for tiny animated machines',
+        date: 'Aug 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/contraptions',
+        gradient: 'from-neutral-900 via-red-900 to-neutral-800',
+        CoverComponent: ContraptionsCover
+      },
       {
         title: 'MIDI Visualizer',
         url: '/playground/midi-visualizer',
