@@ -260,3 +260,10 @@
     opacity: 1;
   }
 }
+
+/* Dark counterpart. Only the ground changes — every other colour is threaded
+   through the SVG from the theme table, so the two share one stylesheet. */
+.coverNoir {
+  composes: cover;
+  background: #141414;
+}

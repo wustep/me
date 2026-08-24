@@ -28,7 +28,29 @@ export type MotifProps = {
   c: string
   /** Class applied to the moving part. */
   move?: string
+  /** Ground colour, for the few motifs that knock a hole in themselves. */
+  bg?: string
 }
+
+/**
+ * The generator's palettes. `okazz` is the app's default — ink on paper — and
+ * `noir` is its dark counterpart, where a single red carries nearly all the
+ * colour in the piece.
+ */
+export const THEMES = {
+  okazz: {
+    ink: '#212121',
+    bg: '#ebf1f4',
+    palette: ['#fcb500', '#007eb6', '#009135', '#e76b31', '#eb335e']
+  },
+  noir: {
+    ink: '#f0ede6',
+    bg: '#141414',
+    palette: ['#e23636', '#f0ede6', '#8a8a8a', '#c9a227', '#4d4d4d']
+  }
+} as const
+
+export type ThemeName = keyof typeof THEMES
 
 export type Motif = (props: MotifProps) => ReactNode
 
@@ -120,7 +142,7 @@ export function Bell({ c, move }: MotifProps) {
  * A bulb on a post — the machine that most obviously reacts to a signal.
  * `move` toggles the rays and the fill; the bulb reads as dark at rest.
  */
-export function Lamp({ c, move }: MotifProps) {
+export function Lamp({ c, move, bg }: MotifProps) {
   return (
     <g>
       <Floor />
@@ -140,7 +162,7 @@ export function Lamp({ c, move }: MotifProps) {
           )
         })}
       </g>
-      <circle cx={0} cy={-4} r={7.5} fill={PAPER} />
+      <circle cx={0} cy={-4} r={7.5} fill={bg ?? PAPER} />
     </g>
   )
 }
@@ -184,13 +206,13 @@ export function Pulse({ c, move }: MotifProps) {
 }
 
 /** Three lamps in a housing; `move` shifts which one is lit. */
-export function Signal({ c, move }: MotifProps) {
+export function Signal({ c, move, bg }: MotifProps) {
   return (
     <g>
       <rect x={-8} y={-15} width={16} height={30} rx={3} fill='none' />
       <line x1={0} y1={15} x2={0} y2={H} />
       {[-9, 0, 9].map((cy) => (
-        <circle key={cy} cx={0} cy={cy} r={4.4} fill={PAPER} />
+        <circle key={cy} cx={0} cy={cy} r={4.4} fill={bg ?? PAPER} />
       ))}
       <circle className={move} cx={0} cy={-9} r={4.4} fill={c} />
     </g>

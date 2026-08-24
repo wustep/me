@@ -46,7 +46,7 @@ export const playgroundSections: PlaygroundSection[] = [
         url: '/playground/contraptions',
         description:
           'A generator for grids of tiny animated machines. Every cell is a small self-contained mechanism that loops forever — pendulums, gear pairs, marble runs, tipping buckets — and adjacent machines can be wired into chains that fire in sequence, so a signal visibly runs across the piece. 37 machines, 14 palettes, four layouts, and every composition is a shareable link. Built with Claude Opus 5.',
-        summary: 'Grids of tiny looping machines, wired into chains',
+        summary: 'Generator for tiny animated machines',
         date: 'Aug 2026',
         year: '2026',
         source: 'https://github.com/wustep/contraptions',

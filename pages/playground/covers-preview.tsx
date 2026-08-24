@@ -4,7 +4,10 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
-import { ContraptionsCoverA } from '@/components/wustep/ContraptionsCoverA'
+import {
+  ContraptionsCoverA,
+  ContraptionsCoverANoir
+} from '@/components/wustep/ContraptionsCoverA'
 import { ContraptionsCoverB } from '@/components/wustep/ContraptionsCoverB'
 import { ContraptionsCoverC } from '@/components/wustep/ContraptionsCoverC'
 import { ContraptionsCoverD } from '@/components/wustep/ContraptionsCoverD'
@@ -42,25 +45,30 @@ const tabs: [Tab, ...Tab[]] = [
   {
     id: 'contraptions',
     title: 'Contraptions',
-    summary: 'Grids of tiny looping machines, wired into chains',
+    summary: 'Generator for tiny animated machines',
     covers: [
       {
-        label: 'A — Grid vignette',
+        label: 'A — Grid vignette (shipped)',
         hint: 'Hover: the grid idles and a chain fires across the middle — bead per link, lamp lights on arrival.',
         Cover: ContraptionsCoverA
       },
       {
-        label: 'B — Poster',
+        label: 'A — Grid vignette, Noir',
+        hint: 'Same scene on the generator’s dark palette — one red carries nearly all the colour.',
+        Cover: ContraptionsCoverANoir
+      },
+      {
+        label: 'B — Poster (unshipped)',
         hint: 'Hover: the ornament bands start running and a bead travels the lower rule.',
         Cover: ContraptionsCoverB
       },
       {
-        label: 'C — The chain, huge',
+        label: 'C — The chain, huge (unshipped)',
         hint: 'Hover: hammer strikes → bead → gears step → bead → bell rings. The mechanic as the whole card.',
         Cover: ContraptionsCoverC
       },
       {
-        label: 'D — Specimen sheet',
+        label: 'D — Specimen sheet (unshipped)',
         hint: 'Hover: a roll call — every specimen performs once, left to right down the plate.',
         Cover: ContraptionsCoverD
       }

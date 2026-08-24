@@ -8,17 +8,17 @@ import {
   Conveyor,
   Gears,
   Hammer,
-  INK,
   Lamp,
   type Motif,
   Orbit,
-  PALETTE,
   Pendulum,
   Pipe,
   Pulse,
   Signal,
   Slope,
   Spring,
+  type ThemeName,
+  THEMES,
   Wavy,
   Windmill
 } from './ContraptionsMotifs'
@@ -73,9 +73,23 @@ const IDLE = new Map<Motif, string | undefined>([
 ])
 
 export function ContraptionsCoverA() {
+  return <GridVignette theme='okazz' />
+}
+
+/**
+ * The same scene on the generator's dark palette. Kept alongside the paper
+ * version so the two can be compared in the card grid, where the surrounding
+ * UI is dark and a paper cover reads as a lit panel rather than a hole.
+ */
+export function ContraptionsCoverANoir() {
+  return <GridVignette theme='noir' />
+}
+
+function GridVignette({ theme }: { theme: ThemeName }) {
+  const { ink, bg, palette } = THEMES[theme]
   // defs ids collide across card instances; colons break url(#…) refs.
   const uid = useId().replaceAll(':', '')
-  const id = (name: string) => `ca-${name}-${uid}`
+  const id = (name: string) => `ca-${theme}-${name}-${uid}`
 
   const cells: Array<{
     key: string
@@ -104,7 +118,7 @@ export function ContraptionsCoverA() {
           x,
           y,
           Motif: M,
-          color: PALETTE[link! % PALETTE.length]!,
+          color: palette[link! % palette.length]!,
           move: [
             styles.strike,
             styles.spinFire,
@@ -123,7 +137,7 @@ export function ContraptionsCoverA() {
         x,
         y,
         Motif: M,
-        color: PALETTE[(r * 5 + c) % PALETTE.length]!,
+        color: palette[(r * 5 + c) % palette.length]!,
         move: IDLE.get(M)
       })
     }
@@ -133,7 +147,10 @@ export function ContraptionsCoverA() {
   const links = CHAIN_TO - CHAIN_FROM
 
   return (
-    <div className={styles.cover} aria-hidden='true'>
+    <div
+      className={theme === 'noir' ? styles.coverNoir : styles.cover}
+      aria-hidden='true'
+    >
       <svg
         className={styles.svg}
         viewBox={`0 0 ${STAGE_W} ${STAGE_H}`}
@@ -146,7 +163,7 @@ export function ContraptionsCoverA() {
         </defs>
 
         <g clipPath={`url(#${id('stage')})`}>
-          <rect x='0' y='0' width={STAGE_W} height={STAGE_H} fill='#ebf1f4' />
+          <rect x='0' y='0' width={STAGE_W} height={STAGE_H} fill={bg} />
 
           {/* Conduit under the machines, the way the generator draws it: a
               heavy ink channel with a paper core running through it. */}
@@ -156,7 +173,7 @@ export function ContraptionsCoverA() {
               y1={chainY}
               x2={CHAIN_TO * CELL + CELL / 2}
               y2={chainY}
-              stroke={INK}
+              stroke={ink}
               strokeWidth={9}
             />
             <line
@@ -164,13 +181,13 @@ export function ContraptionsCoverA() {
               y1={chainY}
               x2={CHAIN_TO * CELL + CELL / 2}
               y2={chainY}
-              stroke='#ebf1f4'
+              stroke={bg}
               strokeWidth={4}
             />
           </g>
 
           <g
-            stroke={INK}
+            stroke={ink}
             strokeWidth={2.4}
             strokeLinecap='round'
             strokeLinejoin='round'
@@ -178,7 +195,7 @@ export function ContraptionsCoverA() {
           >
             {cells.map(({ key, x, y, Motif: M, color, move }) => (
               <g key={key} transform={`translate(${x} ${y})`}>
-                <M c={color} move={move} />
+                <M c={color} move={move} bg={bg} />
               </g>
             ))}
           </g>
@@ -186,7 +203,7 @@ export function ContraptionsCoverA() {
           {/* Junctions sit where the conduit crosses between cells, never on a
               cell centre — a terminal on a centre punches a hole through the
               machine it feeds. */}
-          <g stroke={INK} strokeWidth={2.4} fill='#ebf1f4'>
+          <g stroke={ink} strokeWidth={2.4} fill={bg}>
             {Array.from({ length: links }, (_, k) => (
               <circle
                 key={k}
@@ -198,7 +215,7 @@ export function ContraptionsCoverA() {
           </g>
 
           {/* One bead per link, each crossing during its own slice of the loop. */}
-          <g stroke={INK} strokeWidth={2}>
+          <g stroke={ink} strokeWidth={2}>
             {Array.from({ length: links }, (_, k) => (
               <circle
                 key={k}
@@ -207,7 +224,7 @@ export function ContraptionsCoverA() {
                 cx={(CHAIN_FROM + k) * CELL + CELL / 2}
                 cy={chainY}
                 r={6}
-                fill={PALETTE[k % PALETTE.length]}
+                fill={palette[k % palette.length]}
               />
             ))}
           </g>
