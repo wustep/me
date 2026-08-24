@@ -121,7 +121,7 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Splash Panic!',
         url: '/playground/splashpanic',
         description:
-          'A chaotic multiplayer water-balloon battle arena inspired by Crazy Arcade — trap your rivals in bubbles, rescue your teammates, and be the last one standing.',
+          'A multiplayer water-balloon battle arena game inspired by Crazy Arcade and Bomberman.',
         summary: 'Multiplayer water-balloon chaos with bubble traps & rescues',
         date: 'Jul 2026',
         year: '2026',
@@ -166,7 +166,7 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Contraptions',
         url: '/playground/contraptions',
         description:
-          'A generator for grids of tiny animated machines — each cell a small mechanism that loops forever, with neighbours wired into chains that fire in sequence, so a signal visibly runs across the piece. After Okazz’s original: openprocessing.org/@okazz/2993522',
+          'A generator for grids of tiny animated machines, inspired by [Okazz](https://x.com/okazz_/status/2090999902805393607)',
         summary: 'Generator for tiny animated machines',
         date: 'Aug 2026',
         year: '2026',

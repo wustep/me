@@ -18,6 +18,7 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar'
 import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
+import { PlaygroundDescription } from '@/components/wustep/PlaygroundDescription'
 import { playgroundSections } from '@/playground/registry'
 
 const defaultDescription = "Welcome to Stephen's code playground."
@@ -207,7 +208,9 @@ export function PlaygroundSidebar({
           <Info className='size-3.5' />
           <span>About</span>
         </div>
-        <p>{aboutInfo.description}</p>
+        <p>
+          <PlaygroundDescription text={aboutInfo.description} />
+        </p>
         {metadataItems.length ? (
           <p className='mt-1 text-[11px] text-muted-foreground flex items-center gap-1'>
             {metadataItems.map((item, index) => (

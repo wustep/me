@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import { RiTwitterX } from '@/components/icons/InlineIcons'
 import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
+import { plainDescription } from '@/components/wustep/PlaygroundDescription'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { useInView } from '@/lib/use-in-view'
 import { playgroundEntries } from '@/playground/registry'
@@ -166,7 +167,7 @@ export default function PlaygroundPage() {
             <div className='notion-collection-card-body p-4 flex-1'>
               <h3 className='font-semibold mb-1'>{project.title}</h3>
               <p className='text-sm text-muted-foreground'>
-                {project.summary ?? project.description}
+                {project.summary ?? plainDescription(project.description)}
               </p>
             </div>
             {project.article || project.x ? (
