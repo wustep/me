@@ -2,7 +2,7 @@ import type React from 'react'
 
 import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
-import { ContraptionsCoverA } from '@/components/wustep/ContraptionsCoverA'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
@@ -50,8 +50,8 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Aug 2026',
         year: '2026',
         source: 'https://github.com/wustep/contraptions',
-        gradient: 'from-sky-500 via-amber-400 to-rose-500',
-        CoverComponent: ContraptionsCoverA
+        gradient: 'from-neutral-900 via-red-900 to-neutral-800',
+        CoverComponent: ContraptionsCover
       },
       {
         title: 'StageBench',

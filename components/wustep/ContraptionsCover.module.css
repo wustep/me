@@ -1,0 +1,284 @@
+/* Cover for Contraptions — a patch of the generator's grid on its Noir
+   palette. The scene is one extra-wide SVG (960×200) sliced to the cover box,
+   so the full height always fits and wider cards reveal more grid. The ground
+   is painted inside the SVG as well as on .cover so the letterboxing can never
+   show a mismatched edge. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #ebf1f4;
+}
+
+/* Shipped ground. Only the backdrop differs — every other colour is threaded
+   through the SVG from the theme table, so both grounds share this stylesheet. */
+.coverNoir {
+  composes: cover;
+  background: #141414;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Paused-timeline idiom: everything is declared up front and held, so the card
+   is a finished frame at rest and hover switches the board on.
+
+   Every machine shares one 4.2s loop and reads its start offset from --delay,
+   set per cell on the wrapping <g>. animation-delay does not inherit, but
+   custom properties do, which is why the offset travels as a variable. The
+   offsets are negative, so the held frame is a moment part-way through the
+   loop rather than every machine sitting at zero — the rest pose looks like a
+   photograph of a working board. */
+.swing,
+.swingSoft,
+.spin,
+.breathe,
+.slide,
+.bounce,
+.strike,
+.walk,
+.march,
+.topple,
+.glow,
+.blink {
+  animation-duration: 4.2s;
+  animation-iteration-count: infinite;
+  animation-delay: var(--delay, 0s);
+  animation-play-state: paused;
+  transform-box: fill-box;
+}
+
+.swing {
+  animation-name: swing;
+  animation-timing-function: ease-in-out;
+  transform-origin: 50% 0%;
+}
+.swingSoft {
+  animation-name: swingSoft;
+  animation-timing-function: ease-in-out;
+  transform-origin: 50% 0%;
+}
+.spin {
+  animation-name: spin;
+  animation-timing-function: linear;
+  transform-origin: center;
+}
+.breathe {
+  animation-name: breathe;
+  animation-timing-function: ease-in-out;
+  transform-origin: center;
+}
+.slide {
+  animation-name: slide;
+  animation-timing-function: ease-in-out;
+  transform-origin: center;
+}
+.bounce {
+  animation-name: bounce;
+  animation-timing-function: ease-in-out;
+}
+.strike {
+  animation-name: strike;
+  animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+}
+.walk {
+  animation-name: walk;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.march {
+  animation-name: march;
+  animation-timing-function: linear;
+}
+.topple {
+  animation-name: topple;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.7, 1);
+  transform-origin: 50% 100%;
+}
+.glow {
+  animation-name: glow;
+  animation-timing-function: ease-out;
+  opacity: 0;
+}
+.blink {
+  animation-name: blink;
+  animation-timing-function: steps(1, end);
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    transform: rotate(19deg);
+  }
+  50% {
+    transform: rotate(-19deg);
+  }
+}
+@keyframes swingSoft {
+  0%,
+  100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(0.7);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+@keyframes slide {
+  0%,
+  100% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+/* Up fast, down under its own weight — the way the real machine moves. */
+@keyframes strike {
+  0% {
+    transform: translateY(0);
+  }
+  8% {
+    transform: translateY(-13px);
+  }
+  40% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+/* A square walking its own perimeter, one edge per quarter. */
+@keyframes walk {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(0, -14px);
+  }
+  50% {
+    transform: translate(-14px, -14px);
+  }
+  75% {
+    transform: translate(-14px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes march {
+  0% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(10px);
+  }
+}
+@keyframes topple {
+  0%,
+  10% {
+    transform: rotate(0deg);
+  }
+  45%,
+  85% {
+    transform: rotate(52deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes glow {
+  0%,
+  60% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+@keyframes blink {
+  0% {
+    transform: translateY(0);
+  }
+  33% {
+    transform: translateY(9px);
+  }
+  66% {
+    transform: translateY(18px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* `.group` is the card <Link> on /playground; the bare .cover selectors keep
+   the cover alive anywhere else it is rendered. Hover is gated so a tap on a
+   touch device cannot strand the board mid-animation. */
+@media (hover: hover) {
+  :global(.group):hover .svg *,
+  .cover:hover .svg * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .svg *,
+.cover:focus-within .svg * {
+  animation-play-state: running;
+}
+
+/* The held frame is already a designed still — machines scattered across their
+   loops rather than all at zero — so reduced motion only needs the lamps lit
+   so the board does not read as half-drawn. */
+@media (prefers-reduced-motion: reduce) {
+  .swing,
+  .swingSoft,
+  .spin,
+  .breathe,
+  .slide,
+  .bounce,
+  .strike,
+  .walk,
+  .march,
+  .topple,
+  .glow,
+  .blink {
+    animation: none !important;
+  }
+  .glow {
+    opacity: 1;
+  }
+}

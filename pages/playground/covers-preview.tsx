@@ -5,9 +5,9 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import {
-  ContraptionsCoverA,
-  ContraptionsCoverANoir
-} from '@/components/wustep/ContraptionsCoverA'
+  ContraptionsCover,
+  ContraptionsCoverPaper
+} from '@/components/wustep/ContraptionsCover'
 import { ContraptionsCoverB } from '@/components/wustep/ContraptionsCoverB'
 import { ContraptionsCoverC } from '@/components/wustep/ContraptionsCoverC'
 import { ContraptionsCoverD } from '@/components/wustep/ContraptionsCoverD'
@@ -48,14 +48,14 @@ const tabs: [Tab, ...Tab[]] = [
     summary: 'Generator for tiny animated machines',
     covers: [
       {
-        label: 'A — Grid vignette (shipped)',
-        hint: 'Hover: the grid idles and a chain fires across the middle — bead per link, lamp lights on arrival.',
-        Cover: ContraptionsCoverA
+        label: 'Grid board, Noir (shipped)',
+        hint: 'Hover: the whole board switches on, every machine picking up on its own offset.',
+        Cover: ContraptionsCover
       },
       {
-        label: 'A — Grid vignette, Noir',
-        hint: 'Same scene on the generator’s dark palette — one red carries nearly all the colour.',
-        Cover: ContraptionsCoverANoir
+        label: 'Grid board, paper (unshipped)',
+        hint: 'The same board on the default ink-on-paper palette.',
+        Cover: ContraptionsCoverPaper
       },
       {
         label: 'B — Poster (unshipped)',
