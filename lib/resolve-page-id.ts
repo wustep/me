@@ -47,3 +47,18 @@ export function lookupSlug(
   const pageId = slugMap[slug] || slugMap[normalized]
   return pageId ? (parsePageId(pageId) ?? undefined) : undefined
 }
+
+/**
+ * True when `/<slug>` would resolve the same way `resolveNotionPage` does:
+ * committed index / URL overrides, then collection slugs from override pages.
+ * Used to keep the RSS feed from advertising leftover posts that 404.
+ */
+export function isResolvablePageSlug(
+  slug: string,
+  maps: PageIdLookupMaps,
+  extraSlugMap: Record<string, string> = {}
+): boolean {
+  return Boolean(
+    resolvePageIdFromMaps(slug, maps) || lookupSlug(slug, extraSlugMap)
+  )
+}

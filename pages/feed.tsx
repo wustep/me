@@ -12,8 +12,13 @@ import RSS from 'rss'
 import * as config from '@/lib/config'
 import { getSocialImageUrl } from '@/lib/get-social-image-url'
 import { notion } from '@/lib/notion-api'
+import { canonicalPageMap } from '@/lib/notion-index'
 import { getPageSlug } from '@/lib/page-slug'
-import { getCollectionBlockIds } from '@/lib/posts-collection'
+import {
+  getCollectionBlockIds,
+  getOverrideCollectionSlugMap
+} from '@/lib/posts-collection'
+import { isResolvablePageSlug } from '@/lib/resolve-page-id'
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   if (req.method !== 'GET') {
@@ -94,6 +99,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       return { props: {} }
     }
 
+    const extraSlugMap = await getOverrideCollectionSlugMap()
+    const pageIdMaps = {
+      pageUrlOverrides: config.pageUrlOverrides,
+      pageUrlAdditions: config.pageUrlAdditions,
+      canonicalPageMap
+    }
+
     // Get all pages that belong to this collection
     for (const blockId of collectionBlockIds) {
       const block =
@@ -124,6 +136,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         config.description
 
       const slug = getPageSlug(block, recordMap) || pageId
+      if (!isResolvablePageSlug(slug, pageIdMaps, extraSlugMap)) {
+        console.warn('skipping feed item with unresolvable slug', slug)
+        continue
+      }
       const url = `${config.host}/${slug}`
 
       const lastUpdatedTime = getPageProperty<number>(
