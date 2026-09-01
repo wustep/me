@@ -2,6 +2,11 @@ import { type Block } from 'notion-types'
 import { defaultMapImageUrl } from 'notion-utils'
 
 import { defaultPageCover, defaultPageIcon } from './config'
+import {
+  isAttachmentSource,
+  isGifSource,
+  notionFileProxyUrl
+} from './rewrite-video-urls'
 
 function notionImageProxyUrl(url: string, block: Block): string {
   const notionImageUrl = new URL(
@@ -31,11 +36,16 @@ export const mapImageUrl = (url: string | undefined, block: Block) => {
     return url
   }
 
-  // notion-utils leaves http(s) GIFs unproxied — correct for public CDNs,
-  // but `attachment:…gif` is not fetchable. Always proxy attachment: sources,
-  // including after react-notion-x appends `?spaceId=`.
-  if (url.startsWith('attachment:')) {
-    return notionImageProxyUrl(url.replace(/[?#].*$/, ''), block)
+  // notion-utils' GIF_REGEXP returns `*.gif` URLs unproxied — correct for
+  // public CDNs, but `attachment:…gif` is not fetchable. Send those through
+  // the same re-signer videos use. Other attachment: stills use Notion's
+  // image proxy (needed for HEIC conversion).
+  if (isAttachmentSource(url)) {
+    const clean = url.replace(/[?#].*$/, '')
+    if (isGifSource(clean)) {
+      return notionFileProxyUrl(block.id, clean)
+    }
+    return notionImageProxyUrl(clean, block)
   }
 
   return defaultMapImageUrl(url, block)

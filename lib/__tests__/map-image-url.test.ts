@@ -33,6 +33,15 @@ describe('mapImageUrl', () => {
     expect(mapped).toContain(encodeURIComponent(url))
   })
 
+  it('still proxies attachment: stills through notion.so/image', () => {
+    const url =
+      'attachment:d25020a5-cf96-4eee-bdca-e58e60fd4564:photo.png?spaceId=abc'
+
+    const mapped = mapImageUrl(url, block)
+    expect(mapped).toContain('https://www.notion.so/image/')
+    expect(mapped).not.toContain('/api/notion-file')
+  })
+
   it('wraps attachment: sources (current Notion upload format) in the proxy', () => {
     const url =
       'attachment:d25020a5-cf96-4eee-bdca-e58e60fd4564:EADC0DE2-FEA6-4356-A7ED-52AEB8952AD1.heic'
@@ -43,16 +52,17 @@ describe('mapImageUrl', () => {
     expect(mapped).toContain('id=1285cb08-cf2c-806c-83d9-ce2bbaaa663f')
   })
 
-  it('proxies attachment: GIFs instead of leaving the raw source', () => {
+  it('sends attachment: GIFs through the same-origin file re-signer', () => {
     const url =
       'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif?spaceId=30725683-e071-41f1-988d-e6e6fa72abd8'
 
     const mapped = mapImageUrl(url, block)
-    expect(mapped).toContain('https://www.notion.so/image/')
-    expect(mapped).toContain(
-      encodeURIComponent(
-        'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif'
-      )
+    expect(mapped).toMatch(/\/api\/notion-file\?/)
+    expect(mapped).not.toContain('notion.so/image')
+    const href = new URL(mapped!)
+    expect(href.searchParams.get('id')).toBe(block.id)
+    expect(href.searchParams.get('url')).toBe(
+      'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif'
     )
     expect(mapped).not.toMatch(/^attachment:/)
   })

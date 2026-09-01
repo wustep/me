@@ -65,6 +65,26 @@ describe('rewriteVideoSources', () => {
     expect(href.searchParams.get('url')).toContain('.gif')
   })
 
+  it('leaves public-CDN GIFs on image blocks alone', () => {
+    const gifId = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
+    const recordMap = recordMapWith({
+      [gifId]: {
+        role: 'reader',
+        value: {
+          id: gifId,
+          type: 'image',
+          properties: {
+            source: [['https://media.giphy.com/media/abc/sozin.gif']]
+          }
+        }
+      }
+    })
+
+    rewriteVideoSources(recordMap)
+
+    expect(recordMap.signed_urls?.[gifId]).toBeUndefined()
+  })
+
   it('leaves YouTube embeds alone', () => {
     const recordMap = recordMapWith({
       [youtubeId]: {

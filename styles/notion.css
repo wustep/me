@@ -61,23 +61,31 @@
 }
 
 .notion-asset-wrapper-video {
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0 !important;
+  width: 100%;
   max-width: 100%;
 }
 
+/* Caption is a sibling of this box. Cap the player only so the
+   caption stays below and cannot sit inside an overflowing video. */
 .notion-asset-wrapper-video > div {
   width: 100% !important;
   height: auto !important;
-  max-height: min(420px, 56vw);
+  max-height: min(22rem, 50vw);
   overflow: hidden;
+  position: relative;
 }
 
 .notion-asset-wrapper-video video {
   display: block;
   width: 100% !important;
+  max-width: 100%;
   height: auto !important;
-  max-height: min(420px, 56vw);
+  max-height: min(22rem, 50vw);
   object-fit: contain;
+  background: #000;
 }
 
 .notion-asset-wrapper-video .notion-asset-caption {

@@ -16,8 +16,21 @@ export function mediaProxyOrigin(): string {
   return siteUrl
 }
 
-function isGifSource(source: string): boolean {
+export function isGifSource(source: string): boolean {
   return /\.gif(?:$|[?#])/i.test(source)
+}
+
+export function isAttachmentSource(source: string): boolean {
+  return source.startsWith('attachment:')
+}
+
+/** Same-origin re-signer. Absolute so react-notion-x can `new URL(source)`. */
+export function notionFileProxyUrl(blockId: string, source: string): string {
+  const params = new URLSearchParams({
+    id: blockId,
+    url: source.replace(/[?#].*$/, '')
+  })
+  return `${mediaProxyOrigin()}/api/notion-file?${params}`
 }
 
 /**
@@ -36,21 +49,21 @@ function isGifSource(source: string): boolean {
 export function rewriteVideoSources(recordMap: ExtendedRecordMap): void {
   if (!recordMap.block) return
 
-  const origin = mediaProxyOrigin()
-
   for (const [blockId, wrapper] of Object.entries(recordMap.block)) {
     const block = getBlockValue(wrapper)
     if (block?.type !== 'video' && block?.type !== 'image') continue
 
     const source = block.properties?.source?.[0]?.[0]
     if (!source || EMBED_HOST_RE.test(source)) continue
-    if (block.type === 'image' && !isGifSource(source)) continue
+    // Image proxy handles stills; only attachment GIFs need the file API.
+    if (
+      block.type === 'image' &&
+      !(isGifSource(source) && isAttachmentSource(source))
+    ) {
+      continue
+    }
 
-    const params = new URLSearchParams({
-      id: blockId,
-      url: source.replace(/[?#].*$/, '')
-    })
     recordMap.signed_urls ??= {}
-    recordMap.signed_urls[blockId] = `${origin}/api/notion-file?${params}`
+    recordMap.signed_urls[blockId] = notionFileProxyUrl(blockId, source)
   }
 }
