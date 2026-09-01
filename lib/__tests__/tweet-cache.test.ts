@@ -11,7 +11,7 @@ const { getTweetDataMock, dbGetMock, dbSetMock } = vi.hoisted(() => ({
 vi.mock('react-tweet/api', () => ({ getTweet: getTweetDataMock }))
 vi.mock('../db', () => ({ dbGet: dbGetMock, dbSet: dbSetMock }))
 
-const { getTweet, getTweetsMap } = await import('../get-tweets')
+const { getTweet, getTweetsMap, getFreshTweet } = await import('../get-tweets')
 
 beforeEach(() => {
   getTweetDataMock.mockReset()
@@ -73,6 +73,33 @@ describe('getTweet caching', () => {
     await getTweet('5')
 
     expect(dbSetMock).not.toHaveBeenCalled()
+  })
+})
+
+describe('getFreshTweet', () => {
+  it('fetches from syndication without reading or writing the durable cache', async () => {
+    getTweetDataMock.mockResolvedValue({
+      id: 'fresh-1',
+      entities: { urls: [] }
+    })
+
+    const tweet = await getFreshTweet('fresh-1')
+
+    expect(tweet).toMatchObject({ id: 'fresh-1' })
+    expect(getTweetDataMock).toHaveBeenCalledWith('fresh-1')
+    expect(dbGetMock).not.toHaveBeenCalled()
+    expect(dbSetMock).not.toHaveBeenCalled()
+  })
+
+  it('does not cache a transient failure', async () => {
+    getTweetDataMock.mockRejectedValueOnce(new Error('429'))
+    await expect(getFreshTweet('fresh-2')).rejects.toThrow('429')
+
+    getTweetDataMock.mockResolvedValueOnce({ id: 'fresh-2' })
+    await expect(getFreshTweet('fresh-2')).resolves.toMatchObject({
+      id: 'fresh-2'
+    })
+    expect(getTweetDataMock).toHaveBeenCalledTimes(2)
   })
 })
 

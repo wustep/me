@@ -111,3 +111,20 @@ const TWEET_CACHE_TTL_MS = 25 * 60 * 1000
 export const getTweet = pMemoize(getTweetImpl, {
   cache: new ExpiryMap<string, any>(TWEET_CACHE_TTL_MS)
 })
+
+/**
+ * Fresh syndication payload for in-page video playback. `video.twimg.com`
+ * URLs go stale; the Redis-backed `getTweet` path is fine for posters and
+ * fallback, but the player needs a live fetch. Skip Redis, keep a short
+ * in-process memoize so a page with many embeds doesn't stampede X.
+ */
+const FRESH_TWEET_CACHE_TTL_MS = 2 * 60 * 1000
+
+async function getFreshTweetImpl(tweetId: string): Promise<any> {
+  if (!tweetId) return null
+  return normalizeTweetEntities((await getTweetData(tweetId)) || null)
+}
+
+export const getFreshTweet = pMemoize(getFreshTweetImpl, {
+  cache: new ExpiryMap<string, any>(FRESH_TWEET_CACHE_TTL_MS)
+})
