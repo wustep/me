@@ -37,6 +37,34 @@ describe('rewriteVideoSources', () => {
     expect(href.searchParams.get('url')).toContain('attachment:')
   })
 
+  it('points attachment GIFs at the same-origin re-signer', () => {
+    const gifId = '3c25cb08-cf2c-80c4-b4ac-db1746dad068'
+    const recordMap = recordMapWith({
+      [gifId]: {
+        role: 'reader',
+        value: {
+          id: gifId,
+          type: 'image',
+          properties: {
+            source: [
+              [
+                'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif'
+              ]
+            ]
+          }
+        }
+      }
+    })
+
+    rewriteVideoSources(recordMap)
+
+    expect(recordMap.signed_urls?.[gifId]).toMatch(
+      /^https?:\/\/.+\/api\/notion-file\?/
+    )
+    const href = new URL(recordMap.signed_urls![gifId]!)
+    expect(href.searchParams.get('url')).toContain('.gif')
+  })
+
   it('leaves YouTube embeds alone', () => {
     const recordMap = recordMapWith({
       [youtubeId]: {

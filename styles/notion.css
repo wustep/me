@@ -60,9 +60,31 @@
   margin-bottom: 1em;
 }
 
-.notion-asset-wrapper-video > div,
-.notion-asset-wrapper-video video {
+.notion-asset-wrapper-video {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.notion-asset-wrapper-video > div {
   width: 100% !important;
+  height: auto !important;
+  max-height: min(420px, 56vw);
+  overflow: hidden;
+}
+
+.notion-asset-wrapper-video video {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-height: min(420px, 56vw);
+  object-fit: contain;
+}
+
+.notion-asset-wrapper-video .notion-asset-caption {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  margin-top: 0.35em;
 }
 
 .notion-header .notion-nav-header {

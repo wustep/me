@@ -1280,30 +1280,70 @@ span[class*='_background'] {
 }
 
 /**
- * Column images: react-notion-x always sets object-fit: cover and the
- * row clips overflow. A Notion crop (or a screenshot already cropped to
- * its intended frame) then gets a second, centered crop — text and UI
- * chrome fall off the edge. Show the full frame instead.
+ * Column photos: Notion sizes each image to the column width at its
+ * intrinsic ratio. react-notion-x often stamps a fixed height (320px)
+ * plus object-fit:cover, which re-crops an already-framed screenshot.
+ * Fill the cell width, drop the forced height, keep Notion's tight gap.
  */
 .notion-row {
   align-items: flex-start;
-  overflow: visible;
+  overflow: hidden;
 }
 
-.notion-column .notion-asset-wrapper,
-.notion-column .notion-asset-wrapper > div,
-.notion-column .lazy-image-wrapper {
+.notion-column {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.notion-column .notion-asset-wrapper {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  min-width: 0;
+}
+
+.notion-column .notion-asset-wrapper > div {
+  width: 100% !important;
+  height: auto !important;
   max-width: 100%;
 }
 
 .notion-column .notion-asset-wrapper img,
 .notion-column .lazy-image-wrapper img {
-  object-fit: contain !important;
-  object-position: center top;
+  display: block;
+  width: 100%;
+  height: auto !important;
+  max-width: 100%;
+  max-height: none;
+  object-fit: fill;
+  object-position: center center;
   min-width: 0 !important;
   min-height: 0 !important;
-  max-width: 100%;
-  height: auto;
+}
+
+.notion-column .lazy-image-wrapper {
+  overflow: hidden;
+  padding-bottom: 0 !important;
+  height: auto !important;
+}
+
+.notion-column .lazy-image-wrapper img {
+  position: static !important;
+}
+
+/**
+ * Uploaded videos in a column/gallery: cap the player so a wide clip
+ * cannot grow over its siblings on mobile, and keep captions below.
+ */
+.notion-column .notion-asset-wrapper-video > div,
+.notion-column .notion-asset-wrapper-video video {
+  max-height: 280px;
+}
+
+@media (max-width: 640px) {
+  .notion-column .notion-asset-wrapper-video > div,
+  .notion-column .notion-asset-wrapper-video video {
+    max-height: 220px;
+  }
 }
 
 /**

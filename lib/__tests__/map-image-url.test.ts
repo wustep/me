@@ -43,6 +43,26 @@ describe('mapImageUrl', () => {
     expect(mapped).toContain('id=1285cb08-cf2c-806c-83d9-ce2bbaaa663f')
   })
 
+  it('proxies attachment: GIFs instead of leaving the raw source', () => {
+    const url =
+      'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif?spaceId=30725683-e071-41f1-988d-e6e6fa72abd8'
+
+    const mapped = mapImageUrl(url, block)
+    expect(mapped).toContain('https://www.notion.so/image/')
+    expect(mapped).toContain(
+      encodeURIComponent(
+        'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif'
+      )
+    )
+    expect(mapped).not.toMatch(/^attachment:/)
+  })
+
+  it('leaves the same-origin file re-signer unwrapped', () => {
+    const url =
+      'http://localhost:6363/api/notion-file?id=1&url=attachment%3Aabc%3Aclip.gif'
+    expect(mapImageUrl(url, block)).toBe(url)
+  })
+
   it('leaves Unsplash URLs alone', () => {
     const url =
       'https://images.unsplash.com/photo-1620121478247-ec786b9be2fa?ixlib=rb-4.0.3'
@@ -52,6 +72,14 @@ describe('mapImageUrl', () => {
 })
 
 describe('shouldUnoptimizeNotionImage', () => {
+  it('unoptimizes the same-origin file re-signer', () => {
+    expect(
+      shouldUnoptimizeNotionImage(
+        'http://localhost:6363/api/notion-file?id=1&url=attachment%3Aabc%3Aclip.gif'
+      )
+    ).toBe(true)
+  })
+
   it('unoptimizes Notion image-proxy URLs', () => {
     expect(
       shouldUnoptimizeNotionImage(
