@@ -121,7 +121,8 @@ export function LlmsDirectory() {
           </ul>
 
           <p className={styles.footNote}>
-            Every deck was generated from the same authoring prompt —{' '}
+            Every deck was written from the same prompt, with no access to my
+            deck or to each other’s —{' '}
             <a
               href='/lenses/llms/prompt.md'
               className={styles.ledeLink}

@@ -29,7 +29,7 @@
 
 id: agency
 category: Philosophy
-tagline: Ceilings are self-imposed.
+tagline: Most ceilings are self-imposed.
 bg: #B83D31
 fg: #F6EAD8
 accent: #F3C35F
@@ -43,9 +43,9 @@ Agency is seeing a future you want, noticing the moves actually available, and t
 
 It starts with realizing you have more choices than the default script suggests. Agency is less a personality trait than a skill loop — _notice the options, weigh them, commit, execute, update_ — and like any skill, it grows with practice.
 
-Some constraints are real, and some rules have reasons you don’t understand yet. Agency without humility wastes effort or harms people. Distinguish what you can change from what you need to work around.
+Some constraints are real, and some rules have reasons you don’t understand yet. Agency without humility wastes effort or harms people. Distinguish what you can change from what you have to work around.
 
-The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Usually choices get filed under “impossible” because they’d be awkward, difficult, or uncomfortable. Practically, this may mean realizing you can just name the elephant in the room, find another path to the same goal, or pick up work that isn’t your “role” because nobody else is doing it.
+The questions worth asking: _what assumptions am I not examining? Which choices do I treat as off the table that should be on it?_ Often a choice gets filed under “impossible” because it would be awkward, difficult, or uncomfortable. In practice, that can mean naming the elephant in the room, finding another path to the same goal, or picking up work that isn’t your “role” because nobody else is doing it.
 
 # Attention
 
@@ -82,7 +82,7 @@ reading: Communication: A Simple Multi-Stage Model — LessWrong | https://www.l
 quote: The single biggest problem in communication is the illusion that it has taken place.
 quote-cite: Attributed to George Bernard Shaw
 
-A surprising number of problems between two people are translation failures. Different vocabularies, unsaid assumptions, and stakes can turn a small misunderstanding into conflict or an outcome neither person wanted. “They’re wrong” and “they don’t care” often mean _we are not in the same conversation_.
+A surprising number of problems between two people are translation failures. Different vocabularies, unspoken assumptions, and mismatched stakes can turn a small misunderstanding into a conflict, or an outcome neither person wanted. “They’re wrong” and “they don’t care” often mean _we are not in the same conversation_.
 
 An idea travels from the felt sense in your head into words, then gets rebuilt inside someone else’s. Every hop is lossy. Your version is rich with reasons you’ve never had to say; their version is whatever their experience can reconstruct from the words you chose. Telephone, played in earnest, by people who all think they’re being clear.
 
@@ -105,11 +105,11 @@ quote-cite: G.K. Chesterton
 
 A blank page sounds like freedom until you have to put something on it. _Build anything_ can produce nothing for weeks; _build this in a week, using these three ideas_ gives your taste somewhere to push.
 
-Sonnets, haiku, jazz standards: the wall creates the shape. A deadline nobody imposed can make finishing possible. One tool where you could have five can force you to learn the tool. A smaller budget can expose which part mattered.
+Sonnets, haiku, jazz standards: the wall creates the shape. A deadline nobody imposed can make finishing possible. One tool instead of five can force you to learn it properly. A smaller budget can expose which part mattered.
 
 The inverse matters too. When a problem won’t budge, find the constraint everyone quietly decided was fixed. Sometimes the door is locked. Sometimes nobody tried the handle.
 
-Constraints also outlive their reasons. A rule written for last year’s crisis can run this year’s work long after everyone forgets why. Keep the walls that give the thing its shape. Push on the inherited ones.
+Constraints also outlive their reasons. A rule written for last year’s crisis can run this year’s work long after everyone forgets why. Keep the walls that give the work its shape. Push on the inherited ones.
 
 # Dopamine
 
@@ -127,7 +127,7 @@ quote-cite-href: https://amzn.to/4283g1X
 
 A feed keeps offering one more video. The possibility that the next one will be better can hold your attention long after the current one has stopped being enjoyable.
 
-A useful oversimplification is that dopamine organizes wanting. It makes novelty, pursuit, and the possibility of reward feel worth acting on. Snacking, gambling, falling in love, starting another project — different objects, a familiar loop.
+A useful oversimplification is that dopamine organizes wanting. It makes novelty, pursuit, and the possibility of reward feel worth acting on. Snacking, gambling, falling in love, starting another project — different objects, the same loop.
 
 The model is narrow. It can help you work with wanting; it can’t tell you what something means to you or absolve you of what you do inside the loop.
 
@@ -148,7 +148,7 @@ You can spend a whole day barely leaving the couch and still feel exhausted. Ano
 
 _Tired_ can describe at least three systems: physical fatigue and fuel, sleep and circadian rhythm, and motivation or stimulation. A nap can help sleep pressure and do nothing for boredom. A walk can cost physical energy and restore mental energy. Dinner with friends can wake you up one night and drain you the next.
 
-When energy is low, ask which system is speaking. Sometimes you need rest. Sometimes you need a warm-up: light, food, one small task, something worth anticipating. Going to bed on time is serious work. So is eating before the meeting and taking the walk after lunch.
+When you feel drained, ask which of the three is actually low. Sometimes you need rest. Sometimes you need a warm-up: light, food, one small task, something worth anticipating. Going to bed on time is serious work. So is eating before the meeting and taking the walk after lunch.
 
 The trap is turning every day into a tuning exercise. But without the distinction, you end up napping through boredom, drinking coffee through sleep debt, or calling a missed lunch laziness.
 
@@ -185,11 +185,11 @@ quote: The brain is a product of evolution, and just as animal brains serve to o
 quote-cite: Steven Pinker, How the Mind Works
 quote-cite-href: https://amzn.to/4esTgqP
 
-Human brains developed under conditions far different from modern life. Traits that helped people survive, reproduce, and cooperate did not disappear when the environment changed.
+Human brains developed under conditions very different from modern life. Traits that helped people survive, reproduce, and cooperate didn’t disappear when the environment changed.
 
-That mismatch offers hypotheses for why we care so much about status, form coalitions, gossip, and respond strongly to social approval. Dating apps and social feeds can amplify tendencies that once operated inside groups of a few dozen people.
+That mismatch is one way to explain why we care so much about status, form coalitions, gossip, and respond so strongly to social approval. Dating apps and social feeds can amplify tendencies that once operated inside groups of a few dozen people.
 
-Evolutionary explanations are easy to invent after the fact. A plausible story is not evidence, and culture, development, and individual experience may explain the same behavior better. Use the lens to generate questions rather than declare a behavior natural or inevitable.
+Evolutionary explanations are easy to invent after the fact. A plausible story isn’t evidence, and culture, development, and individual experience may explain the same behavior better. Use the lens to ask questions, not to declare a behavior natural or inevitable.
 
 # Expertise
 
@@ -223,7 +223,7 @@ A team says it values quality, then promotes whoever ships the most. The ruleboo
 
 Products, teams, classrooms, friendships — each has rules, rewards, and feedback. The good ones make the right behavior feel playable: the goal is visible, progress is legible, and the odds feel fair.
 
-This shifts the question from _how do I make people behave?_ to _what game did I put them in?_ Good managers, teachers, and product designers spend less time giving heroic speeches and more time adjusting the payoff matrix.
+This shifts the question from _how do I make people behave?_ to _what game did I put them in?_ Good managers, teachers, and product designers spend less time giving speeches and more time adjusting the payoffs.
 
 Push this too far and intrinsic motivation gets crowded out. A team that only responds to points stops when the points stop. Still, if the same bad strategy keeps winning, another speech probably won’t fix it. Change the game.
 
@@ -241,11 +241,11 @@ reading: Headspace | /headspace
 quote: We cannot solve our problems with the same thinking we used when we created them.
 quote-cite: Attributed to Albert Einstein
 
-Imagine an infinitely dimensional space whose axes are personality traits, ideas, beliefs, emotions, and skills. You are a blob occupying some region of it. The blob shifts and reshapes as you learn, pay attention, and experience the world.
+Imagine a space with one axis for every personality trait, idea, belief, emotion, and skill. You’re a blob occupying some region of it. The blob shifts and reshapes as you learn, pay attention, and experience the world.
 
 Experience also gives it edges. We call them personality, comfort zones, or identity: _I’m terrible at public speaking. I’m not creative. I could never get that job._ A description of the past hardens into a boundary on the future.
 
-Growth asks for two things: a belief that you could inhabit a new part of the space, and an environment that helps you expand into it. Friends and teachers can pull you beyond a familiar edge. Books let you temporarily inhabit the headspace of someone who has already grown in a direction you want to go.
+Growth takes two things: a belief that you could inhabit a new part of the space, and an environment that helps you expand into it. Friends and teachers can pull you past a familiar edge. Books let you borrow, for a while, the headspace of someone who has already grown in a direction you want to go.
 
 Empathy is another kind of reshaping. You loosen your own assumptions until someone else’s conclusion feels natural from inside the headspace that produced it. You don’t have to keep the shape. Each perspective you can inhabit gives your headspace another degree of freedom.
 
@@ -267,9 +267,9 @@ _I’m trying to write_ asks for a decision every time. _I’m a writer_ has alr
 
 Your identity includes your traits, values, affiliations, and limits. Its effects are real, but none of those descriptions are permanent facts. You can examine them, revise them, and notice when an old description no longer fits.
 
-A looser identity makes new behavior easier. If being competent is essential to who you are, criticism can feel threatening; if competence is something you are developing, the same criticism becomes information.
+A looser identity makes new behavior easier. If being competent is essential to who you are, criticism can feel threatening; if competence is something you’re developing, the same criticism becomes information.
 
-Identity also helps people know what to expect from you and helps you remain consistent over time. Keep the parts that support your commitments. Reconsider the parts that only explain why you can’t change.
+Identity also helps people know what to expect from you, and helps you stay consistent over time. Keep the parts that support your commitments. Reconsider the parts that only explain why you can’t change.
 
 # Incentives
 
@@ -286,13 +286,13 @@ quote: Show me the incentive and I’ll show you the outcome.
 quote-cite: Charlie Munger, Poor Charlie’s Almanack
 quote-cite-href: https://amzn.to/4fqMKBY
 
-After New York and Pennsylvania began publishing cardiac-surgery report cards, providers became more selective and sicker patients were less likely to receive surgery. Public scores created a reason to avoid difficult cases even though improving care was the goal. People and organizations adapt to what gets rewarded — in money, attention, or social approval — even when the resulting behavior defeats the original goal.
+After New York and Pennsylvania began publishing cardiac-surgery report cards, providers became more selective and sicker patients were less likely to receive surgery. Public scores gave providers a reason to avoid hard cases, the opposite of what the scores were for. People and organizations adapt to what gets rewarded — in money, attention, or social approval — even when the resulting behavior defeats the original goal.
 
-Measures also determine what gets neglected. A team measured on tickets closed will close tickets. A team measured on customer satisfaction will spend more time hearing from customers. Work left out of the measure becomes easier to deprioritize without an explicit decision.
+Measures also determine what gets neglected. A team measured on tickets closed will close tickets. A team measured on customer satisfaction will spend more time hearing from customers. Whatever the measure leaves out gets dropped quietly, without anyone deciding to drop it.
 
 Incentives don’t explain every choice. People leave money on the table for status, identity, loyalty, or inertia. Treat incentives as a strong pressure rather than a complete theory of motivation.
 
-“Why does this keep happening?” often resolves into _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. Changing the outcome usually requires changing what gets rewarded.
+“Why does this keep happening?” often comes down to _who benefits when it does?_ Bureaucracies grow because growing is rewarded. Newsrooms publish outrage because outrage gets clicks. Changing the outcome usually requires changing what gets rewarded.
 
 # Interface
 
@@ -308,7 +308,7 @@ reading: The Design of Everyday Things — Don Norman | https://amzn.to/4n7GyQV
 
 You meant to journal this year. The notebook is in a drawer, under the chargers. Each extra step between intention and action makes the action less likely.
 
-Good interfaces reduce unnecessary steps. Put the journal on the desk. Make the recurring task one tap away. Send the agenda before the meeting so people can think before they speak. If someone already wants to do something, make it easy to begin.
+Good interfaces remove unnecessary steps. Put the journal on the desk. Make the recurring task one tap away. Send the agenda before the meeting so people can think before they speak. If someone already wants to do something, make it easy to begin.
 
 Friction can be useful too. Confirmation dialogs slow down destructive actions. Waiting periods create time to reconsider. The design question is where speed helps and where a pause improves the decision.
 
@@ -325,13 +325,13 @@ accent: #F0C66C
 illustration: legibility
 related: communication, primitives, epistemic
 
-A thing you can’t name, explain, or show is hard to improve. Writing, diagrams, dashboards, and frameworks make reasoning observable. A vague concern becomes a claim someone else can inspect. Quiet work becomes something another person can understand and support.
+A thing you can’t name, explain, or show is hard to improve. Writing, diagrams, dashboards, and frameworks make reasoning visible. A vague concern becomes a claim someone else can inspect. Quiet work becomes something another person can understand and support.
 
 Articulation is part of the work. Written values give a team something specific to disagree about. A bug you can reproduce is already easier to fix. A dashboard changes which questions get asked before anyone makes a decision from it.
 
-Legibility is also how others come to know your work. People can support a project when they understand what changed, why it changed, and what happened afterward. Documenting the work gives other people enough context to evaluate it and build on it.
+Legibility is also how others come to know your work. People can support a project when they understand what changed, why it changed, and what happened afterward. Writing it down gives people enough context to judge it and build on it.
 
-Legibility can flatten what matters into what fits in a chart, and metrics get gamed the moment they start to count. The judgment is in choosing what to make legible — and what to leave as quiet execution.
+Legibility can flatten what matters into what fits in a chart, and metrics get gamed the moment they start to count. The skill is choosing what to make legible, and what to leave as quiet work.
 
 # Memetics
 
@@ -346,11 +346,11 @@ related: narrative, osmosis, status
 
 You hear a phrase once, then three more times that week, then catch yourself using it. Ideas reproduce by becoming easy to remember, repeat, and display.
 
-What you encounter most has survived selection for transmissibility. Catchy beats correct; sticky beats subtle; shareable beats nuanced. Your information diet supplies much of the material that later feels like your own taste.
+What reaches you most often is whatever spreads best. Catchy beats correct; sticky beats subtle; shareable beats nuanced. Much of what later feels like your own taste came in through that filter.
 
 For any viral take, ask: _why is this winning now, and what does repeating it give the person spreading it?_ The answer may explain its reach before it says anything about whether the idea is right.
 
-How far an idea travels marks it as fit, not true or false. Distrusting everything popular doesn’t free you from the crowd either. It lets the crowd choose your beliefs with the sign flipped.
+How far an idea travels tells you how well it spreads, not whether it’s true. Distrusting everything popular doesn’t free you from the crowd either. It lets the crowd choose your beliefs with the sign flipped.
 
 # Minimalism
 
@@ -369,7 +369,7 @@ Dieter Rams put it in three words: _“Weniger, aber besser”_ — less, but be
 
 Every addition creates ongoing work. A feature adds code to maintain and another place to break. A possession needs space and care. A commitment keeps asking for time after the excitement of saying yes has passed.
 
-The same discipline applies to a calendar, a room, a product, or a set of beliefs. Decide what has earned its place. Accumulation happens by default; subtraction takes deliberate choices.
+The same discipline applies to a calendar, a room, a product, or a set of beliefs. Decide what has earned its place. Accumulation happens by default; subtraction takes a deliberate choice.
 
 Some complexity is irreducible, and over-pruned systems become brittle. Judge the result by how well the remainder works; sparseness alone proves nothing.
 
@@ -392,7 +392,7 @@ Narratives turn facts into direction. They shape what feels possible, admirable,
 
 A strong story can carry a bad decision farther than the facts ever could. A useful narrative gives you direction while remaining answerable to reality. When the facts change, the story should change with them.
 
-The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the narrative and behavior follows.
+The throwaway sentence — _I’m bad at this_, _we don’t do that here_, _I’m not the kind of person who…_ — sets the ceiling for what comes next. Edit the story and behavior tends to follow.
 
 # Osmosis
 
@@ -407,11 +407,11 @@ related: mimetics, attention, status
 quote: You are the average of the five people you spend the most time with.
 quote-cite: Jim Rohn
 
-Spend enough time in a group and you start picking up its vocabulary, standards, and sense of what is normal. You notice what people praise, what they reject, and what they do without needing to discuss it.
+Spend enough time in a group and you start picking up its vocabulary, standards, and sense of what’s normal. You notice what people praise, what they reject, and what they do without needing to discuss it.
 
-You absorb bad norms as readily as good ones. Pay attention to what becomes normal around the people, work, and media you encounter repeatedly.
+You absorb bad norms as readily as good ones. So pay attention to what’s becoming normal for you, and where it’s coming from.
 
-Exposure can teach what advice cannot. “Have higher standards” is vague; watching someone revise a piece of work five times shows you what those standards require. Repeated contact gradually changes what you notice in your own work.
+Exposure can teach what advice can’t. “Have higher standards” is vague; watching someone revise a piece of work five times shows you what those standards require. Repeated contact gradually changes what you notice in your own work.
 
 # Primitives
 
@@ -425,11 +425,11 @@ illustration: primitives
 related: minimalism, systems, legibility
 reading: The Pragmatic Programmer — Andrew Hunt & David Thomas | https://amzn.to/4odvous
 
-When several problems keep arriving together, look for a shared cause. Missed deadlines, avoided conversations, and silence after a plan slips can all grow from the same fear of disappointing people. Fixing each incident leaves the shared cause unchanged.
+When several problems keep arriving together, look for a shared cause. Missed deadlines, avoided conversations, and silence after a plan slips can all grow from the same fear of disappointing people. Fixing each incident leaves the cause in place.
 
 A primitive is a smaller thing that produces several larger patterns. In a product, one permission model can replace five narrow features. In a person, one belief can keep recreating conflicts that look unrelated. Ask: _what smaller thing keeps generating this?_
 
-Don’t force every mess into one elegant root cause. Test the candidate: change it and see whether several recurring problems improve. If they don’t, the explanation may be simpler than the reality.
+Don’t force every mess into one elegant root cause. Test the candidate: change it and see whether several recurring problems improve. If they don’t, you’ve found a tidy explanation, not the cause.
 
 # Probabilistic thinking
 
@@ -442,19 +442,19 @@ accent: #E6B64E
 illustration: probabilistic
 related: epistemic, systems, second-order
 
-The forecast says a 70% chance of rain. If the day stays dry, the forecast wasn’t necessarily wrong; one point landed somewhere inside the distribution.
+The forecast says a 70% chance of rain. If the day stays dry, the forecast wasn’t necessarily wrong; a dry day was one of the outcomes it allowed for.
 
-Most uncertain things have a shape, a range, and a tail. Treating them as binary — will or won’t, safe or risky — creates expensive mistakes. _What will happen?_ gives way to _what’s the spread, and where’s my edge?_ Plans become ranges. Confidence becomes calibration. Updating is half the skill.
+Most uncertain things have a shape, a range, and a tail. Treating them as binary — will or won’t, safe or risky — creates expensive mistakes. The question shifts from _what will happen?_ to _what’s the spread, and where’s my edge?_ Plans become ranges and confidence becomes calibration. Updating as new evidence arrives is half the skill.
 
-Sometimes the answer is to commit hard to a small chance and help improve it. Most decisions still require planning for a range of outcomes rather than assuming the average case will happen.
+Sometimes the answer is to commit hard to a long shot and work to improve the odds. Most decisions still call for planning across the range of outcomes rather than assuming the average case.
 
-The lens also reorders which bets count as smart. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
+The lens also changes which bets look smart. A bet with an 80% chance of a small win and a 20% chance of ruin is worse than one with a modest edge and bounded losses. A good outcome doesn’t prove the bet was good; a bad outcome doesn’t prove it was bad.
 
 # Projection
 
 id: projection
 category: Psychology
-tagline: What people say about others is about themselves.
+tagline: Every judgment is partly a self-portrait.
 bg: #344557
 fg: #F6EAD8
 accent: #E2AB3F
@@ -463,7 +463,7 @@ related: headspace, communication, narrative
 quote: Everything that irritates us about others can lead us to an understanding of ourselves.
 quote-cite: Carl Jung
 
-People interpret others through their own history. The traits they notice first, the criticism they repeat, and the praise they give freely all reflect what they have learned to care about.
+People interpret others through their own history. The traits they notice first, the criticism they repeat, and the praise they give freely all reflect what they’ve learned to care about.
 
 When someone says _people in this industry are all so insecure,_ ask why insecurity was the pattern they noticed and why it felt important to mention. The same applies to praise: what someone admires freely tells you what they value and what they’re reaching for — a compliment is a small self-portrait, too.
 
@@ -484,11 +484,11 @@ quote-cite: Garrett Hardin
 
 Every action has immediate effects and downstream effects. Lower a price and usage rises; new users change the culture; over time, the product may serve a different audience than before.
 
-The honest question about a decision is _what does this set in motion?_ Automate a task and people may do more of it until the saved time fills back up. Add a feature and you change how people use the rest of the product. A decision keeps acting after its immediate goal is met.
+The better question about a decision is _what does this set in motion?_ Automate a task and people may do more of it until the saved time fills back up. Add a feature and you change how people use the rest of the product. A decision keeps acting after its immediate goal is met.
 
 Ask _and then what?_ three times in a row. The first answer is the goal. The second is plausible. The third is where the surprises live — and where much of the value or damage of a decision sits.
 
-If you keep imagining further consequences, no decision will feel safe. This also favors the status quo because the costs of acting are easier to imagine than the costs of doing nothing. Consider the likely consequences two or three steps out, then decide.
+Overdo it and no decision will feel safe. The lens also favors the status quo, since the costs of acting are easier to imagine than the costs of doing nothing. Look two or three steps out, then decide.
 
 # Self-fulfilling prophecy
 
@@ -505,11 +505,11 @@ quote-cite: Attributed to Henry Ford
 
 Believing you can do a thing changes how you approach it. Expect the interview to go badly and you show up guarded and tight. Expect to belong and you ask for the referral, prepare like it matters, and walk in calm enough to give yourself a chance. The forecast helps write the outcome it claims to foresee.
 
-The same process can help or hurt. Confidence changes behavior in ways that can earn more confidence; certainty that you’re bad creates tension that can make you perform worse. Placebo and nocebo effects also show that expectations can affect experience. A lot of _I knew it_ is _I helped cause it_.
+It runs both ways. Confidence changes behavior in ways that can earn more confidence; certainty that you’re bad creates tension that can make you perform worse. Placebo and nocebo effects show the same thing: expectations shape experience. A lot of _I knew it_ is _I helped cause it_.
 
-It can be worth leaning on belief past what the evidence supports because belief changes the odds by changing behavior. It can’t replace ability, preparation, luck, or time. Belief can increase the chance that you try; it cannot guarantee the result.
+It can be worth believing a little past what the evidence supports, because belief changes the odds by changing what you do. It can’t replace ability, preparation, luck, or time. Belief raises the chance that you try; it can’t guarantee the result.
 
-Aim the lens at other people carefully. You don’t know all of their constraints or circumstances, and _just believe harder_ recasts a real limit as weak will. The useful version increases agency without pretending thought controls the world.
+Aim the lens at other people carefully. You don’t know all of their constraints or circumstances, and _just believe harder_ recasts a real limit as weak will. The useful version gives you more agency without pretending thoughts control the world.
 
 # Status
 
@@ -526,11 +526,11 @@ quote-cite: John Adams, Discourses on Davila
 
 Status is local. Someone takes a pay cut to join the hotter company. Someone else ends a friendship over who got thanked first in the acknowledgments. The practical stakes can be small while the position they imply feels enormous.
 
-People trade money, comfort, and time for a half-step inside a group of forty. This is why a minor slight can hurt more than a larger material loss: it says something about where you stand among people whose opinion matters to you.
+People trade money, comfort, and time for a half-step inside a group of forty. This is why a minor slight can hurt more than a bigger material loss: it says something about where you stand among people whose opinion matters to you.
 
 Opting out of one status game often means joining another. Someone indifferent to money or career may care deeply about standing in a craft, a scene, or a friend group that matters to exactly thirty people.
 
-Love, curiosity, craft, and play aren’t disguised bids for rank. But when a reaction seems wildly disproportionate to the visible stakes, ask which group’s esteem is at stake.
+Love, curiosity, craft, and play aren’t disguised bids for rank. But when a reaction seems wildly out of proportion to the visible stakes, ask which group’s esteem is on the line.
 
 # Systems
 
@@ -550,7 +550,7 @@ Outcomes are rarely caused by one thing. Repeated outcomes usually come from fee
 
 When a team keeps missing deadlines, blaming the last person who acted explains little. Look at when decisions are made, where work waits, which goal takes priority, and what information arrives too late.
 
-A systems explanation can also excuse individual choices. People still make decisions and remain responsible for them. The lens is most useful when it helps prevent the same failure from happening again.
+A systems explanation can also excuse individual choices. People still make decisions and are still responsible for them. The lens is most useful when it keeps the same failure from happening again.
 
 To change the system, look for a leverage point — a condition with disproportionate effects. An approval may arrive too late. A goal may be missing. A metric may reward the wrong behavior. Change one condition, then watch whether the recurring outcome changes with it.
 
@@ -567,9 +567,9 @@ related: expertise, minimalism, legibility
 
 Taste is a refined sense of what’s worth pursuing — a filter that helps you predict what will land. It works on movies and furniture. It also works on product decisions, hires, and who you spend your time with.
 
-Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that hit that mark in context.
+Good taste has three parts. _Resonance_: what you point people toward lands — your friends like the books you recommend. _Articulation_: you can say what you’re optimizing for, and why. _Execution_: you can consistently make choices that meet that standard in practice.
 
-Taste can become narrow or driven by status. Preference is not proof of quality, and consensus is not proof either. Useful taste is specific enough to guide a decision and flexible enough to change when the context changes.
+Taste can become narrow or driven by status. Preference isn’t proof of quality, and neither is consensus. Useful taste is specific enough to guide a decision and flexible enough to change when the context changes.
 
 The three develop unevenly. You might know what people will like but struggle to explain why, describe the standard precisely but lack the craft to meet it, or execute consistently against a standard nobody else values. Knowing which part is weak tells you what to practice.
 
@@ -587,10 +587,10 @@ reading: The Elephant in the Brain — Kevin Simler & Robin Hanson | https://amz
 quote: Man is not a rational animal; he is a rationalizing animal.
 quote-cite: Robert Heinlein
 
-When a choice looks irrational, assume for a minute that the person is optimizing something you haven’t priced. The interesting question becomes: _what belongs in their utility function?_
+When a choice looks irrational, assume for a minute that the person is optimizing something you haven’t priced. The question becomes: _what’s in their utility function?_
 
-The function can contain pleasure and pain, but also identity, status, belonging, dignity, coherence, the feeling of being right, or the feeling of having chosen. Staying in a bad job or refusing an easy compromise may make sense once you include the terms the person is using.
+The function can contain pleasure and pain, but also identity, status, belonging, dignity, coherence, the feeling of being right, or the feeling of having chosen. Staying in a bad job or refusing an easy compromise can make sense once you include the terms they’re actually weighing.
 
-Calling someone irrational ends the inquiry. Reconstructing the function gives you a hypothesis. The middle manager may value safety more than speed. The friend who won’t let an argument go may be protecting an identity, not the point being argued.
+Calling someone irrational closes the question. Reconstructing the function gives you a hypothesis. The middle manager may value safety more than speed. The friend who won’t let an argument go may be protecting an identity, not the point being argued.
 
 This model is easy to cheat: after any choice, invent another term that explains it. A useful utility function should help predict the next choice, not only explain the last one.

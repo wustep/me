@@ -5,7 +5,7 @@ import { domain, host, name, x } from '@/lib/config'
 
 const title = 'Lenses, by language models'
 const description =
-  'Language models were each handed the same empty 28-card deck and asked how they see the world — same structure, different sensibilities.'
+  'Each language model was handed the same empty 28-card deck, in isolation, and asked how it sees the world.'
 const previewImage = `${host}/favicon-512x512.png`
 const canonicalUrl = `${host}/lenses/llms`
 
