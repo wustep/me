@@ -15,6 +15,8 @@ describe('markdownForPath', () => {
     expect(about.body).toBe(home.body)
     expect(home.body).toMatch(/^# Stephen Wu/m)
     expect(home.body).toContain('Accept: text/markdown')
+    expect(home.body).toContain("[aug '26](https://wustep.me/aug-26)")
+    expect(home.body).not.toContain("[oct '25](https://wustep.me/oct-25)")
   })
 
   it('returns a 404 markdown body for unknown paths', () => {
@@ -28,6 +30,14 @@ describe('markdownForPath', () => {
     const page = markdownForPath('/headspace')
     expect(page.status).toBe(200)
     expect(page.body).toContain('https://wustep.me/headspace')
+
+    const lifeUpdate = markdownForPath('/aug-26')
+    expect(lifeUpdate.status).toBe(200)
+    expect(lifeUpdate.body).toContain('https://wustep.me/aug-26')
+
+    const previousLifeUpdate = markdownForPath('/oct-25')
+    expect(previousLifeUpdate.status).toBe(200)
+    expect(previousLifeUpdate.body).toContain('https://wustep.me/oct-25')
   })
 })
 

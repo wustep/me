@@ -73,6 +73,11 @@ export const writingSoftware = [
 
 export const writingPersonal = [
   {
+    title: "aug '26",
+    href: '/aug-26',
+    note: 'life update'
+  },
+  {
     title: 'Headspace',
     href: '/headspace',
     note: 'identity, growth, thought-space'
@@ -86,11 +91,6 @@ export const writingPersonal = [
     title: 'On philosophy',
     href: '/philosophy',
     note: 'moral philosophy, lenses'
-  },
-  {
-    title: "oct '25",
-    href: '/oct-25',
-    note: 'life update'
   }
 ] as const
 
