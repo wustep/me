@@ -1,0 +1,44 @@
+import { type ExtendedRecordMap } from 'notion-types'
+import { getBlockValue } from 'notion-utils'
+
+import { siteUrl } from './site-identity'
+
+const EMBED_HOST_RE =
+  /youtube|youtu\.be|vimeo|wistia|loom|videoask|getcloudapp|tella/i
+
+export function mediaProxyOrigin(): string {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+  if (process.env.NODE_ENV === 'development') {
+    return `http://localhost:${process.env.PORT ?? '6363'}`
+  }
+  return siteUrl
+}
+
+/**
+ * react-notion-x plays uploaded videos from `signed_urls` or the raw
+ * `attachment:` source. We strip expiring signed hosts (images go through
+ * Notion's image proxy instead), so videos are left with `attachment:` —
+ * which `new URL()` throws on when the block has a spaceId.
+ *
+ * Point those sources at a same-origin re-signer so the player gets a
+ * fresh HTTPS URL at request time.
+ */
+export function rewriteVideoSources(recordMap: ExtendedRecordMap): void {
+  if (!recordMap.block) return
+
+  const origin = mediaProxyOrigin()
+
+  for (const [blockId, wrapper] of Object.entries(recordMap.block)) {
+    const block = getBlockValue(wrapper)
+    if (block?.type !== 'video') continue
+
+    const source = block.properties?.source?.[0]?.[0]
+    if (!source || EMBED_HOST_RE.test(source)) continue
+
+    const params = new URLSearchParams({ id: blockId, url: source })
+    recordMap.signed_urls ??= {}
+    recordMap.signed_urls[blockId] = `${origin}/api/notion-file?${params}`
+  }
+}

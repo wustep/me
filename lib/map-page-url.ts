@@ -3,6 +3,8 @@ import { parsePageId, uuidToId } from 'notion-utils'
 
 import { includeNotionIdInUrls } from './config'
 import { getCanonicalPageId } from './get-canonical-page-id'
+import { isPublishedOnSite } from './is-published-on-site'
+import { notionSiteOrigin } from './site-identity'
 import { type Site } from './types'
 
 // include UUIDs in page URLs during local development but not in production
@@ -16,12 +18,17 @@ export const mapPageUrl =
 
     if (uuidToId(pageUuid) === site.rootNotionPageId) {
       return createUrl('/', searchParams)
-    } else {
-      return createUrl(
-        `/${getCanonicalPageId(pageUuid, recordMap, { uuid })}`,
-        searchParams
-      )
     }
+
+    const slug = getCanonicalPageId(pageUuid, recordMap, { uuid: false })
+    if (!isPublishedOnSite(pageUuid, slug)) {
+      return `${notionSiteOrigin}/${uuidToId(pageUuid)}`
+    }
+
+    return createUrl(
+      `/${getCanonicalPageId(pageUuid, recordMap, { uuid })}`,
+      searchParams
+    )
   }
 
 export const getCanonicalPageUrl =

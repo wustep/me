@@ -379,24 +379,22 @@ h6 {
 }
 
 /**
- * ========== Links ========== 
+ * ========== Links ==========
+ * Thin currentColor underline instead of the stacked 1px border + thick
+ * purple/pink hover gradient (notion.css + the previous override here).
  */
 .notion-link {
-  border-bottom-width: 1px;
+  border-bottom: none;
+  background-image: none;
+  box-shadow: inset 0 -1px 0 0 color-mix(in srgb, currentColor 32%, transparent);
 }
 
-/**
- * Minor behavior changes in link hover
- */
 .notion-link:focus,
 .notion-link:hover {
-  background-image: linear-gradient(
-    90.68deg,
-    var(--notion-blue) 0.26%,
-    var(--notion-purple) 102.37%
-  );
-  transition-duration: 300ms;
-  transition-property: inherit;
+  border-bottom-color: transparent;
+  background-image: none;
+  box-shadow: inset 0 -1px 0 0 currentColor;
+  transition: box-shadow 160ms ease;
 }
 
 /**
@@ -407,6 +405,7 @@ h6 {
 .notion-link:has([class*='_background']),
 [class$='_background'] > .notion-link {
   border-color: transparent;
+  box-shadow: none;
   align-items: center;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -1278,4 +1277,56 @@ span[class*='_background'] {
 .notion-property-select-item,
 .notion-property-status-item {
   border-radius: 8px;
+}
+
+/**
+ * Column images: react-notion-x always sets object-fit: cover and the
+ * row clips overflow. A Notion crop (or a screenshot already cropped to
+ * its intended frame) then gets a second, centered crop — text and UI
+ * chrome fall off the edge. Show the full frame instead.
+ */
+.notion-row {
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.notion-column .notion-asset-wrapper,
+.notion-column .notion-asset-wrapper > div,
+.notion-column .lazy-image-wrapper {
+  max-width: 100%;
+}
+
+.notion-column .notion-asset-wrapper img,
+.notion-column .lazy-image-wrapper img {
+  object-fit: contain !important;
+  object-position: center top;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100%;
+  height: auto;
+}
+
+/**
+ * react-tweet keys dark tokens off [data-theme=dark] / .dark / OS
+ * preference — not this site's .dark-mode class. Bridge so embeds
+ * follow the page toggle even when OS preference disagrees.
+ */
+.dark-mode :where(.react-tweet-theme) {
+  --tweet-skeleton-gradient: linear-gradient(
+    270deg,
+    #15202b,
+    rgb(30, 39, 50),
+    rgb(30, 39, 50),
+    rgb(21, 32, 43)
+  );
+  --tweet-border: 1px solid rgb(66, 83, 100);
+  --tweet-font-color: rgb(247, 249, 249);
+  --tweet-font-color-secondary: rgb(139, 152, 165);
+  --tweet-bg-color: rgb(21, 32, 43);
+  --tweet-bg-color-hover: rgb(30, 39, 50);
+  --tweet-quoted-bg-color-hover: rgba(255, 255, 255, 0.03);
+  --tweet-color-blue-secondary: rgb(107, 201, 251);
+  --tweet-color-blue-secondary-hover: rgba(107, 201, 251, 0.1);
+  --tweet-twitter-icon-color: var(--tweet-font-color);
+  --tweet-verified-blue-color: #fff;
 }

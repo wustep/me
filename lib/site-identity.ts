@@ -94,8 +94,8 @@ export const writingPersonal = [
   }
 ] as const
 
-export const notionContactUrl =
-  'https://wustep.notion.site/1425cb08cf2c80cc89d4f322774aa02b'
+export const notionSiteOrigin = 'https://wustep.notion.site'
+export const notionContactUrl = `${notionSiteOrigin}/1425cb08cf2c80cc89d4f322774aa02b`
 
 export function personJsonLd() {
   return {
