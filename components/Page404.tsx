@@ -1,6 +1,7 @@
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
 
+import { AgentOnly } from './AgentOnly'
 import styles from './Page404.module.css'
 import { PageHead } from './PageHead'
 
@@ -27,8 +28,12 @@ export function Page404({ site, pageId, error }: types.PageProps) {
           <p className={styles.hints}>
             <a href='/'>Home</a>
             <span aria-hidden='true'> · </span>
-            <a href='/llms.txt'>llms.txt</a>
-            <span aria-hidden='true'> · </span>
+            <AgentOnly>
+              <a href='/llms.txt' tabIndex={-1}>
+                llms.txt
+              </a>
+              {' · '}
+            </AgentOnly>
             <a href='/sitemap.xml'>sitemap.xml</a>
           </p>
 

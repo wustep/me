@@ -10,6 +10,7 @@ import {
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import styles from './AboutPage.module.css'
+import { AgentOnly } from './AgentOnly'
 import { DesignButton } from './wustep/DesignButton'
 import { LabsButton } from './wustep/LabsButton'
 import { Illustration } from './wustep/lenses/illustrations'
@@ -619,10 +620,14 @@ export function AboutPage() {
               Get in touch →
             </a>
           </Tooltip>
-          <nav className={styles.footerMeta} aria-label='Site'>
-            <a href='/privacy'>Privacy</a>
-            <a href='/llms.txt'>llms.txt</a>
-          </nav>
+          <AgentOnly as='nav'>
+            <a href='/privacy' tabIndex={-1}>
+              Privacy
+            </a>
+            <a href='/llms.txt' tabIndex={-1}>
+              llms.txt
+            </a>
+          </AgentOnly>
         </footer>
       </div>
     </main>

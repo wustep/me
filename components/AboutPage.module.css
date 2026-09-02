@@ -1153,24 +1153,6 @@ a.bioHint {
   color: var(--about-accent);
 }
 
-.footerMeta {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 16px;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-}
-
-.footerMeta a {
-  color: var(--about-muted);
-}
-
-.footerMeta a:hover,
-.footerMeta a:focus-visible {
-  color: var(--about-accent);
-}
-
 @media (hover: hover) {
   .contactLink:hover {
     color: var(--about-accent);
