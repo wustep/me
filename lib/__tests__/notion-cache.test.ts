@@ -102,7 +102,7 @@ describe('getPage caching', () => {
               id: textId,
               type: 'text',
               properties: {
-                title: [['see ', ['‣', [['p', mentionId, 'space']]]]]
+                title: [['see '], ['‣', [['p', mentionId, 'space']]]]
               }
             }
           }
