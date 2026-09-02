@@ -3,6 +3,7 @@ import Link from 'next/link'
 import * as React from 'react'
 
 import aboutStyles from '@/components/AboutPage.module.css'
+import { AgentOnlyLink } from '@/components/AgentOnly'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { github, host, linkedin, name, x } from '@/lib/config'
 
@@ -92,8 +93,8 @@ export function SiteInfoPage({
             <nav className={styles.footerNav} aria-label='Site'>
               <Link href='/'>Home</Link>
               <Link href='/contact'>Contact</Link>
-              <Link href='/privacy'>Privacy</Link>
-              <a href='/llms.txt'>llms.txt</a>
+              <AgentOnlyLink href='/privacy'>Privacy</AgentOnlyLink>
+              <AgentOnlyLink href='/llms.txt'>llms.txt</AgentOnlyLink>
             </nav>
           </footer>
         </div>
