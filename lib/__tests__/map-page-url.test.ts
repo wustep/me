@@ -75,6 +75,28 @@ describe('mapPageUrl', () => {
       mapPageUrl(site, recordMap, new URLSearchParams())(unpublished)
     ).toBe('https://wustep.notion.site/3c25cb08cf2c8071b8edd5b57d7df47c')
   })
+
+  it('still sends unpublished mentions to notion.site after the title block is merged', () => {
+    const unpublished = '3c25cb08-cf2c-8071-b8ed-d5b57d7df47c'
+    const titledRecordMap = {
+      block: {
+        [unpublished]: {
+          role: 'reader',
+          value: {
+            id: unpublished,
+            type: 'page',
+            properties: {
+              title: [['AI Coding Developer Belts at Notion (Jan 2026)']]
+            }
+          }
+        }
+      }
+    } as unknown as ExtendedRecordMap
+
+    expect(
+      mapPageUrl(site, titledRecordMap, new URLSearchParams())(unpublished)
+    ).toBe('https://wustep.notion.site/3c25cb08cf2c8071b8edd5b57d7df47c')
+  })
 })
 
 describe('getCanonicalPageUrl', () => {

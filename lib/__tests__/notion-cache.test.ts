@@ -74,6 +74,57 @@ describe('getPage caching', () => {
     })
   })
 
+  it('merges missing page-mention targets into the cached record map', async () => {
+    const textId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+    const mentionId = '3c25cb08-cf2c-8071-b8ed-d5b57d7df47c'
+
+    getPageMock.mockImplementation(async (pageId: string) => {
+      if (pageId === mentionId) {
+        return {
+          block: {
+            [mentionId]: {
+              role: 'reader',
+              value: {
+                id: mentionId,
+                type: 'page',
+                properties: { title: [['AI Coding Developer Belts']] }
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        block: {
+          [textId]: {
+            role: 'reader',
+            value: {
+              id: textId,
+              type: 'text',
+              properties: {
+                title: [['see ', ['‣', [['p', mentionId, 'space']]]]]
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const page = await getPage('mentions-merge')
+
+    expect(getPageMock).toHaveBeenCalledTimes(2)
+    expect(getPageMock).toHaveBeenNthCalledWith(2, mentionId, {
+      chunkLimit: 1,
+      fetchMissingBlocks: false,
+      fetchCollections: false,
+      signFileUrls: false
+    })
+    expect(page.block[mentionId]?.value).toMatchObject({
+      type: 'page',
+      properties: { title: [['AI Coding Developer Belts']] }
+    })
+  })
+
   it('does not cache a rejected fetch', async () => {
     getPageMock.mockRejectedValueOnce(new Error('boom'))
     await expect(getPage('flaky')).rejects.toThrow('boom')
