@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { canonicalPageMap } from '../notion-index'
 import {
   isResolvablePageSlug,
   lookupSlug,
@@ -72,5 +73,22 @@ describe('isResolvablePageSlug', () => {
     expect(
       isResolvablePageSlug('rapid-prototyping-highlighty-part-2', maps)
     ).toBe(false)
+  })
+})
+
+describe('committed notion-index', () => {
+  const indexMaps = {
+    pageUrlOverrides: {},
+    pageUrlAdditions: {},
+    canonicalPageMap
+  }
+
+  it('resolves the aug-26 life-update slug and keeps oct-25', () => {
+    expect(resolvePageIdFromMaps('aug-26', indexMaps)).toBe(
+      '3ce5cb08-cf2c-80e6-8ab4-fb9b4171b562'
+    )
+    expect(resolvePageIdFromMaps('oct-25', indexMaps)).toBe(
+      '2bc5cb08-cf2c-81a9-90cf-df278a05d778'
+    )
   })
 })

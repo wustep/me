@@ -60,9 +60,39 @@
   margin-bottom: 1em;
 }
 
-.notion-asset-wrapper-video > div,
-.notion-asset-wrapper-video video {
+.notion-asset-wrapper-video {
+  display: flex;
+  flex-direction: column;
+  min-width: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Caption is a sibling of this box. Cap the player only so the
+   caption stays below and cannot sit inside an overflowing video. */
+.notion-asset-wrapper-video > div {
   width: 100% !important;
+  height: auto !important;
+  max-height: min(22rem, 50vw);
+  overflow: hidden;
+  position: relative;
+}
+
+.notion-asset-wrapper-video video {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+  max-height: min(22rem, 50vw);
+  object-fit: contain;
+  background: #000;
+}
+
+.notion-asset-wrapper-video .notion-asset-caption {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  margin-top: 0.35em;
 }
 
 .notion-header .notion-nav-header {
@@ -252,30 +282,15 @@
   position: relative;
   transition: unset;
   opacity: 1;
-  border-bottom-width: 0.1rem;
+  border-bottom: none;
   background: transparent;
-  background-origin: border-box;
-  background-repeat: no-repeat;
-  background-position: 50% 100%;
-  background-size: 0 0.1rem;
-}
-
-.notion-link:focus,
-.notion-link:hover {
-  border-bottom-color: transparent;
-
-  background-image: linear-gradient(90.68deg, #b439df 0.26%, #e5337e 102.37%);
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 100% 0.1rem;
-
-  transition-property: background-position, background-size;
-  transition-duration: 300ms;
 }
 
 /* @wustep: gradient highlights removed — colors are set in wustep.css */
 
-/* @wustep: dark mode tags */
+/* @wustep: dark mode tags — remap both chip fill and label. Light-mode
+   --notion-item-text-* tokens are near-black; after the fill is darkened
+   they become unreadable. --notion-fg-color was never defined. */
 .dark-mode {
   --notion-item-blue: var(--notion-blue_background);
   --notion-item-orange: var(--notion-orange_background);
@@ -287,10 +302,22 @@
   --notion-item-default: var(--notion-gray_background);
   --notion-item-purple: var(--notion-purple_background);
   --notion-item-gray: var(--notion-gray_background);
+
+  --notion-item-text-blue: rgb(186, 206, 214);
+  --notion-item-text-orange: rgb(221, 192, 166);
+  --notion-item-text-green: rgb(183, 211, 200);
+  --notion-item-text-pink: rgb(219, 186, 204);
+  --notion-item-text-brown: rgb(199, 186, 178);
+  --notion-item-text-red: rgb(226, 186, 182);
+  --notion-item-text-yellow: rgb(222, 210, 168);
+  --notion-item-text-default: var(--fg-color);
+  --notion-item-text-purple: rgb(206, 192, 222);
+  --notion-item-text-gray: var(--fg-color);
 }
 .dark-mode .notion-property-multi_select-item,
-.dark-mode .notion-property-select-item {
-  color: var(--notion-fg-color);
+.dark-mode .notion-property-select-item,
+.dark-mode .notion-property-status-item {
+  color: var(--fg-color);
 }
 
 /* disable highlighting in dark mode */

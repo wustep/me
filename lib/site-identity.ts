@@ -73,6 +73,11 @@ export const writingSoftware = [
 
 export const writingPersonal = [
   {
+    title: "aug '26",
+    href: '/aug-26',
+    note: 'life update'
+  },
+  {
     title: 'Headspace',
     href: '/headspace',
     note: 'identity, growth, thought-space'
@@ -86,16 +91,11 @@ export const writingPersonal = [
     title: 'On philosophy',
     href: '/philosophy',
     note: 'moral philosophy, lenses'
-  },
-  {
-    title: "oct '25",
-    href: '/oct-25',
-    note: 'life update'
   }
 ] as const
 
-export const notionContactUrl =
-  'https://wustep.notion.site/1425cb08cf2c80cc89d4f322774aa02b'
+export const notionSiteOrigin = 'https://wustep.notion.site'
+export const notionContactUrl = `${notionSiteOrigin}/1425cb08cf2c80cc89d4f322774aa02b`
 
 export function personJsonLd() {
   return {

@@ -379,24 +379,22 @@ h6 {
 }
 
 /**
- * ========== Links ========== 
+ * ========== Links ==========
+ * Thin currentColor underline instead of the stacked 1px border + thick
+ * purple/pink hover gradient (notion.css + the previous override here).
  */
 .notion-link {
-  border-bottom-width: 1px;
+  border-bottom: none;
+  background-image: none;
+  box-shadow: inset 0 -1px 0 0 color-mix(in srgb, currentColor 32%, transparent);
 }
 
-/**
- * Minor behavior changes in link hover
- */
 .notion-link:focus,
 .notion-link:hover {
-  background-image: linear-gradient(
-    90.68deg,
-    var(--notion-blue) 0.26%,
-    var(--notion-purple) 102.37%
-  );
-  transition-duration: 300ms;
-  transition-property: inherit;
+  border-bottom-color: transparent;
+  background-image: none;
+  box-shadow: inset 0 -1px 0 0 currentColor;
+  transition: box-shadow 160ms ease;
 }
 
 /**
@@ -407,6 +405,7 @@ h6 {
 .notion-link:has([class*='_background']),
 [class$='_background'] > .notion-link {
   border-color: transparent;
+  box-shadow: none;
   align-items: center;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -1278,4 +1277,111 @@ span[class*='_background'] {
 .notion-property-select-item,
 .notion-property-status-item {
   border-radius: 8px;
+}
+
+/**
+ * Column photos: Notion fills each cell at the file's intrinsic ratio.
+ * react-notion-x stamps an inline height (often 320px) + object-fit:cover,
+ * which re-crops an already-framed screenshot. Drop that height so the
+ * LQIP / next/image padding-box can size the image. Do not zero
+ * padding-bottom or force position:static — that collapses fill images
+ * to alt text (including attachment GIFs).
+ */
+.notion-row {
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.notion-column {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.notion-column .notion-asset-wrapper {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.notion-column .notion-asset-wrapper > div {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+}
+
+.notion-column .notion-asset-wrapper-image {
+  width: 100%;
+}
+
+/**
+ * Uploaded videos in a column/gallery: equal visual weight. A wide
+ * playground clip must not grow over siblings once the row stacks.
+ */
+.notion-column .notion-asset-wrapper-video > div,
+.notion-column .notion-asset-wrapper-video video {
+  max-height: 16rem;
+}
+
+@media (max-width: 640px) {
+  .notion-column .notion-asset-wrapper-video,
+  .notion-row .notion-asset-wrapper-video {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0 !important;
+  }
+
+  .notion-column .notion-asset-wrapper-video > div,
+  .notion-column .notion-asset-wrapper-video video,
+  .notion-row .notion-asset-wrapper-video > div,
+  .notion-row .notion-asset-wrapper-video video {
+    max-height: 12.5rem;
+  }
+}
+
+/**
+ * Permalink icons: react-notion-x floats a 16px SVG to the top of the
+ * line box, so on serif headings it sits above the cap-height. Size the
+ * hit target to one line (1lh) and center the glyph so it tracks H1–H4.
+ */
+.notion-hash-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1lh;
+  width: 1em;
+  margin-left: -1.2em;
+  padding-right: 0.2em;
+  box-sizing: content-box;
+}
+
+.notion-hash-link svg {
+  display: block;
+  width: 0.7em;
+  height: 0.7em;
+}
+
+/**
+ * react-tweet keys dark tokens off [data-theme=dark] / .dark / OS
+ * preference — not this site's .dark-mode class. Bridge so embeds
+ * follow the page toggle even when OS preference disagrees.
+ */
+.dark-mode :where(.react-tweet-theme) {
+  --tweet-skeleton-gradient: linear-gradient(
+    270deg,
+    #15202b,
+    rgb(30, 39, 50),
+    rgb(30, 39, 50),
+    rgb(21, 32, 43)
+  );
+  --tweet-border: 1px solid rgb(66, 83, 100);
+  --tweet-font-color: rgb(247, 249, 249);
+  --tweet-font-color-secondary: rgb(139, 152, 165);
+  --tweet-bg-color: rgb(21, 32, 43);
+  --tweet-bg-color-hover: rgb(30, 39, 50);
+  --tweet-quoted-bg-color-hover: rgba(255, 255, 255, 0.03);
+  --tweet-color-blue-secondary: rgb(107, 201, 251);
+  --tweet-color-blue-secondary-hover: rgba(107, 201, 251, 0.1);
+  --tweet-twitter-icon-color: var(--tweet-font-color);
+  --tweet-verified-blue-color: #fff;
 }

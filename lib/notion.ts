@@ -16,6 +16,7 @@ import {
 import { getTweetsMap } from './get-tweets'
 import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
+import { rewriteVideoSources } from './rewrite-video-urls'
 import { filterSignedUrls } from './signed-file-urls'
 import { type ExtendedPreviewImagesRecordMap } from './types'
 
@@ -68,6 +69,7 @@ async function getPageUncached(pageId: string): Promise<ExtendedRecordMap> {
   if (recordMap?.signed_urls) {
     recordMap.signed_urls = filterSignedUrls(recordMap.signed_urls)
   }
+  rewriteVideoSources(recordMap)
 
   if (navigationStyle !== 'default') {
     // ensure that any pages linked to in the custom navigation header have

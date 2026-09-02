@@ -7,6 +7,7 @@ import { normalizePageIdPath } from '@/lib/normalize-page-id-path'
 import { canonicalPageMap } from '@/lib/notion-index'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 import { resolvePageIdFromMaps } from '@/lib/resolve-page-id'
+import { notionSiteOrigin } from '@/lib/site-identity'
 import { type PageProps, type Params } from '@/lib/types'
 
 export const config: PageConfig = {
@@ -24,7 +25,7 @@ async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
   const normalizedNotionPageId = parsePageId(notionPageId, { uuid: false })
   if (!normalizedNotionPageId) return null
 
-  return `https://wustep.notion.site/${normalizedNotionPageId}`
+  return `${notionSiteOrigin}/${normalizedNotionPageId}`
 }
 
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
