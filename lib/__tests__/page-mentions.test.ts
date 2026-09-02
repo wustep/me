@@ -6,7 +6,8 @@ import {
   getMentionedPageIds,
   getMissingMentionPageIds,
   hasPageBlock,
-  mergeMentionedPages
+  mergeMentionedPages,
+  slimMentionRecordMap
 } from '../page-mentions'
 
 const textBlockId = '3cf5cb08-cf2c-801f-891e-d60dcee2f9ad'
@@ -167,6 +168,31 @@ describe('aliasPageBlock', () => {
   })
 })
 
+describe('slimMentionRecordMap', () => {
+  it('keeps only the mentioned page block', () => {
+    const extraId = 'dddddddd-dddd-dddd-dddd-dddddddddddd'
+    const mentionMap = recordMapWith({
+      [beltsId]: {
+        role: 'reader',
+        value: {
+          id: beltsId,
+          type: 'page',
+          properties: { title: [['Belts']] }
+        }
+      },
+      [extraId]: {
+        role: 'reader',
+        value: { id: extraId, type: 'text', properties: { title: [['nope']] } }
+      }
+    })
+
+    const slim = slimMentionRecordMap(mentionMap, beltsId)
+    expect(Object.keys(slim?.block || {})).toEqual([beltsId])
+    expect(slim?.collection).toEqual({})
+    expect(hasPageBlock(slim!, beltsId)).toBe(true)
+  })
+})
+
 describe('mergeMentionedPages', () => {
   it('fetches missing mention pages and merges them', async () => {
     const recordMap = recordMapWith({
@@ -182,6 +208,7 @@ describe('mergeMentionedPages', () => {
       }
     })
 
+    const extraId = 'dddddddd-dddd-dddd-dddd-dddddddddddd'
     const fetchPage = vi.fn(async (pageId: string) =>
       recordMapWith({
         [pageId]: {
@@ -190,6 +217,14 @@ describe('mergeMentionedPages', () => {
             id: pageId,
             type: 'page',
             properties: { title: [['AI Coding Developer Belts']] }
+          }
+        },
+        [extraId]: {
+          role: 'reader',
+          value: {
+            id: extraId,
+            type: 'text',
+            properties: { title: [['nope']] }
           }
         }
       })
@@ -205,6 +240,7 @@ describe('mergeMentionedPages', () => {
       signFileUrls: false
     })
     expect(hasPageBlock(merged, beltsId)).toBe(true)
+    expect(merged.block[extraId]).toBeUndefined()
   })
 
   it('does not fetch mentions that are already present', async () => {

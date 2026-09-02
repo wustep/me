@@ -98,6 +98,38 @@ export function aliasPageBlock(
 }
 
 /**
+ * Keep only the mentioned page block. Full `getPage` payloads still include
+ * that page's children and collection views even with `chunkLimit: 1`; merging
+ * those into the host map can change how react-notion-x classifies the page.
+ */
+export function slimMentionRecordMap(
+  mentionMap: ExtendedRecordMap,
+  pageId: string
+): ExtendedRecordMap | null {
+  const dashed = parsePageId(pageId, { uuid: true })
+  const compact = parsePageId(pageId, { uuid: false })
+  const sourceKey = [pageId, dashed, compact].find(
+    (key) => key && getBlockValue(mentionMap.block?.[key])
+  )
+  if (!sourceKey) return null
+
+  const wrapper = mentionMap.block[sourceKey]!
+  const block: ExtendedRecordMap['block'] = { [sourceKey]: wrapper }
+  if (dashed && dashed !== sourceKey) {
+    block[dashed] = wrapper
+  }
+
+  return {
+    block,
+    collection: {},
+    collection_view: {},
+    notion_user: {},
+    collection_query: {},
+    signed_urls: {}
+  } as ExtendedRecordMap
+}
+
+/**
  * Fetch page-mention targets that are missing from `recordMap.block` and merge
  * them in. One pass only — mentioned pages are loaded for title/icon, not
  * crawled for further mentions (avoids cycles).
@@ -113,7 +145,8 @@ export async function mergeMentionedPages(
     missing,
     async (pageId) => {
       try {
-        return await fetchPage(pageId, MENTION_FETCH_OPTIONS)
+        const mentionMap = await fetchPage(pageId, MENTION_FETCH_OPTIONS)
+        return slimMentionRecordMap(mentionMap, pageId)
       } catch (err) {
         console.warn(
           `Failed to fetch mentioned page ${pageId}`,
