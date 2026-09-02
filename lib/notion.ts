@@ -15,6 +15,7 @@ import {
 } from './config'
 import { getTweetsMap } from './get-tweets'
 import { notion } from './notion-api'
+import { mergeMentionedPages } from './page-mentions'
 import { getPreviewImageMap } from './preview-images'
 import { rewriteVideoSources } from './rewrite-video-urls'
 import { filterSignedUrls } from './signed-file-urls'
@@ -85,6 +86,12 @@ async function getPageUncached(pageId: string): Promise<ExtendedRecordMap> {
       )
     }
   }
+
+  // Page mentions (`p` decorations) need their target page blocks — at least
+  // title — in this record map. Notion's loadPageChunk often omits them.
+  recordMap = await mergeMentionedPages(recordMap, (mentionPageId, options) =>
+    notion.getPage(mentionPageId, options)
+  )
 
   if (isPreviewImageSupportEnabled) {
     const previewImageMap = await getPreviewImageMap(recordMap)
