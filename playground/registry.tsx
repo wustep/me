@@ -166,8 +166,8 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Contraptions',
         url: '/playground/contraptions',
         description:
-          'One ball on a Rube Goldberg chain that never ends. It rolls, drops and flies through a run of tiny machines, and every portal it enters opens onto a new world with its own palette and pieces. Grew out of a generator for grids of tiny animated machines, inspired by [Okazz](https://x.com/okazz_/status/2090999902805393607).',
-        summary: 'One ball, one endless Rube Goldberg chain',
+          'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',
+        summary: 'Rube goldberg experiments in <canvas>',
         date: 'Sep 2026',
         year: '2026',
         source: 'https://github.com/wustep/contraptions',

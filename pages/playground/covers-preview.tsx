@@ -39,7 +39,7 @@ const tabs: [Tab, ...Tab[]] = [
   {
     id: 'contraptions',
     title: 'Contraptions',
-    summary: 'One ball, one endless Rube Goldberg chain',
+    summary: 'Rube goldberg experiments in <canvas>',
     covers: [
       {
         label: 'The hop (shipped)',
