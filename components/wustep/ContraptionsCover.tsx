@@ -291,26 +291,27 @@ function buildKeyframes(id: (name: string) => string): string {
     ]),
 
     // The far portal: wakes as the ball comes toward it, flashes paper and
-    // rings out as it takes it, and is asleep again once the iris re-opens.
+    // rings out as it takes it, stays lit while the iris closes on it, and
+    // goes to sleep behind the shut iris so it is dark once that re-opens.
     track(id('eyeOut'), [
       ...hold(T_WAKE, 'transform:scale(0)', 'out'),
       [T_AWAKE, 'transform:scale(1)'],
-      [T_CUT, 'transform:scale(1)'],
-      [T_SHUT, 'transform:scale(0)'],
+      [T_SHUT, 'transform:scale(1)'],
+      [T_SHUT + 0.1, 'transform:scale(0)'],
       [LOOP, 'transform:scale(0)']
     ]),
     track(id('haloOut'), [
       ...hold(T_WAKE, 'opacity:0', 'out'),
       [T_AWAKE, 'opacity:1'],
-      [T_CUT, 'opacity:1'],
-      [T_SHUT, 'opacity:0'],
+      [T_SHUT, 'opacity:1'],
+      [T_SHUT + 0.1, 'opacity:0'],
       [LOOP, 'opacity:0']
     ]),
     track(id('spiralOut'), [
       ...hold(T_WAKE, 'stroke-width:2.4', 'out'),
       [T_AWAKE, 'stroke-width:3.8'],
-      [T_CUT, 'stroke-width:3.8'],
-      [T_SHUT, 'stroke-width:2.4'],
+      [T_SHUT, 'stroke-width:3.8'],
+      [T_SHUT + 0.1, 'stroke-width:2.4'],
       [LOOP, 'stroke-width:2.4']
     ]),
     track(id('flashOut'), [
