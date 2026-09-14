@@ -4,6 +4,7 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -35,6 +36,18 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'contraptions',
+    title: 'Contraptions',
+    summary: 'Rube goldberg experiments in <canvas>',
+    covers: [
+      {
+        label: 'The hop (shipped)',
+        hint: 'Follows the site theme — Risograph on paper in light, Noir in dark; same map either way. Hover: the ball comes out of one portal, rolls off the rail, is thrown by the trampoline up to the shelf and pulled into the other portal, and the same instant comes back out of the first.',
+        Cover: ContraptionsCover
+      }
+    ]
+  },
   {
     id: 'splashpanic',
     title: 'Splash Panic!',

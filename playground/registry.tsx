@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
@@ -161,6 +162,18 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Visualizations',
     items: [
+      {
+        title: 'Contraptions',
+        url: '/playground/contraptions',
+        description:
+          'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',
+        summary: 'Rube goldberg experiments in <canvas>',
+        date: 'Sep 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/contraptions',
+        gradient: 'from-stone-100 via-sky-700 to-emerald-600',
+        CoverComponent: ContraptionsCover
+      },
       {
         title: 'MIDI Visualizer',
         url: '/playground/midi-visualizer',
