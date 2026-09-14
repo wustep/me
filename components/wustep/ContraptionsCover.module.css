@@ -1,14 +1,16 @@
-/* Cover for Contraptions — one hop of the show. The scene is one extra-wide
-   SVG (1200×240) sliced to the cover box: the box is 190px tall at every
-   card width, so the full height always fits and a wider card only reveals
-   more of the wings.
+/* Cover for Contraptions — one hop of the show, in two worlds. Each world
+   is one extra-wide SVG (1200×240) sliced to the cover box: the box is
+   190px tall at every card width, so the full height always fits and a
+   wider card only shows more of the world's paper.
 
-   Every colour the SVG paints comes from these variables, which is what lets
-   one scene serve both themes: the show's Risograph palette on paper in
-   light mode — the world the reference stills were taken in — and its Noir
-   palette in dark, where a single red carries nearly all the colour. The SVG
-   cannot respond to `body.dark-mode` itself, so the palette lives here and
-   the component only ever refers to `var(--cc-*)`. */
+   Both worlds are in the DOM and the theme picks one — the show puts a
+   whole new map behind every portal, and here the site's light and dark
+   modes are two of those maps. The palette rides along as custom
+   properties: the show's Risograph palette on paper for the light world,
+   its Noir palette for the dark one, where a single red carries nearly all
+   the colour. The SVG cannot respond to `body.dark-mode` itself, so both
+   the switch and the palette live here and the component only ever refers
+   to `var(--cc-*)`. */
 .cover {
   --cc-bg: #f7f3e8;
   --cc-ink: #2b2b2b;
@@ -17,12 +19,9 @@
   --cc-ball: #00a95c;
   /* the portal rings and the vortex inside them */
   --cc-portal: #0078bf;
-  /* trampoline bed, paddle, stairs */
+  /* the trampoline bed */
   --cc-a: #ff6c2f;
-  /* the lift's cage and wheel */
   --cc-b: #ffe800;
-  /* the pendulum's bob */
-  --cc-c: #ff48b0;
 
   position: relative;
   width: 100%;
@@ -31,18 +30,37 @@
   background: var(--cc-bg);
 }
 
-/* Noir: bone ink on near-black, the ball the one red thing on the page. The
-   portals go grey so their ring stays a ring — the hole inside is ink, and a
-   bone ring round a bone hole would read as a disc. */
+/* Noir: bone ink on near-black under stars, the ball the one red thing on
+   the page. The portals go grey so their ring stays a ring — the hole
+   inside is ink, and a bone ring round a bone hole would read as a disc.
+   --cc-a is the cannon's barrel, --cc-b its wheels. */
 :global(body.dark-mode) .cover {
   --cc-bg: #141414;
   --cc-ink: #f0ede6;
-  --cc-dot: rgba(240, 237, 230, 0.14);
+  --cc-dot: rgba(240, 237, 230, 0.38);
   --cc-ball: #e23636;
   --cc-portal: #8a8a8a;
   --cc-a: #8a8a8a;
   --cc-b: #c9a227;
-  --cc-c: #c9a227;
+}
+
+.world {
+  position: absolute;
+  inset: 0;
+}
+
+/* One world per theme. `display: none` also stops the hidden world's
+   animations from costing anything. */
+.dark {
+  display: none;
+}
+
+:global(body.dark-mode) .cover .light {
+  display: none;
+}
+
+:global(body.dark-mode) .cover .dark {
+  display: block;
 }
 
 .svg {
@@ -55,7 +73,7 @@
    so the card is a finished frame at rest and hover switches the machine on.
    Hovering out freezes it mid-hop; hovering back picks the hop up.
 
-   Each part gets its keyframe name, the shared loop length and the shared
+   Each part gets its keyframe name, the world's loop length and the shared
    negative delay inline from the component — the delay is what parks the
    whole scene on the rest pose, and the trail ghosts run the same clock a
    few frames behind. Easing lives inside the keyframes, per leg, so the
@@ -91,7 +109,8 @@
 
 /* With no animation at all, every part falls back to the attributes the
    component drew it with, which are the rest pose: the ball just past the
-   top of its flight, trail behind it, the far portal awake, iris open. */
+   top of its flight, trail behind it, the far portal awake, the iris open —
+   and in the dark world, the cannon's smoke still hanging at the muzzle. */
 @media (prefers-reduced-motion: reduce) {
   .run {
     animation: none !important;

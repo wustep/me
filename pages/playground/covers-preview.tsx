@@ -42,8 +42,8 @@ const tabs: [Tab, ...Tab[]] = [
     summary: 'One ball, one endless Rube Goldberg chain',
     covers: [
       {
-        label: 'The hop (shipped)',
-        hint: 'Follows the site theme — Risograph on paper in light, Noir in dark. Hover: the ball comes out of one portal, rolls off the rail, bounces up to the shelf and is pulled into the other; the iris closes, holds, and opens on the first again.',
+        label: 'The hop, in two worlds (shipped)',
+        hint: 'One world per site theme, both in the DOM. Light is the Risograph world on paper: the ball rolls off its rail, drops onto a trampoline and is thrown up to the shelf. Dark is the Noir world under stars: it drops through a funnel into a cannon and is fired up. Either way the far portal pulls it in, the iris closes on it, holds, and opens on the first portal again. Toggle the theme to compare.',
         Cover: ContraptionsCover
       }
     ]
