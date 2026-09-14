@@ -124,15 +124,16 @@ const BALL_HI = RAIL_HI - R
 const BALL_LO = RAIL_LO - R
 const BALL_BED = BED - R
 
+/** Where the first rail ends, the trampoline under it, and where the shelf begins. */
+const RAIL_END = 535
+const TRAMPOLINE = { x: 580, halfW: 24, legs: [564, 596] }
+const SHELF_START = 642
+
 /**
  * The hop, as legs from the entry eye. Speeds are the show's in spirit —
  * rails roll at a steady pace, falls accelerate, flights are parabolas
  * (linear x, eased y) — slowed a touch so the ball reads at card size.
  */
-const RAIL_END = 535
-const TRAMPOLINE = { x: 580, halfW: 24, legs: [564, 596] }
-const SHELF_START = 642
-
 const LEGS: Leg[] = [
   // pushed out of the entry, a streak that rounds into a ball
   { to: [458, BALL_HI], dur: 0.45, ex: 'out', ey: 'out', transit: 'out' },
