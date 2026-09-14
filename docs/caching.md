@@ -32,7 +32,7 @@ These live in Node memory inside a single Vercel serverless instance. They are c
 
 - TTL: **25 minutes**.
 - Keyed by `pageId`.
-- Caches the full `ExtendedRecordMap` after the AWS-URL fix, navigation merge, preview images, and tweet hydration.
+- Caches the full `ExtendedRecordMap` after the AWS-URL fix, navigation merge, missing page-mention merge, preview images, and tweet hydration.
 - Stores the in-flight `Promise` so concurrent requests for the same page share a single fetch (in-flight deduplication).
 - Rejected promises are evicted so errors aren't cached.
 
@@ -54,6 +54,11 @@ These live in Node memory inside a single Vercel serverless instance. They are c
 - Wrapped in `pMemoize` (no TTL).
 - Fetches the pages referenced by `navigationLinks` with minimal options (no collections, no missing blocks, no signed URLs).
 - Merged into every page record map when `navigationStyle !== 'default'`.
+
+### Page-mention targets — [`lib/page-mentions.ts`](../lib/page-mentions.ts)
+
+- Not a separate cache. Missing `p`-decoration page IDs are fetched during `getPageUncached` (lightweight `getPage`: no collections, no missing blocks, no signed URLs) and merged into the page record map that `getPage` memoizes.
+- react-notion-x renders mention text from the target page block; without this merge, mentions of pages outside the current chunk collapse to empty.
 
 ### Client-side search cache — [`lib/search-notion.ts`](../lib/search-notion.ts)
 
