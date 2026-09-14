@@ -1362,6 +1362,15 @@ span[class*='_background'] {
   height: 0.7em;
 }
 
+/* Floated left of the heading with a negative margin; below the
+ * 720px page-padding breakpoint there isn't enough gutter for the
+ * icon, so it hangs off-screen. Hide it there; desktop hover stays. */
+@media screen and (max-width: 720px) {
+  .notion-hash-link {
+    display: none;
+  }
+}
+
 /**
  * react-tweet keys dark tokens off [data-theme=dark] / .dark / OS
  * preference — not this site's .dark-mode class. Bridge so embeds
