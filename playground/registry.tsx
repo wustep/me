@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
@@ -161,6 +162,18 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Visualizations',
     items: [
+      {
+        title: 'Contraptions',
+        url: '/playground/contraptions',
+        description:
+          'One ball on a Rube Goldberg chain that never ends. It rolls, drops and flies through a run of tiny machines, and every portal it enters opens onto a new world with its own palette and pieces. Grew out of a generator for grids of tiny animated machines, inspired by [Okazz](https://x.com/okazz_/status/2090999902805393607).',
+        summary: 'One ball, one endless Rube Goldberg chain',
+        date: 'Sep 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/contraptions',
+        gradient: 'from-stone-100 via-sky-700 to-emerald-600',
+        CoverComponent: ContraptionsCover
+      },
       {
         title: 'MIDI Visualizer',
         url: '/playground/midi-visualizer',

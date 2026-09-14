@@ -4,6 +4,7 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
+import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -35,6 +36,18 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'contraptions',
+    title: 'Contraptions',
+    summary: 'One ball, one endless Rube Goldberg chain',
+    covers: [
+      {
+        label: 'The hop (shipped)',
+        hint: 'Follows the site theme — Risograph on paper in light, Noir in dark. Hover: the ball comes out of one portal, rolls off the rail, bounces up to the shelf and is pulled into the other; the iris closes, holds, and opens on the first again.',
+        Cover: ContraptionsCover
+      }
+    ]
+  },
   {
     id: 'splashpanic',
     title: 'Splash Panic!',
