@@ -10,11 +10,12 @@ import styles from './StageBenchCover.module.css'
  *   program screen, phase knobs, keybed). Drawn as one fixed-viewBox SVG so
  *   it scales as a single piece at any card size; the maroon stage behind it
  *   absorbs the varying cover aspect ratio. Hovering the card "starts a
- *   run" that plays Beethoven's Ode to Joy across the keybed — each key
- *   physically dips and shades on the notes it plays — while the program
- *   screen and ACTIVE LED step SELECT MODEL → RUNNING 01 → 02 → 03 through
- *   the three phrases (only resetting to SELECT MODEL once the tune
- *   finishes), the status LED flickers, and the first phase knob steps up.
+ *   run" that plays the opening of Debussy's Clair de Lune (transposed to
+ *   C so it sits on white keys) across the keybed — each key physically
+ *   dips and shades on the notes it plays — while the program screen and
+ *   ACTIVE LED step SELECT MODEL → RUNNING 01 → 02 → 03 through the three
+ *   phrases (only resetting to SELECT MODEL once the tune finishes), the
+ *   status LED flickers, and the first phase knob steps up.
  */
 
 // 22 white keys; a black key sits on the right edge of white indices
@@ -22,33 +23,18 @@ import styles from './StageBenchCover.module.css'
 const WHITE_KEYS = 22
 const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
 
-// The hover "run" plays Ode to Joy on the keybed — white keys only. White
-// key i sounds C D E F G A B (i % 7), so the tune lives in the second octave
-// (C = index 7 … G = index 11).
-type Note = 'C' | 'D' | 'E' | 'F' | 'G'
-const MELODY: readonly Note[] = [
-  'E',
-  'E',
-  'F',
-  'G',
-  'G',
-  'F',
-  'E',
-  'D',
-  'C',
-  'C',
-  'D',
-  'E',
-  'E',
-  'D',
-  'D'
-]
-const NOTE_KEY: Record<Note, number> = { C: 7, D: 8, E: 9, F: 10, G: 11 }
+// The hover "run" plays Clair de Lune's opening on the keybed — white keys
+// only. Concert pitch is D♭; transposed down a semitone to C the singing
+// line is G–E–G–E–G–C–D–E, all white. White key i sounds C D E F G A B
+// (i % 7); the tune lives in the second octave (C = 7 … G = 11).
+type Note = 'C' | 'D' | 'E' | 'G'
+const MELODY: readonly Note[] = ['G', 'E', 'G', 'E', 'G', 'C', 'D', 'E']
+const NOTE_KEY: Record<Note, number> = { C: 7, D: 8, E: 9, G: 11 }
 
-// One shared loop; notes land evenly across the RUNNING window.
-const LOOP_S = 8.4
-const NOTE_START = 13.5 // % of loop where the first note strikes
-const NOTE_STEP = 5 // % of loop between notes
+// One shared loop; Clair wants a little more air than Ode to Joy.
+const LOOP_S = 9.6
+const NOTE_START = 12 // % of loop where the first note strikes
+const NOTE_STEP = 8 // % of loop between notes
 
 // keyIndex → the loop-% times it is struck (ascending, from MELODY order).
 const KEY_STRIKES = MELODY.reduce<Map<number, number[]>>((map, note, i) => {

@@ -516,9 +516,9 @@ export function AboutPage() {
 /* ---------- StageBench card art ----------
    A pocket version of the playground cover's red Nord: status LED, program
    screen, three phase knobs, and two octaves of keys starting on C. Hovering
-   the card "starts a run", as on the full cover — the keys play the first two
-   bars of Ode to Joy while the screen's progress bar steps once per note.
-   All motion lives in AboutPage.module.css. */
+   the card "starts a run", as on the full cover — the keys play Clair de
+   Lune's opening (transposed to C: G E G E G C D E) while the screen's
+   progress bar steps once per note. All motion lives in AboutPage.module.css. */
 
 const SB_WHITE_KEYS = 14
 // A black key sits on the right edge of every white key except E and B.
@@ -529,12 +529,11 @@ const SB_KEYS_X = 6.75
 const SB_KEY_PITCH = 8.5
 const SB_KEY_GAP = 0.5
 const SB_BLACK_W = 5
-// The tune sits in the second octave (C = white key 7), so it needs D E F G.
-// Each struck key runs the keyframe that holds its notes.
+// Clair opening in C: G E G E G C D E — second octave C=7 … G=11.
 const SB_STRUCK: Record<number, string | undefined> = {
+  7: styles.sbKeyC,
   8: styles.sbKeyD,
   9: styles.sbKeyE,
-  10: styles.sbKeyF,
   11: styles.sbKeyG
 }
 

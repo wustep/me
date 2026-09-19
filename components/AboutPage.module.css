@@ -928,21 +928,25 @@ a.bioHint {
   fill: var(--sb-led-off);
 }
 
-/* The run is one shared 3.6s loop, declared paused at its idle pose and
+/* The run is one shared 4.8s loop, declared paused at its idle pose and
    resumed while the card is hovered/focused — the playground cover's idiom,
    so hovering out freezes the run and hovering back picks it up. Eight notes
-   (E E F G · G F E D) strike every 10% from 4%; the last 16% is the breath
-   before the tune comes round again. */
+   of Clair de Lune's opening in C (G E G E G C D E) strike every 10% from 4%;
+   the last 16% is the breath before the tune comes round again. */
+.sbKeyC,
 .sbKeyD,
 .sbKeyE,
-.sbKeyF,
 .sbKeyG,
 .sbLedOn,
 .sbProgress {
-  animation-duration: 3.6s;
+  animation-duration: 4.8s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-play-state: paused;
+}
+
+.sbKeyC {
+  animation-name: sbStrikeC;
 }
 
 .sbKeyD {
@@ -951,10 +955,6 @@ a.bioHint {
 
 .sbKeyE {
   animation-name: sbStrikeE;
-}
-
-.sbKeyF {
-  animation-name: sbStrikeF;
 }
 
 .sbKeyG {
@@ -979,61 +979,24 @@ a.bioHint {
 }
 
 /* Each strike is a quick dip + shade held most of the beat, released before
-   the next note so a repeated key re-articulates. */
-@keyframes sbStrikeE {
+   the next note so a repeated key re-articulates.
+   Hits at 4/14/24/34/44/54/64/74%: G E G E G C D E. */
+@keyframes sbStrikeG {
   0%,
   4%,
   12.5%,
-  14%,
-  22.5%,
-  64%,
-  72.5%,
-  100% {
-    transform: translateY(0);
-    fill: var(--sb-white);
-  }
-  5%,
-  10.5%,
-  15%,
-  20.5%,
-  65%,
-  70.5% {
-    transform: translateY(1.5px);
-    fill: var(--sb-white-down);
-  }
-}
-
-@keyframes sbStrikeF {
-  0%,
   24%,
   32.5%,
-  54%,
-  62.5%,
-  100% {
-    transform: translateY(0);
-    fill: var(--sb-white);
-  }
-  25%,
-  30.5%,
-  55%,
-  60.5% {
-    transform: translateY(1.5px);
-    fill: var(--sb-white-down);
-  }
-}
-
-@keyframes sbStrikeG {
-  0%,
-  34%,
-  42.5%,
   44%,
   52.5%,
   100% {
     transform: translateY(0);
     fill: var(--sb-white);
   }
-  35%,
-  40.5%,
+  5%,
+  10.5%,
+  25%,
+  30.5%,
   45%,
   50.5% {
     transform: translateY(1.5px);
@@ -1041,16 +1004,54 @@ a.bioHint {
   }
 }
 
-@keyframes sbStrikeD {
+@keyframes sbStrikeE {
   0%,
+  14%,
+  22.5%,
+  34%,
+  42.5%,
   74%,
   82.5%,
   100% {
     transform: translateY(0);
     fill: var(--sb-white);
   }
+  15%,
+  20.5%,
+  35%,
+  40.5%,
   75%,
   80.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbStrikeC {
+  0%,
+  54%,
+  62.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  55%,
+  60.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbStrikeD {
+  0%,
+  64%,
+  72.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  65%,
+  70.5% {
     transform: translateY(1.5px);
     fill: var(--sb-white-down);
   }
@@ -1104,8 +1105,8 @@ a.bioHint {
    comes from these variables — the show's Risograph palette in light mode,
    a Noir-adjacent one in dark: bone ink on near-black with the ball the one
    red thing on the card. The show's Noir greys both portal and trampoline;
-   here the portals go slate blue, deep enough that the ring stays a ring
-   round the bone hole, and the bed copper, warm but well short of the red.
+   here the portals go a clear blue (#4a8fe7) so they read as blue, not grey,
+   and the bed copper, warm but well short of the red.
    The playground cover (ContraptionsCover.module.css) carries the same pair;
    change them together. */
 .contraptions {
