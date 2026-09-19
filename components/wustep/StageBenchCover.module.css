@@ -106,7 +106,7 @@
    The whole run is one shared 8.4s loop, declared paused at its idle pose
    (SELECT MODEL, ACTIVE 00) and resumed only while the card is
    hovered/focused — so hovering out freezes the run mid-flight. Hovering
-   "plays" Ode to Joy across the keybed (the per-key keyframes are generated
+   "plays" Clair de Lune (C transposition) across the keybed (the per-key keyframes are generated
    from the melody in the component); the program screen and ACTIVE LED step
    SELECT → RUNNING 01 → 02 → 03 through the three phrases and only fall back
    to SELECT MODEL once the tune finishes (the loop wrap). Windows:

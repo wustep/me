@@ -650,8 +650,8 @@ a.bioHint {
 }
 
 .domino,
-.spotIt,
-.bookshelf,
+.stagebench,
+.contraptions,
 .lenses {
   align-items: center;
   justify-content: center;
@@ -692,158 +692,6 @@ a.bioHint {
 
 .domino:focus-within .dominoBlock {
   transform: translateY(-2px) rotate(-3deg);
-}
-
-.spotIt {
-  gap: 0;
-  padding-inline: clamp(22px, 7%, 34px);
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.spotItCards {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.spotItCard {
-  position: absolute;
-  width: 130px;
-  height: 130px;
-  bottom: -28px;
-  right: -20px;
-  transform: rotate(8deg);
-  transition:
-    transform 400ms ease,
-    opacity 400ms ease;
-}
-
-.spotItCardFill {
-  fill: black;
-  opacity: 0.03;
-}
-
-:global(body.dark-mode) .spotItCardFill {
-  fill: white;
-  opacity: 0.03;
-}
-
-.spotItCardStroke {
-  stroke: black;
-  stroke-width: 0.75;
-  fill: none;
-  opacity: 0.08;
-}
-
-:global(body.dark-mode) .spotItCardStroke {
-  stroke: white;
-  opacity: 0.07;
-}
-
-.spotItCardBack {
-  bottom: -36px;
-  right: -8px;
-  transform: rotate(-6deg);
-  opacity: 0.4;
-}
-
-.spotItSymbol {
-  transition: transform 300ms ease;
-}
-
-.spotItSymbol:nth-child(3) {
-  animation: symbolFloat 3.5s ease-in-out 0s infinite;
-}
-.spotItSymbol:nth-child(4) {
-  animation: symbolFloat 3.8s ease-in-out 0.4s infinite;
-}
-.spotItSymbol:nth-child(5) {
-  animation: symbolFloat 3.2s ease-in-out 0.8s infinite;
-}
-.spotItSymbol:nth-child(6) {
-  animation: symbolFloat 4s ease-in-out 0.2s infinite;
-}
-.spotItSymbol:nth-child(7) {
-  animation: symbolFloat 3.6s ease-in-out 0.6s infinite;
-}
-.spotItSymbol:nth-child(8) {
-  animation: symbolFloat 3.4s ease-in-out 1s infinite;
-}
-.spotItSymbol:nth-child(9) {
-  animation: symbolFloat 3.9s ease-in-out 0.3s infinite;
-}
-.spotItSymbol:nth-child(10) {
-  animation: symbolFloat 3.7s ease-in-out 0.7s infinite;
-}
-
-/* Paused at rest (this rule's later source order wins the play-state over the
-   shorthands above); the symbols float only while hovered/focused. */
-.spotIt .spotItSymbol {
-  animation-play-state: paused;
-}
-
-@keyframes symbolFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-1.5px);
-  }
-}
-
-@media (hover: hover) {
-  .spotIt:hover .spotItCard:last-child {
-    transform: rotate(5deg) translate(-4px, -6px);
-  }
-
-  .spotIt:hover .spotItCardBack {
-    transform: rotate(-10deg) translate(4px, -2px);
-    opacity: 0.3;
-  }
-
-  .spotIt:hover .spotItSymbol {
-    animation-play-state: running;
-  }
-}
-
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) shifts the
-   cards and floats the symbols just like hover. */
-.spotIt:focus-within .spotItCard:last-child {
-  transform: rotate(5deg) translate(-4px, -6px);
-}
-
-.spotIt:focus-within .spotItCardBack {
-  transform: rotate(-10deg) translate(4px, -2px);
-  opacity: 0.3;
-}
-
-.spotIt:focus-within .spotItSymbol {
-  animation-play-state: running;
-}
-
-.spotIt h3 {
-  position: relative;
-  z-index: var(--z-base);
-  width: 100%;
-  max-width: min(52%, 10.5rem);
-  text-align: left;
-  font-size: clamp(1.48rem, 1.3rem + 0.5vw, 1.78rem);
-  font-weight: 650;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-}
-
-.bookshelf {
-  gap: 6px;
-  padding: 14px 18px;
-  justify-content: flex-end;
-}
-
-.bookshelf h3 {
-  font-size: 1.4rem;
 }
 
 .lenses {
@@ -993,66 +841,608 @@ a.bioHint {
   animation: lensesCardBlink 6s ease-in-out infinite;
 }
 
-.bookshelfBooks {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 56px;
+/* ---------- StageBench card ----------
+   A pocket red Nord over the title. The keyboard keeps its own colours in
+   both themes, like the playground cover; dark mode only takes a little
+   glare off the body and the keys. */
+.stagebench {
+  --sb-body: #c4202f;
+  --sb-slot: #2a070c;
+  --sb-white: #faf7f2;
+  --sb-white-down: #d3ccc0;
+  --sb-black: #17181c;
+  --sb-screen: #101218;
+  --sb-screen-label: #e05545;
+  --sb-screen-track: rgba(238, 242, 246, 0.16);
+  --sb-screen-bar: #eef2f6;
+  --sb-led-off: #6f101b;
+  --sb-led-on: #ff6a55;
+  --sb-knob: #454a57;
+  --sb-knob-pointer: #e6e8ee;
+
+  gap: 8px;
+  padding: 14px 18px;
+  justify-content: flex-end;
 }
 
-.book {
+:global(body.dark-mode) .stagebench {
+  --sb-body: #b31c2a;
+  --sb-white: #ece8e1;
+  --sb-white-down: #c4bdb0;
+}
+
+.stagebench h3 {
+  font-size: 1.4rem;
+}
+
+.stagebenchArt {
   display: block;
-  width: 9px;
-  border-radius: 2px 2px 0 0;
-  transition: transform 300ms ease;
+  width: 132px;
+  height: 50px;
+  flex-shrink: 0;
+  /* A pressed key dips past the keybed's bottom edge. */
+  overflow: visible;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.18));
+}
+
+.sbBody {
+  fill: var(--sb-body);
+  transition: fill 300ms ease;
+}
+
+.sbSlot {
+  fill: var(--sb-slot);
+}
+
+.sbWhiteKey {
+  fill: var(--sb-white);
+}
+
+.sbBlackKey {
+  fill: var(--sb-black);
+}
+
+.sbScreen {
+  fill: var(--sb-screen);
+}
+
+.sbScreenLabel {
+  fill: var(--sb-screen-label);
+}
+
+.sbTrack {
+  fill: var(--sb-screen-track);
+}
+
+.sbKnob {
+  fill: var(--sb-knob);
+}
+
+.sbKnobPointer {
+  stroke: var(--sb-knob-pointer);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.sbLedOff {
+  fill: var(--sb-led-off);
+}
+
+/* The run is one shared 4.8s loop, declared paused at its idle pose and
+   resumed while the card is hovered/focused — the playground cover's idiom,
+   so hovering out freezes the run and hovering back picks it up. Eight notes
+   of Clair de Lune's opening in C (G E G E G C D E) strike every 10% from 4%;
+   the last 16% is the breath before the tune comes round again. */
+.sbKeyC,
+.sbKeyD,
+.sbKeyE,
+.sbKeyG,
+.sbLedOn,
+.sbProgress {
+  animation-duration: 4.8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.sbKeyC {
+  animation-name: sbStrikeC;
+}
+
+.sbKeyD {
+  animation-name: sbStrikeD;
+}
+
+.sbKeyE {
+  animation-name: sbStrikeE;
+}
+
+.sbKeyG {
+  animation-name: sbStrikeG;
+}
+
+/* Bright layer over the dark LED. */
+.sbLedOn {
+  fill: var(--sb-led-on);
+  opacity: 0;
+  filter: drop-shadow(0 0 1.5px var(--sb-led-on));
+  animation-name: sbLedRun;
+}
+
+/* One segment per note: steps(8, start) lands each jump on a strike. */
+.sbProgress {
+  fill: var(--sb-screen-bar);
+  transform: scaleX(0);
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  animation-name: sbProgressRun;
+}
+
+/* Each strike is a quick dip + shade held most of the beat, released before
+   the next note so a repeated key re-articulates.
+   Hits at 4/14/24/34/44/54/64/74%: G E G E G C D E. */
+@keyframes sbStrikeG {
+  0%,
+  4%,
+  12.5%,
+  24%,
+  32.5%,
+  44%,
+  52.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  5%,
+  10.5%,
+  25%,
+  30.5%,
+  45%,
+  50.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbStrikeE {
+  0%,
+  14%,
+  22.5%,
+  34%,
+  42.5%,
+  74%,
+  82.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  15%,
+  20.5%,
+  35%,
+  40.5%,
+  75%,
+  80.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbStrikeC {
+  0%,
+  54%,
+  62.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  55%,
+  60.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbStrikeD {
+  0%,
+  64%,
+  72.5%,
+  100% {
+    transform: translateY(0);
+    fill: var(--sb-white);
+  }
+  65%,
+  70.5% {
+    transform: translateY(1.5px);
+    fill: var(--sb-white-down);
+  }
+}
+
+@keyframes sbLedRun {
+  0%,
+  3% {
+    opacity: 0;
+  }
+  4%,
+  84% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sbProgressRun {
+  0%,
+  4% {
+    transform: scaleX(0);
+    animation-timing-function: steps(8, start);
+  }
+  84%,
+  92% {
+    transform: scaleX(1);
+  }
+  93%,
+  100% {
+    transform: scaleX(0);
+  }
 }
 
 @media (hover: hover) {
-  .bookshelf:hover .book:nth-child(1) {
-    transform: translateY(-3px) rotate(-2deg);
-  }
-  .bookshelf:hover .book:nth-child(2) {
-    transform: translateY(-5px);
-  }
-  .bookshelf:hover .book:nth-child(3) {
-    transform: translateY(-2px) rotate(1deg);
-  }
-  .bookshelf:hover .book:nth-child(4) {
-    transform: translateY(-6px) rotate(-1deg);
-  }
-  .bookshelf:hover .book:nth-child(5) {
-    transform: translateY(-4px) rotate(2deg);
-  }
-  .bookshelf:hover .book:nth-child(6) {
-    transform: translateY(-3px) rotate(-1deg);
-  }
-  .bookshelf:hover .book:nth-child(7) {
-    transform: translateY(-5px) rotate(1deg);
+  .stagebench:hover .stagebenchArt * {
+    animation-play-state: running;
   }
 }
 
-/* Touch + keyboard: with no hover, focus (tapping the card / Tab) lifts the
-   books just like hover. */
-.bookshelf:focus-within .book:nth-child(1) {
-  transform: translateY(-3px) rotate(-2deg);
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) starts the
+   run just like hover. */
+.stagebench:focus-within .stagebenchArt * {
+  animation-play-state: running;
 }
-.bookshelf:focus-within .book:nth-child(2) {
-  transform: translateY(-5px);
+
+/* ---------- Contraptions card ----------
+   Title left, one hop of the show on the right. Every colour the SVG paints
+   comes from these variables — the show's Risograph palette in light mode,
+   a Noir-adjacent one in dark: bone ink on near-black with the ball the one
+   red thing on the card. The show's Noir greys both portal and trampoline;
+   here the portals go a clear blue (#4a8fe7) so they read as blue, not grey,
+   and the bed copper, warm but well short of the red.
+   The playground cover (ContraptionsCover.module.css) carries the same pair;
+   change them together. */
+.contraptions {
+  --cc-ink: #2b2b2b;
+  --cc-ball: #00a95c;
+  --cc-portal: #0078bf;
+  --cc-accent: #ff6c2f;
+  /* Loop length, and the moment in it the card rests on: the ball partway
+     up its flight to the far portal. Every part is parked there by the same
+     negative delay; the trail ghosts override it to run a beat behind
+     (CC_POSE_S in AboutPage.tsx mirrors --cc-pose). */
+  --cc-loop: 2s;
+  --cc-pose: -1.24s;
+
+  gap: 0;
+  padding-inline: clamp(22px, 7%, 34px);
+  align-items: flex-start;
+  justify-content: center;
 }
-.bookshelf:focus-within .book:nth-child(3) {
-  transform: translateY(-2px) rotate(1deg);
+
+:global(body.dark-mode) .contraptions {
+  --cc-ink: #f0ede6;
+  --cc-ball: #e23636;
+  --cc-portal: #4a8fe7;
+  --cc-accent: #b8743f;
 }
-.bookshelf:focus-within .book:nth-child(4) {
-  transform: translateY(-6px) rotate(-1deg);
+
+.contraptions h3 {
+  position: relative;
+  z-index: var(--z-base);
+  text-align: left;
+  font-size: clamp(1.48rem, 1.3rem + 0.5vw, 1.78rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
-.bookshelf:focus-within .book:nth-child(5) {
-  transform: translateY(-4px) rotate(2deg);
+
+.contraptionsArt {
+  position: absolute;
+  top: 50%;
+  right: clamp(10px, 3%, 16px);
+  /* Shrinks with the card on a narrow phone so the far portal never backs
+     into the title. */
+  width: min(42%, 140px);
+  transform: translateY(-50%);
+  /* The portals' rings spread past the viewBox on the jump. */
+  overflow: visible;
+  pointer-events: none;
 }
-.bookshelf:focus-within .book:nth-child(6) {
-  transform: translateY(-3px) rotate(-1deg);
+
+/* One ink weight for everything, as in the show. */
+.ccInk,
+.ccRing,
+.ccBed,
+.ccBall,
+.ccWave {
+  stroke: var(--cc-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    fill 300ms ease,
+    stroke 300ms ease;
 }
-.bookshelf:focus-within .book:nth-child(7) {
-  transform: translateY(-5px) rotate(1deg);
+
+.ccInk,
+.ccWave {
+  fill: none;
+}
+
+.ccRing,
+.ccEye {
+  fill: var(--cc-portal);
+}
+
+.ccHole {
+  fill: var(--cc-ink);
+}
+
+.ccBed {
+  fill: var(--cc-accent);
+}
+
+.ccBall,
+.ccGhost {
+  fill: var(--cc-ball);
+}
+
+.ccHole,
+.ccEye,
+.ccGhost {
+  transition: fill 300ms ease;
+}
+
+/* Paused-timeline idiom: every moving part is declared up front and held on
+   the rest pose, so hover switches the machine on, hovering out freezes it
+   mid-hop, and hovering back picks the hop up. Easing lives inside the
+   keyframes, per leg, so the default is linear. The hop, in loop %:
+     0–7    pushed out of the near portal, growing from nothing
+     7–42   falls to the trampoline (steady x, accelerating y)
+     42–50  the bed gives, then throws
+     50–85  flies up to the far portal, arriving at the top of the arc
+     85–92  swallowed, shrinking to nothing
+     92–100 out of sight; the loop wrap is the jump back */
+.ccBallX,
+.ccBallY,
+.ccBall,
+.ccGhost,
+.ccBed,
+.ccSpring,
+.ccEye,
+.ccWave {
+  animation-duration: var(--cc-loop);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: var(--cc-pose);
+  animation-play-state: paused;
+}
+
+.ccBallX {
+  animation-name: ccHopX;
+}
+
+.ccBallY {
+  animation-name: ccHopY;
+}
+
+.ccBall,
+.ccGhost,
+.ccEye,
+.ccWave {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.ccBall,
+.ccGhost {
+  animation-name: ccHopShape;
+}
+
+.ccBed {
+  animation-name: ccBedGive;
+}
+
+/* Springs squash toward their feet. */
+.ccSpring {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation-name: ccSpringGive;
+}
+
+/* Base scales are the rest pose, for when reduced motion drops the loop. */
+.ccEyeIn {
+  transform: scale(0.45);
+  animation-name: ccEyeInCharge;
+}
+
+.ccEyeOut {
+  transform: scale(0.65);
+  animation-name: ccEyeOutCharge;
+}
+
+.ccWave {
+  opacity: 0;
+}
+
+.ccWaveIn {
+  animation-name: ccWaveInRing;
+}
+
+.ccWaveOut {
+  animation-name: ccWaveOutRing;
+}
+
+/* Portal centre to portal centre at a steady pace. */
+@keyframes ccHopX {
+  0% {
+    transform: translateX(15px);
+  }
+  92%,
+  100% {
+    transform: translateX(109px);
+  }
+}
+
+/* The two flights are halves of a parabola — quadratic ease-in for the fall,
+   its mirror for the throw — so with the steady x the ball draws real arcs.
+   36px is the portals' height (CC_PORTAL_Y in AboutPage.tsx); move them and
+   the rest-pose transforms there need re-solving too. */
+@keyframes ccHopY {
+  0%,
+  7% {
+    transform: translateY(36px);
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0.33);
+  }
+  42% {
+    transform: translateY(64px);
+    animation-timing-function: ease-out;
+  }
+  46% {
+    transform: translateY(67px);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: translateY(64px);
+    animation-timing-function: cubic-bezier(0.33, 0.67, 0.67, 1);
+  }
+  85%,
+  100% {
+    transform: translateY(36px);
+  }
+}
+
+@keyframes ccHopShape {
+  0% {
+    transform: scale(0);
+  }
+  7%,
+  85% {
+    transform: scale(1);
+  }
+  92%,
+  100% {
+    transform: scale(0);
+  }
+}
+
+/* Struck, gives, throws, and rings once before it settles. */
+@keyframes ccBedGive {
+  0%,
+  42% {
+    transform: translateY(0);
+  }
+  46% {
+    transform: translateY(3px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  54% {
+    transform: translateY(-1px);
+  }
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* The bed's 3px of give, as a fraction of the 14.5px springs. */
+@keyframes ccSpringGive {
+  0%,
+  42% {
+    transform: scaleY(1);
+  }
+  46% {
+    transform: scaleY(0.79);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  54% {
+    transform: scaleY(1.07);
+  }
+  60%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* The far portal charges as the ball comes off the trampoline toward it. */
+@keyframes ccEyeOutCharge {
+  0%,
+  50% {
+    transform: scale(0.45);
+  }
+  83%,
+  92% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.45);
+  }
+}
+
+/* The near portal stirs just ahead of the ball's return, as in the show. */
+@keyframes ccEyeInCharge {
+  0% {
+    transform: scale(1);
+  }
+  12%,
+  84% {
+    transform: scale(0.45);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ccWaveOutRing {
+  0%,
+  87% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  88% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes ccWaveInRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  14%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  .contraptions:hover .contraptionsArt * {
+    animation-play-state: running;
+  }
+}
+
+/* Touch + keyboard: with no hover, focus (tapping the card / Tab) runs the
+   hop just like hover. */
+.contraptions:focus-within .contraptionsArt * {
+  animation-play-state: running;
 }
 
 .writing {
@@ -1192,8 +1582,8 @@ a.bioHint {
 }
 
 .tooltipWrapper:has(.domino),
-.tooltipWrapper:has(.spotIt),
-.tooltipWrapper:has(.bookshelf),
+.tooltipWrapper:has(.stagebench),
+.tooltipWrapper:has(.contraptions),
 .tooltipWrapper:has(.lenses) {
   grid-column: span 3;
 }
@@ -1331,8 +1721,8 @@ a.bioHint {
 
   .tooltipWrapper:has(.compact),
   .tooltipWrapper:has(.domino),
-  .tooltipWrapper:has(.spotIt),
-  .tooltipWrapper:has(.bookshelf),
+  .tooltipWrapper:has(.stagebench),
+  .tooltipWrapper:has(.contraptions),
   .tooltipWrapper:has(.lenses) {
     grid-column: 1 / -1;
   }
@@ -1398,7 +1788,8 @@ a.bioHint {
      hover/focus rules (which only flip animation-play-state) have nothing left
      to run. The `.page` prefix matches the per-child rules' specificity so
      these win by source order. */
-  .page .spotItSymbol,
+  .page .stagebenchArt *,
+  .page .contraptionsArt *,
   .page .lensesArt :global(svg[data-anim] [data-anim-target]) {
     animation: none;
   }
@@ -1411,9 +1802,8 @@ a.bioHint {
     transform: none !important;
   }
 
-  /* Bookshelf books and the DOM-ino block lift on hover/focus via a
-     transition — make those instant. */
-  .page .book,
+  /* The DOM-ino block lifts on hover/focus via a transition — make that
+     instant. */
   .page .dominoBlock {
     transition: none;
   }
