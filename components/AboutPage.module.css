@@ -1102,8 +1102,10 @@ a.bioHint {
 /* ---------- Contraptions card ----------
    Title left, one hop of the show on the right. Every colour the SVG paints
    comes from these variables — the show's Risograph palette in light mode,
-   its Noir palette in dark, where the ball is the one red thing on the card
-   and the portals go grey so their ring stays a ring round the bone hole. */
+   a Noir-adjacent one in dark: bone ink on near-black with the ball the one
+   red thing on the card. The show's Noir greys both portal and trampoline;
+   here the portals go slate blue, deep enough that the ring stays a ring
+   round the bone hole, and the bed copper, warm but well short of the red. */
 .contraptions {
   --cc-ink: #2b2b2b;
   --cc-ball: #00a95c;
@@ -1125,8 +1127,8 @@ a.bioHint {
 :global(body.dark-mode) .contraptions {
   --cc-ink: #f0ede6;
   --cc-ball: #e23636;
-  --cc-portal: #8a8a8a;
-  --cc-accent: #8a8a8a;
+  --cc-portal: #43608f;
+  --cc-accent: #b8743f;
 }
 
 .contraptions h3 {
@@ -1288,11 +1290,13 @@ a.bioHint {
 }
 
 /* The two flights are halves of a parabola — quadratic ease-in for the fall,
-   its mirror for the throw — so with the steady x the ball draws real arcs. */
+   its mirror for the throw — so with the steady x the ball draws real arcs.
+   36px is the portals' height (CC_PORTAL_Y in AboutPage.tsx); move them and
+   the rest-pose transforms there need re-solving too. */
 @keyframes ccHopY {
   0%,
   7% {
-    transform: translateY(32px);
+    transform: translateY(36px);
     animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0.33);
   }
   42% {
@@ -1309,7 +1313,7 @@ a.bioHint {
   }
   85%,
   100% {
-    transform: translateY(32px);
+    transform: translateY(36px);
   }
 }
 

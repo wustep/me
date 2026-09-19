@@ -644,9 +644,10 @@ function StageBenchArt() {
 /* ---------- Contraptions card art ----------
    One hop of the show, cut down from the playground cover: the ball comes
    out of one portal, drops onto the trampoline, is thrown up into the other
-   portal, and the same beat is pushed back out of the first. The palette is
-   the show's — Risograph on paper in light mode, Noir in dark — through the
-   --cc-* variables in AboutPage.module.css, where the motion lives too.
+   portal, and the same beat is pushed back out of the first. The palette
+   follows the show — Risograph on paper in light mode, Noir-adjacent in dark
+   — through the --cc-* variables in AboutPage.module.css, where the motion
+   lives too.
 
    At rest the ball hangs partway up its flight to the far portal with its
    trail behind it. The transform attributes below draw that pose; the paused
@@ -655,12 +656,12 @@ function StageBenchArt() {
 // Ground line the posts and springs stand on, and the height the portals
 // float at, in viewBox units.
 const CC_GROUND = 90
-const CC_PORTAL_Y = 32
+const CC_PORTAL_Y = 36
 // Trail ghosts run the ball's clock this many seconds behind it, largest
 // lag first so the nearest ghost paints on top.
 const CC_TRAIL = [
-  { lag: 0.12, x: 72.22, y: 53.97, r: 3, opacity: 0.2 },
-  { lag: 0.06, x: 75.28, y: 49.66, r: 4.2, opacity: 0.4 }
+  { lag: 0.12, x: 72.22, y: 55.15, r: 3, opacity: 0.2 },
+  { lag: 0.06, x: 75.28, y: 51.37, r: 4.2, opacity: 0.4 }
 ]
 // Must match --cc-pose in AboutPage.module.css: the loop time of the rest pose.
 const CC_POSE_S = 1.24
@@ -750,7 +751,7 @@ function ContraptionsArt() {
         )
       })}
       <g className={styles.ccBallX} transform='translate(78.35 0)'>
-        <g className={styles.ccBallY} transform='translate(0 45.82)'>
+        <g className={styles.ccBallY} transform='translate(0 48.02)'>
           <circle className={styles.ccBall} r='5.5' />
         </g>
       </g>
