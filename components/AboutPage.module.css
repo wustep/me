@@ -1105,7 +1105,9 @@ a.bioHint {
    a Noir-adjacent one in dark: bone ink on near-black with the ball the one
    red thing on the card. The show's Noir greys both portal and trampoline;
    here the portals go slate blue, deep enough that the ring stays a ring
-   round the bone hole, and the bed copper, warm but well short of the red. */
+   round the bone hole, and the bed copper, warm but well short of the red.
+   The playground cover (ContraptionsCover.module.css) carries the same pair;
+   change them together. */
 .contraptions {
   --cc-ink: #2b2b2b;
   --cc-ball: #00a95c;

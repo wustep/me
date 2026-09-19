@@ -5,10 +5,10 @@
 
    Every colour the SVG paints comes from these variables, which is what lets
    one map serve both themes: the show's Risograph palette on paper in light
-   mode — the world the reference stills were taken in — and its Noir
-   palette in dark, where a single red carries nearly all the colour. The SVG
-   cannot respond to `body.dark-mode` itself, so the palette lives here and
-   the component only ever refers to `var(--cc-*)`. */
+   mode — the world the reference stills were taken in — and a Noir-adjacent
+   one in dark, where the red ball is still the loudest thing on the page.
+   The SVG cannot respond to `body.dark-mode` itself, so the palette lives
+   here and the component only ever refers to `var(--cc-*)`. */
 .cover {
   --cc-bg: #f7f3e8;
   --cc-ink: #2b2b2b;
@@ -27,16 +27,19 @@
   background: var(--cc-bg);
 }
 
-/* Noir: bone ink on near-black, the ball the one red thing on the page. The
-   portals go grey so their ring stays a ring — the hole inside is ink, and a
-   bone ring round a bone hole would read as a disc. */
+/* Noir-adjacent: bone ink on near-black, the ball the one red thing on the
+   page. The show greys both portal and trampoline; here the portals go slate
+   blue so their ring stays a ring — the hole inside is ink, and a bone ring
+   round a bone hole would read as a disc — and the bed copper, warm but well
+   short of the red. The About card's .contraptions block carries the same
+   pair; change them together. */
 :global(body.dark-mode) .cover {
   --cc-bg: #141414;
   --cc-ink: #f0ede6;
   --cc-dot: rgba(240, 237, 230, 0.14);
   --cc-ball: #e23636;
-  --cc-portal: #8a8a8a;
-  --cc-accent: #8a8a8a;
+  --cc-portal: #43608f;
+  --cc-accent: #b8743f;
 }
 
 .svg {
