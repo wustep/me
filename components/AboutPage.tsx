@@ -427,144 +427,23 @@ export function AboutPage() {
               </a>
             </Tooltip>
 
-            <Tooltip label='An interactive bookshelf of my reading list'>
+            <Tooltip label='A benchmark where models rebuild the Nord Stage 4'>
               <a
-                href='/playground/bookshelf'
-                className={`${styles.projectCard} ${styles.bookshelf}`}
+                href='/playground/stagebench'
+                className={`${styles.projectCard} ${styles.stagebench}`}
               >
-                <div className={styles.bookshelfBooks}>
-                  <span
-                    className={styles.book}
-                    style={{ background: '#e74c3c', height: '70%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#3b82f6', height: '85%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#22c55e', height: '60%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#f59e0b', height: '90%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#a855f7', height: '75%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#06b6d4', height: '65%' }}
-                  />
-                  <span
-                    className={styles.book}
-                    style={{ background: '#ec4899', height: '80%' }}
-                  />
-                </div>
-                <h3>Bookshelf</h3>
+                <StageBenchArt />
+                <h3>StageBench</h3>
               </a>
             </Tooltip>
 
-            <Tooltip label='A browser-based Spot It! card game'>
+            <Tooltip label='One ball on a Rube Goldberg chain that never ends'>
               <a
-                href='/playground/spot-it'
-                className={`${styles.projectCard} ${styles.spotIt}`}
+                href='/playground/contraptions'
+                className={`${styles.projectCard} ${styles.contraptions}`}
               >
-                <div className={styles.spotItCards} aria-hidden='true'>
-                  <svg
-                    className={`${styles.spotItCard} ${styles.spotItCardBack}`}
-                    viewBox='0 0 100 100'
-                    fill='none'
-                  >
-                    <circle
-                      cx='50'
-                      cy='50'
-                      r='48'
-                      className={styles.spotItCardFill}
-                    />
-                    <circle
-                      cx='50'
-                      cy='50'
-                      r='46'
-                      className={styles.spotItCardStroke}
-                    />
-                  </svg>
-                  <svg
-                    className={styles.spotItCard}
-                    viewBox='0 0 100 100'
-                    fill='none'
-                  >
-                    <circle
-                      cx='50'
-                      cy='50'
-                      r='48'
-                      className={styles.spotItCardFill}
-                    />
-                    <circle
-                      cx='50'
-                      cy='50'
-                      r='46'
-                      className={styles.spotItCardStroke}
-                    />
-                    <polygon
-                      className={styles.spotItSymbol}
-                      points='30,20 32.5,27 40,27 34,31.5 36,39 30,35 24,39 26,31.5 20,27 27.5,27'
-                      fill='#f59e0b'
-                    />
-                    <path
-                      className={styles.spotItSymbol}
-                      d='M70,28 C70,24 74,22 76,24 C78,22 82,24 82,28 C82,33 76,37 76,37 C76,37 70,33 70,28Z'
-                      fill='#ec4899'
-                    />
-                    <polygon
-                      className={styles.spotItSymbol}
-                      points='52,14 48,28 53,26 49,40 57,23 52,25'
-                      fill='#fb923c'
-                    />
-                    <polygon
-                      className={styles.spotItSymbol}
-                      points='24,55 31,48 38,55 31,62'
-                      fill='#3b82f6'
-                    />
-                    <circle
-                      className={styles.spotItSymbol}
-                      cx='70'
-                      cy='58'
-                      r='8'
-                      fill='#22c55e'
-                    />
-                    <polygon
-                      className={styles.spotItSymbol}
-                      points='50,60 42,74 58,74'
-                      fill='#e74c3c'
-                    />
-                    <g className={styles.spotItSymbol}>
-                      <rect
-                        x='22'
-                        y='77'
-                        width='12'
-                        height='4'
-                        rx='1'
-                        fill='#a855f7'
-                      />
-                      <rect
-                        x='26'
-                        y='73'
-                        width='4'
-                        height='12'
-                        rx='1'
-                        fill='#a855f7'
-                      />
-                    </g>
-                    <path
-                      className={styles.spotItSymbol}
-                      d='M72,76 A7,7 0 1,1 72,90 A5,5 0 1,0 72,76Z'
-                      fill='#06b6d4'
-                    />
-                  </svg>
-                </div>
-                <h3>Spot it!</h3>
+                <ContraptionsArt />
+                <h3>Contraptions</h3>
               </a>
             </Tooltip>
           </div>
@@ -631,6 +510,251 @@ export function AboutPage() {
         </footer>
       </div>
     </main>
+  )
+}
+
+/* ---------- StageBench card art ----------
+   A pocket version of the playground cover's red Nord: status LED, program
+   screen, three phase knobs, and two octaves of keys starting on C. Hovering
+   the card "starts a run", as on the full cover — the keys play the first two
+   bars of Ode to Joy while the screen's progress bar steps once per note.
+   All motion lives in AboutPage.module.css. */
+
+const SB_WHITE_KEYS = 14
+// A black key sits on the right edge of every white key except E and B.
+const SB_BLACK_AFTER = new Set([0, 1, 3, 4, 5])
+// Keybed geometry in viewBox units. Quarter-unit values keep every computed
+// coordinate an exact binary fraction, so the markup prints cleanly.
+const SB_KEYS_X = 6.75
+const SB_KEY_PITCH = 8.5
+const SB_KEY_GAP = 0.5
+const SB_BLACK_W = 5
+// The tune sits in the second octave (C = white key 7), so it needs D E F G.
+// Each struck key runs the keyframe that holds its notes.
+const SB_STRUCK: Record<number, string | undefined> = {
+  8: styles.sbKeyD,
+  9: styles.sbKeyE,
+  10: styles.sbKeyF,
+  11: styles.sbKeyG
+}
+
+function StageBenchArt() {
+  const whiteKeys = Array.from({ length: SB_WHITE_KEYS }, (_, i) => i)
+  return (
+    <svg
+      className={styles.stagebenchArt}
+      viewBox='0 0 132 50'
+      aria-hidden='true'
+    >
+      <rect className={styles.sbBody} width='132' height='50' rx='5' />
+
+      {/* Status LED: dark at rest, lit through the run. */}
+      <circle className={styles.sbLedOff} cx='11' cy='9.5' r='1.8' />
+      <circle className={styles.sbLedOn} cx='11' cy='9.5' r='1.8' />
+
+      {/* Program screen: a label dash over the run's progress bar. */}
+      <rect
+        className={styles.sbScreen}
+        x='19'
+        y='4.5'
+        width='52'
+        height='10'
+        rx='2'
+      />
+      <rect
+        className={styles.sbScreenLabel}
+        x='23'
+        y='7'
+        width='12'
+        height='1.4'
+        rx='0.7'
+      />
+      <rect
+        className={styles.sbTrack}
+        x='23'
+        y='10.2'
+        width='44'
+        height='1.6'
+        rx='0.8'
+      />
+      <rect
+        className={styles.sbProgress}
+        x='23'
+        y='10.2'
+        width='44'
+        height='1.6'
+        rx='0.8'
+      />
+
+      {/* Phase knobs, each parked at its own angle. */}
+      {[-50, 0, 55].map((deg, i) => (
+        <g key={deg} transform={`translate(${92 + i * 14} 9.5)`}>
+          <circle className={styles.sbKnob} r='3.4' />
+          <line
+            className={styles.sbKnobPointer}
+            y1='-0.6'
+            y2='-2.8'
+            transform={`rotate(${deg})`}
+          />
+        </g>
+      ))}
+
+      {/* Keybed: a dark slot so the gaps between keys read as shadow. */}
+      <rect
+        className={styles.sbSlot}
+        x='5.75'
+        y='18'
+        width='120.5'
+        height='28'
+        rx='1.5'
+      />
+      {whiteKeys.map((i) => (
+        <rect
+          key={i}
+          className={`${styles.sbWhiteKey} ${SB_STRUCK[i] ?? ''}`}
+          x={SB_KEYS_X + i * SB_KEY_PITCH}
+          y='19'
+          width={SB_KEY_PITCH - SB_KEY_GAP}
+          height='26'
+          rx='1'
+        />
+      ))}
+      {whiteKeys
+        .filter((i) => i < SB_WHITE_KEYS - 1 && SB_BLACK_AFTER.has(i % 7))
+        .map((i) => (
+          <rect
+            key={i}
+            className={styles.sbBlackKey}
+            x={
+              SB_KEYS_X +
+              (i + 1) * SB_KEY_PITCH -
+              SB_KEY_GAP / 2 -
+              SB_BLACK_W / 2
+            }
+            y='19'
+            width={SB_BLACK_W}
+            height='15.5'
+            rx='0.8'
+          />
+        ))}
+    </svg>
+  )
+}
+
+/* ---------- Contraptions card art ----------
+   One hop of the show, cut down from the playground cover: the ball comes
+   out of one portal, drops onto the trampoline, is thrown up into the other
+   portal, and the same beat is pushed back out of the first. The palette is
+   the show's — Risograph on paper in light mode, Noir in dark — through the
+   --cc-* variables in AboutPage.module.css, where the motion lives too.
+
+   At rest the ball hangs partway up its flight to the far portal with its
+   trail behind it. The transform attributes below draw that pose; the paused
+   animations land on the same frame, and reduced motion falls back to it. */
+
+// Ground line the posts and springs stand on, and the height the portals
+// float at, in viewBox units.
+const CC_GROUND = 90
+const CC_PORTAL_Y = 32
+// Trail ghosts run the ball's clock this many seconds behind it, largest
+// lag first so the nearest ghost paints on top.
+const CC_TRAIL = [
+  { lag: 0.12, x: 72.22, y: 53.97, r: 3, opacity: 0.2 },
+  { lag: 0.06, x: 75.28, y: 49.66, r: 4.2, opacity: 0.4 }
+]
+// Must match --cc-pose in AboutPage.module.css: the loop time of the rest pose.
+const CC_POSE_S = 1.24
+
+function ContraptionsPortal({ x, eye }: { x: number; eye?: string }) {
+  const foot = CC_GROUND - CC_PORTAL_Y
+  return (
+    <g transform={`translate(${x} ${CC_PORTAL_Y})`}>
+      <line className={styles.ccInk} y1='13' y2={foot} />
+      <line className={styles.ccInk} x1='-4' y1={foot} x2='4' y2={foot} />
+      {/* A band of colour round a hole of ink, as in the show. */}
+      <ellipse className={styles.ccRing} rx='8' ry='13' />
+      <ellipse className={styles.ccHole} rx='4.6' ry='9.6' />
+      {/* The eye swells as the portal charges. */}
+      <ellipse className={`${styles.ccEye} ${eye ?? ''}`} rx='3' ry='6.2' />
+    </g>
+  )
+}
+
+function ContraptionsArt() {
+  return (
+    <svg
+      className={styles.contraptionsArt}
+      viewBox='0 14 124 80'
+      aria-hidden='true'
+    >
+      {/* Trampoline: springs squash from their feet, the bed rides on top. */}
+      {[53, 71].map((x) => (
+        <g key={x} transform={`translate(${x} ${CC_GROUND})`}>
+          <line className={styles.ccInk} x1='-4' x2='4' />
+          <path
+            className={`${styles.ccInk} ${styles.ccSpring}`}
+            d='M0 0L-3 -2.4L3 -4.8L-3 -7.2L3 -9.6L-3 -12L0 -14.5'
+          />
+        </g>
+      ))}
+      <rect
+        className={styles.ccBed}
+        x='49'
+        y='70.5'
+        width='26'
+        height='5'
+        rx='2.5'
+      />
+
+      <ContraptionsPortal x={15} eye={styles.ccEyeIn} />
+      <ContraptionsPortal x={109} eye={styles.ccEyeOut} />
+
+      {/* The jump: each portal sends one ring out as the ball crosses it. */}
+      <ellipse
+        className={`${styles.ccWave} ${styles.ccWaveIn}`}
+        cx='15'
+        cy={CC_PORTAL_Y}
+        rx='8'
+        ry='13'
+      />
+      <ellipse
+        className={`${styles.ccWave} ${styles.ccWaveOut}`}
+        cx='109'
+        cy={CC_PORTAL_Y}
+        rx='8'
+        ry='13'
+      />
+
+      {CC_TRAIL.map(({ lag, x, y, r, opacity }) => {
+        const delay = { animationDelay: `${(lag - CC_POSE_S).toFixed(2)}s` }
+        return (
+          <g
+            key={lag}
+            className={styles.ccBallX}
+            style={delay}
+            transform={`translate(${x} 0)`}
+          >
+            <g
+              className={styles.ccBallY}
+              style={delay}
+              transform={`translate(0 ${y})`}
+            >
+              <circle
+                className={styles.ccGhost}
+                style={delay}
+                r={r}
+                opacity={opacity}
+              />
+            </g>
+          </g>
+        )
+      })}
+      <g className={styles.ccBallX} transform='translate(78.35 0)'>
+        <g className={styles.ccBallY} transform='translate(0 45.82)'>
+          <circle className={styles.ccBall} r='5.5' />
+        </g>
+      </g>
+    </svg>
   )
 }
 
