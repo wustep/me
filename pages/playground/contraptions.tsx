@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
-import { domain, host, name, x } from '@/lib/config'
+import { domain, name, x } from '@/lib/config'
 
 // The show is the app's front door; the sandbox it grew out of sits behind
 // the gear at its top-left, so one URL is enough here.
@@ -10,8 +10,8 @@ const SHOW_URL = 'https://contraptions-wustep.vercel.app/'
 const title = 'Contraptions'
 const description =
   'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.'
-const previewImage = `${host}/playground/covers/contraptions.png`
-const canonicalUrl = `${host}/playground/contraptions`
+const previewImage = 'https://wustep.me/playground/covers/contraptions.png'
+const canonicalUrl = 'https://wustep.me/playground/contraptions'
 
 export default function PlaygroundContraptionsPage() {
   return (
