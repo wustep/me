@@ -4,6 +4,8 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
+import { JevInboxCover } from '@/components/wustep/JevInboxCover'
+import { JevMatchCover } from '@/components/wustep/JevMatchCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
@@ -41,6 +43,28 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Experiments',
     items: [
+      {
+        title: 'Jev Inbox',
+        url: '/playground/jev-inbox',
+        description:
+          'Triage a fictional Gmail inbox with [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev)-shaped Delete / Review / Leave confidences. Each message carries the real Gmail users.messages schema. Built with Grok 4.6.',
+        summary: 'Delete, Review, or Leave — with a confidence triad',
+        date: 'Sep 2026',
+        year: '2026',
+        gradient: 'from-amber-100 via-stone-300 to-emerald-800',
+        CoverComponent: JevInboxCover
+      },
+      {
+        title: 'Jev Match',
+        url: '/playground/jev-match',
+        description:
+          'Structured [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) questions over hobbies and looking-for: a hypothesis, fit score, confidence, and reasons per candidate. Fictional nobodies only. Built with Grok 4.6.',
+        summary: 'Fit scores and hypotheses over fictional nobodies',
+        date: 'Sep 2026',
+        year: '2026',
+        gradient: 'from-slate-900 via-indigo-950 to-orange-300',
+        CoverComponent: JevMatchCover
+      },
       {
         title: 'StageBench',
         url: '/playground/stagebench',

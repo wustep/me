@@ -1,0 +1,219 @@
+/* JevMatchCover — two people cards lean in; the fit ring fills. */
+
+.cover {
+  --dusk: #161822;
+  --card: #262a38;
+  --ink: #efe8dc;
+  --mute: rgba(239, 232, 220, 0.45);
+  --fit: #7eb8a0;
+  --spark: #e8a87c;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(90% 140% at 50% 0%, #232636 0%, var(--dusk) 70%);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  fill: var(--card);
+  stroke: rgba(239, 232, 220, 0.1);
+  stroke-width: 1.25;
+}
+
+.avatar {
+  fill: #3a4054;
+}
+
+.line {
+  fill: var(--ink);
+}
+
+.mute {
+  fill: var(--mute);
+}
+
+.smile {
+  fill: none;
+  stroke: var(--mute);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.left {
+  transform-origin: 520px 120px;
+}
+
+.right {
+  transform-origin: 760px 120px;
+}
+
+.ring {
+  fill: none;
+  stroke: rgba(126, 184, 160, 0.22);
+  stroke-width: 5;
+}
+
+.ringFill {
+  fill: none;
+  stroke: var(--fit);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 132;
+  stroke-dashoffset: 92;
+  transform-origin: 640px 118px;
+  transform: rotate(-90deg);
+}
+
+.spark {
+  stroke: var(--spark);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.fitText {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 750;
+  fill: var(--fit);
+  text-anchor: middle;
+}
+
+@keyframes leanL {
+  0%,
+  14% {
+    transform: translateX(0);
+  }
+  40%,
+  78% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes leanR {
+  0%,
+  14% {
+    transform: translateX(0);
+  }
+  40%,
+  78% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes ringFill {
+  0%,
+  12% {
+    stroke-dashoffset: 92;
+  }
+  48%,
+  80% {
+    stroke-dashoffset: 28;
+  }
+  100% {
+    stroke-dashoffset: 92;
+  }
+}
+
+@keyframes spark {
+  0%,
+  22% {
+    opacity: 0;
+  }
+  40%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  .cover:hover .left,
+  :global(.group):hover .left {
+    animation: leanL 2.6s ease-in-out infinite;
+  }
+  .cover:hover .right,
+  :global(.group):hover .right {
+    animation: leanR 2.6s ease-in-out infinite;
+  }
+  .cover:hover .ringFill,
+  :global(.group):hover .ringFill {
+    animation: ringFill 2.6s ease-in-out infinite;
+  }
+  .cover:hover .spark,
+  :global(.group):hover .spark {
+    animation: spark 2.6s ease-in-out infinite;
+  }
+}
+
+.cover:focus-within .left,
+:global(.group):focus-within .left {
+  animation: leanL 2.6s ease-in-out infinite;
+}
+.cover:focus-within .right,
+:global(.group):focus-within .right {
+  animation: leanR 2.6s ease-in-out infinite;
+}
+.cover:focus-within .ringFill,
+:global(.group):focus-within .ringFill {
+  animation: ringFill 2.6s ease-in-out infinite;
+}
+.cover:focus-within .spark,
+:global(.group):focus-within .spark {
+  animation: spark 2.6s ease-in-out infinite;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .left {
+    animation: leanL 2.6s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .right {
+    animation: leanR 2.6s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .ringFill {
+    animation: ringFill 2.6s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .spark {
+    animation: spark 2.6s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .left,
+  .right,
+  .ringFill,
+  .spark {
+    animation: none !important;
+  }
+  .left {
+    transform: translateX(8px);
+  }
+  .right {
+    transform: translateX(-8px);
+  }
+  .ringFill {
+    stroke-dashoffset: 28;
+  }
+  .spark {
+    opacity: 1;
+  }
+}

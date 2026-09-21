@@ -1,0 +1,38 @@
+{
+  "_comment": "Shape mirrors Gmail users.messages + common connector flattening. Content is fictional.",
+  "id": "18f0a1b2c3d4e5f6",
+  "threadId": "18f0a1b2c3d4e5f6",
+  "labelIds": ["INBOX", "UNREAD", "CATEGORY_PROMOTIONS"],
+  "snippet": "Flash sale — 40% off everything this weekend only. Shop now before…",
+  "historyId": "21714000",
+  "internalDate": "1726876800000",
+  "sizeEstimate": 18420,
+  "payload": {
+    "mimeType": "multipart/alternative",
+    "headers": [
+      { "name": "From", "value": "Deals <noreply@shop.example>" },
+      { "name": "To", "value": "you@example.com" },
+      { "name": "Subject", "value": "Your weekend flash sale starts now" },
+      { "name": "Date", "value": "Sun, 21 Sep 2025 10:00:00 -0700" },
+      { "name": "Message-ID", "value": "<abc123@shop.example>" },
+      { "name": "List-Unsubscribe", "value": "<mailto:unsub@shop.example>, <https://shop.example/unsub>" },
+      { "name": "List-Id", "value": "deals.shop.example" }
+    ],
+    "parts": [
+      {
+        "mimeType": "text/plain",
+        "body": { "size": 120, "data": null }
+      },
+      {
+        "mimeType": "text/html",
+        "body": { "size": 2400, "data": null }
+      }
+    ]
+  },
+  "subject": "Your weekend flash sale starts now",
+  "sender": "Deals <noreply@shop.example>",
+  "toRecipients": ["you@example.com"],
+  "ccRecipients": [],
+  "date": "2025-09-21T17:00:00Z",
+  "plaintextBody": "Flash sale — 40% off everything this weekend only…"
+}

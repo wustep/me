@@ -1,0 +1,279 @@
+/* JevInboxCover — a miniature inbox plus the Delete/Review/Leave triad.
+   Rest pose is the designed frame (meters low, stamp off). Hover applies
+   the loop so the rest pose stays exact. */
+
+.cover {
+  --paper: #e8dfd2;
+  --row: #fbf6ee;
+  --ink: #2a2622;
+  --mute: rgba(42, 38, 34, 0.45);
+  --line: rgba(42, 38, 34, 0.12);
+  --delete: #c45c4a;
+  --review: #c4901a;
+  --leave: #2f7a5b;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    120% 180% at 50% -20%,
+    #f4ece0 0%,
+    var(--paper) 62%
+  );
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.row {
+  fill: var(--row);
+  stroke: var(--line);
+  stroke-width: 1.25;
+}
+
+.dot {
+  fill: #3d5a80;
+}
+
+.line {
+  fill: var(--ink);
+}
+
+.mute {
+  fill: var(--mute);
+}
+
+.track {
+  fill: rgba(42, 38, 34, 0.1);
+}
+
+.fill {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.fillDelete {
+  fill: var(--delete);
+  transform: scaleX(0.16);
+}
+
+.fillReview {
+  fill: var(--review);
+  transform: scaleX(0.28);
+}
+
+.fillLeave {
+  fill: var(--leave);
+  transform: scaleX(0.12);
+}
+
+.label {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 1.2px;
+  fill: var(--mute);
+}
+
+.stamp {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+  fill: var(--review);
+  opacity: 0;
+  transform-origin: 820px 48px;
+  transform: rotate(-8deg) translateY(-6px);
+}
+
+.midRow {
+  transform-origin: 520px 120px;
+}
+
+@keyframes fillD {
+  0%,
+  12% {
+    transform: scaleX(0.16);
+  }
+  40%,
+  78% {
+    transform: scaleX(0.14);
+  }
+  100% {
+    transform: scaleX(0.16);
+  }
+}
+
+@keyframes fillR {
+  0%,
+  10% {
+    transform: scaleX(0.28);
+  }
+  42%,
+  80% {
+    transform: scaleX(0.78);
+  }
+  100% {
+    transform: scaleX(0.28);
+  }
+}
+
+@keyframes fillL {
+  0%,
+  14% {
+    transform: scaleX(0.12);
+  }
+  48%,
+  82% {
+    transform: scaleX(0.08);
+  }
+  100% {
+    transform: scaleX(0.12);
+  }
+}
+
+@keyframes stampIn {
+  0%,
+  18% {
+    opacity: 0;
+    transform: rotate(-8deg) translateY(-8px);
+  }
+  36%,
+  78% {
+    opacity: 1;
+    transform: rotate(-8deg) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-8deg) translateY(-8px);
+  }
+}
+
+@keyframes lift {
+  0%,
+  16% {
+    transform: translate(0, 0);
+  }
+  40%,
+  76% {
+    transform: translate(6px, -5px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  40%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@media (hover: hover) {
+  .cover:hover .fillDelete,
+  :global(.group):hover .fillDelete {
+    animation: fillD 2.4s ease-in-out infinite;
+  }
+  .cover:hover .fillReview,
+  :global(.group):hover .fillReview {
+    animation: fillR 2.4s ease-in-out infinite;
+  }
+  .cover:hover .fillLeave,
+  :global(.group):hover .fillLeave {
+    animation: fillL 2.4s ease-in-out infinite;
+  }
+  .cover:hover .stamp,
+  :global(.group):hover .stamp {
+    animation: stampIn 2.4s ease-in-out infinite;
+  }
+  .cover:hover .midRow,
+  :global(.group):hover .midRow {
+    animation: lift 2.4s ease-in-out infinite;
+  }
+  .cover:hover .dotLive,
+  :global(.group):hover .dotLive {
+    animation: blink 2.4s ease-in-out infinite;
+  }
+}
+
+.cover:focus-within .fillDelete,
+:global(.group):focus-within .fillDelete {
+  animation: fillD 2.4s ease-in-out infinite;
+}
+.cover:focus-within .fillReview,
+:global(.group):focus-within .fillReview {
+  animation: fillR 2.4s ease-in-out infinite;
+}
+.cover:focus-within .fillLeave,
+:global(.group):focus-within .fillLeave {
+  animation: fillL 2.4s ease-in-out infinite;
+}
+.cover:focus-within .stamp,
+:global(.group):focus-within .stamp {
+  animation: stampIn 2.4s ease-in-out infinite;
+}
+.cover:focus-within .midRow,
+:global(.group):focus-within .midRow {
+  animation: lift 2.4s ease-in-out infinite;
+}
+.cover:focus-within .dotLive,
+:global(.group):focus-within .dotLive {
+  animation: blink 2.4s ease-in-out infinite;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .fillDelete {
+    animation: fillD 2.4s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .fillReview {
+    animation: fillR 2.4s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .fillLeave {
+    animation: fillL 2.4s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .stamp {
+    animation: stampIn 2.4s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .midRow {
+    animation: lift 2.4s ease-in-out infinite;
+  }
+  :global([data-cover-awake]) .dotLive {
+    animation: blink 2.4s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fillDelete,
+  .fillReview,
+  .fillLeave,
+  .stamp,
+  .midRow,
+  .dotLive {
+    animation: none !important;
+  }
+  .fillDelete {
+    transform: scaleX(0.14);
+  }
+  .fillReview {
+    transform: scaleX(0.78);
+  }
+  .fillLeave {
+    transform: scaleX(0.08);
+  }
+  .stamp {
+    opacity: 1;
+    transform: rotate(-8deg) translateY(0);
+  }
+}

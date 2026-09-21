@@ -5,6 +5,8 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
+import { JevInboxCover } from '@/components/wustep/JevInboxCover'
+import { JevMatchCover } from '@/components/wustep/JevMatchCover'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -36,6 +38,30 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'jev-inbox',
+    title: 'Jev Inbox',
+    summary: 'Delete, Review, or Leave — with a confidence triad',
+    covers: [
+      {
+        label: 'Triad vignette (shipped)',
+        hint: 'Hover: Review fills, the stamp lands, the middle row lifts.',
+        Cover: JevInboxCover
+      }
+    ]
+  },
+  {
+    id: 'jev-match',
+    title: 'Jev Match',
+    summary: 'Fit scores and hypotheses over fictional nobodies',
+    covers: [
+      {
+        label: 'Two cards (shipped)',
+        hint: 'Hover: the cards lean in, the fit ring fills, a spark bridges.',
+        Cover: JevMatchCover
+      }
+    ]
+  },
   {
     id: 'contraptions',
     title: 'Contraptions',
