@@ -172,6 +172,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2026',
         source: 'https://github.com/wustep/contraptions',
         gradient: 'from-stone-100 via-sky-700 to-emerald-600',
+        image: '/playground/covers/contraptions.png',
         CoverComponent: ContraptionsCover
       },
       {
