@@ -58,7 +58,7 @@ const tabs: [Tab, ...Tab[]] = [
   {
     id: 'jev',
     title: 'Jev Playground',
-    summary: 'Jev picks the labels; code does the rest',
+    summary: "Tiny demos with TypeSafe's System One Jev model",
     covers: [
       {
         label: 'The dial writes the staff (shipped)',

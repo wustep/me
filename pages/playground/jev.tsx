@@ -9,7 +9,7 @@ const APP_URL = 'https://jev-playground.vercel.app/'
 
 const title = 'Jev Playground'
 const description =
-  'Jev only picks labels and code does the rest, across four rooms: a score you can hear, absurd trolley problems, inbox triage, and match ranking.'
+  'Tiny demos where a model answers with enums only: sort mail, rank people, pick a musical form, or decide a trolley case.'
 const canonicalUrl = 'https://wustep.me/playground/jev'
 
 export default function PlaygroundJevPage() {

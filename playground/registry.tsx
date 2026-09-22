@@ -46,8 +46,8 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Jev Playground',
         url: '/playground/jev',
         description:
-          'Jev only picks labels and code does the rest, across four rooms: a score you can hear, absurd trolley problems, inbox triage, and match ranking.',
-        summary: 'Jev picks the labels; code does the rest',
+          'Tiny demos where a model answers with enums only: sort mail, rank people, pick a musical form, or decide a trolley case.',
+        summary: "Tiny demos with TypeSafe's System One Jev model",
         date: 'Sep 2026',
         year: '2026',
         source: 'https://github.com/wustep/jev-playground',
