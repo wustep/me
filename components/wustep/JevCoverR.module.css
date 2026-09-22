@@ -1,0 +1,271 @@
+/* The marionettes. One 640×360 stage sliced to the always-16:9 cover box.
+   A red theater on a dark wall in both site themes. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #3c2229;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The show ----------
+   One 8s loop, paused at 0% — the cross level, all four puppets standing
+   (the rest pose). Hover resumes it; leaving freezes the cross mid-tilt.
+     0–25%    violinist   lifted 4–22%, bow saws, notes climb
+     25–50%   postman     lifted 29–47%, tosses the letter
+     50–75%   sweetheart  lifted 54–72%, lets the balloon up
+     75–100%  conductor   lifted 79–97%, trots in place
+   The cross tilts toward whichever puppet is up; every puppet group owns
+   its strings, so a lift shortens them into the cross. */
+.anim {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover .anim,
+.cover:focus-within .anim {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the show runs while this cover holds the
+   grid's spotlight (data-cover-awake, pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running;
+  }
+}
+
+/* Cross pivots on its center (CROSS in JevCoverR.tsx). Angles point it
+   roughly at each puppet: ±138 and ±46 units off center. */
+.cross {
+  transform-origin: 320px 30px;
+  animation-name: cross;
+}
+
+@keyframes cross {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  6%,
+  20% {
+    transform: rotate(-10deg);
+  }
+  31%,
+  45% {
+    transform: rotate(-4deg);
+  }
+  56%,
+  70% {
+    transform: rotate(4deg);
+  }
+  81%,
+  95% {
+    transform: rotate(10deg);
+  }
+}
+
+.lift_violin {
+  animation-name: liftViolin;
+}
+.lift_post {
+  animation-name: liftPost;
+}
+.lift_sweet {
+  animation-name: liftSweet;
+}
+.lift_tram {
+  animation-name: liftTram;
+}
+
+@keyframes liftViolin {
+  0%,
+  3%,
+  23%,
+  100% {
+    transform: translateY(0);
+  }
+  7%,
+  19% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes liftPost {
+  0%,
+  28%,
+  48%,
+  100% {
+    transform: translateY(0);
+  }
+  32%,
+  44% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes liftSweet {
+  0%,
+  53%,
+  73%,
+  100% {
+    transform: translateY(0);
+  }
+  57%,
+  69% {
+    transform: translateY(-14px);
+  }
+}
+/* The conductor bounces twice — a trot, not a lift. */
+@keyframes liftTram {
+  0%,
+  78%,
+  98%,
+  100% {
+    transform: translateY(0);
+  }
+  82%,
+  86%,
+  90%,
+  94% {
+    transform: translateY(-14px);
+  }
+  84%,
+  88%,
+  92% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Violinist: the bow saws; the notes climb and settle. */
+.bow {
+  animation-name: bow;
+}
+
+@keyframes bow {
+  0%,
+  6%,
+  22%,
+  100% {
+    transform: rotate(0deg);
+  }
+  9%,
+  15% {
+    transform: rotate(-10deg);
+  }
+  12%,
+  18% {
+    transform: rotate(8deg);
+  }
+}
+
+.notes {
+  animation-name: notes;
+}
+
+@keyframes notes {
+  0%,
+  6%,
+  24%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  8% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  18% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* Postman: arm swings up, the letter sails off toward the wings and a new
+   one is back in hand before his turn ends. */
+.toss {
+  animation-name: toss;
+}
+
+@keyframes toss {
+  0%,
+  33%,
+  44%,
+  100% {
+    transform: rotate(0deg);
+  }
+  36%,
+  40% {
+    transform: rotate(-110deg);
+  }
+}
+
+.letter {
+  animation-name: letter;
+}
+
+@keyframes letter {
+  0%,
+  34% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  43% {
+    transform: translate(64px, -86px) rotate(30deg);
+    opacity: 0;
+  }
+  46% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  49%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+/* Sweetheart: the balloon rises out of frame; a fresh one fades back in. */
+.balloon {
+  animation-name: balloon;
+}
+
+@keyframes balloon {
+  0%,
+  58% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(16px, -90px);
+    opacity: 0;
+  }
+  74% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  78%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    animation: none !important;
+  }
+}

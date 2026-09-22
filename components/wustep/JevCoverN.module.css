@@ -1,0 +1,63 @@
+/* Preview-only illustration. Paper palette follows Jev in either site theme.
+   A wide stage reveals scenery without cropping the central miniature. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #eee2e1;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.anim {
+  animation-play-state: paused !important;
+}
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running !important;
+  }
+}
+:global(.group):focus-within .cover .anim {
+  animation-play-state: running !important;
+}
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover .anim {
+    animation: none !important;
+  }
+}
+
+.chosen {
+  animation: lift 4s ease-in-out infinite;
+}
+.attraction {
+  animation: field 4s ease-in-out infinite;
+}
+@keyframes lift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  45%,
+  60% {
+    transform: translateY(-18px);
+  }
+}
+@keyframes field {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45%,
+  60% {
+    opacity: 0.3;
+  }
+}

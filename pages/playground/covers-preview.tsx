@@ -9,6 +9,26 @@ import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
 import { JevCoverC } from '@/components/wustep/JevCoverC'
 import { JevCoverD } from '@/components/wustep/JevCoverD'
+import { JevCoverE } from '@/components/wustep/JevCoverE'
+import { JevCoverF } from '@/components/wustep/JevCoverF'
+import { JevCoverG } from '@/components/wustep/JevCoverG'
+import { JevCoverH } from '@/components/wustep/JevCoverH'
+import { JevCoverI } from '@/components/wustep/JevCoverI'
+import { JevCoverJ } from '@/components/wustep/JevCoverJ'
+import { JevCoverK } from '@/components/wustep/JevCoverK'
+import { JevCoverL } from '@/components/wustep/JevCoverL'
+import { JevCoverM } from '@/components/wustep/JevCoverM'
+import { JevCoverN } from '@/components/wustep/JevCoverN'
+import { JevCoverO } from '@/components/wustep/JevCoverO'
+import { JevCoverP } from '@/components/wustep/JevCoverP'
+import { JevCoverQ } from '@/components/wustep/JevCoverQ'
+import { JevCoverR } from '@/components/wustep/JevCoverR'
+import { JevCoverS } from '@/components/wustep/JevCoverS'
+import { JevCoverT } from '@/components/wustep/JevCoverT'
+import { JevCoverU } from '@/components/wustep/JevCoverU'
+import { JevCoverV } from '@/components/wustep/JevCoverV'
+import { JevCoverW } from '@/components/wustep/JevCoverW'
+import { JevCoverX } from '@/components/wustep/JevCoverX'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -43,7 +63,7 @@ const tabs: [Tab, ...Tab[]] = [
   {
     id: 'jev',
     title: 'Jev Playground',
-    summary: 'Jev picks the labels; code writes the notes',
+    summary: "Tiny demos with TypeSafe's System One Jev model",
     covers: [
       {
         label: 'The dial writes the staff (shipped)',
@@ -64,6 +84,106 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'D — Four doors (unshipped)',
         hint: 'Hover: one landing card at a time — a note hops, the trolley chooses a rail, the inbox stamp cycles, the match rank slides.',
         Cover: JevCoverD
+      },
+      {
+        label: 'E — The ballot (unshipped)',
+        hint: 'Hover: the answer sheet is re-asked row by row — the fill hops across each room’s options, then lands on the pick with its probability.',
+        Cover: JevCoverE
+      },
+      {
+        label: 'F — Stamped (unshipped)',
+        hint: 'Hover: the pile is worked — a prize-desk letter gets DELETE, a manager’s note REVIEW, then the library notice is stamped LEAVE again.',
+        Cover: JevCoverF
+      },
+      {
+        label: 'G — Match card (unshipped)',
+        hint: 'Hover: the shortlist scrambles and empties, each candidate’s match.fit bar fills in turn, then code sorts the rows and the top slot lights.',
+        Cover: JevCoverG
+      },
+      {
+        label: 'H — Lever (unshipped)',
+        hint: 'Hover: the trolley takes the siding and leaves; the next rolls in while the lever wavers wait / pull / wait, then lands on pull .64.',
+        Cover: JevCoverH
+      },
+      {
+        label: 'I — Pipeline (unshipped)',
+        hint: 'Hover: outputs dim, then Jev sends one label chip per room down its pipe — the pipe inks behind it and the room’s effect lights.',
+        Cover: JevCoverI
+      },
+      {
+        label: 'J — Shape sorter (unshipped)',
+        hint: 'A wooden toy turns four shaped choices into four little worlds. Hover: the chosen music block settles into its slot.',
+        Cover: JevCoverJ
+      },
+      {
+        label: 'K — Paper piano (unshipped)',
+        hint: 'A punched paper strip drives a miniature music box. Hover: the brass roller moves and the notes lift.',
+        Cover: JevCoverK
+      },
+      {
+        label: 'L — The mobile (unshipped)',
+        hint: 'Four peer rooms hang in balance from one small bead. Hover: the mobile rocks and its musical pendant swings.',
+        Cover: JevCoverL
+      },
+      {
+        label: 'M — Paper flight (unshipped)',
+        hint: 'An envelope becomes a paper plane above a full inbox. Hover: the selected letter glides free of the pile.',
+        Cover: JevCoverM
+      },
+      {
+        label: 'N — Magnetic chemistry (unshipped)',
+        hint: 'A horseshoe magnet lifts the closest match from a crowd. Hover: attraction draws the purple figure upward.',
+        Cover: JevCoverN
+      },
+      {
+        label: 'O — The dollhouse (unshipped)',
+        hint: 'A house cut open at night, four lit rooms under one attic firefly. Hover: the firefly touches each lamp in turn and that room plays itself — notes rise, the couple leans in, a letter files itself, the toy trolley takes the siding.',
+        Cover: JevCoverO
+      },
+      {
+        label: 'P — The magic lantern (unshipped)',
+        hint: 'A brass lantern throws one small glass slide onto a sheet as a big silhouette show, an audience in the dark. Hover: slides swap from the rack — pianist, letters flocking to a post box, two on a bench shuffling closer, a tram under its wire.',
+        Cover: JevCoverP
+      },
+      {
+        label: 'Q — Snow globes (unshipped)',
+        hint: 'Four snow globes on a sunny sill, one world each; a cat’s paw dangles from the shelf above. Hover: the paw taps each globe in turn — it wobbles, the snow lifts, and the world inside plays.',
+        Cover: JevCoverQ
+      },
+      {
+        label: 'R — The marionettes (unshipped)',
+        hint: 'One gold control cross, every string fanning down to four puppets on a red stage. Hover: the cross tilts toward each in turn and that puppet performs — violin, a tossed letter, a heart balloon let go, a trot in a toy tram.',
+        Cover: JevCoverR
+      },
+      {
+        label: 'S — The pop-up book (unshipped)',
+        hint: 'An open pop-up book with four ribbon tabs; the concert shell stands out of the gutter. Hover: each tab is pulled in turn, a leaf turns, and the post office, the couple’s tree, and the tram’s hill fold up.',
+        Cover: JevCoverS
+      },
+      {
+        label: 'T — The sheepdog (unshipped)',
+        hint: 'Four stone folds on a ridge, one painted gate per room; Jev is the collie crouched behind the flock. Hover: the dog slinks in, the sheep stream up through the open gold gate, it swings shut, then the flock ambles home.',
+        Cover: JevCoverT
+      },
+      {
+        label: 'U — The waggle dance (unshipped)',
+        hint: 'A cutaway hive and four flowers across the meadow; Jev is the dancing bee whose straight waggle run points at one flower. Hover: two figure-8s on the comb, then the foragers fly to the gold flower and home.',
+        Cover: JevCoverU
+      },
+      {
+        label: 'V — The lighthouse (unshipped)',
+        hint: 'A striped lighthouse at twilight and four painted buoys across the bay; Jev is the lamp. Hover: the beam sweeps every buoy, locks on gold (its lantern answers), and two sailboats head out to it.',
+        Cover: JevCoverV
+      },
+      {
+        label: 'W — The conductor (unshipped)',
+        hint: 'Four orchestra sections on risers under a concert shell; Jev is the baton tip. Hover: the baton sweeps each section under its lamp, settles on the brass and beats time while notes rise.',
+        Cover: JevCoverW
+      },
+      {
+        label: 'X — The signal flags (unshipped)',
+        hint: 'A junction fanning into four painted tunnel portals; Jev is the flagman on the lookout tower. Hover: semaphore flourish, the gold flag points, and the waiting train runs the gold branch into the tunnel and backs out.',
+        Cover: JevCoverX
       }
     ]
   },

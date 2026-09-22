@@ -9,7 +9,7 @@ const APP_URL = 'https://jev-playground.vercel.app/'
 
 const title = 'Jev Playground'
 const description =
-  'Can a System One model steer music? Jev chooses only enums — character, form, key, chords — and the app writes the sheet, the sound, and the MIDI. Trolley problems, inbox triage, and match ranking sit in the other rooms.'
+  'Tiny demos where a model answers with enums only: sort mail, rank people, pick a musical form, or decide a trolley case.'
 const canonicalUrl = 'https://wustep.me/playground/jev'
 
 export default function PlaygroundJevPage() {

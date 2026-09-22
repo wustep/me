@@ -1,0 +1,424 @@
+/* The magic lantern. One 640×360 stage sliced to the always-16:9 cover
+   box. A dark room in both site themes — projection only reads in the dark. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #2a2230;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The show ----------
+   One 10s loop, paused at 0% — the music slide in the lantern and the
+   pianist on the sheet (the rest pose). Hover resumes it; leaving freezes
+   the show on whatever slide is up.
+     0–24%    music    notes rise off the piano
+     25–49%   inbox    letters flock to the post box
+     50–74%   match    the two on the bench shuffle closer
+     75–99%   trolley  the tram rolls under its wire
+   Each swap: the sheet blinks dark for a beat while the next slide drops
+   into the slot and its twin disappears from the rack. */
+.anim {
+  animation-duration: 10s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover .anim,
+.cover:focus-within .anim {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the show runs while this cover holds the
+   grid's spotlight (data-cover-awake, pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running;
+  }
+}
+
+/* Ambient: the lantern's lamp flickers. */
+.flicker {
+  animation: flicker 2.4s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.7;
+  }
+}
+
+/* Beam dims with the blink so the swap reads as the lantern's doing. */
+.beam {
+  animation-name: beam;
+}
+
+@keyframes beam {
+  0%,
+  22%,
+  28%,
+  47%,
+  53%,
+  72%,
+  78%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  50%,
+  75% {
+    opacity: 0.3;
+  }
+}
+
+.blink {
+  opacity: 0;
+  animation-name: blink;
+}
+
+@keyframes blink {
+  0%,
+  22%,
+  28%,
+  47%,
+  53%,
+  72%,
+  78%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  50%,
+  75% {
+    opacity: 0.9;
+  }
+}
+
+/* Pictures: hard cuts hidden under the blink. */
+.show {
+  opacity: 0;
+}
+
+.show_music {
+  opacity: 1;
+  animation-name: showMusic;
+}
+.show_inbox {
+  animation-name: showInbox;
+}
+.show_match {
+  animation-name: showMatch;
+}
+.show_trolley {
+  animation-name: showTrolley;
+}
+
+@keyframes showMusic {
+  0%,
+  24.9% {
+    opacity: 1;
+  }
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes showInbox {
+  0%,
+  24.9%,
+  50%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  49.9% {
+    opacity: 1;
+  }
+}
+@keyframes showMatch {
+  0%,
+  49.9%,
+  75%,
+  100% {
+    opacity: 0;
+  }
+  50%,
+  74.9% {
+    opacity: 1;
+  }
+}
+@keyframes showTrolley {
+  0%,
+  74.9% {
+    opacity: 0;
+  }
+  75%,
+  99.9% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Slot: the chosen slide stands in the lantern. On its turn it drops in
+   from above; its twin in the rack goes missing for the same window. */
+.inSlot {
+  opacity: 0;
+}
+
+.slot_music {
+  opacity: 1;
+  animation-name: slotMusic;
+}
+.slot_inbox {
+  animation-name: slotInbox;
+}
+.slot_match {
+  animation-name: slotMatch;
+}
+.slot_trolley {
+  animation-name: slotTrolley;
+}
+
+@keyframes slotMusic {
+  0%,
+  23% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  98% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slotInbox {
+  0%,
+  23% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  25%,
+  48% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50%,
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+@keyframes slotMatch {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  50%,
+  73% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+@keyframes slotTrolley {
+  0%,
+  73% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  75%,
+  96% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  98%,
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+.rack_music {
+  opacity: 0;
+  animation-name: rackMusic;
+}
+.rack_inbox {
+  animation-name: rackInbox;
+}
+.rack_match {
+  animation-name: rackMatch;
+}
+.rack_trolley {
+  animation-name: rackTrolley;
+}
+
+@keyframes rackMusic {
+  0%,
+  23% {
+    opacity: 0;
+  }
+  25%,
+  97% {
+    opacity: 1;
+  }
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rackInbox {
+  0%,
+  23%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  48% {
+    opacity: 0;
+  }
+}
+@keyframes rackMatch {
+  0%,
+  48%,
+  75%,
+  100% {
+    opacity: 1;
+  }
+  50%,
+  73% {
+    opacity: 0;
+  }
+}
+@keyframes rackTrolley {
+  0%,
+  73%,
+  99%,
+  100% {
+    opacity: 1;
+  }
+  75%,
+  97% {
+    opacity: 0;
+  }
+}
+
+/* Motion inside each picture, confined to its own window. */
+.notesUp {
+  animation-name: notesUp;
+}
+
+@keyframes notesUp {
+  0%,
+  2% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-10px);
+  }
+  22%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.flock {
+  animation-name: flock;
+}
+
+@keyframes flock {
+  0%,
+  26% {
+    transform: translate(-20px, 6px);
+  }
+  46%,
+  100% {
+    transform: translate(34px, 8px);
+  }
+}
+
+.scootL {
+  animation-name: scootL;
+}
+.scootR {
+  animation-name: scootR;
+}
+
+@keyframes scootL {
+  0%,
+  54% {
+    transform: translateX(0);
+  }
+  66%,
+  100% {
+    transform: translateX(10px);
+  }
+}
+@keyframes scootR {
+  0%,
+  56% {
+    transform: translateX(0);
+  }
+  68%,
+  100% {
+    transform: translateX(-4px);
+  }
+}
+
+.tram {
+  animation-name: tram;
+  animation-timing-function: linear;
+}
+
+@keyframes tram {
+  0%,
+  75% {
+    transform: translateX(-70px);
+  }
+  99%,
+  100% {
+    transform: translateX(60px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim,
+  .flicker {
+    animation: none !important;
+  }
+}
