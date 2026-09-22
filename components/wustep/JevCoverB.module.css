@@ -1,0 +1,169 @@
+/* The poster. Same wide stage as the other Jev covers (1200×240, sliced):
+   the wordmark sits in the middle a 16:9 card shows, and the masthead rule
+   is what a wider card adds. Paper in both themes — the app is paper. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kicker {
+  font-family: var(--jev-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3.2px;
+  text-anchor: middle;
+  fill: #7a756b;
+}
+
+.wordmark {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 64px;
+  font-weight: 600;
+  text-anchor: middle;
+  fill: #16161a;
+}
+
+.name,
+.nameOn {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.name {
+  fill: #16161a;
+}
+
+/* ---------- Reading the index ----------
+   Paused on the finished poster (every overlay at opacity 0). Hover walks
+   Music → Trolley → Inbox → Match. 7.2s, shared with the other covers so
+   a row of them breathes together.
+     8–24%   Music
+     30–46%  Trolley
+     52–68%  Inbox
+     74–90%  Match */
+
+.onMusic,
+.onTrolley,
+.onInbox,
+.onMatch {
+  opacity: 0;
+  animation-duration: 7.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.onMusic {
+  animation-name: onMusic;
+}
+
+.onTrolley {
+  animation-name: onTrolley;
+}
+
+.onInbox {
+  animation-name: onInbox;
+}
+
+.onMatch {
+  animation-name: onMatch;
+}
+
+@keyframes onMusic {
+  0%,
+  6% {
+    opacity: 0;
+  }
+  8%,
+  24% {
+    opacity: 1;
+  }
+  28%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes onTrolley {
+  0%,
+  26% {
+    opacity: 0;
+  }
+  30%,
+  46% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes onInbox {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  52%,
+  68% {
+    opacity: 1;
+  }
+  72%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes onMatch {
+  0%,
+  70% {
+    opacity: 0;
+  }
+  74%,
+  90% {
+    opacity: 1;
+  }
+  94%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onMusic,
+  .onTrolley,
+  .onInbox,
+  .onMatch {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,159 @@
+/* The pick — one dial stop, huge. Wide stage (1200×240, sliced) so the
+   stop and its note stay in the middle of a 16:9 card and a wider card
+   shows more of the staff. Paper in both themes; the app is paper. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.name {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 32px;
+  font-weight: 600;
+  text-anchor: start;
+}
+
+.tag {
+  font-family: var(--jev-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  fill: #7a756b;
+}
+
+/* ---------- Resolving the pick ----------
+   Paused on Bach. Hover crossfades the whole stop — rule, name, tagline,
+   the long bar, and the note — through Beethoven, Chopin, Debussy.
+     0–20% / 94–100%  Bach (rest)
+     24–42%           Beethoven
+     46–64%           Chopin
+     68–86%           Debussy */
+
+.showBach,
+.showBeethoven,
+.showChopin,
+.showDebussy {
+  animation-duration: 7.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.showBach {
+  opacity: 1;
+  animation-name: showBach;
+}
+
+.showBeethoven,
+.showChopin,
+.showDebussy {
+  opacity: 0;
+}
+
+.showBeethoven {
+  animation-name: showBeethoven;
+}
+
+.showChopin {
+  animation-name: showChopin;
+}
+
+.showDebussy {
+  animation-name: showDebussy;
+}
+
+@keyframes showBach {
+  0%,
+  20% {
+    opacity: 1;
+  }
+  24%,
+  90% {
+    opacity: 0;
+  }
+  94%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes showBeethoven {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  24%,
+  42% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showChopin {
+  0%,
+  42% {
+    opacity: 0;
+  }
+  46%,
+  64% {
+    opacity: 1;
+  }
+  68%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showDebussy {
+  0%,
+  64% {
+    opacity: 0;
+  }
+  68%,
+  86% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showBach,
+  .showBeethoven,
+  .showChopin,
+  .showDebussy {
+    animation: none !important;
+  }
+}
