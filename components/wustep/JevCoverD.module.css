@@ -1,0 +1,301 @@
+/* Four doors — the landing. Wide stage (1200×240, sliced); the four cards
+   sit in the middle a 16:9 crop shows. Paper in both themes. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kicker {
+  font-family: var(--jev-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
+  text-anchor: middle;
+  fill: #7a756b;
+}
+
+.doorName {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.stamp {
+  font-family: var(--jev-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-anchor: middle;
+}
+
+/* ---------- One door at a time ----------
+   7.2s, paused on the finished landing (no wash, car on the chosen rail,
+   stamp says LEAVE, rank on the first row, the gold note at rest).
+     4–22%   Music hops
+     28–46%  the trolley replays its choice
+     52–70%  the stamp cycles Leave → Review → Delete
+     76–94%  the rank mark slides to the second row and back
+   Washes are the app's hover tint and are invisible at 0%. */
+
+.washMusic,
+.washTrolley,
+.washInbox,
+.washMatch,
+.hop,
+.car,
+.rank,
+.stampLeave,
+.stampReview,
+.stampDelete {
+  animation-duration: 7.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.washMusic,
+.washTrolley,
+.washInbox,
+.washMatch,
+.stampReview,
+.stampDelete {
+  opacity: 0;
+}
+
+.stampLeave {
+  opacity: 1;
+}
+
+.washMusic {
+  animation-name: washMusic;
+}
+
+.washTrolley {
+  animation-name: washTrolley;
+}
+
+.washInbox {
+  animation-name: washInbox;
+}
+
+.washMatch {
+  animation-name: washMatch;
+}
+
+.hop {
+  animation-name: hop;
+}
+
+.car {
+  animation-name: car;
+}
+
+.rank {
+  animation-name: rank;
+}
+
+.stampLeave {
+  animation-name: stampLeave;
+}
+
+.stampReview {
+  animation-name: stampReview;
+}
+
+.stampDelete {
+  animation-name: stampDelete;
+}
+
+@keyframes washMusic {
+  0%,
+  2% {
+    opacity: 0;
+  }
+  6%,
+  20% {
+    opacity: 0.12;
+  }
+  24%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes washTrolley {
+  0%,
+  26% {
+    opacity: 0;
+  }
+  30%,
+  44% {
+    opacity: 0.12;
+  }
+  48%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes washInbox {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  54%,
+  68% {
+    opacity: 0.12;
+  }
+  72%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes washMatch {
+  0%,
+  74% {
+    opacity: 0;
+  }
+  78%,
+  92% {
+    opacity: 0.12;
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The second note lifts a step and settles back. 0% matches the attribute
+   pose, so pausing and reduced motion leave it on the staff. */
+@keyframes hop {
+  0%,
+  4% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-8px);
+  }
+  20%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Car: chosen rail → switch → chosen rail. Coordinates are the same
+   translate the element is drawn with, so 0% is the rest pose. */
+@keyframes car {
+  0%,
+  26% {
+    transform: translate(570px, 132px);
+  }
+  32% {
+    transform: translate(548px, 104px);
+  }
+  44%,
+  100% {
+    transform: translate(570px, 132px);
+  }
+}
+
+@keyframes rank {
+  0%,
+  74% {
+    transform: translateY(0);
+  }
+  86% {
+    transform: translateY(28px);
+  }
+  96%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes stampLeave {
+  0%,
+  52% {
+    opacity: 1;
+  }
+  56%,
+  66% {
+    opacity: 0;
+  }
+  70%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes stampReview {
+  0%,
+  54% {
+    opacity: 0;
+  }
+  57%,
+  61% {
+    opacity: 1;
+  }
+  64%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes stampDelete {
+  0%,
+  62% {
+    opacity: 0;
+  }
+  65%,
+  69% {
+    opacity: 1;
+  }
+  72%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .washMusic,
+  .washTrolley,
+  .washInbox,
+  .washMatch,
+  .hop,
+  .car,
+  .rank,
+  .stampLeave,
+  .stampReview,
+  .stampDelete {
+    animation: none !important;
+  }
+}

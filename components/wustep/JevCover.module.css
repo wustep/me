@@ -1,0 +1,177 @@
+/* The dial writes the staff. One extra-wide SVG (1200×240) sliced to the
+   cover box: the box is ~16:9 on the grid, so the full height always fits
+   and a wider card only shows more of the staff.
+
+   Paper stays paper in both themes. The app has no dark palette — a cover
+   that inverted would stop looking like it escaped from the app. */
+.cover {
+  --jev-paper: #f3eee4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--jev-paper);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stopName,
+.stopAccent {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.stopName {
+  fill: #16161a;
+}
+
+/* ---------- The run ----------
+   One 7.2s loop, paused on Bach (the rest pose). Hover resumes it, so
+   leaving mid-phrase freezes the dial where it is.
+     0–18%    Bach, and the landing again at 94–100%
+     22–40%   Chopin
+     44–62%   Debussy
+     66–84%   Glass, then back to Bach
+   Each stop's notes, wash, top rule, and accent-colored name share a
+   class, so they crossfade together. The per-note accent flash is a
+   generated keyframe (jev-dial-*) that only blips inside that window. */
+
+.showBach,
+.showChopin,
+.showDebussy,
+.showGlass {
+  animation-duration: 7.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.showBach {
+  opacity: 1;
+  animation-name: showBach;
+}
+
+.showChopin,
+.showDebussy,
+.showGlass {
+  opacity: 0;
+}
+
+.showChopin {
+  animation-name: showChopin;
+}
+
+.showDebussy {
+  animation-name: showDebussy;
+}
+
+.showGlass {
+  animation-name: showGlass;
+}
+
+@keyframes showBach {
+  0%,
+  18% {
+    opacity: 1;
+  }
+  22%,
+  84% {
+    opacity: 0;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes showChopin {
+  0%,
+  18% {
+    opacity: 0;
+  }
+  22%,
+  40% {
+    opacity: 1;
+  }
+  44%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showDebussy {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  44%,
+  62% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showGlass {
+  0%,
+  62% {
+    opacity: 0;
+  }
+  66%,
+  84% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The accent copy of a notehead. Name and duration come from the component
+   so each note can blip on its own beat; this class only holds the paused
+   state the hover rule resumes. Opacity 0 is the rest pose. */
+.blip {
+  animation-play-state: paused;
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight — the one nearest the middle of the screen
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showBach,
+  .showChopin,
+  .showDebussy,
+  .showGlass,
+  .blip {
+    animation: none !important;
+  }
+}

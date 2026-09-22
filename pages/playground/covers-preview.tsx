@@ -5,6 +5,10 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
+import { JevCover } from '@/components/wustep/JevCover'
+import { JevCoverB } from '@/components/wustep/JevCoverB'
+import { JevCoverC } from '@/components/wustep/JevCoverC'
+import { JevCoverD } from '@/components/wustep/JevCoverD'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -36,6 +40,33 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'jev',
+    title: 'Jev Playground',
+    summary: 'Jev picks the labels; code writes the notes',
+    covers: [
+      {
+        label: 'The dial writes the staff (shipped)',
+        hint: 'Hover: the dial steps Bach, Chopin, Debussy, Glass, and each stop engraves its phrase — noteheads take the stop accent as they sound.',
+        Cover: JevCover
+      },
+      {
+        label: 'B — Poster (unshipped)',
+        hint: 'Hover: a reading light walks Music, Trolley, Inbox, Match — the active tick thickens and the name takes its accent.',
+        Cover: JevCoverB
+      },
+      {
+        label: 'C — The pick (unshipped)',
+        hint: 'Hover: the stop resolves Bach → Beethoven → Chopin → Debussy; the long bar takes that accent and the note changes pitch.',
+        Cover: JevCoverC
+      },
+      {
+        label: 'D — Four doors (unshipped)',
+        hint: 'Hover: one landing card at a time — a note hops, the trolley chooses a rail, the inbox stamp cycles, the match rank slides.',
+        Cover: JevCoverD
+      }
+    ]
+  },
   {
     id: 'contraptions',
     title: 'Contraptions',
