@@ -1,0 +1,229 @@
+/* Cover for Jev Playground, concept V — the lighthouse. One wide SVG
+   (1600×360) sliced to the cover box; every colour comes from these
+   variables so dark mode can take the bay from twilight to night without
+   touching the component. */
+.cover {
+  --jv-ink: #2b2a33;
+  --jv-sky: #7f93cf;
+  --jv-dusk: #f4b59a;
+  --jv-star: rgba(255, 250, 230, 0.8);
+  --jv-moon: #fff3c9;
+  --jv-headland: #5c6a9e;
+  --jv-sea: #3f6aa6;
+  --jv-sea-far: #5a82bb;
+  --jv-wave: #a9c6ea;
+  --jv-foam: #fdf8ef;
+  --jv-rock: #6b6275;
+  --jv-tower: #fdf8ef;
+  --jv-stripe: #e8574f;
+  --jv-glass: #fff0a8;
+  --jv-beam: #fff3b0;
+  --jv-lantern-off: #9aa3b8;
+  --jv-hull: #fdf8ef;
+  --jv-sail: #fffdf6;
+  --jv-blue: #5b8def;
+  --jv-rose: #f07a9a;
+  --jv-gold: #ffc83d;
+  --jv-mint: #4cc9a4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--jv-sky);
+}
+
+/* Full night: the beam is the brightest thing in the scene. */
+:global(body.dark-mode) .cover {
+  --jv-ink: #111118;
+  --jv-sky: #1b2140;
+  --jv-dusk: #3a3160;
+  --jv-headland: #262c4d;
+  --jv-sea: #1c2c4f;
+  --jv-sea-far: #25385f;
+  --jv-wave: #4b6590;
+  --jv-foam: #d9dbe6;
+  --jv-rock: #3b3645;
+  --jv-tower: #e4e0d6;
+  --jv-stripe: #c94a44;
+  --jv-lantern-off: #535a70;
+  --jv-hull: #d9d5ca;
+  --jv-sail: #ece8dc;
+  --jv-gold: #ffc23a;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The sweep, on hover ----------
+   One shared 8s loop, held paused on its 0% frame, which is the rest pose:
+   beam lying on the gold buoy, boats in the lee. Hover resumes it.
+     0–10%    the beam swings back to the first buoy
+     10–26%   it sweeps the bay to the last buoy
+     26–34%   it swings back and locks on gold; the lantern answers
+     34–60%   the boats sail out to the gold buoy
+     66–92%   they sail home */
+
+.beam,
+.boat,
+.lantern,
+.lamp {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.beam {
+  transform: rotate(var(--a2));
+  animation-name: sweep;
+}
+
+@keyframes sweep {
+  0% {
+    transform: rotate(var(--a2));
+  }
+  10% {
+    transform: rotate(var(--a0));
+  }
+  15% {
+    transform: rotate(var(--a1));
+  }
+  20% {
+    transform: rotate(var(--a2));
+  }
+  26% {
+    transform: rotate(var(--a3));
+  }
+  34%,
+  100% {
+    transform: rotate(var(--a2));
+  }
+}
+
+.boat {
+  animation-name: sail;
+}
+
+@keyframes sail {
+  0%,
+  34% {
+    transform: translate(0, 0) scale(1);
+  }
+  60%,
+  66% {
+    transform: translate(var(--dx), var(--dy)) scale(0.8);
+  }
+  92%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.lantern {
+  animation-name: lantern;
+}
+
+@keyframes lantern {
+  0%,
+  30%,
+  38%,
+  44%,
+  100% {
+    r: 5px;
+    opacity: 1;
+  }
+  34%,
+  41% {
+    r: 9px;
+    opacity: 0.7;
+  }
+}
+
+.lamp {
+  animation-name: lamp;
+}
+
+@keyframes lamp {
+  0%,
+  28%,
+  40%,
+  100% {
+    opacity: 1;
+  }
+  34% {
+    opacity: 0.55;
+  }
+}
+
+/* The swell and the bobbing run on their own gentle loops. */
+.swell,
+.bob {
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  animation-timing-function: ease-in-out;
+}
+
+.swell {
+  animation-name: swell;
+  animation-duration: 4s;
+}
+
+@keyframes swell {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(26px);
+  }
+}
+
+.bob {
+  animation-name: bob;
+  animation-duration: 2.2s;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(3px) rotate(3deg);
+  }
+}
+
+/* ---------- Hover / focus / in view ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam,
+  .boat,
+  .lantern,
+  .lamp,
+  .swell,
+  .bob {
+    animation: none !important;
+  }
+}

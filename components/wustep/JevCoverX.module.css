@@ -1,0 +1,241 @@
+/* Cover for Jev Playground, concept X — the signal flags. One wide SVG
+   (1600×360) sliced to the cover box; every colour comes from these
+   variables so dark mode can take the junction to dusk without touching
+   the component. */
+.cover {
+  --jx-ink: #2b2a33;
+  --jx-sky: #d6ecf5;
+  --jx-sun: #ffd76a;
+  --jx-cloud: #f6fbfd;
+  --jx-hill: #b7d79a;
+  --jx-ground: #d9c79e;
+  --jx-bed: #d9c79e;
+  --jx-tie: #9a7a57;
+  --jx-cliff: #c9a27e;
+  --jx-cliff-line: #b28c69;
+  --jx-tunnel: #2b2a33;
+  --jx-wood: #a8764f;
+  --jx-cap: #e8574f;
+  --jx-flag: #fffdf6;
+  --jx-loco: #e8574f;
+  --jx-car: #5b8def;
+  --jx-window: #fff0a8;
+  --jx-blue: #5b8def;
+  --jx-rose: #f07a9a;
+  --jx-gold: #ffc83d;
+  --jx-mint: #4cc9a4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--jx-sky);
+}
+
+/* Dusk at the junction: the painted portals and gold flag carry the scene. */
+:global(body.dark-mode) .cover {
+  --jx-ink: #16161d;
+  --jx-sky: #232a45;
+  --jx-sun: #f3e7b8;
+  --jx-cloud: #333b5a;
+  --jx-hill: #33503f;
+  --jx-ground: #5a4d3a;
+  --jx-bed: #5a4d3a;
+  --jx-tie: #3f3426;
+  --jx-cliff: #6b5646;
+  --jx-cliff-line: #5a4839;
+  --jx-tunnel: #111118;
+  --jx-wood: #6e4f37;
+  --jx-cap: #c94a44;
+  --jx-flag: #ece8dc;
+  --jx-loco: #c94a44;
+  --jx-car: #4b74c9;
+  --jx-gold: #ffc23a;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The signal, on hover ----------
+   One shared 8s loop, held paused on its 0% frame, which is the rest pose:
+   gold flag on the gold tunnel, train waiting. Hover resumes it.
+     0–16%    semaphore: both flags up, crossed low, up again
+     16–32%   the pointing arm sweeps the four portals and lands on gold
+     34–62%   the train runs the gold branch into the tunnel
+     62–70%   it's inside; the portal glows
+     70–96%   it backs out onto the main line */
+
+.armR,
+.armL,
+.car,
+.glow,
+.lit {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.armR {
+  transform: rotate(var(--a2));
+  animation-name: armR;
+}
+
+@keyframes armR {
+  0% {
+    transform: rotate(var(--a2));
+  }
+  5%,
+  13% {
+    transform: rotate(-60deg);
+  }
+  9% {
+    transform: rotate(40deg);
+  }
+  18% {
+    transform: rotate(var(--a0));
+  }
+  22% {
+    transform: rotate(var(--a1));
+  }
+  26% {
+    transform: rotate(var(--a2));
+  }
+  29% {
+    transform: rotate(var(--a3));
+  }
+  32%,
+  100% {
+    transform: rotate(var(--a2));
+  }
+}
+
+/* The plain flag hangs low-left at rest and joins the semaphore. */
+.armL {
+  transform: rotate(120deg);
+  animation-name: armL;
+}
+
+@keyframes armL {
+  0%,
+  16%,
+  100% {
+    transform: rotate(120deg);
+  }
+  5%,
+  13% {
+    transform: rotate(-120deg);
+  }
+  9% {
+    transform: rotate(140deg);
+  }
+}
+
+.car {
+  offset-rotate: auto;
+  offset-distance: var(--rest);
+  animation-name: run;
+}
+
+@keyframes run {
+  0%,
+  34% {
+    offset-distance: var(--rest);
+    animation-timing-function: ease-in;
+  }
+  62%,
+  70% {
+    offset-distance: calc(100% - var(--lag));
+    animation-timing-function: ease-in-out;
+  }
+  94%,
+  100% {
+    offset-distance: var(--rest);
+  }
+}
+
+.glow {
+  opacity: 0.2;
+  animation-name: glow;
+}
+
+@keyframes glow {
+  0%,
+  56%,
+  76%,
+  100% {
+    opacity: 0.2;
+  }
+  62%,
+  70% {
+    opacity: 0.6;
+  }
+}
+
+.lit {
+  opacity: 0.8;
+  animation-name: lit;
+}
+
+@keyframes lit {
+  0%,
+  32%,
+  100% {
+    opacity: 0.8;
+  }
+  18%,
+  28% {
+    opacity: 0;
+  }
+}
+
+/* The gold flag snaps in the wind the whole time it's awake. */
+.flap {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: flap 0.5s ease-in-out infinite paused;
+}
+
+@keyframes flap {
+  0%,
+  100% {
+    transform: skewY(0deg);
+  }
+  50% {
+    transform: skewY(8deg) scaleX(0.92);
+  }
+}
+
+/* ---------- Hover / focus / in view ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .armR,
+  .armL,
+  .car,
+  .glow,
+  .lit,
+  .flap {
+    animation: none !important;
+  }
+}

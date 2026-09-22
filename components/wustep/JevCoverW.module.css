@@ -1,0 +1,304 @@
+/* Cover for Jev Playground, concept W — the conductor. One wide SVG
+   (1600×360) sliced to the cover box; every colour comes from these
+   variables so dark mode can dim the house lights without touching the
+   component. */
+.cover {
+  --jw-ink: #2b2a33;
+  --jw-wall: #f3e3c6;
+  --jw-shell-a: #f8ecd6;
+  --jw-shell-b: #efdcb8;
+  --jw-shell-line: #dcc39a;
+  --jw-curtain: #c64f5a;
+  --jw-curtain-fold: #a63f4b;
+  --jw-floor: #c89462;
+  --jw-riser: #e2c396;
+  --jw-podium: #8a5a3c;
+  --jw-skin: #f2c9a0;
+  --jw-baton: #fffdf6;
+  --jw-blue: #5b8def;
+  --jw-rose: #f07a9a;
+  --jw-gold: #ffc83d;
+  --jw-mint: #4cc9a4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--jw-wall);
+}
+
+/* House lights down: the section lamps and baton tip do the lighting. */
+:global(body.dark-mode) .cover {
+  --jw-ink: #121218;
+  --jw-wall: #2a2437;
+  --jw-shell-a: #362e45;
+  --jw-shell-b: #2f2840;
+  --jw-shell-line: #463b58;
+  --jw-curtain: #6e2833;
+  --jw-curtain-fold: #561e29;
+  --jw-floor: #4b3727;
+  --jw-riser: #5a4838;
+  --jw-podium: #3e2a1e;
+  --jw-skin: #c9a07c;
+  --jw-baton: #efeadc;
+  --jw-gold: #ffc23a;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The downbeat, on hover ----------
+   One shared 8s loop, held paused on its 0% frame, which is the rest pose:
+   baton on the brass, their lamp lit. Hover resumes it.
+     0–30%    the baton sweeps left to right, each lamp answering in turn
+     34–84%   it settles on gold and beats time; the brass bounce, notes rise
+     84–100%  it holds still for the cutoff */
+
+.arm,
+.tip,
+.lamp0,
+.lamp1,
+.lamp2,
+.lamp3,
+.play {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.arm {
+  transform: rotate(var(--a2));
+  animation-name: arm;
+}
+
+@keyframes arm {
+  0% {
+    transform: rotate(var(--a2));
+  }
+  8% {
+    transform: rotate(var(--a0));
+  }
+  15% {
+    transform: rotate(var(--a1));
+  }
+  22% {
+    transform: rotate(var(--a2));
+  }
+  29% {
+    transform: rotate(var(--a3));
+  }
+  36% {
+    transform: rotate(var(--a2));
+  }
+  /* beat time: little dips below the pick */
+  42%,
+  54%,
+  66%,
+  78% {
+    transform: rotate(calc(var(--a2) + 9deg));
+  }
+  48%,
+  60%,
+  72%,
+  84%,
+  100% {
+    transform: rotate(var(--a2));
+  }
+}
+
+.tip {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: tip;
+}
+
+@keyframes tip {
+  0%,
+  34%,
+  100% {
+    transform: scale(1);
+  }
+  38%,
+  80% {
+    transform: scale(1.5);
+  }
+}
+
+.lamp0,
+.lamp1,
+.lamp3 {
+  opacity: 0;
+}
+.lamp2 {
+  opacity: 0.3;
+}
+.lamp0 {
+  animation-name: lamp0;
+}
+.lamp1 {
+  animation-name: lamp1;
+}
+.lamp2 {
+  animation-name: lamp2;
+}
+.lamp3 {
+  animation-name: lamp3;
+}
+
+@keyframes lamp0 {
+  0%,
+  4%,
+  13%,
+  100% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes lamp1 {
+  0%,
+  11%,
+  19%,
+  100% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes lamp2 {
+  0% {
+    opacity: 0.3;
+  }
+  6%,
+  18% {
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.3;
+  }
+  27% {
+    opacity: 0.1;
+  }
+  36%,
+  84% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes lamp3 {
+  0%,
+  25%,
+  33%,
+  100% {
+    opacity: 0;
+  }
+  29% {
+    opacity: 0.35;
+  }
+}
+
+/* The brass lean in while they play. */
+.play {
+  animation-name: play;
+}
+
+@keyframes play {
+  0%,
+  34%,
+  88%,
+  100% {
+    transform: translateY(0);
+  }
+  38%,
+  84% {
+    transform: translateY(-4px);
+  }
+}
+
+.bounce,
+.note {
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.bounce {
+  animation-name: bounce;
+  animation-duration: 0.96s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.note {
+  opacity: 0;
+  animation-name: note;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes note {
+  0% {
+    opacity: 0;
+    transform: translate(0, 10px) rotate(-8deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(14px, -60px) rotate(10deg);
+  }
+}
+
+/* ---------- Hover / focus / in view ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arm,
+  .tip,
+  .lamp0,
+  .lamp1,
+  .lamp2,
+  .lamp3,
+  .play,
+  .bounce,
+  .note {
+    animation: none !important;
+  }
+}

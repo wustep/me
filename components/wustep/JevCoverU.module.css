@@ -1,0 +1,243 @@
+/* Cover for Jev Playground, concept U — the waggle dance. One wide SVG
+   (1600×360) sliced to the cover box; every colour comes from these
+   variables so dark mode can turn the meadow to evening without touching
+   the component. */
+.cover {
+  --ju-ink: #2b2a33;
+  --ju-sky: #fdf0cf;
+  --ju-sun: #ffd76a;
+  --ju-cloud: #fffaf0;
+  --ju-hill: #b9d98f;
+  --ju-meadow: #9fcf7e;
+  --ju-stem: #5e9f55;
+  --ju-roof: #c46b4f;
+  --ju-wood: #e3b27a;
+  --ju-comb-deep: #d99a2b;
+  --ju-comb: #f6cf6a;
+  --ju-comb-line: #c98a1e;
+  --ju-honey: #eea12a;
+  --ju-cap: #fbe7b0;
+  --ju-trail: rgba(43, 42, 51, 0.45);
+  --ju-bee: #ffc83d;
+  --ju-wing: rgba(255, 255, 255, 0.85);
+  --ju-eye: #6a4a2c;
+  --ju-blue: #5b8def;
+  --ju-rose: #f07a9a;
+  --ju-gold: #ffc83d;
+  --ju-mint: #4cc9a4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ju-sky);
+}
+
+/* Evening in the meadow: the comb glows like a lantern and the gold flower
+   still carries the scene. */
+:global(body.dark-mode) .cover {
+  --ju-ink: #16161d;
+  --ju-sky: #28294a;
+  --ju-sun: #f3e7b8;
+  --ju-cloud: #383a60;
+  --ju-hill: #30473d;
+  --ju-meadow: #3b5a41;
+  --ju-stem: #4f7d4c;
+  --ju-roof: #8e4b3b;
+  --ju-wood: #9d7a55;
+  --ju-comb-deep: #a8731d;
+  --ju-comb: #e0b555;
+  --ju-comb-line: #9c6a18;
+  --ju-honey: #d88f22;
+  --ju-cap: #eed79c;
+  --ju-trail: rgba(22, 22, 29, 0.55);
+  --ju-wing: rgba(235, 238, 255, 0.8);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The dance, on hover ----------
+   One shared 8s loop, held paused on its 0% frame, which is the rest pose:
+   dancer poised at the start of the run, foragers on the board. Hover
+   resumes the timeline, so leaving mid-dance freezes it.
+     0–40%    two figure-8s; the straight runs point at the gold flower
+     30–50%   the foragers fly out (staggered)
+     50–62%   they turn on the petals; the flower nods, the glow lifts
+     62–84%   they fly home, then face out again */
+
+.dancer,
+.forager,
+.bloom,
+.glow {
+  animation-duration: 8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.dancer {
+  offset-rotate: auto;
+  animation-name: dance;
+}
+
+@keyframes dance {
+  0% {
+    offset-distance: 0%;
+  }
+  20% {
+    offset-distance: 100%;
+  }
+  20.01% {
+    offset-distance: 0%;
+  }
+  40% {
+    offset-distance: 100%;
+  }
+  40.01%,
+  100% {
+    offset-distance: 0%;
+  }
+}
+
+/* The waggle and the wingbeat are quick loops of their own. */
+.waggle,
+.flutter {
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  animation-timing-function: ease-in-out;
+}
+
+.waggle {
+  animation-name: waggle;
+  animation-duration: 0.18s;
+}
+
+@keyframes waggle {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+}
+
+.flutter {
+  animation-name: flutter;
+  animation-duration: 0.12s;
+}
+
+@keyframes flutter {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+}
+
+.forager {
+  offset-rotate: auto;
+  animation-name: forage;
+}
+
+@keyframes forage {
+  0%,
+  30% {
+    offset-distance: 0%;
+    offset-rotate: auto;
+    animation-timing-function: ease-in-out;
+  }
+  50% {
+    offset-distance: 100%;
+    offset-rotate: auto;
+  }
+  56%,
+  62% {
+    offset-distance: 100%;
+    offset-rotate: reverse;
+    animation-timing-function: ease-in-out;
+  }
+  82% {
+    offset-distance: 0%;
+    offset-rotate: reverse;
+  }
+  88%,
+  100% {
+    offset-distance: 0%;
+    offset-rotate: auto;
+  }
+}
+
+.bloom {
+  animation-name: bloom;
+}
+
+@keyframes bloom {
+  0%,
+  46%,
+  66%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  52% {
+    transform: rotate(-10deg) scale(1.08);
+  }
+  58% {
+    transform: rotate(8deg) scale(1.06);
+  }
+}
+
+.glow {
+  opacity: 0.22;
+  animation-name: glow;
+}
+
+@keyframes glow {
+  0%,
+  44%,
+  68%,
+  100% {
+    opacity: 0.22;
+  }
+  52%,
+  60% {
+    opacity: 0.55;
+  }
+}
+
+/* ---------- Hover / focus / in view ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dancer,
+  .forager,
+  .waggle,
+  .flutter,
+  .bloom,
+  .glow {
+    animation: none !important;
+  }
+}

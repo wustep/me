@@ -1,0 +1,261 @@
+/* Cover for Jev Playground, concept T — the sheepdog. One wide SVG
+   (1600×360) sliced to the cover box; every colour comes from these
+   variables so dark mode can turn the hillside to dusk without touching the
+   component. */
+.cover {
+  --jt-ink: #2b2a33;
+  --jt-sky: #cfe7f2;
+  --jt-sun: #ffd76a;
+  --jt-cloud: #f6fbfd;
+  --jt-hill-far: #a9d3a0;
+  --jt-hill: #8cc47f;
+  --jt-meadow: #a6d68d;
+  --jt-path: #c7dc9a;
+  --jt-pen-floor: #b8d68e;
+  --jt-tree: #5fa865;
+  --jt-tuft: #6fae5f;
+  --jt-stone: #ddd6c6;
+  --jt-wool: #fffdf6;
+  --jt-dog: #2b2a33;
+  --jt-shadow: rgba(43, 42, 51, 0.18);
+  --jt-blue: #5b8def;
+  --jt-rose: #f07a9a;
+  --jt-gold: #ffc83d;
+  --jt-mint: #4cc9a4;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--jt-sky);
+}
+
+/* Dusk on the hill: the sheep stay the brightest thing on the slope and the
+   gold gate still carries the scene. */
+:global(body.dark-mode) .cover {
+  --jt-ink: #16161d;
+  --jt-sky: #232a45;
+  --jt-sun: #f3e7b8;
+  --jt-cloud: #333b5a;
+  --jt-hill-far: #2d3f45;
+  --jt-hill: #33503f;
+  --jt-meadow: #3d5e45;
+  --jt-path: #4d6a4a;
+  --jt-pen-floor: #44643f;
+  --jt-tree: #2a4a38;
+  --jt-tuft: #2d4a34;
+  --jt-stone: #9a9486;
+  --jt-wool: #f2eee2;
+  --jt-dog: #16161d;
+  --jt-shadow: rgba(0, 0, 0, 0.28);
+  --jt-gold: #ffc23a;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The herd, on hover ----------
+   One shared 7s loop, held paused on its 0% frame, which is the rest pose:
+   gate open, flock grazing, dog crouched. Hover resumes the timeline, so
+   leaving mid-herd freezes it and coming back finishes the run.
+     0–8%     the dog creeps
+     8–40%    the flock streams up through the gold gate (staggered)
+     46–52%   the gate swings shut; the pennant and glow lift
+     58–64%   the gate opens again
+     64–96%   the flock ambles home, the dog trots back */
+
+.sheep,
+.dog,
+.trot,
+.gate,
+.pennant,
+.glow {
+  animation-duration: 7s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.sheep {
+  animation-name: herd;
+}
+
+@keyframes herd {
+  0%,
+  8% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: ease-in-out;
+  }
+  24% {
+    transform: translate(var(--mx), var(--my)) scale(0.86);
+    animation-timing-function: ease-out;
+  }
+  34%,
+  62% {
+    transform: translate(var(--dx), var(--dy)) scale(0.72);
+    animation-timing-function: ease-in-out;
+  }
+  74% {
+    transform: translate(var(--mx), var(--my)) scale(0.86);
+    animation-timing-function: ease-in-out;
+  }
+  90%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* A little up-and-down trot while anything is walking. */
+.trot {
+  animation-name: trot;
+}
+
+@keyframes trot {
+  0%,
+  8%,
+  34%,
+  62%,
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+  12%,
+  18%,
+  24%,
+  30%,
+  66%,
+  72%,
+  78%,
+  84% {
+    transform: translateY(-3px);
+  }
+  15%,
+  21%,
+  27%,
+  69%,
+  75%,
+  81%,
+  87% {
+    transform: translateY(0);
+  }
+}
+
+.dog {
+  animation-name: dog;
+}
+
+@keyframes dog {
+  0%,
+  4% {
+    transform: translate(0, 0);
+    animation-timing-function: ease-in-out;
+  }
+  26% {
+    transform: translate(120px, -44px);
+    animation-timing-function: ease-in-out;
+  }
+  36%,
+  64% {
+    transform: translate(170px, -70px);
+    animation-timing-function: ease-in-out;
+  }
+  92%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Rest pose is open: the gate folds toward the viewer on its left hinge.
+   The same transform is the base style, so reduced motion keeps it open. */
+.gate {
+  transform: scaleX(0.4) skewY(40deg);
+  animation-name: gate;
+}
+
+@keyframes gate {
+  0%,
+  44% {
+    transform: scaleX(0.4) skewY(40deg);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1.4);
+  }
+  50%,
+  58% {
+    transform: scaleX(1) skewY(0deg);
+    animation-timing-function: ease-in-out;
+  }
+  64%,
+  100% {
+    transform: scaleX(0.4) skewY(40deg);
+  }
+}
+
+.pennant {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation-name: pennant;
+}
+
+@keyframes pennant {
+  0%,
+  46%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  50%,
+  56% {
+    transform: translateY(-8px);
+  }
+}
+
+.glow {
+  opacity: 0.22;
+  animation-name: glow;
+}
+
+@keyframes glow {
+  0%,
+  40%,
+  64%,
+  100% {
+    opacity: 0.22;
+  }
+  50%,
+  58% {
+    opacity: 0.55;
+  }
+}
+
+/* ---------- Hover / focus / in view ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheep,
+  .dog,
+  .trot,
+  .gate,
+  .pennant,
+  .glow {
+    animation: none !important;
+  }
+}

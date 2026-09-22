@@ -24,6 +24,11 @@ import { JevCoverP } from '@/components/wustep/JevCoverP'
 import { JevCoverQ } from '@/components/wustep/JevCoverQ'
 import { JevCoverR } from '@/components/wustep/JevCoverR'
 import { JevCoverS } from '@/components/wustep/JevCoverS'
+import { JevCoverT } from '@/components/wustep/JevCoverT'
+import { JevCoverU } from '@/components/wustep/JevCoverU'
+import { JevCoverV } from '@/components/wustep/JevCoverV'
+import { JevCoverW } from '@/components/wustep/JevCoverW'
+import { JevCoverX } from '@/components/wustep/JevCoverX'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -154,6 +159,31 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'S — The pop-up book (unshipped)',
         hint: 'An open pop-up book with four ribbon tabs; the concert shell stands out of the gutter. Hover: each tab is pulled in turn, a leaf turns, and the post office, the couple’s tree, and the tram’s hill fold up.',
         Cover: JevCoverS
+      },
+      {
+        label: 'T — The sheepdog (unshipped)',
+        hint: 'Four stone folds on a ridge, one painted gate per room; Jev is the collie crouched behind the flock. Hover: the dog slinks in, the sheep stream up through the open gold gate, it swings shut, then the flock ambles home.',
+        Cover: JevCoverT
+      },
+      {
+        label: 'U — The waggle dance (unshipped)',
+        hint: 'A cutaway hive and four flowers across the meadow; Jev is the dancing bee whose straight waggle run points at one flower. Hover: two figure-8s on the comb, then the foragers fly to the gold flower and home.',
+        Cover: JevCoverU
+      },
+      {
+        label: 'V — The lighthouse (unshipped)',
+        hint: 'A striped lighthouse at twilight and four painted buoys across the bay; Jev is the lamp. Hover: the beam sweeps every buoy, locks on gold (its lantern answers), and two sailboats head out to it.',
+        Cover: JevCoverV
+      },
+      {
+        label: 'W — The conductor (unshipped)',
+        hint: 'Four orchestra sections on risers under a concert shell; Jev is the baton tip. Hover: the baton sweeps each section under its lamp, settles on the brass and beats time while notes rise.',
+        Cover: JevCoverW
+      },
+      {
+        label: 'X — The signal flags (unshipped)',
+        hint: 'A junction fanning into four painted tunnel portals; Jev is the flagman on the lookout tower. Hover: semaphore flourish, the gold flag points, and the waiting train runs the gold branch into the tunnel and backs out.',
+        Cover: JevCoverX
       }
     ]
   },
