@@ -4,7 +4,8 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
-import { JevCover } from '@/components/wustep/JevCover'
+// Temporarily hidden — bring back later
+// import { JevCover } from '@/components/wustep/JevCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
@@ -42,18 +43,19 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Experiments',
     items: [
-      {
-        title: 'Jev Playground',
-        url: '/playground/jev',
-        description:
-          'Can a System One model steer music? Jev chooses only enums — character, form, key, chords — and the app writes the sheet, the sound, and the MIDI. Trolley problems, inbox triage, and match ranking sit in the other rooms.',
-        summary: 'Jev picks the labels; code writes the notes',
-        date: 'Sep 2026',
-        year: '2026',
-        source: 'https://github.com/wustep/jev-playground',
-        gradient: 'from-stone-100 via-amber-100 to-amber-800',
-        CoverComponent: JevCover
-      },
+      // Temporarily hidden — bring back later
+      // {
+      //   title: 'Jev Playground',
+      //   url: '/playground/jev',
+      //   description:
+      //     'Can a System One model steer music? Jev chooses only enums — character, form, key, chords — and the app writes the sheet, the sound, and the MIDI. Trolley problems, inbox triage, and match ranking sit in the other rooms.',
+      //   summary: 'Jev picks the labels; code writes the notes',
+      //   date: 'Sep 2026',
+      //   year: '2026',
+      //   source: 'https://github.com/wustep/jev-playground',
+      //   gradient: 'from-stone-100 via-amber-100 to-amber-800',
+      //   CoverComponent: JevCover
+      // },
       {
         title: 'StageBench',
         url: '/playground/stagebench',
