@@ -26,6 +26,13 @@ describe('markdownForPath', () => {
     expect(missing.body).toContain('/sitemap.xml')
   })
 
+  it('serves Contraptions at the canonical path and the old playground path', () => {
+    const page = markdownForPath('/contraptions')
+    expect(page.status).toBe(200)
+    expect(page.body).toContain('https://wustep.me/contraptions')
+    expect(markdownForPath('/playground/contraptions')).toEqual(page)
+  })
+
   it('knows published Notion slugs', () => {
     const page = markdownForPath('/headspace')
     expect(page.status).toBe(200)
@@ -49,6 +56,7 @@ describe('getLlmsTxt', () => {
     expect(text).toContain('as a product, SaaS, or public data API')
     expect(text).toContain('/prompting')
     expect(text).toContain('/lenses')
+    expect(text).toContain('/contraptions')
     expect(text).toContain('/playground')
     expect(text).toContain('Accept: text/markdown')
   })

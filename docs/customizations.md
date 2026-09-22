@@ -50,7 +50,7 @@ A Notion page property that hides the collection view title on specific posts. R
 A standalone section at `/playground` for interactive experiments — demos that don't fit the Notion-driven blog model.
 
 - Index: [`pages/playground/index.tsx`](../pages/playground/index.tsx) reads [`playground/registry.tsx`](../playground/registry.tsx) for the list.
-- Each entry has its own page under [`pages/playground/<slug>.tsx`](../pages/playground/).
+- Each entry has its own page under [`pages/playground/<slug>.tsx`](../pages/playground/). Contraptions is the exception: it is a full-viewport page at [`/contraptions`](../pages/contraptions.tsx) (no playground chrome), and `/playground/contraptions` redirects there.
 - Custom cover components: [`components/wustep/BookshelfCover.tsx`](../components/wustep/BookshelfCover.tsx), [`components/wustep/DominoCover.tsx`](../components/wustep/DominoCover.tsx).
 - Layout + nav: [`components/wustep/PlaygroundLayout.tsx`](../components/wustep/PlaygroundLayout.tsx), [`components/wustep/PlaygroundSidebar.tsx`](../components/wustep/PlaygroundSidebar.tsx).
 - Entries with `ownerOnly: true` are shown only while owner mode is active.

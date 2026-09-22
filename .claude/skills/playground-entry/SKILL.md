@@ -59,6 +59,9 @@ Add to the right section of `playgroundSections` in `playground/registry.tsx`
 External deployment → iframe page; copy the shape of
 `pages/playground/stagebench.tsx` (`PlaygroundLayout` + intro line + "open in
 its own tab" link + rounded iframe, `h-[720px]`, `loading='lazy'`).
+Contraptions is the exception, not the template: it lives at `/contraptions`
+as a full-viewport iframe with no playground chrome, and
+`/playground/contraptions` redirects there.
 Locally-built experiences instead render their component directly (see
 `spot-it.tsx`). Games that capture arrow keys/space inside an iframe still
 scroll the host page in some browsers — if the project is a game, keep the

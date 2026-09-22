@@ -164,7 +164,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Contraptions',
-        url: '/playground/contraptions',
+        url: '/contraptions',
         description:
           'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',
         summary: 'Rube goldberg experiments in <canvas>',

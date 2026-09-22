@@ -439,7 +439,7 @@ export function AboutPage() {
 
             <Tooltip label='One ball on a Rube Goldberg chain that never ends'>
               <a
-                href='/playground/contraptions'
+                href='/contraptions'
                 className={`${styles.projectCard} ${styles.contraptions}`}
               >
                 <ContraptionsArt />

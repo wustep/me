@@ -42,6 +42,11 @@ export default withBundleAnalyzer({
   redirects: async () => {
     return [
       {
+        source: '/playground/contraptions',
+        destination: '/contraptions',
+        permanent: true
+      },
+      {
         source: '/about',
         destination: '/',
         permanent: true
@@ -93,6 +98,10 @@ export default withBundleAnalyzer({
       },
       {
         source: '/playground',
+        headers: [{ key: 'Vary', value: 'Accept' }]
+      },
+      {
+        source: '/contraptions',
         headers: [{ key: 'Vary', value: 'Accept' }]
       }
     ]

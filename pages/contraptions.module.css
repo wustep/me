@@ -1,0 +1,18 @@
+/* Edge-to-edge show. Fixed to the viewport so site wrappers (the font root
+   in _app) cannot inset it, and so the page itself does not scroll. */
+.frame {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  border: 0;
+  background: #111;
+}
+
+:global(html),
+:global(body) {
+  overflow: hidden;
+  height: 100%;
+}

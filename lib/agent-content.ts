@@ -38,7 +38,8 @@ const FIRST_PARTY_EXACT = new Set([
   '/contact',
   '/feed',
   '/site',
-  '/owner'
+  '/owner',
+  '/contraptions'
 ])
 
 function absolute(path: string) {
@@ -73,6 +74,7 @@ ${writingList(writingPersonal)}
 ## Projects
 
 - [Lenses](${absolute('/lenses')}) — a canvas of lenses for seeing the world
+- [Contraptions](${absolute('/contraptions')}) — a full-screen Rube Goldberg show
 - [Playground](${absolute('/playground')}) — small web experiments
 - [Projects](${absolute('/projects')}) — a longer list of work and side projects
 
@@ -143,10 +145,23 @@ HTML: ${absolute('/lenses')}
 `
 }
 
+export function getContraptionsMarkdown() {
+  return `# Contraptions
+
+One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.
+
+The show fills the viewport. The old playground path redirects here.
+
+HTML: ${absolute('/contraptions')}
+`
+}
+
 export function getPlaygroundMarkdown() {
   return `# Playground
 
 Small web experiments: games, visualizers, and other things that did not belong on a Notion page.
+
+[Contraptions](${absolute('/contraptions')}) is a full-screen show of its own, outside this shell.
 
 HTML: ${absolute('/playground')}
 `
@@ -211,6 +226,9 @@ export function markdownForPath(pathname: string): {
       return { body: getPromptingMarkdown(), status: 200 }
     case '/lenses':
       return { body: getLensesMarkdown(), status: 200 }
+    case '/contraptions':
+    case '/playground/contraptions':
+      return { body: getContraptionsMarkdown(), status: 200 }
     case '/playground':
       return { body: getPlaygroundMarkdown(), status: 200 }
     default:
@@ -247,6 +265,7 @@ Request \`Accept: text/markdown\` (or \`text/plain\`) on the homepage and other 
 - ${absolute('/about')} — same as home
 - ${absolute('/prompting')} — prompting notes
 - ${absolute('/lenses')} — lenses deck
+- ${absolute('/contraptions')} — Contraptions, a full-screen Rube Goldberg show
 - ${absolute('/playground')} — experiments
 - ${absolute('/feed')} — RSS
 - ${absolute('/sitemap.xml')} — sitemap
@@ -338,6 +357,15 @@ export function getOpenApiDocument() {
           operationId: 'getLenses',
           summary: 'Lenses',
           description: 'A canvas of lenses for seeing the world.',
+          responses: markdownOrHtml
+        }
+      },
+      '/contraptions': {
+        get: {
+          operationId: 'getContraptions',
+          summary: 'Contraptions',
+          description:
+            'Full-screen Rube Goldberg show. /playground/contraptions redirects here.',
           responses: markdownOrHtml
         }
       },
