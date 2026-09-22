@@ -1,0 +1,242 @@
+/* Stamped. One extra-wide SVG (1200×240) sliced to the cover box: the box
+   is ~16:9 on the grid, so the full height always fits and a wider card
+   only shows more of the desk.
+
+   Paper stays paper in both themes, like the app (it has no dark
+   palette). */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tag,
+.prob {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.prob {
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.action {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-anchor: middle;
+}
+
+.from {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.from tspan {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.subject {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ---------- The run ----------
+   One 8s loop, paused at 0% — the library notice already stamped LEAVE
+   (the rest pose). Hover resumes it:
+      4–7%   the stamped letter is filed away
+      7–11%  prize desk comes up;   19% DELETE thumps
+     33–37%  filed;  35–39% manager's note comes up;  47% REVIEW
+     59–63%  filed;  63–67% library notice returns;   75% LEAVE
+   Base styles are the rest pose, so reduced motion (animation: none)
+   lands on it too. */
+.letter,
+.stamp {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-duration: 8s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.letterA {
+  opacity: 0;
+  animation-name: letterA;
+}
+.letterB {
+  opacity: 0;
+  animation-name: letterB;
+}
+.letterC {
+  animation-name: letterC;
+}
+.stampA {
+  animation-name: stampA;
+}
+.stampB {
+  animation-name: stampB;
+}
+.stampC {
+  animation-name: stampC;
+}
+
+@keyframes letterA {
+  0%,
+  7% {
+    opacity: 0;
+    transform: translate(0, 14px);
+  }
+  11%,
+  33% {
+    opacity: 1;
+    transform: none;
+  }
+  37%,
+  100% {
+    opacity: 0;
+    transform: translate(-70px, -6px) rotate(-3deg);
+  }
+}
+
+@keyframes letterB {
+  0%,
+  35% {
+    opacity: 0;
+    transform: translate(0, 14px);
+  }
+  39%,
+  59% {
+    opacity: 1;
+    transform: none;
+  }
+  63%,
+  100% {
+    opacity: 0;
+    transform: translate(-70px, -6px) rotate(-3deg);
+  }
+}
+
+@keyframes letterC {
+  0%,
+  4% {
+    opacity: 1;
+    transform: none;
+  }
+  7% {
+    opacity: 0;
+    transform: translate(-70px, -6px) rotate(-3deg);
+  }
+  8%,
+  63% {
+    opacity: 0;
+    transform: translate(0, 14px);
+  }
+  67%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A stamp is lifted (big, clear), then pressed (a hair under size), then
+   settles. */
+@keyframes stampA {
+  0%,
+  17% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+  19% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+  21%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes stampB {
+  0%,
+  45% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+  47% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+  49%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes stampC {
+  0%,
+  7% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  8%,
+  73% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+  77%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* The rest pose is the stamped letter; reduced motion just keeps it. */
+@media (prefers-reduced-motion: reduce) {
+  .letter,
+  .stamp {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,268 @@
+/* The match card. One extra-wide SVG (1200×240) sliced to the cover box:
+   the box is ~16:9 on the grid, so the full height always fits and a
+   wider card only shows more of the candidate pool.
+
+   Paper stays paper in both themes, like the app (it has no dark
+   palette). */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tag,
+.prob {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.prob {
+  text-anchor: end;
+}
+
+.for {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-style: italic;
+  text-anchor: end;
+}
+
+.you,
+.initial {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.name {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.bar {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+/* ---------- The run ----------
+   One 8s loop, paused at 0% — the ranked list (the rest pose). Hover
+   resumes it:
+      3–6%   top highlight off, bars empty, scores step out
+      6–14%  rows scramble to Cyd, Ari, Bea
+     20–30%  Cyd scored .31
+     32–42%  Ari scored .82
+     44–54%  Bea scored .64
+     62–72%  code sorts: rows slide into rank
+     74–78%  the top slot lights
+   Base styles are the rest pose, so reduced motion (animation: none)
+   lands on it too. */
+.anim {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.top {
+  animation-name: top;
+}
+.rowDown {
+  animation-name: rowDown;
+}
+.rowUp {
+  animation-name: rowUp;
+}
+.barAri {
+  animation-name: barAri;
+}
+.barBea {
+  animation-name: barBea;
+}
+.barCyd {
+  animation-name: barCyd;
+}
+.probAri {
+  animation-name: probAri;
+}
+.probBea {
+  animation-name: probBea;
+}
+.probCyd {
+  animation-name: probCyd;
+}
+
+@keyframes top {
+  0%,
+  3% {
+    opacity: 1;
+  }
+  5%,
+  74% {
+    opacity: 0;
+  }
+  78%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Slot pitch is 50 units: Ari and Bea drop one slot, Cyd climbs two. */
+@keyframes rowDown {
+  0%,
+  6% {
+    transform: none;
+  }
+  14%,
+  62% {
+    transform: translateY(50px);
+  }
+  72%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes rowUp {
+  0%,
+  6% {
+    transform: none;
+  }
+  14%,
+  62% {
+    transform: translateY(-100px);
+  }
+  72%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes barCyd {
+  0%,
+  3% {
+    transform: scaleX(1);
+  }
+  6%,
+  20% {
+    transform: scaleX(0);
+  }
+  30%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes barAri {
+  0%,
+  3% {
+    transform: scaleX(1);
+  }
+  6%,
+  32% {
+    transform: scaleX(0);
+  }
+  42%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes barBea {
+  0%,
+  3% {
+    transform: scaleX(1);
+  }
+  6%,
+  44% {
+    transform: scaleX(0);
+  }
+  54%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes probCyd {
+  0%,
+  3% {
+    opacity: 1;
+  }
+  5%,
+  29% {
+    opacity: 0;
+  }
+  31%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes probAri {
+  0%,
+  3% {
+    opacity: 1;
+  }
+  5%,
+  41% {
+    opacity: 0;
+  }
+  43%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes probBea {
+  0%,
+  3% {
+    opacity: 1;
+  }
+  5%,
+  53% {
+    opacity: 0;
+  }
+  55%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* The rest pose is the ranked list; reduced motion just keeps it. */
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    animation: none !important;
+  }
+}

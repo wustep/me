@@ -1,0 +1,254 @@
+/* The lever. One extra-wide SVG (1200×240) sliced to the cover box: the
+   box is ~16:9 on the grid, so the full height always fits and a wider
+   card only shows more track.
+
+   Paper stays paper in both themes, like the app (it has no dark
+   palette). */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tag,
+.prob {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.prob {
+  text-anchor: end;
+}
+
+.ask {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.chip {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.who {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Pull leans the handle toward the switch; wait leans it away. The pivot
+   is the base plate's center (548, 206) in stage units. */
+.lever {
+  transform-box: view-box;
+  transform-origin: 548px 206px;
+  transform: rotate(30deg);
+}
+
+.car {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.waitWay {
+  opacity: 0;
+}
+
+/* ---------- The run ----------
+   One 8s loop, paused at 0% — lever at pull, siding inked, trolley at the
+   points (the rest pose). Hover resumes it:
+      4–21%  the trolley takes the siding and leaves
+     22–70%  the next one rolls in while the lever wavers:
+               23% wait · 36% pull · 45% wait · 57% pull
+     58–62%  the answer chip returns: pull .64
+   Base styles are the rest pose, so reduced motion (animation: none)
+   lands on it too. */
+.anim {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.car {
+  animation-name: car;
+  animation-timing-function: linear;
+}
+.lever {
+  animation-name: lever;
+}
+.pullWay {
+  animation-name: pullWay;
+}
+.waitWay {
+  animation-name: waitWay;
+}
+.answer {
+  animation-name: answer;
+}
+
+/* Through the points the car follows the siding's curve in three chords,
+   tilting up and back level. */
+@keyframes car {
+  0%,
+  4% {
+    opacity: 1;
+    transform: none;
+    animation-timing-function: ease-in;
+  }
+  9% {
+    transform: translate(94px, 0);
+  }
+  12% {
+    transform: translate(144px, -28px) rotate(-40deg);
+  }
+  15% {
+    transform: translate(196px, -58px) rotate(0deg);
+  }
+  21% {
+    opacity: 1;
+    transform: translate(760px, -58px);
+  }
+  21.5% {
+    opacity: 0;
+    transform: translate(760px, -58px);
+  }
+  22% {
+    opacity: 0;
+    transform: translate(-560px, 0);
+  }
+  23% {
+    opacity: 1;
+    transform: translate(-540px, 0);
+    animation-timing-function: ease-out;
+  }
+  70%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lever {
+  0%,
+  21% {
+    transform: rotate(30deg);
+  }
+  23%,
+  34% {
+    transform: rotate(-30deg);
+  }
+  36%,
+  43% {
+    transform: rotate(30deg);
+  }
+  45%,
+  55% {
+    transform: rotate(-30deg);
+  }
+  57%,
+  100% {
+    transform: rotate(30deg);
+  }
+}
+
+@keyframes pullWay {
+  0%,
+  21% {
+    opacity: 1;
+  }
+  23%,
+  35% {
+    opacity: 0;
+  }
+  37%,
+  44% {
+    opacity: 1;
+  }
+  46%,
+  56% {
+    opacity: 0;
+  }
+  58%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes waitWay {
+  0%,
+  22% {
+    opacity: 0;
+  }
+  24%,
+  35% {
+    opacity: 1;
+  }
+  37%,
+  45% {
+    opacity: 0;
+  }
+  47%,
+  56% {
+    opacity: 1;
+  }
+  58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes answer {
+  0%,
+  20% {
+    opacity: 1;
+  }
+  22%,
+  58% {
+    opacity: 0;
+  }
+  62%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* The rest pose is the thrown lever; reduced motion just keeps it. */
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,105 @@
+/* The pipeline. One extra-wide SVG (1200×240) sliced to the cover box:
+   the box is ~16:9 on the grid, so the full height always fits and a
+   wider card only shows more of the input feed.
+
+   Paper stays paper in both themes, like the app (it has no dark
+   palette). */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.key,
+.nodeTag,
+.chipText,
+.feed {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.prob {
+  text-anchor: end;
+}
+
+.nodeTag,
+.chipText {
+  text-anchor: middle;
+}
+
+.feed {
+  font-size: 11px;
+}
+
+.node {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.effect {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Chips only exist mid-flight. */
+.chip {
+  opacity: 0;
+}
+
+/* ---------- The run ----------
+   One 8s loop, paused at 0% — every pipe inked, every output lit (the
+   rest pose). Hover resumes it: at 2–5% the outputs dim and the pipes
+   drain, then each room gets its chip in turn —
+      9–22%   music.form    rondo
+     28–41%   trolley.act   pull
+     47–60%   inbox.action  leave
+     66–79%   match.fit     high
+   The chip, pipe and output keyframes are generated per room in the
+   component (jev-pipe-*); this class only holds the paused state the
+   hover rule resumes. Base styles are the rest pose, so reduced motion
+   (animation: none) lands on it too. */
+.anim {
+  animation-play-state: paused;
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* The rest pose is the lit engine; reduced motion just keeps it. */
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    animation: none !important;
+  }
+}

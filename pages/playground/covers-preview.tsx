@@ -9,6 +9,11 @@ import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
 import { JevCoverC } from '@/components/wustep/JevCoverC'
 import { JevCoverD } from '@/components/wustep/JevCoverD'
+import { JevCoverE } from '@/components/wustep/JevCoverE'
+import { JevCoverF } from '@/components/wustep/JevCoverF'
+import { JevCoverG } from '@/components/wustep/JevCoverG'
+import { JevCoverH } from '@/components/wustep/JevCoverH'
+import { JevCoverI } from '@/components/wustep/JevCoverI'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -43,7 +48,7 @@ const tabs: [Tab, ...Tab[]] = [
   {
     id: 'jev',
     title: 'Jev Playground',
-    summary: 'Jev picks the labels; code writes the notes',
+    summary: 'Jev picks the labels; code does the rest',
     covers: [
       {
         label: 'The dial writes the staff (shipped)',
@@ -64,6 +69,31 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'D — Four doors (unshipped)',
         hint: 'Hover: one landing card at a time — a note hops, the trolley chooses a rail, the inbox stamp cycles, the match rank slides.',
         Cover: JevCoverD
+      },
+      {
+        label: 'E — The ballot (unshipped)',
+        hint: 'Hover: the answer sheet is re-asked row by row — the fill hops across each room’s options, then lands on the pick with its probability.',
+        Cover: JevCoverE
+      },
+      {
+        label: 'F — Stamped (unshipped)',
+        hint: 'Hover: the pile is worked — a prize-desk letter gets DELETE, a manager’s note REVIEW, then the library notice is stamped LEAVE again.',
+        Cover: JevCoverF
+      },
+      {
+        label: 'G — Match card (unshipped)',
+        hint: 'Hover: the shortlist scrambles and empties, each candidate’s match.fit bar fills in turn, then code sorts the rows and the top slot lights.',
+        Cover: JevCoverG
+      },
+      {
+        label: 'H — Lever (unshipped)',
+        hint: 'Hover: the trolley takes the siding and leaves; the next rolls in while the lever wavers wait / pull / wait, then lands on pull .64.',
+        Cover: JevCoverH
+      },
+      {
+        label: 'I — Pipeline (unshipped)',
+        hint: 'Hover: outputs dim, then Jev sends one label chip per room down its pipe — the pipe inks behind it and the room’s effect lights.',
+        Cover: JevCoverI
       }
     ]
   },

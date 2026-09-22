@@ -1,0 +1,82 @@
+/* The ballot. One extra-wide SVG (1200×240) sliced to the cover box: the
+   box is ~16:9 on the grid, so the full height always fits and a wider
+   card only shows more ruled paper.
+
+   Paper stays paper in both themes, like the app (it has no dark
+   palette). */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3eee4;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The question ids are the app's mono tags; the options are names, so
+   they take the serif. */
+.key,
+.prob {
+  font-family: var(--jev-mono), ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.prob {
+  text-anchor: end;
+}
+
+.chip {
+  font-family: var(--jev-serif), Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+/* ---------- The run ----------
+   One 8s loop, paused at 0% — every row answered (the rest pose). Hover
+   resumes it and the rows are re-asked in turn:
+     4–22%   music.form      binary → ternary → rondo
+     24–40%  trolley.act     wait → pull
+     42–60%  inbox.action    delete → review → leave
+     62–82%  match.fit       mid → high → mid → high
+   Every chip fill and probability has its own generated keyframe
+   (jev-ballot-*, built from the row table in the component); this class
+   only holds the paused state the hover rule resumes. */
+.fill {
+  animation-play-state: paused;
+}
+
+/* ---------- Hover / focus / in view: resume the paused run ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the run plays while this cover holds the
+   grid's spotlight (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* The rest pose is the finished sheet; reduced motion just keeps it. */
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    animation: none !important;
+  }
+}
