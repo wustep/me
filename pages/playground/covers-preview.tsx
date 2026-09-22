@@ -14,6 +14,11 @@ import { JevCoverF } from '@/components/wustep/JevCoverF'
 import { JevCoverG } from '@/components/wustep/JevCoverG'
 import { JevCoverH } from '@/components/wustep/JevCoverH'
 import { JevCoverI } from '@/components/wustep/JevCoverI'
+import { JevCoverJ } from '@/components/wustep/JevCoverJ'
+import { JevCoverK } from '@/components/wustep/JevCoverK'
+import { JevCoverL } from '@/components/wustep/JevCoverL'
+import { JevCoverM } from '@/components/wustep/JevCoverM'
+import { JevCoverN } from '@/components/wustep/JevCoverN'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -94,6 +99,31 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'I — Pipeline (unshipped)',
         hint: 'Hover: outputs dim, then Jev sends one label chip per room down its pipe — the pipe inks behind it and the room’s effect lights.',
         Cover: JevCoverI
+      },
+      {
+        label: 'J — Shape sorter (unshipped)',
+        hint: 'A wooden toy turns four shaped choices into four little worlds. Hover: the chosen music block settles into its slot.',
+        Cover: JevCoverJ
+      },
+      {
+        label: 'K — Paper piano (unshipped)',
+        hint: 'A punched paper strip drives a miniature music box. Hover: the brass roller moves and the notes lift.',
+        Cover: JevCoverK
+      },
+      {
+        label: 'L — The mobile (unshipped)',
+        hint: 'Four peer rooms hang in balance from one small bead. Hover: the mobile rocks and its musical pendant swings.',
+        Cover: JevCoverL
+      },
+      {
+        label: 'M — Paper flight (unshipped)',
+        hint: 'An envelope becomes a paper plane above a full inbox. Hover: the selected letter glides free of the pile.',
+        Cover: JevCoverM
+      },
+      {
+        label: 'N — Magnetic chemistry (unshipped)',
+        hint: 'A horseshoe magnet lifts the closest match from a crowd. Hover: attraction draws the purple figure upward.',
+        Cover: JevCoverN
       }
     ]
   },
