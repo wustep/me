@@ -1,0 +1,390 @@
+/* Snow globes. One 640×360 stage sliced to the always-16:9 cover box.
+   A daylit windowsill in both site themes — the globes are the color. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f1e4cf;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The taps ----------
+   One 8s loop, paused at 0% — paw raised over the music globe, all snow
+   settled (the rest pose). Hover resumes it; leaving freezes the paw and
+   whatever snow is still in the air.
+     0–22%    music    tap at 8%, globe wobbles and snows 9–21%
+     25–47%   inbox    tap at 33%, 34–46%
+     50–72%   match    tap at 58%, 59–71%
+     75–97%   trolley  tap at 83%, 84–96%
+     97–100%  paw swings home
+   The paw's slide and its tap are separate groups so each keyframe stays
+   a single axis. */
+.anim {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover .anim,
+.cover:focus-within .anim {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the taps run while this cover holds the
+   grid's spotlight (data-cover-awake, pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running;
+  }
+}
+
+/* Ambient: the tail sways, the clouds drift a little. */
+.tail {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: sway 3.2s ease-in-out infinite;
+}
+
+.cloud {
+  animation: drift 12s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(14px);
+  }
+}
+
+/* Paw travel: one globe = 140 units (GAP in JevCoverQ.tsx). */
+.paw {
+  animation-name: paw;
+}
+
+@keyframes paw {
+  0%,
+  18% {
+    transform: translateX(0);
+  }
+  25%,
+  43% {
+    transform: translateX(140px);
+  }
+  50%,
+  68% {
+    transform: translateX(280px);
+  }
+  75%,
+  93% {
+    transform: translateX(420px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.tap {
+  animation-name: tap;
+}
+
+/* 26 units down (PAW_LIFT) lands the toes on the glass. */
+@keyframes tap {
+  0%,
+  5%,
+  11%,
+  30%,
+  36%,
+  55%,
+  61%,
+  80%,
+  86%,
+  100% {
+    transform: translateY(0);
+  }
+  8%,
+  33%,
+  58%,
+  83% {
+    transform: translateY(26px);
+  }
+}
+
+/* Globe wobble on its base (origin set inline at the base center). */
+.wobble_music {
+  animation-name: wobbleMusic;
+}
+.wobble_inbox {
+  animation-name: wobbleInbox;
+}
+.wobble_match {
+  animation-name: wobbleMatch;
+}
+.wobble_trolley {
+  animation-name: wobbleTrolley;
+}
+
+@keyframes wobbleMusic {
+  0%,
+  8%,
+  20%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(-5deg);
+  }
+  13% {
+    transform: rotate(4deg);
+  }
+  16% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes wobbleInbox {
+  0%,
+  33%,
+  45%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-5deg);
+  }
+  38% {
+    transform: rotate(4deg);
+  }
+  41% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes wobbleMatch {
+  0%,
+  58%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  63% {
+    transform: rotate(4deg);
+  }
+  66% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes wobbleTrolley {
+  0%,
+  83%,
+  95%,
+  100% {
+    transform: rotate(0deg);
+  }
+  85% {
+    transform: rotate(-5deg);
+  }
+  88% {
+    transform: rotate(4deg);
+  }
+  91% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* Snow: settled into the drift at rest (40 units down); a tap throws it
+   up to the top of the globe and it sifts back down. */
+.snow {
+  transform: translateY(40px);
+}
+
+.snow_music {
+  animation-name: snowMusic;
+}
+.snow_inbox {
+  animation-name: snowInbox;
+}
+.snow_match {
+  animation-name: snowMatch;
+}
+.snow_trolley {
+  animation-name: snowTrolley;
+}
+
+@keyframes snowMusic {
+  0%,
+  8%,
+  24%,
+  100% {
+    transform: translateY(40px);
+  }
+  10% {
+    transform: translateY(0);
+  }
+}
+@keyframes snowInbox {
+  0%,
+  33%,
+  49%,
+  100% {
+    transform: translateY(40px);
+  }
+  35% {
+    transform: translateY(0);
+  }
+}
+@keyframes snowMatch {
+  0%,
+  58%,
+  74%,
+  100% {
+    transform: translateY(40px);
+  }
+  60% {
+    transform: translateY(0);
+  }
+}
+@keyframes snowTrolley {
+  0%,
+  83%,
+  99%,
+  100% {
+    transform: translateY(40px);
+  }
+  85% {
+    transform: translateY(0);
+  }
+}
+
+/* Each world's own motion, inside its globe's window. */
+.bounce_music {
+  animation-name: bounceMusic;
+}
+
+@keyframes bounceMusic {
+  0%,
+  9%,
+  22%,
+  100% {
+    transform: translateY(0);
+  }
+  13% {
+    transform: translateY(-6px);
+  }
+  17% {
+    transform: translateY(-2px);
+  }
+  19% {
+    transform: translateY(-7px);
+  }
+}
+
+.bounce_inbox {
+  animation-name: bounceInbox;
+}
+
+@keyframes bounceInbox {
+  0%,
+  34% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  43% {
+    transform: translate(26px, -6px);
+    opacity: 0;
+  }
+  47% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  50%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.leanL {
+  animation-name: leanL;
+}
+.leanR {
+  animation-name: leanR;
+}
+
+@keyframes leanL {
+  0%,
+  60%,
+  72%,
+  100% {
+    transform: rotate(0deg);
+  }
+  63%,
+  69% {
+    transform: rotate(10deg);
+  }
+}
+@keyframes leanR {
+  0%,
+  60%,
+  72%,
+  100% {
+    transform: rotate(0deg);
+  }
+  63%,
+  69% {
+    transform: rotate(-10deg);
+  }
+}
+
+.bounce_trolley {
+  animation-name: bounceTrolley;
+}
+
+@keyframes bounceTrolley {
+  0%,
+  84% {
+    transform: translateX(0);
+  }
+  90% {
+    transform: translateX(14px);
+  }
+  96%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim,
+  .tail,
+  .cloud {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,379 @@
+/* The dollhouse. One 640×360 stage sliced to the always-16:9 cover box.
+   Night stays night in both site themes: the lit rooms are the point, and
+   a light-mode cover would wash them out. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #2a2a4c;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The visit ----------
+   One 8s loop, paused at 0% — the firefly home in the attic, every room
+   lit and still (the rest pose). Hover resumes it; leaving freezes the
+   firefly wherever it is, like a held breath.
+     0–8%     attic
+     12–26%   music: lamp flares, notes rise off the piano
+     32–46%   match: the two sitters lean in, a heart pops
+     52–66%   inbox: the letter flies into the empty pigeonhole
+     72–86%   trolley: the car rolls off and takes the siding
+     92–100%  back to the attic
+   Every room keyframe shares the 8s duration so retiming is one edit. */
+.anim {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover .anim,
+.cover:focus-within .anim {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the visit plays while this cover holds
+   the grid's spotlight (data-cover-awake, pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running;
+  }
+}
+
+/* Ambient: stars twinkle, smoke drifts, the firefly bobs and buzzes. Gentle
+   enough to run always; CoverCell pauses them off-screen. */
+.star {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.smoke {
+  animation: smoke 6s ease-in-out infinite;
+}
+
+.flyBob {
+  animation: bob 1.6s ease-in-out infinite;
+}
+
+.wing {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: buzz 0.18s linear infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes smoke {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(6px, -4px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes buzz {
+  50% {
+    transform: scaleY(0.4);
+  }
+}
+
+/* Flight path. The per-room offsets are inline custom properties computed
+   from the lamp geometry in JevCoverO.tsx (FLIGHT), so moving a lamp moves
+   the firefly's stop with it. */
+.fly {
+  animation-name: fly;
+}
+
+@keyframes fly {
+  0%,
+  6% {
+    transform: translate(0, 0);
+  }
+  12%,
+  24% {
+    transform: translate(var(--music-x), var(--music-y));
+  }
+  32%,
+  44% {
+    transform: translate(var(--match-x), var(--match-y));
+  }
+  52%,
+  64% {
+    transform: translate(var(--inbox-x), var(--inbox-y));
+  }
+  72%,
+  84% {
+    transform: translate(var(--trolley-x), var(--trolley-y));
+  }
+  94%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Lamp glow sits at a warm idle and flares while its room is visited. */
+.glow {
+  opacity: 0.45;
+}
+
+.glow_music {
+  animation-name: glowMusic;
+}
+.glow_match {
+  animation-name: glowMatch;
+}
+.glow_inbox {
+  animation-name: glowInbox;
+}
+.glow_trolley {
+  animation-name: glowTrolley;
+}
+
+@keyframes glowMusic {
+  0%,
+  11%,
+  28%,
+  100% {
+    opacity: 0.45;
+  }
+  14%,
+  24% {
+    opacity: 1;
+  }
+}
+@keyframes glowMatch {
+  0%,
+  31%,
+  48%,
+  100% {
+    opacity: 0.45;
+  }
+  34%,
+  44% {
+    opacity: 1;
+  }
+}
+@keyframes glowInbox {
+  0%,
+  51%,
+  68%,
+  100% {
+    opacity: 0.45;
+  }
+  54%,
+  64% {
+    opacity: 1;
+  }
+}
+@keyframes glowTrolley {
+  0%,
+  71%,
+  88%,
+  100% {
+    opacity: 0.45;
+  }
+  74%,
+  84% {
+    opacity: 1;
+  }
+}
+
+/* Music: the notes already hang over the piano at rest; on the visit they
+   drop back to the keys and rise again, fading in as they climb. */
+.notes {
+  animation-name: notes;
+}
+
+@keyframes notes {
+  0%,
+  12% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  13% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  22% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+  28%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Match: the sitters tilt toward each other; the heart pops between. */
+.leanLeft,
+.leanRight {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.leanLeft {
+  animation-name: leanLeft;
+}
+.leanRight {
+  animation-name: leanRight;
+}
+
+@keyframes leanLeft {
+  0%,
+  33%,
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+  37%,
+  45% {
+    transform: rotate(9deg);
+  }
+}
+@keyframes leanRight {
+  0%,
+  33%,
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+  37%,
+  45% {
+    transform: rotate(-9deg);
+  }
+}
+
+.heart {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: heart;
+}
+
+@keyframes heart {
+  0%,
+  36%,
+  49%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateY(6px);
+  }
+  39%,
+  45% {
+    opacity: 1;
+    transform: scale(1) translateY(-4px);
+  }
+}
+
+/* Inbox: the letter lifts off the desk, arcs to the empty pigeonhole
+   (top-middle, ~58 right of its desk spot), shrinks into it and is filed;
+   it reappears on the desk once the room goes quiet again. */
+.letter {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: letter;
+}
+
+@keyframes letter {
+  0%,
+  53% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  58% {
+    transform: translate(28px, -18px) scale(0.85);
+  }
+  62% {
+    transform: translate(56px, -2px) scale(0.6);
+    opacity: 1;
+  }
+  65%,
+  90% {
+    transform: translate(58px, -2px) scale(0.6);
+    opacity: 0;
+  }
+  96%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Trolley: rolls along the main line and up the siding, then fades home
+   while the firefly flies back to the attic. */
+.trolley {
+  animation-name: trolley;
+}
+
+@keyframes trolley {
+  0%,
+  73% {
+    transform: translate(0, 0);
+  }
+  80% {
+    transform: translate(40px, 0);
+  }
+  86% {
+    transform: translate(70px, -12px);
+  }
+  90% {
+    transform: translate(70px, -12px);
+    opacity: 1;
+  }
+  92% {
+    opacity: 0;
+  }
+  96% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim,
+  .star,
+  .smoke,
+  .flyBob,
+  .wing {
+    animation: none !important;
+  }
+}

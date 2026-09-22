@@ -19,6 +19,11 @@ import { JevCoverK } from '@/components/wustep/JevCoverK'
 import { JevCoverL } from '@/components/wustep/JevCoverL'
 import { JevCoverM } from '@/components/wustep/JevCoverM'
 import { JevCoverN } from '@/components/wustep/JevCoverN'
+import { JevCoverO } from '@/components/wustep/JevCoverO'
+import { JevCoverP } from '@/components/wustep/JevCoverP'
+import { JevCoverQ } from '@/components/wustep/JevCoverQ'
+import { JevCoverR } from '@/components/wustep/JevCoverR'
+import { JevCoverS } from '@/components/wustep/JevCoverS'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
@@ -124,6 +129,31 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'N — Magnetic chemistry (unshipped)',
         hint: 'A horseshoe magnet lifts the closest match from a crowd. Hover: attraction draws the purple figure upward.',
         Cover: JevCoverN
+      },
+      {
+        label: 'O — The dollhouse (unshipped)',
+        hint: 'A house cut open at night, four lit rooms under one attic firefly. Hover: the firefly touches each lamp in turn and that room plays itself — notes rise, the couple leans in, a letter files itself, the toy trolley takes the siding.',
+        Cover: JevCoverO
+      },
+      {
+        label: 'P — The magic lantern (unshipped)',
+        hint: 'A brass lantern throws one small glass slide onto a sheet as a big silhouette show, an audience in the dark. Hover: slides swap from the rack — pianist, letters flocking to a post box, two on a bench shuffling closer, a tram under its wire.',
+        Cover: JevCoverP
+      },
+      {
+        label: 'Q — Snow globes (unshipped)',
+        hint: 'Four snow globes on a sunny sill, one world each; a cat’s paw dangles from the shelf above. Hover: the paw taps each globe in turn — it wobbles, the snow lifts, and the world inside plays.',
+        Cover: JevCoverQ
+      },
+      {
+        label: 'R — The marionettes (unshipped)',
+        hint: 'One gold control cross, every string fanning down to four puppets on a red stage. Hover: the cross tilts toward each in turn and that puppet performs — violin, a tossed letter, a heart balloon let go, a trot in a toy tram.',
+        Cover: JevCoverR
+      },
+      {
+        label: 'S — The pop-up book (unshipped)',
+        hint: 'An open pop-up book with four ribbon tabs; the concert shell stands out of the gutter. Hover: each tab is pulled in turn, a leaf turns, and the post office, the couple’s tree, and the tram’s hill fold up.',
+        Cover: JevCoverS
       }
     ]
   },

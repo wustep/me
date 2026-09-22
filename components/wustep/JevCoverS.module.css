@@ -1,0 +1,245 @@
+/* The pop-up book. One 640×360 stage sliced to the always-16:9 cover box.
+   A teal desk under lamplight in both site themes. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #2f5d62;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- The reading ----------
+   One 10s loop, paused at 0% — the concert shell standing open, the music
+   tab pulled (the rest pose). Hover resumes it; leaving freezes mid-page.
+     0–20%    music standing
+     21–27%   fold down, leaf turns, inbox tab pulled
+     27–45%   post office stands
+     46–52%   turn → match
+     52–70%   the tree and the couple stand
+     71–77%   turn → trolley
+     77–95%   the tram's hill stands
+     96–100%  turn back → music stands again
+   Pop-ups and the leaf hinge on the gutter base (320, 262 in the SVG). */
+.anim {
+  animation-duration: 10s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover .anim,
+  .cover:hover .anim {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover .anim,
+.cover:focus-within .anim {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the book reads itself while this cover
+   holds the grid's spotlight (data-cover-awake, pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover .anim {
+    animation-play-state: running;
+  }
+}
+
+.pop {
+  transform-origin: 320px 262px;
+  transform: scaleY(0);
+}
+
+.pop_music {
+  transform: scaleY(1);
+  animation-name: popMusic;
+}
+.pop_inbox {
+  animation-name: popInbox;
+}
+.pop_match {
+  animation-name: popMatch;
+}
+.pop_trolley {
+  animation-name: popTrolley;
+}
+
+@keyframes popMusic {
+  0%,
+  19% {
+    transform: scaleY(1);
+  }
+  22%,
+  97% {
+    transform: scaleY(0);
+  }
+  99% {
+    transform: scaleY(1.06);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+@keyframes popInbox {
+  0%,
+  27%,
+  47%,
+  100% {
+    transform: scaleY(0);
+  }
+  30% {
+    transform: scaleY(1.06);
+  }
+  31%,
+  44% {
+    transform: scaleY(1);
+  }
+}
+@keyframes popMatch {
+  0%,
+  52%,
+  72%,
+  100% {
+    transform: scaleY(0);
+  }
+  55% {
+    transform: scaleY(1.06);
+  }
+  56%,
+  69% {
+    transform: scaleY(1);
+  }
+}
+@keyframes popTrolley {
+  0%,
+  77%,
+  97% {
+    transform: scaleY(0);
+  }
+  80% {
+    transform: scaleY(1.06);
+  }
+  81%,
+  94% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+/* The leaf: a copy of the right page that swings over the gutter. Hidden
+   (scaleX 0) except during each turn. */
+.leaf {
+  transform-origin: 320px 262px;
+  transform: scaleX(0);
+  animation-name: leaf;
+  animation-timing-function: linear;
+}
+
+@keyframes leaf {
+  0%,
+  21.9%,
+  27.1%,
+  46.9%,
+  52.1%,
+  71.9%,
+  77.1%,
+  95.9% {
+    transform: scaleX(0);
+  }
+  22%,
+  47%,
+  72%,
+  96% {
+    transform: scaleX(1);
+  }
+  27%,
+  52%,
+  77% {
+    transform: scaleX(-1);
+  }
+  100% {
+    transform: scaleX(-1);
+  }
+}
+
+/* Tabs: the pulled ribbon slides 16 units further out. */
+.tab_music {
+  transform: translateX(16px);
+  animation-name: tabMusic;
+}
+.tab_inbox {
+  animation-name: tabInbox;
+}
+.tab_match {
+  animation-name: tabMatch;
+}
+.tab_trolley {
+  animation-name: tabTrolley;
+}
+
+@keyframes tabMusic {
+  0%,
+  20% {
+    transform: translateX(16px);
+  }
+  23%,
+  96% {
+    transform: translateX(0);
+  }
+  99%,
+  100% {
+    transform: translateX(16px);
+  }
+}
+@keyframes tabInbox {
+  0%,
+  21%,
+  48%,
+  100% {
+    transform: translateX(0);
+  }
+  24%,
+  45% {
+    transform: translateX(16px);
+  }
+}
+@keyframes tabMatch {
+  0%,
+  46%,
+  73%,
+  100% {
+    transform: translateX(0);
+  }
+  49%,
+  70% {
+    transform: translateX(16px);
+  }
+}
+@keyframes tabTrolley {
+  0%,
+  71%,
+  97%,
+  100% {
+    transform: translateX(0);
+  }
+  74%,
+  95% {
+    transform: translateX(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    animation: none !important;
+  }
+}
