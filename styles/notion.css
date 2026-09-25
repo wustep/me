@@ -191,19 +191,9 @@
   margin: 2em 0;
 }
 
-@media only screen and (max-width: 920px) {
-  .index-page.notion-page {
-    padding-left: 2vw;
-    padding-right: 2vw;
-  }
-}
-
-@media only screen and (max-width: 720px) {
-  .notion-page {
-    padding-left: 2vw;
-    padding-right: 2vw;
-  }
-}
+/* @wustep: removed the 2vw side padding below 920px/720px — on a phone it
+   left ~8px gutters, tighter than the header and every other surface.
+   react-notion-x's own min(16px, 8vw) matches the About page's 16px. */
 
 /* @wustep: show search always */
 /* @media only screen and (max-width: 600px) {
