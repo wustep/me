@@ -647,24 +647,36 @@ span[class*='_background'] {
 }
 
 /**
- * Compact property styling for non-mobile
+ * Compact property styling: date · author · tag on one centered line,
+ * wrapping on phones rather than stacking one property per line.
  */
-@media screen and (min-width: 500px) {
-  .notion-collection-row {
-    padding-bottom: 0;
+.notion-collection-row {
+  padding-bottom: 0;
+}
+
+.notion-collection-row-body {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0em;
+}
+
+.notion-collection-row-property:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  color: var(--w-secondary);
+}
+
+/* Labeled properties need the width, so they keep stacking on phones. */
+@media screen and (max-width: 499px) {
+  .enable-page-property-names .notion-collection-row-body {
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .notion-collection-row-body {
-    flex-direction: row;
-    justify-content: center;
-    gap: 0em;
-  }
-
-  .notion-collection-row-property:not(:last-child)::after {
-    content: '·';
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    color: var(--w-secondary);
+  .enable-page-property-names .notion-collection-row-property::after {
+    content: none;
   }
 }
 
@@ -1157,6 +1169,20 @@ span[class*='_background'] {
 .notion-collection-row {
   font-size: 0.9rem;
   color: var(--w-secondary);
+}
+
+/* A notch tighter on phones so "September 15, 2025 · Stephen Wu · Personal
+   Essays" still fits one line instead of leaving a dangling separator. */
+@media screen and (max-width: 499px) {
+  /* react-notion-x pins values at 14px */
+  .notion-collection-row-value {
+    font-size: 13px;
+  }
+
+  .notion-collection-row-property:not(:last-child)::after {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+  }
 }
 
 .notion-asset-caption {
