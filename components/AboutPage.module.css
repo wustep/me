@@ -1600,7 +1600,11 @@ a.bioHint {
   font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 500;
-  white-space: nowrap;
+  /* One line wherever it fits; wraps (like the inline variant) rather than
+     widening the page on a narrow window — the DOM-ino label is ~400px. */
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  text-align: center;
   border-radius: 10px;
   opacity: 0;
   pointer-events: none;
