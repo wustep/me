@@ -97,6 +97,19 @@ h6 {
 }
 
 /**
+ * react-notion-x strips outlines from everything inside .notion
+ * (`.notion *:focus { outline: 0 }`), which left keyboard focus invisible on
+ * links, gallery cards and toggles. Restore a ring for keyboard focus only;
+ * outlines follow each element's own border-radius. `:where` keeps this at
+ * the reset's specificity, so it wins by source order while components with
+ * their own :focus-visible ring (ThemeToggle, LabsButton) still apply theirs.
+ */
+.notion :where(a, button, summary, [role='button']):focus-visible {
+  outline: 2px solid var(--w-primary);
+  outline-offset: 2px;
+}
+
+/**
  * ========== Header ========== 
  */
 .notion-header .notion-search-button {
@@ -356,6 +369,26 @@ h6 {
 /**
  * ========== Table of Contents ==========
  */
+
+/**
+ * With an aside, react-notion-x sizes the content column to the full
+ * --notion-max-width, ignoring the page's 16px side padding. The body then
+ * runs 32px wider than the title, post metadata and author footer, and sits
+ * 16px right of center. Subtract the padding so every block shares one column.
+ * The row itself (content + aside) is sized from the viewport the same way
+ * and ran 16px past the right edge, leaving the page horizontally scrollable.
+ */
+@media (min-width: 1300px) and (min-height: 300px) {
+  .notion-page-content-has-aside {
+    width: calc((100vw + var(--notion-max-width)) / 2 - 16px);
+  }
+
+  .notion-page-content-has-aside .notion-page-content-inner {
+    width: calc(var(--notion-max-width) - 32px);
+    max-width: calc(var(--notion-max-width) - 32px);
+  }
+}
+
 .notion-aside-table-of-contents {
   background: none;
 }
@@ -627,24 +660,36 @@ span[class*='_background'] {
 }
 
 /**
- * Compact property styling for non-mobile
+ * Compact property styling: date · author · tag on one centered line,
+ * wrapping on phones rather than stacking one property per line.
  */
-@media screen and (min-width: 500px) {
-  .notion-collection-row {
-    padding-bottom: 0;
+.notion-collection-row {
+  padding-bottom: 0;
+}
+
+.notion-collection-row-body {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0em;
+}
+
+.notion-collection-row-property:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  color: var(--w-secondary);
+}
+
+/* Labeled properties need the width, so they keep stacking on phones. */
+@media screen and (max-width: 499px) {
+  .enable-page-property-names .notion-collection-row-body {
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .notion-collection-row-body {
-    flex-direction: row;
-    justify-content: center;
-    gap: 0em;
-  }
-
-  .notion-collection-row-property:not(:last-child)::after {
-    content: '·';
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    color: var(--w-secondary);
+  .enable-page-property-names .notion-collection-row-property::after {
+    content: none;
   }
 }
 
@@ -1139,6 +1184,20 @@ span[class*='_background'] {
   color: var(--w-secondary);
 }
 
+/* A notch tighter on phones so "September 15, 2025 · Stephen Wu · Personal
+   Essays" still fits one line instead of leaving a dangling separator. */
+@media screen and (max-width: 499px) {
+  /* react-notion-x pins values at 14px */
+  .notion-collection-row-value {
+    font-size: 13px;
+  }
+
+  .notion-collection-row-property:not(:last-child)::after {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+  }
+}
+
 .notion-asset-caption {
   font-size: 0.82rem;
   color: var(--w-secondary);
@@ -1154,6 +1213,8 @@ span[class*='_background'] {
   text-transform: uppercase;
   color: var(--w-secondary);
   margin: 3rem 0 0.75rem;
+  /* Flush with the page title and cards (react-notion-x pads headings 2px) */
+  padding-inline: 0;
 }
 
 .auxiliary-page .notion-h1:first-child {

@@ -61,7 +61,6 @@ The shadcn side flips on the same class: `globals.css` overrides its tokens unde
 Per-component scoped styles live alongside their component:
 
 - [`components/AboutPage.module.css`](../components/AboutPage.module.css)
-- [`components/PageSocial.module.css`](../components/PageSocial.module.css)
 - [`components/Page404.module.css`](../components/Page404.module.css)
 - [`components/styles.module.css`](../components/styles.module.css) — shared across the Notion page shell.
 - [`components/wustep/BookshelfCover.module.css`](../components/wustep/BookshelfCover.module.css)
