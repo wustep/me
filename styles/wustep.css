@@ -97,6 +97,19 @@ h6 {
 }
 
 /**
+ * react-notion-x strips outlines from everything inside .notion
+ * (`.notion *:focus { outline: 0 }`), which left keyboard focus invisible on
+ * links, gallery cards and toggles. Restore a ring for keyboard focus only;
+ * outlines follow each element's own border-radius. `:where` keeps this at
+ * the reset's specificity, so it wins by source order while components with
+ * their own :focus-visible ring (ThemeToggle, LabsButton) still apply theirs.
+ */
+.notion :where(a, button, summary, [role='button']):focus-visible {
+  outline: 2px solid var(--w-primary);
+  outline-offset: 2px;
+}
+
+/**
  * ========== Header ========== 
  */
 .notion-header .notion-search-button {
