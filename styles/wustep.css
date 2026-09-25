@@ -356,6 +356,26 @@ h6 {
 /**
  * ========== Table of Contents ==========
  */
+
+/**
+ * With an aside, react-notion-x sizes the content column to the full
+ * --notion-max-width, ignoring the page's 16px side padding. The body then
+ * runs 32px wider than the title, post metadata and author footer, and sits
+ * 16px right of center. Subtract the padding so every block shares one column.
+ * The row itself (content + aside) is sized from the viewport the same way
+ * and ran 16px past the right edge, leaving the page horizontally scrollable.
+ */
+@media (min-width: 1300px) and (min-height: 300px) {
+  .notion-page-content-has-aside {
+    width: calc((100vw + var(--notion-max-width)) / 2 - 16px);
+  }
+
+  .notion-page-content-has-aside .notion-page-content-inner {
+    width: calc(var(--notion-max-width) - 32px);
+    max-width: calc(var(--notion-max-width) - 32px);
+  }
+}
+
 .notion-aside-table-of-contents {
   background: none;
 }
@@ -1154,6 +1174,8 @@ span[class*='_background'] {
   text-transform: uppercase;
   color: var(--w-secondary);
   margin: 3rem 0 0.75rem;
+  /* Flush with the page title and cards (react-notion-x pads headings 2px) */
+  padding-inline: 0;
 }
 
 .auxiliary-page .notion-h1:first-child {
