@@ -1313,23 +1313,30 @@ span[class*='_background'] {
 
 /**
  * ========== Borders ==========
- * Reduce borders from 1px to 0.5px and swap to the tailwind color.
+ * Hairline borders in the wustep divider token.
+ * (Tailwind's --color-border resolves once at :root, so it stayed the
+ * light-mode #e5e5e5 in dark mode: near-white rules on a black page.)
  */
 
+/* 1px, like the About page's dividers: at 8-10% alpha a half-pixel rule
+   all but disappears on 1x screens. react-notion-x also draws a 1px
+   --bg-color-0 bottom border (#474c50 in dark mode), so every rule was two
+   lines; drop it. */
 .notion-hr {
-  border-top: 0.5px solid var(--color-border);
+  border-top: 1px solid var(--w-divider);
+  border-bottom: none;
 }
 
 .notion-simple-table {
-  border: 0.5px solid var(--color-border);
+  border: 0.5px solid var(--w-divider);
 }
 
 .notion-simple-table td {
-  border: 0.5px solid var(--color-border);
+  border: 0.5px solid var(--w-divider);
 }
 
 .notion-list-body {
-  border-top: 0.5px solid var(--color-border);
+  border-top: 0.5px solid var(--w-divider);
 }
 
 /**
