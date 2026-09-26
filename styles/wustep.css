@@ -1282,8 +1282,17 @@ span[class*='_background'] {
 .notion-hr {
   margin: 1.2em 0 /* from 2em 0 */;
 }
+/* Quotes speak in Crimson italic, a step larger than the sans around them
+   since Crimson's x-height is small. A hairline in the text's own ink
+   replaces notion.css's 4px sky-blue bar, the one off-palette color in the
+   prose. */
 .notion-quote {
-  font-size: 1em /* from 1.2em */;
+  font-family: var(--font-serif);
+  font-size: 1.25em /* from 1.2em */;
+  line-height: 1.45;
+  padding: 0.1em 0 0.1em 0.9em;
+  border-left: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  color: var(--w-primary);
 }
 
 /**
