@@ -80,13 +80,16 @@ h6 {
 }
 
 /**
- * Make dark <-> light mode changes come in smoothly.
+ * Dark <-> light switches cross-fade the whole page as one view transition
+ * (see lib/use-dark-mode.ts). This replaces a blanket 0.5s background /
+ * border / shadow transition on `*`, which let text change color ahead of
+ * its background and made every hover without its own transition linger
+ * for half a second on the way out.
  */
-* {
-  transition:
-    background-color 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.5s ease;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -389,26 +392,60 @@ h6 {
   }
 }
 
+/**
+ * The TOC reads as page chrome, in the About page's vocabulary: an
+ * uppercase sans label like its EXPERIENCE / PROJECTS headers, muted sans
+ * entries, and the current section in full ink. That replaces
+ * react-notion-x's cyan active state (2.6:1 on white, under AA) and its
+ * 0.7-opacity entries.
+ */
 .notion-aside-table-of-contents {
   background: none;
+  font-family: var(--font-sans);
 }
 
 .notion-aside-table-of-contents-header {
   align-self: start;
-  text-transform: none;
+  margin: 0 0 0.5rem 6px;
   user-select: none;
-  font-family: var(--font-serif);
+  font-size: 0.7rem;
   font-weight: 600;
-  font-size: 1.2em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--w-secondary);
 }
+
 .notion-table-of-contents-item-body {
   max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: var(--font-serif);
 }
+
 .notion-aside-table-of-contents .notion-table-of-contents-item {
-  line-height: 15px /* Avoid overflow-y cutting off the text */;
+  /* Room for descenders; overflow: hidden on the body clips a tighter box */
+  line-height: 1.35;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--w-secondary);
+  opacity: 1;
+  transition: color 150ms ease;
+}
+
+.notion-aside-table-of-contents .notion-table-of-contents-item-indent-level-1 {
+  font-size: 12.5px;
+}
+
+@media (hover: hover) {
+  .notion-aside-table-of-contents .notion-table-of-contents-item:hover {
+    background: none;
+    color: var(--w-primary);
+  }
+}
+
+.notion-aside-table-of-contents .notion-table-of-contents-active-item {
+  color: var(--w-primary) !important;
+  font-weight: 500;
 }
 
 /**
@@ -420,6 +457,7 @@ h6 {
   border-bottom: none;
   background-image: none;
   box-shadow: inset 0 -1px 0 0 color-mix(in srgb, currentColor 32%, transparent);
+  transition: box-shadow 160ms ease;
 }
 
 .notion-link:focus,
@@ -427,7 +465,6 @@ h6 {
   border-bottom-color: transparent;
   background-image: none;
   box-shadow: inset 0 -1px 0 0 currentColor;
-  transition: box-shadow 160ms ease;
 }
 
 /**
@@ -1282,8 +1319,17 @@ span[class*='_background'] {
 .notion-hr {
   margin: 1.2em 0 /* from 2em 0 */;
 }
+/* Quotes speak in Crimson italic, a step larger than the sans around them
+   since Crimson's x-height is small. A hairline in the text's own ink
+   replaces notion.css's 4px sky-blue bar, the one off-palette color in the
+   prose. */
 .notion-quote {
-  font-size: 1em /* from 1.2em */;
+  font-family: var(--font-serif);
+  font-size: 1.25em /* from 1.2em */;
+  line-height: 1.45;
+  padding: 0.1em 0 0.1em 0.9em;
+  border-left: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  color: var(--w-primary);
 }
 
 /**
@@ -1313,23 +1359,30 @@ span[class*='_background'] {
 
 /**
  * ========== Borders ==========
- * Reduce borders from 1px to 0.5px and swap to the tailwind color.
+ * Hairline borders in the wustep divider token.
+ * (Tailwind's --color-border resolves once at :root, so it stayed the
+ * light-mode #e5e5e5 in dark mode: near-white rules on a black page.)
  */
 
+/* 1px, like the About page's dividers: at 8-10% alpha a half-pixel rule
+   all but disappears on 1x screens. react-notion-x also draws a 1px
+   --bg-color-0 bottom border (#474c50 in dark mode), so every rule was two
+   lines; drop it. */
 .notion-hr {
-  border-top: 0.5px solid var(--color-border);
+  border-top: 1px solid var(--w-divider);
+  border-bottom: none;
 }
 
 .notion-simple-table {
-  border: 0.5px solid var(--color-border);
+  border: 0.5px solid var(--w-divider);
 }
 
 .notion-simple-table td {
-  border: 0.5px solid var(--color-border);
+  border: 0.5px solid var(--w-divider);
 }
 
 .notion-list-body {
-  border-top: 0.5px solid var(--color-border);
+  border-top: 0.5px solid var(--w-divider);
 }
 
 /**
