@@ -389,26 +389,60 @@ h6 {
   }
 }
 
+/**
+ * The TOC reads as page chrome, in the About page's vocabulary: an
+ * uppercase sans label like its EXPERIENCE / PROJECTS headers, muted sans
+ * entries, and the current section in full ink. That replaces
+ * react-notion-x's cyan active state (2.6:1 on white, under AA) and its
+ * 0.7-opacity entries.
+ */
 .notion-aside-table-of-contents {
   background: none;
+  font-family: var(--font-sans);
 }
 
 .notion-aside-table-of-contents-header {
   align-self: start;
-  text-transform: none;
+  margin: 0 0 0.5rem 6px;
   user-select: none;
-  font-family: var(--font-serif);
+  font-size: 0.7rem;
   font-weight: 600;
-  font-size: 1.2em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--w-secondary);
 }
+
 .notion-table-of-contents-item-body {
   max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: var(--font-serif);
 }
+
 .notion-aside-table-of-contents .notion-table-of-contents-item {
-  line-height: 15px /* Avoid overflow-y cutting off the text */;
+  /* Room for descenders; overflow: hidden on the body clips a tighter box */
+  line-height: 1.35;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--w-secondary);
+  opacity: 1;
+  transition: color 150ms ease;
+}
+
+.notion-aside-table-of-contents .notion-table-of-contents-item-indent-level-1 {
+  font-size: 12.5px;
+}
+
+@media (hover: hover) {
+  .notion-aside-table-of-contents .notion-table-of-contents-item:hover {
+    background: none;
+    color: var(--w-primary);
+  }
+}
+
+.notion-aside-table-of-contents .notion-table-of-contents-active-item {
+  color: var(--w-primary) !important;
+  font-weight: 500;
 }
 
 /**
