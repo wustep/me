@@ -29,7 +29,8 @@ import styles from './fonts.module.css'
 const storageKey = 'design-font-tester-settings'
 
 function ensureDesignFonts(doc: Document) {
-  if (doc.querySelector('link[data-design-fonts]')) return
+  // The preview iframe's document can exist before <head> is parsed.
+  if (!doc.head || doc.querySelector('link[data-design-fonts]')) return
 
   const stylesheet = doc.createElement('link')
   stylesheet.rel = 'stylesheet'

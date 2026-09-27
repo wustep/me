@@ -98,6 +98,13 @@ export default siteConfig({
     '/writing': '3415cb08cf2c80128c06eb41ddf69c79'
   },
 
+  // Older Notion links use slugs that no longer match the canonical page URL.
+  // These resolve inbound only; outbound links keep the current slug.
+  pageUrlAdditions: {
+    '/me-ghost': '2bc5cb08cf2c8131b2a7f3714271d549',
+    '/highlighty-project': '2bc5cb08cf2c81cda0bece79763f25db'
+  },
+
   // whether to use the default notion navigation style or a custom one with links to
   // important pages
   // navigationStyle: 'default'
