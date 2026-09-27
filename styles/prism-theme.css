@@ -22,15 +22,13 @@
   color: rgba(229, 231, 235, 1);
 }
 
+/* @wustep: inline code in the text's own ink on a quiet chip. The #ff4081
+   pink measured 3.0:1 on its light chip and 2.6:1 on the dark one (AA text
+   needs 4.5:1). The dark selector outranks `.dark-mode .notion code`. */
+.notion .notion-inline-code,
 .dark-mode .notion .notion-inline-code {
-  background: rgb(71, 76, 80) !important;
-  color: #ff4081;
-  padding: 0.2em 0.4em !important;
-}
-
-.notion .notion-inline-code {
-  color: #ff4081;
-  background: rgba(127, 122, 107, 0.1) !important;
+  color: inherit;
+  background: var(--w-surface-hover) !important;
   padding: 0.2em 0.4em !important;
 }
 
