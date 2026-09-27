@@ -346,10 +346,9 @@
   backdrop-filter: saturate(180%) blur(16px);
 }
 
-.notion-bookmark:hover {
-  border-image: linear-gradient(90.68deg, #b439df 0.26%, #e5337e 102.37%);
-  border-image-slice: 1;
-}
+/* @wustep: removed the purple-to-pink border-image on bookmark hover. It
+   squared off the card's rounded corners; wustep.css firms the border
+   instead, like the gallery cards. */
 
 .notion-block-ab9a258d6cf444f3bb40dc2600feae91 .notion-column {
   padding: 0;

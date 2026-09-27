@@ -78,6 +78,7 @@ A few patterns used throughout `styles/wustep.css`:
 - Target block types via `.notion-callout.notion-<color>_background` for callout colors.
 - Target button blocks (highlighted link blocks) via the classes `react-notion-x` emits plus extra markers added in the custom `blockMap`.
 - Collection titles can be hidden on a per-page basis via the `Disable Collection Links` property; the styling is applied via a conditional class on the page root.
+- Draw rules and hairlines with `--w-divider` / `--w-divider-hover`. react-notion-x's `--fg-color-0`…`4` are text colors that all become 90% white in dark mode, and Tailwind's `--color-border` resolves once at `:root`, so it stays the light-mode value under `.dark-mode`.
 
 ## When to use which
 

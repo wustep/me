@@ -1271,8 +1271,10 @@ span[class*='_background'] {
   width: 100%;
   margin-top: 1em;
   padding: 1.5em 0;
-  border-top: 0.5px solid var(--color-border) /* from var(--fg-color-1) */;
-  border-bottom: 0.5px solid var(--color-border) /* from var(--fg-color-1) */;
+  /* Same 1px rule as .notion-hr. Tailwind's --color-border stayed the
+     light-mode #e5e5e5 in dark mode (see Borders below). */
+  border-top: 1px solid var(--w-divider);
+  border-bottom: 1px solid var(--w-divider);
   border-left: 0;
   border-right: 0;
 }
@@ -1383,6 +1385,28 @@ span[class*='_background'] {
 
 .notion-list-body {
   border-top: 0.5px solid var(--w-divider);
+}
+
+/* react-notion-x draws collection-table rules (/tech-recs, /books-podcasts)
+   in --fg-color-0/1. Those are text colors, 90% white in dark mode. */
+.notion-table-header-inner,
+.notion-table-view-header-cell-inner,
+.notion-table-row,
+.notion-table-cell {
+  border-color: var(--w-divider);
+}
+
+/* Bookmarks take the gallery cards' hairline and hover (#474c50 in dark
+   before). `.notion` matches react-notion-x's `.dark-mode .notion-bookmark`. */
+.notion .notion-bookmark {
+  border-color: var(--w-divider);
+  transition: border-color 150ms ease;
+}
+
+@media (hover: hover) {
+  .notion .notion-bookmark:hover {
+    border-color: var(--w-divider-hover);
+  }
 }
 
 /**
