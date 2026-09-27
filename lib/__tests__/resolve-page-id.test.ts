@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { pageUrlAdditions, pageUrlOverrides } from '../config'
 import { canonicalPageMap } from '../notion-index'
 import {
   isResolvablePageSlug,
@@ -82,6 +83,19 @@ describe('committed notion-index', () => {
     pageUrlAdditions: {},
     canonicalPageMap
   }
+
+  it('resolves legacy slugs that Notion still links to', () => {
+    const maps = { pageUrlOverrides, pageUrlAdditions, canonicalPageMap }
+    expect(resolvePageIdFromMaps('me-ghost', maps)).toBe(
+      '2bc5cb08-cf2c-8131-b2a7-f3714271d549'
+    )
+    expect(resolvePageIdFromMaps('highlighty-project', maps)).toBe(
+      '2bc5cb08-cf2c-81cd-a0be-ce79763f25db'
+    )
+    expect(resolvePageIdFromMaps('highlighty', maps)).toBe(
+      '2bc5cb08-cf2c-81cd-a0be-ce79763f25db'
+    )
+  })
 
   it('resolves the aug-26 life-update slug and keeps oct-25', () => {
     expect(resolvePageIdFromMaps('aug-26', indexMaps)).toBe(
