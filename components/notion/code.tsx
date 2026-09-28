@@ -1,10 +1,19 @@
-// Prism grammars have to be registered before Code highlights a block.
-// Keeping them in this module lets `next/dynamic` see one direct import().
-import 'prismjs/components/prism-markup-templating.js'
+// Prism language components are browser scripts: they read a global `Prism`
+// and do not import the core. Turbopack turns each static import into a
+// synchronous external `require` while the module is linking, in source
+// order. `prismjs` has to be first so its `global.Prism = Prism` assignment
+// has run before `prism-markup-templating.js` (and the rest) execute.
+// Grammars that call `Prism.languages.extend` follow the language they extend.
+import 'prismjs'
+import 'prismjs/components/prism-clike.js'
 import 'prismjs/components/prism-markup.js'
-import 'prismjs/components/prism-bash.js'
+import 'prismjs/components/prism-css.js'
+import 'prismjs/components/prism-javascript.js'
+import 'prismjs/components/prism-markup-templating.js'
 import 'prismjs/components/prism-c.js'
 import 'prismjs/components/prism-cpp.js'
+import 'prismjs/components/prism-objectivec.js'
+import 'prismjs/components/prism-bash.js'
 import 'prismjs/components/prism-csharp.js'
 import 'prismjs/components/prism-docker.js'
 import 'prismjs/components/prism-java.js'
@@ -18,7 +27,6 @@ import 'prismjs/components/prism-handlebars.js'
 import 'prismjs/components/prism-less.js'
 import 'prismjs/components/prism-makefile.js'
 import 'prismjs/components/prism-markdown.js'
-import 'prismjs/components/prism-objectivec.js'
 import 'prismjs/components/prism-ocaml.js'
 import 'prismjs/components/prism-python.js'
 import 'prismjs/components/prism-reason.js'
