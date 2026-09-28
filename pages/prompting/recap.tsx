@@ -7,7 +7,7 @@ const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'Recap'
 const title = `${chapterTitle} — ${parentTitle}`
 const description =
-  'Five reminders before you go. The four mental models on one page, plus the techniques worth practicing.'
+  'The whole guide on one page: the mindset, the three mental models, the techniques worth practicing, and orchestration.'
 const canonicalUrl = `${host}/prompting/recap`
 const previewImage = `${host}/favicon-512x512.png`
 

@@ -1260,6 +1260,14 @@
   border-bottom: none;
 }
 
+/* Effort ladder: the rung name leads, so pin it to a fixed column and
+ * let the descriptions share one left edge. */
+.modelGuideEffort .modelGuideRow {
+  display: grid;
+  grid-template-columns: 4.75em 1fr;
+  justify-content: start;
+}
+
 /* Small provenance tag breaking the table's top hairline, top-right —
  * the same "label cuts the rule" move used by figure captions and
  * section dividers elsewhere in the article. */

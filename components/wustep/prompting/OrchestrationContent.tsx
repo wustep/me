@@ -24,11 +24,11 @@ export function OrchestrationContent() {
       <p>
         Orchestration is the shift from typing to conducting: you stop messaging
         one agent and start briefing several. The question stops being
-        &quot;what do I type next&quot; and becomes &quot;what happens this{' '}
-        <em>hour</em>.&quot;
+        &ldquo;what do I type next&rdquo; and becomes &ldquo;what happens this{' '}
+        <em>hour</em>.&rdquo;
       </p>
 
-      <SectionHeading num='6.1'>Chain, don&apos;t ping</SectionHeading>
+      <SectionHeading num='6.1'>Chain, don&rsquo;t ping</SectionHeading>
 
       <p>
         If you already know steps two through five before you send step one,
@@ -81,7 +81,7 @@ export function OrchestrationContent() {
       <p>
         You can only write one brief at a time, so agents start in a cascade.
         Brief thread one, kick it off. While it runs, brief thread two. By the
-        time you&apos;ve sent the third, the first is delivering.
+        time you&rsquo;ve sent the third, the first is delivering.
       </p>
 
       <Figure
@@ -93,7 +93,7 @@ export function OrchestrationContent() {
       </Figure>
 
       <p>
-        The solid bars never overlap: that&apos;s your hands, and there&apos;s
+        The solid bars never overlap: that&rsquo;s your hands, and there&rsquo;s
         only one of you. The agents overlap freely. Attention is a real cost,
         and you can only spend it on one thread at a time.
       </p>
@@ -101,7 +101,7 @@ export function OrchestrationContent() {
       <SectionHeading num='6.3'>Fan out</SectionHeading>
 
       <p>
-        One agent works on one thing at a time. You don&apos;t. The moment two
+        One agent works on one thing at a time. You don&rsquo;t. The moment two
         tasks are independent of each other, run them side by side: separate
         tabs, separate worktrees, separate windows.
       </p>
@@ -111,7 +111,7 @@ export function OrchestrationContent() {
         caption={
           <>
             One brief fans out; three streams run in parallel; one merge to
-            review. Use this shape only when the tracks don&apos;t depend on
+            review. Use this shape only when the tracks don&rsquo;t depend on
             each other.
           </>
         }
@@ -120,11 +120,10 @@ export function OrchestrationContent() {
       </Figure>
 
       <p>
-        Good candidates: tests in parallel with the implementation, five
-        unrelated bugs at once, three library spikes side by side. Bad
-        candidates: anything where agent B reads what agent A produced.
-        Don&apos;t parallelize a chain. And budget for the merge; three branches
-        become one review queue.
+        Good candidates: five unrelated bugs at once, a test backfill split by
+        module, three library spikes side by side. Bad candidates: anything
+        where agent B reads what agent A produced. Don&rsquo;t parallelize a
+        chain. And budget for the merge; three branches become one review queue.
       </p>
 
       <SectionHeading num='6.4'>Specialize the roles</SectionHeading>
@@ -134,7 +133,7 @@ export function OrchestrationContent() {
         other. A researcher reads and plans. An implementer takes the plan and
         writes. A reviewer comes in cold and critiques. Each role wants a
         different mindset and a different context window; splitting them
-        enforces a discipline you&apos;d struggle to keep alone.
+        enforces a discipline you&rsquo;d struggle to keep alone.
       </p>
 
       <Figure
@@ -169,15 +168,15 @@ export function OrchestrationContent() {
 
       <Note title='Command the fleet'>
         <p>
-          With several agents going, the job changes shape: you&apos;re
+          With several agents going, the job changes shape: you&rsquo;re
           triaging, not typing. Which branch needs a decision, which run is
-          stuck, what&apos;s ready to merge. The bottleneck stops being the
+          stuck, what&rsquo;s ready to merge. The bottleneck stops being the
           model and becomes <em>you</em>.
         </p>
         <p>
-          So that&apos;s the skill worth building: reading diffs fast, holding
+          So that&rsquo;s the skill worth building: reading diffs fast, holding
           several threads, killing runs that have gone sideways, writing briefs
-          that don&apos;t need follow-ups. Optimize the hour, not the message.
+          that don&rsquo;t need follow-ups. Optimize the hour, not the message.
           Conducting is mostly patient briefing and clean handoffs.
         </p>
       </Note>
@@ -365,9 +364,9 @@ function PingPongDiagram() {
  * ───────────────────────────────────────────────────────── */
 
 const FAN_TRACKS = [
-  { y: 70, end: 420, label: 'Agent · tests' },
-  { y: 105, end: 380, label: 'Agent · docs' },
-  { y: 140, end: 460, label: 'Agent · refactor' }
+  { y: 70, end: 420, label: 'Agent · lib spike' },
+  { y: 105, end: 380, label: 'Agent · bug fix' },
+  { y: 140, end: 460, label: 'Agent · test backfill' }
 ] as const
 
 function FanOutDiagram() {
