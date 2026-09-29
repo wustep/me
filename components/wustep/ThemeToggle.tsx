@@ -14,6 +14,11 @@ export type ThemeToggleProps = {
  * Shared theme toggle button.
  * Shows the icon for the mode you'll switch TO (sun when dark, moon when light)
  * and tints on hover: yellow for sun, indigo for moon.
+ *
+ * Accessible name is the fixed state ("Dark mode") paired with aria-pressed,
+ * so screen readers hear "Dark mode, toggle button, pressed" — not an action
+ * label that contradicts the pressed state. The action wording stays in the
+ * hover tooltip.
  */
 export function ThemeToggle({ isDark, onToggle, className }: ThemeToggleProps) {
   return (
@@ -21,7 +26,7 @@ export function ThemeToggle({ isDark, onToggle, className }: ThemeToggleProps) {
       type='button'
       onClick={onToggle}
       className={cn(styles.themeToggle, className)}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label='Dark mode'
       aria-pressed={isDark}
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
