@@ -7,15 +7,15 @@ export function ErrorPage({ statusCode }: { statusCode?: number }) {
   const code = statusCode ?? 500
   const title = `Error ${code}`
   const description =
-    code === 500
-      ? "Something went wrong on our end. We're looking into it."
-      : 'An unexpected error occurred. Please try again later.'
+    code >= 500
+      ? 'Something broke on my end. It may just be a hiccup — try again in a moment.'
+      : 'An unexpected error occurred. Try again, or head back home.'
 
   return (
     <>
       <PageHead title={title} />
 
-      <div className={styles.page}>
+      <main className={styles.page}>
         <div className={styles.content}>
           <p className={styles.code}>{code}</p>
 
@@ -25,21 +25,31 @@ export function ErrorPage({ statusCode }: { statusCode?: number }) {
 
           <p className={styles.description}>{description}</p>
 
-          <a className={styles.homeLink} href={config.host}>
-            <svg
-              viewBox='0 0 16 16'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
+          <div className={styles.actions}>
+            <button
+              type='button'
+              className={styles.homeLink}
+              onClick={() => globalThis.location.reload()}
             >
-              <path d='M10 3L5 8l5 5' />
-            </svg>
-            Back home
-          </a>
+              Try again
+            </button>
+            <a className={styles.homeLink} href={config.host}>
+              <svg
+                viewBox='0 0 16 16'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                aria-hidden='true'
+              >
+                <path d='M10 3L5 8l5 5' />
+              </svg>
+              Back home
+            </a>
+          </div>
         </div>
-      </div>
+      </main>
     </>
   )
 }

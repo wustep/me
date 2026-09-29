@@ -6,13 +6,15 @@ import styles from './Page404.module.css'
 import { PageHead } from './PageHead'
 
 export function Page404({ site, pageId, error }: types.PageProps) {
-  const title = site?.name || 'Page Not Found'
+  // Lead with the status so the tab and history entry say what happened;
+  // `site.name` alone read as a normal "Stephen Wu" page.
+  const title = `Page not found · ${site?.name || config.name}`
 
   return (
     <>
       <PageHead site={site} title={title} />
 
-      <div className={styles.page}>
+      <main className={styles.page}>
         <div className={styles.content}>
           <p className={styles.code}>404</p>
 
@@ -22,11 +24,13 @@ export function Page404({ site, pageId, error }: types.PageProps) {
 
           <p className={styles.description}>
             The page you&apos;re looking for doesn&apos;t exist or has been
-            moved.
+            moved. Maybe wander somewhere else instead?
           </p>
 
           <p className={styles.hints}>
-            <a href='/'>Home</a>
+            <a href='/playground'>Playground</a>
+            <span aria-hidden='true'> · </span>
+            <a href='/lenses'>Lenses</a>
             <span aria-hidden='true'> · </span>
             <AgentOnly>
               <a href='/llms.txt' tabIndex={-1}>
@@ -45,6 +49,7 @@ export function Page404({ site, pageId, error }: types.PageProps) {
               strokeWidth='1.5'
               strokeLinecap='round'
               strokeLinejoin='round'
+              aria-hidden='true'
             >
               <path d='M10 3L5 8l5 5' />
             </svg>
@@ -65,7 +70,7 @@ export function Page404({ site, pageId, error }: types.PageProps) {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </>
   )
 }
