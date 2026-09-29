@@ -21,6 +21,7 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 import { OwnerModeToggle } from '@/components/wustep/OwnerModeToggle'
+import { PlaygroundHead } from '@/components/wustep/PlaygroundHead'
 import { PlaygroundSidebar } from '@/components/wustep/PlaygroundSidebar'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { useDarkMode } from '@/lib/use-dark-mode'
@@ -64,6 +65,8 @@ export function usePlaygroundTheme() {
 interface PlaygroundLayoutProps {
   children: React.ReactNode
   title: string
+  /** Meta description for pages not in the registry (entries use theirs). */
+  description?: string
   breadcrumbs?: { label: string; href?: string }[]
   /** When true, children fill the entire frame (no padding, no title, no max-width) */
   fullFrame?: boolean
@@ -74,6 +77,7 @@ interface PlaygroundLayoutProps {
 export function PlaygroundLayout({
   children,
   title,
+  description,
   breadcrumbs = [],
   fullFrame = false,
   openHref
@@ -102,6 +106,7 @@ export function PlaygroundLayout({
 
   return (
     <PlaygroundThemeContext.Provider value={playgroundTheme}>
+      <PlaygroundHead title={title} description={description} />
       <SidebarProvider
         open={isSidebarOpen}
         onOpenChange={handleSidebarOpenChange}

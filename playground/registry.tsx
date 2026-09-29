@@ -31,6 +31,8 @@ export type PlaygroundEntry = {
   x?: string
   gradient?: string
   image?: string
+  /** PNG/JPEG link-preview image, when `image` is SVG/WebP (unfurlers skip those). */
+  ogImage?: string
   CoverComponent?: React.ComponentType
 }
 
@@ -212,6 +214,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
         image: '/playground/covers/starry-sequencer-poster.webp',
+        ogImage: '/playground/covers/starry-sequencer.png',
         CoverComponent: StarrySequencerCover
       },
       {
