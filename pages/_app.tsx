@@ -22,6 +22,7 @@ import { Analytics, type BeforeSendEvent } from '@vercel/analytics/react'
 import Head from 'next/head'
 import { useLayoutEffect } from 'react'
 
+import { SkipLink } from '@/components/SkipLink'
 import {
   OwnerModeProvider,
   useOwnerMode
@@ -78,6 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
         data-font-root
         className={`${inter.variable} ${crimsonPro.variable} ${geist.variable}`}
       >
+        <SkipLink />
         <Component {...pageProps} />
       </div>
       <SiteAnalytics />

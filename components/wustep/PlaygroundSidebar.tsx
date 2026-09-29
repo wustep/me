@@ -185,6 +185,9 @@ export function PlaygroundSidebar({
                       ) : (
                         <Link
                           href={item.url}
+                          aria-current={
+                            router.pathname === item.url ? 'page' : undefined
+                          }
                           className='flex w-full items-center justify-between gap-2'
                         >
                           <span className='truncate'>{item.title}</span>
