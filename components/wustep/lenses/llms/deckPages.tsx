@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 
 import { domain, host, name, x } from '@/lib/config'
+import { deckSlugFromBasePath, getLensImageUrl } from '@/lib/lens-card'
 
 import type { Deck } from '../deck'
 import { LensesPage } from '../LensesPage'
@@ -19,13 +20,14 @@ import { LensesPage } from '../LensesPage'
 function DeckHead({
   title,
   description,
-  canonicalUrl
+  canonicalUrl,
+  previewImage
 }: {
   title: string
   description: string
   canonicalUrl: string
+  previewImage: string
 }) {
-  const previewImage = `${host}/favicon-512x512.png`
   return (
     <Head>
       <title>{title}</title>
@@ -37,7 +39,7 @@ function DeckHead({
       <meta property='og:description' content={description} />
       <meta property='og:url' content={canonicalUrl} />
       <meta property='og:image' content={previewImage} />
-      <meta name='twitter:card' content='summary' />
+      <meta name='twitter:card' content='summary_large_image' />
       <meta name='twitter:domain' content={domain} />
       {x && <meta name='twitter:creator' content={`@${x}`} />}
       <meta name='twitter:title' content={title} />
@@ -56,6 +58,10 @@ export function makeDeckIndexPage(deck: Deck, seoTitle: string) {
           title={seoTitle}
           description={`${deck.center.tagline} ${deck.dialog.title}`}
           canonicalUrl={`${host}${deck.basePath}`}
+          previewImage={getLensImageUrl(
+            host,
+            deckSlugFromBasePath(deck.basePath)
+          )}
         />
         <LensesPage deck={deck} />
       </>
@@ -80,6 +86,11 @@ export function makeDeckLensRoute(deck: Deck, seoSuffix: string) {
           title={`${lensTitle} — ${seoSuffix}`}
           description={lensTagline}
           canonicalUrl={`${host}${deck.basePath}/${lensId}`}
+          previewImage={getLensImageUrl(
+            host,
+            deckSlugFromBasePath(deck.basePath),
+            lensId
+          )}
         />
         <LensesPage deck={deck} />
       </>

@@ -42,6 +42,7 @@ Browser (HTML + hydrated React)
 | `public/sitemap.xml`         | Static sitemap generated before each build                              |
 | `pages/api/search-notion.ts` | Proxy for Notion search; 404s while `isSearchEnabled` is false, and only forwards a validated `query` scoped to the site root |
 | `pages/api/social-image.tsx` | Edge-runtime OG image generator (uses `next/og`)                        |
+| `pages/api/lens-image.tsx`   | Edge-runtime OG card for a lens or lens deck (static deck data, no Notion) |
 | `components/NotionPage.tsx`  | The main page shell wrapping `react-notion-x`                           |
 
 ## Rendering modes
