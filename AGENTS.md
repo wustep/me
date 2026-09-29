@@ -11,9 +11,11 @@ full format).
 
 - **Do not edit `lenses.json` directly** — it is generated from `lenses.md`,
   and any hand-edit will be overwritten on the next sync.
-- After editing `lenses.md`, run `pnpm lenses:sync` to regenerate
-  `lenses.json`. A pre-commit hook runs this automatically whenever
-  `lenses.md` is staged, so the JSON is always committed in lockstep.
+- After editing any deck's `lenses.md` (the original deck, or a model deck
+  under `llms/<slug>/`), run `pnpm lenses:sync` to regenerate every deck's
+  `lenses.json`. A pre-commit hook runs this automatically whenever a
+  `lenses.md` is staged, and CI fails if any deck's JSON drifts from its
+  markdown.
 - `registry.tsx` imports `lenses.json` and assigns card positions; the
   markdown `body` string is rendered to React by `LensBody.tsx`.
 - `scripts/sync-lenses.mjs` validates required fields and fails the commit on

@@ -2,11 +2,12 @@ import Head from 'next/head'
 
 import { LensesPage } from '@/components/wustep/lenses'
 import { domain, host, name, x } from '@/lib/config'
+import { getLensImageUrl, WUSTEP_DECK_SLUG } from '@/lib/lens-card'
 
 const title = 'Lenses'
 const description =
   'A canvas of lenses for seeing the world — headspace, dopamine, incentives, taste, status, and more. No single lens sees everything.'
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = getLensImageUrl(host, WUSTEP_DECK_SLUG)
 const canonicalUrl = `${host}/lenses`
 
 export default function LensesIndexPage() {
@@ -22,7 +23,7 @@ export default function LensesIndexPage() {
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
         <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />

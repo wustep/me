@@ -499,9 +499,7 @@ export function DesignPanel() {
                 type='button'
                 className={styles.iconBtn}
                 onClick={toggleDarkMode}
-                aria-label={
-                  isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
-                }
+                aria-label='Dark mode'
                 aria-pressed={isDarkMode}
                 title={
                   isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'

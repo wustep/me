@@ -7,10 +7,9 @@
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
       "@/styles/*": ["styles/*"],
-      "@/hooks/*": ["lib/hooks/*"],
       "@/playground/*": ["playground/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "*.config.ts"],
-  "exclude": ["node_modules", "playground"]
+  "exclude": ["node_modules"]
 }

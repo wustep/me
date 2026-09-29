@@ -57,7 +57,8 @@ export function OwnerModeToggle({ className }: { className?: string }) {
         className
       )}
       aria-busy={isToggling}
-      aria-label={label}
+      // Fixed state name + aria-pressed; the action wording lives in `title`.
+      aria-label='Owner mode'
       aria-pressed={isOwner}
       disabled={isToggling}
       title={label}

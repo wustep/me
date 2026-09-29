@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { LensesPage } from '@/components/wustep/lenses'
 import { LENS_BY_ID, LENSES } from '@/components/wustep/lenses/registry'
 import { domain, host, name, x } from '@/lib/config'
+import { getLensImageUrl, WUSTEP_DECK_SLUG } from '@/lib/lens-card'
 
 type LensDetailProps = {
   lensId: string
@@ -24,7 +25,7 @@ export default function LensDetailPage({
 }: LensDetailProps) {
   const title = `${lensTitle} — Lenses`
   const description = lensTagline
-  const previewImage = `${host}/favicon-512x512.png`
+  const previewImage = getLensImageUrl(host, WUSTEP_DECK_SLUG, lensId)
   const canonicalUrl = `${host}/lenses/${lensId}`
 
   return (
@@ -39,7 +40,7 @@ export default function LensDetailPage({
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
         <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />

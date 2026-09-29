@@ -205,8 +205,12 @@ rewrite the model's content) and re-run.
 2. **Create the routes** (copy an existing sibling, e.g. `opus/`):
    - `pages/lenses/llms/<slug>/index.tsx` — `makeDeckIndexPage(<SLUG>_DECK, '<MODEL_LABEL>'s Lenses')`
    - `pages/lenses/llms/<slug>/[lensId].tsx` — `makeDeckLensRoute(<SLUG>_DECK, '<MODEL_LABEL>'s Lenses')`
-3. The directory page at `/lenses/llms` maps over `LLM_DECKS` — no edit needed.
-4. Illustrations are deterministic placeholders keyed off lens ids
+3. **Register the social card** in `lib/lens-card.ts`: import the same two
+   JSON files and add `<slug>: llmDeck('<slug>', <slug>Lenses, <slug>Meta)` to
+   `DECKS` (powers `/api/lens-image`; `lens-card.test.ts` fails if a deck
+   directory is missing here).
+4. The directory page at `/lenses/llms` maps over `LLM_DECKS` — no edit needed.
+5. Illustrations are deterministic placeholders keyed off lens ids
    (`llms/placeholder.tsx`) — no per-deck art work needed.
 
 ## Step 6 — Verify

@@ -4,13 +4,12 @@ Local setup, commands, and conventions.
 
 ## Requirements
 
-- Node ≥ 20 (see `engines` in [`package.json`](../package.json))
-- `pnpm` 10 (see `packageManager` in `package.json` — enforced by Corepack)
+- Node 22 and pnpm 10.34.5, pinned in [`mise.toml`](../mise.toml) — the single source of truth for local dev and CI. Run `mise install` to match. (`engines` in [`package.json`](../package.json) allows Node ≥ 20; `packageManager` pins the same pnpm version for Corepack users.)
 
 ## Commands
 
 ```bash
-pnpm dev                  # next dev (http://localhost:3000)
+pnpm dev                  # next dev (http://localhost:6363)
 pnpm notion:index         # refresh the generated slug index and static sitemap
 pnpm build                # refresh the index, then run next build
 pnpm start                # next start (serve the production build)
@@ -19,6 +18,8 @@ pnpm test                 # lint + prettier + unit tests in parallel
 pnpm test:lint            # eslint
 pnpm test:prettier        # prettier --check
 pnpm test:unit            # vitest run
+pnpm typecheck            # tsc --noEmit (also runs on pre-push and in CI)
+pnpm lenses:sync          # regenerate every deck's lenses.json from lenses.md
 ```
 
 ### Dependency-linking helpers
@@ -51,7 +52,7 @@ Copy [`.env.example`](../.env.example) to `.env.local` for local overrides. Most
 - **Strict TypeScript.** `tsconfig.json` extends Next.js defaults; no `any` allowed in new code.
 - **Prettier** via `@fisch0920/config/prettier` — run on pre-commit via `lint-staged` + `simple-git-hooks`.
 - **ESLint flat config** in [`eslint.config.js`](../eslint.config.js).
-- **Path aliases:** `@/*` → project root (e.g., `@/lib/config`).
+- **Path aliases:** `@/components/*`, `@/lib/*`, `@/styles/*` and `@/playground/*` map to the matching top-level folders (e.g., `@/lib/config`); see `paths` in [`tsconfig.json`](../tsconfig.json). There's no catch-all `@/*`. Vitest doesn't resolve these aliases, so files imported by unit tests use relative imports.
 - **Class names:** merge with `cn()` from [`@/lib/utils`](../lib/utils.ts) (clsx + tailwind-merge). Importing `classnames` is banned by ESLint.
 - **CSS modules** for component-scoped styles (`*.module.css`), global sheets in [`styles/`](../styles/). See [styling.md](styling.md).
 

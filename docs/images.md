@@ -79,6 +79,15 @@ Layered composition:
 - Used by `PageHead` for per-page OG tags.
 - Used by `pages/feed.tsx` for RSS `<enclosure>`.
 
+### Lens cards
+
+[`pages/api/lens-image.tsx`](../pages/api/lens-image.tsx) — Edge runtime, no Notion dependency.
+
+- `GET /api/lens-image?deck=<slug>&id=<lensId>` draws a 1200×630 card in the lens's own `bg`/`fg`/`accent` with its category, title, tagline and deck path. Omit `id` for the deck cover. `deck` is `wustep` (the original deck) or a model deck slug (`opus`, `fable`, …).
+- Data comes from [`lib/lens-card.ts`](../lib/lens-card.ts), which reads the generated `lenses.json` / `deck.json` files. Unknown decks or lenses return 404 — the route never draws caller-supplied text.
+- `getLensImageUrl(host, deck, id?)` builds the URL; used by `pages/lenses.tsx`, `pages/lenses/[lensId].tsx` and the model-deck routes in `components/wustep/lenses/llms/deckPages.tsx` (all `summary_large_image`).
+- When adding a model deck, add it to the `DECKS` map in `lib/lens-card.ts`.
+
 ### Caching
 
 Edge responses are cached by Vercel's CDN by default. No explicit `Cache-Control` is set, so the function may re-run more often than necessary — consider adding `s-maxage` here if it shows up as a hot path.

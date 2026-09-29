@@ -1,14 +1,20 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 
 import { sendApiError } from '@/lib/api-error'
+import { isSearchEnabled, rootNotionPageId } from '@/lib/config'
+import { sanitizeSearchParams } from '@/lib/search-params'
 
-import type * as types from '../../lib/types'
 import { search } from '../../lib/notion'
 
 export default async function searchNotion(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Search is off site-wide; don't leave an open Notion search proxy behind.
+  if (!isSearchEnabled) {
+    return sendApiError(res, 404, 'not_found', 'Search is disabled.')
+  }
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     return sendApiError(
@@ -19,8 +25,17 @@ export default async function searchNotion(
     )
   }
 
+  const searchParams = sanitizeSearchParams(req.body, rootNotionPageId)
+  if (!searchParams) {
+    return sendApiError(
+      res,
+      400,
+      'invalid_request',
+      'Expected a JSON body with a non-empty string `query`.'
+    )
+  }
+
   try {
-    const searchParams: types.SearchParams = req.body
     const results = await search(searchParams)
 
     res.setHeader(
