@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { type PageBlock } from 'notion-types'
 import {
-  formatDate,
   getBlockTitle,
   getBlockValue,
   getPageProperty,
@@ -21,6 +20,7 @@ import {
 
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
+import { formatLongDate, formatMonthYear } from '@/lib/format-date'
 import { getExternalUrlMap } from '@/lib/get-external-url-map'
 import { mapImageUrl, shouldUnoptimizeNotionImage } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
@@ -88,9 +88,7 @@ const propertyLastEditedTimeValue: ComponentOverrideFn = (
   defaultFn
 ) => {
   if (pageHeader && block?.last_edited_time) {
-    return `Last updated ${formatDate(block?.last_edited_time, {
-      month: 'long'
-    })}`
+    return `Last updated ${formatLongDate(block.last_edited_time)}`
   }
 
   return defaultFn()
@@ -104,19 +102,13 @@ const propertyDateValue: ComponentOverrideFn = (
     const publishDate = data?.[0]?.[1]?.[0]?.[1]?.start_date
 
     if (publishDate) {
-      return `${formatDate(publishDate, {
-        month: 'long'
-      })}`
+      return formatLongDate(publishDate)
     }
   }
 
   /* [@wustep: For list view dates, format as "Dec 2016" instead of "Dec 31, 2016"] */
   if (!pageHeader && data?.[0]?.[1]?.[0]?.[1]?.start_date) {
-    const dateStr = data[0][1][0][1].start_date
-    const date = new Date(dateStr)
-    const month = date.toLocaleString('en-US', { month: 'short' })
-    const year = date.getFullYear()
-    return `${month} ${year}`
+    return formatMonthYear(data[0][1][0][1].start_date)
   }
 
   return defaultFn()
