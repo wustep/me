@@ -4,14 +4,14 @@ Suggestions and pull requests are highly encouraged. Have a look at the [open is
 
 ## Development
 
-To develop the project locally, you'll need a recent version of Node.js and `pnpm` installed globally.
+To develop the project locally, you'll need the Node.js and `pnpm` versions pinned in [`mise.toml`](mise.toml) (`mise install` sets both up).
 
-To get started, clone the repo and run `pnpm` from the root directory:
+To get started, clone the repo and install dependencies from the root directory:
 
 ```bash
-git clone https://github.com/transitive-bullshit/nextjs-notion-starter-kit
-cd nextjs-notion-starter-kit
-pnpm
+git clone https://github.com/wustep/me
+cd me
+pnpm install
 ```
 
 Now that your dependencies are installed, you can run the local Next.js dev server:
@@ -20,7 +20,7 @@ Now that your dependencies are installed, you can run the local Next.js dev serv
 pnpm dev
 ```
 
-You should now be able to open `http://localhost:3000` to view the webapp.
+You should now be able to open `http://localhost:6363` to view the webapp.
 
 ## Git hooks
 

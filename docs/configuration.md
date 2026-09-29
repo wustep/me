@@ -125,7 +125,7 @@ Set both for Development, Preview, and Production in Vercel. The cookie is tied 
 
 | Var | Notes |
 |---|---|
-| `PORT` | Dev server port. Defaults to `3000`. |
+| `PORT` | Server port used to build `host` locally. `next dev`/`next start` set it (`pnpm dev` runs on `6363`); falls back to `3000` when unset. |
 | `NOTION_API_BASE_URL` | Override the unofficial Notion API host. Rarely needed. |
 | `VERCEL_URL` | Auto-set by Vercel; used to build `apiHost` in preview deploys. |
 
