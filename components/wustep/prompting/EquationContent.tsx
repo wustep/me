@@ -32,14 +32,14 @@ export function EquationContent() {
       >
         <p>
           Most people are still defaulting to whatever editor they had before
-          agents were a thing, and bolting AI on. That&apos;s the biggest single
-          upgrade most people haven&apos;t made.
+          agents were a thing, and bolting AI on. That&rsquo;s the biggest
+          single upgrade most people haven&rsquo;t made.
         </p>
         <p>
-          The frontier here isn&apos;t subtle: Cursor, Claude Code, and Codex
+          The frontier here isn&rsquo;t subtle: Cursor, Claude Code, and Codex
           are far better than VSCode with stock Copilot. The difference can feel
           like swapping a junior for a senior. Try one for a few weeks; if your
-          day-to-day doesn&apos;t get noticeably easier, go back.
+          day-to-day doesn&rsquo;t get noticeably easier, go back.
         </p>
       </Lever>
 
@@ -86,7 +86,7 @@ export function EquationContent() {
           you down.
         </p>
         <p>
-          Avoid &quot;Auto&quot; mode. Auto optimizes for the platform&apos;s
+          Avoid &ldquo;Auto&rdquo; mode. Auto optimizes for the platform&rsquo;s
           margin, not for you; Cursor reaches for a cheaper model (Composer)
           unless you say otherwise. Pick the model yourself. Consistent results
           are how you learn which one to reach for when.
@@ -94,11 +94,11 @@ export function EquationContent() {
         <p>
           Thinking effort is the dial people forget. Most tools expose four
           rungs: low, medium, high, xhigh. Default to high (or medium, if
-          you&apos;re watching cost) and adjust when the model lets you down by
+          you&rsquo;re watching cost) and adjust when the model lets you down by
           overthinking or underthinking.
         </p>
 
-        <div className={styles.modelGuide}>
+        <div className={`${styles.modelGuide} ${styles.modelGuideEffort}`}>
           <div className={styles.modelGuideRow}>
             <span className={styles.modelGuidePick}>Low</span>
             <span className={styles.modelGuideWhen}>
@@ -136,15 +136,15 @@ export function EquationContent() {
         <p>Prompting is a skill. Some patterns that help:</p>
         <ul className={styles.axisList}>
           <li>
-            <strong>Concrete over abstract.</strong> &quot;Make this
-            faster&quot; gives the model nothing. &quot;First paint is 2.4s,
-            target under 1s, profile and start with the biggest wins&quot; gives
-            it a job.
+            <strong>Concrete over abstract.</strong> &ldquo;Make this
+            faster&rdquo; gives the model nothing. &ldquo;First paint is 2.4s,
+            target under 1s, profile and start with the biggest wins&rdquo;
+            gives it a job.
           </li>
           <li>
-            <strong>Anchor on examples.</strong> &quot;Match the style of{' '}
-            <code>components/PostCard.tsx</code>&quot; beats &quot;make it look
-            nice.&quot; Models are great at imitation, mediocre at taste.
+            <strong>Anchor on examples.</strong> &ldquo;Match the style of{' '}
+            <code>components/PostCard.tsx</code>&rdquo; beats &ldquo;make it
+            look nice.&rdquo; Models are great at imitation, mediocre at taste.
           </li>
           <li>
             <strong>Say what good looks like.</strong> Constraints, success
@@ -152,20 +152,20 @@ export function EquationContent() {
             down.
           </li>
         </ul>
-        <p>What consistently doesn&apos;t:</p>
+        <p>What consistently doesn&rsquo;t:</p>
         <ul className={styles.axisList}>
           <li>
-            <strong>&quot;Be careful.&quot;</strong> It&apos;s not careful.
-            Constraints work; vibes don&apos;t.
+            <strong>&ldquo;Be careful.&rdquo;</strong> It&rsquo;s not careful.
+            Constraints work; vibes don&rsquo;t.
           </li>
           <li>
-            <strong>&quot;Think step by step.&quot;</strong> The model already
+            <strong>&ldquo;Think step by step.&rdquo;</strong> The model already
             does, and modern thinking modes do it better than any prompt
             incantation.
           </li>
           <li>
-            <strong>Politeness padding.</strong> Doesn&apos;t hurt, doesn&apos;t
-            help. Save the keystrokes.
+            <strong>Politeness padding.</strong> Doesn&rsquo;t hurt,
+            doesn&rsquo;t help. Save the keystrokes.
           </li>
         </ul>
         <p>
@@ -180,23 +180,23 @@ export function EquationContent() {
         tagline='Load what the agent needs to see.'
       >
         <p>
-          Most &quot;the model is dumb today&quot; moments are actually
-          &quot;the model can&apos;t see the thing it needs.&quot; The prompt is
-          the verb; context is the noun. Get the noun right and the verb almost
-          takes care of itself.
+          Most &ldquo;the model is dumb today&rdquo; moments are actually
+          &ldquo;the model can&rsquo;t see the thing it needs.&rdquo; The prompt
+          is the verb; context is the noun. Get the noun right and the verb
+          almost takes care of itself.
         </p>
         <p>Things to load:</p>
         <ul className={styles.axisList}>
           <li>
             <strong>Skills and project rules.</strong> A <code>CLAUDE.md</code>{' '}
-            or <code>.cursorrules</code> that captures your project&apos;s
-            patterns, conventions, and the things you&apos;re tired of
+            or <code>AGENTS.md</code> that captures your project&rsquo;s
+            patterns, conventions, and the things you&rsquo;re tired of
             correcting.
           </li>
           <li>
             <strong>Reference material.</strong> The design doc, the API spec,
-            the related PR. Drop them into the chat. Don&apos;t make the agent
-            guess at what&apos;s already written down.
+            the related PR. Drop them into the chat. Don&rsquo;t make the agent
+            guess at what&rsquo;s already written down.
           </li>
           <li>
             <strong>Screenshots.</strong> For UI work, an image of the current
@@ -209,19 +209,28 @@ export function EquationContent() {
           </li>
         </ul>
         <p>
-          Context is the strongest of the four levers. It&apos;s also the most
-          boring, which is why it&apos;s underused.
+          Context is the strongest of the four levers. It&rsquo;s also the most
+          boring, which is why it&rsquo;s underused.
         </p>
       </Lever>
 
       <Note title='Putting it all together'>
         <p>
           Whatever came back, you were part of why it came back that way. When
-          something feels off, walk these four questions and find the lever you
-          didn&apos;t pull:
+          something feels off, walk the four levers in order and find the one
+          you didn&rsquo;t pull:
         </p>
 
         <ul className={styles.axisList}>
+          <li>
+            <strong>Was I in the right tool?</strong> One built around the
+            agent, not an editor with AI bolted on.
+          </li>
+          <li>
+            <strong>Was this the right model, at the right effort?</strong>{' '}
+            Reach for something more capable, or turn thinking up, on tricky
+            work.
+          </li>
           <li>
             <strong>Did I communicate clearly?</strong> Paste the error, name
             the file, say what good looks like.
@@ -229,14 +238,6 @@ export function EquationContent() {
           <li>
             <strong>Could the agent see what it needed?</strong> Load the files,
             screenshots, docs, and rules.
-          </li>
-          <li>
-            <strong>Was this the right model?</strong> Reach for something more
-            capable on tricky work.
-          </li>
-          <li>
-            <strong>Was thinking on?</strong> Turn it up for ambiguous or stuck
-            moments.
           </li>
         </ul>
 

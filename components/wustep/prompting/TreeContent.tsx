@@ -7,16 +7,17 @@ export function TreeContent() {
   return (
     <ChapterBody>
       <p>
-        Every change lives somewhere on a 2D map: how much of the codebase it
-        touches (<em>breadth</em>), and at what level of abstraction (
-        <em>depth</em>). At any point on that map, you have three moves you can
-        make: <strong>ask</strong>, <strong>plan</strong>, or{' '}
+        Every change lives somewhere on a 2D map: what kind of work it is (
+        <em>breadth</em>: UX, performance, debugging, architecture), and how far
+        down the tree you are (<em>depth</em>: the overall feel, one component,
+        one line). At any point on that map, you have three moves you can make:{' '}
+        <strong>ask</strong>, <strong>plan</strong>, or{' '}
         <strong>delegate</strong>.
       </p>
 
       <Figure
         num='4.1'
-        caption='The 2D map: breadth across the codebase, depth of abstraction, and a generated prompt for the selected cell.'
+        caption='The 2D map: kind of work across, depth down, and a generated prompt for the selected cell.'
       >
         <TreeDemo />
       </Figure>
@@ -26,10 +27,10 @@ export function TreeContent() {
         task. The interesting choice is which of the three moves you make.
       </p>
 
-      <Lever num='4.1' name='ASK' tagline="When you don't know yet.">
+      <Lever num='4.1' name='ASK' tagline='When you don’t know yet.'>
         <p>
           Use <strong>Ask</strong> when you need to understand something before
-          you act. It&apos;s the cheapest move: a few seconds and a few tokens
+          you act. It&rsquo;s the cheapest move: a few seconds and a few tokens
           to widen what you know.
         </p>
         <ExamplePrompt
@@ -40,9 +41,9 @@ export function TreeContent() {
           The classic failure is asking too narrowly. You phrase the question
           around what you <em>think</em> the issue is; the model answers that
           question, confidently; you walk away with a clean, wrong answer. The
-          fix is to include what&apos;s actually happening, not what you&apos;ve
-          decided is the problem. Paste the error. Show the file. Describe the
-          symptom before you propose the cause.
+          fix is to include what&rsquo;s actually happening, not what
+          you&rsquo;ve decided is the problem. Paste the error. Show the file.
+          Describe the symptom before you propose the cause.
         </p>
       </Lever>
 
@@ -64,7 +65,7 @@ export function TreeContent() {
         <p>
           The trap is treating the first plan as binding. The model will defend
           whatever it proposed first unless you push back. Treat the plan as a
-          draft, and make it argue for the choices you&apos;re skeptical of.
+          draft, and make it argue for the choices you&rsquo;re skeptical of.
         </p>
       </Lever>
 
@@ -84,9 +85,9 @@ export function TreeContent() {
         />
         <p>
           It works badly the moment any of that breaks: the task touches taste
-          (UX, copy, naming), the change is cross-cutting, or you can&apos;t
-          easily tell whether the result is right. Don&apos;t delegate what you
-          can&apos;t grade. The discipline is bounding the blast radius first:
+          (UX, copy, naming), the change is cross-cutting, or you can&rsquo;t
+          easily tell whether the result is right. Don&rsquo;t delegate what you
+          can&rsquo;t grade. The discipline is bounding the blast radius first:
           smaller diffs, narrower scope, clearer success criteria.
         </p>
       </Lever>
@@ -101,10 +102,10 @@ export function TreeContent() {
             up as rework two prompts later.
           </li>
           <li>
-            <strong>Stuck in a loop? Zoom out.</strong> If you&apos;ve rejected
-            the same delegation three times, the wording isn&apos;t the problem.
-            The agent is missing something you haven&apos;t given it. Back out
-            to plan, or all the way up to ask.
+            <strong>Stuck in a loop? Zoom out.</strong> If you&rsquo;ve rejected
+            the same delegation three times, the wording isn&rsquo;t the
+            problem. The agent is missing something you haven&rsquo;t given it.
+            Back out to plan, or all the way up to ask.
           </li>
           <li>
             <strong>

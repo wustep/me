@@ -19,7 +19,7 @@ export function TechniquesContent() {
         <Technique prompt='What questions should you ask me before starting?'>
           <p>
             Surfaces ambiguity instead of guessing. The model returns a list of
-            things it&apos;s uncertain about; you answer them, then it goes.
+            things it&rsquo;s uncertain about; you answer them, then it goes.
             Saves a lot of clarifying turns later. Especially good with smaller,
             faster models.
           </p>
@@ -31,6 +31,14 @@ export function TechniquesContent() {
             model is happy to grow scope; you have to ask it to shrink.
           </p>
         </Technique>
+
+        <Technique prompt='Match the style of components/PostCard.tsx.'>
+          <p>
+            The cheapest context there is. Point at a path, a screenshot, or a
+            working example instead of describing the target in adjectives.
+            Models are imitators first; give them something to imitate.
+          </p>
+        </Technique>
       </TechniqueGroup>
 
       <TechniqueGroup num='3.2' heading='Open the options'>
@@ -38,7 +46,7 @@ export function TechniquesContent() {
           <p>
             Forces breadth before depth. The model defaults to its first
             plausible idea; asking for three pushes it past that. Useful for any
-            decision where you don&apos;t already know the right answer:
+            decision where you don&rsquo;t already know the right answer:
             algorithm choice, library choice, schema design.
           </p>
         </Technique>
@@ -46,7 +54,7 @@ export function TechniquesContent() {
         <Technique prompt='Argue against your last suggestion.'>
           <p>
             Surfaces hidden assumptions. Especially useful right after a plan;
-            much cheaper to discover its weaknesses now than after you&apos;ve
+            much cheaper to discover its weaknesses now than after you&rsquo;ve
             implemented it.
           </p>
         </Technique>
@@ -56,16 +64,16 @@ export function TechniquesContent() {
         <Technique prompt='What did you skip?'>
           <p>
             After a delegated task, ask what was glossed over. The model often
-            owns up to things you&apos;d have missed: tests, error handling, the
-            &quot;TODO: revisit&quot; it left on line 47. Cheap two-second move,
-            high hit rate.
+            owns up to things you&rsquo;d have missed: tests, error handling,
+            the &ldquo;TODO: revisit&rdquo; it left on line 47. Cheap two-second
+            move, high hit rate.
           </p>
         </Technique>
 
         <Technique prompt='How would a senior engineer review this?'>
           <p>
             Triggers review-mode output, a different vibe than
-            implementation-mode: more critical, more &quot;but consider&quot;
+            implementation-mode: more critical, more &ldquo;but consider&rdquo;
             tradeoffs, more willing to call out things its implementation-self
             would have left in.
           </p>
@@ -73,19 +81,10 @@ export function TechniquesContent() {
       </TechniqueGroup>
 
       <TechniqueGroup num='3.4' heading='Pay it forward'>
-        <Technique prompt='Match the style of components/PostCard.tsx.'>
-          <p>
-            Anchor on something concrete: a path, a screenshot, a doc, a working
-            example. &quot;Match this&quot; beats &quot;make it look nice&quot;
-            by a wide margin. Models are imitators first; give them something to
-            imitate.
-          </p>
-        </Technique>
-
         <Technique prompt='Update CLAUDE.md with what you just learned.'>
           <p>
             Capture the lesson in the project rules so the next agent (or
-            future-you) doesn&apos;t have to relearn it. Five minutes of work
+            future-you) doesn&rsquo;t have to relearn it. Five minutes of work
             that saves every future session.
           </p>
         </Technique>
@@ -95,8 +94,9 @@ export function TechniquesContent() {
         <h3 className={styles.skillsHeading}>Lift them into skills</h3>
         <p>
           Once you find a move that works, stop typing it manually. Every
-          serious agent tool lets you write project-level instructions that the
-          agent reads on every task. You write the lesson once; the agent has it
+          serious agent tool lets you save instructions the agent picks up on
+          its own: rules it reads on every task, skills it loads when
+          they&rsquo;re relevant. You write the lesson once; the agent has it
           forever.
         </p>
         <div className={styles.skillsLinks}>
@@ -139,8 +139,8 @@ export function TechniquesContent() {
       <Note title='Keep climbing'>
         <p>
           None of these are hard, and none of them are secret. The list matters
-          less than the habit of noticing: there&apos;s a craft here, and most
-          of it is still unmapped. The best moves are the ones you&apos;ll find
+          less than the habit of noticing: there&rsquo;s a craft here, and most
+          of it is still unmapped. The best moves are the ones you&rsquo;ll find
           yourself.
         </p>
       </Note>

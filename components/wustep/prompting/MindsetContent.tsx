@@ -10,8 +10,8 @@ export function MindsetContent() {
   return (
     <ChapterBody>
       <p>
-        If you&apos;ve been writing software with agents for a while, you might
-        be starting to feel competent. Don&apos;t trust the feeling.
+        If you&rsquo;ve been writing software with agents for a while, you might
+        be starting to feel competent. Don&rsquo;t trust the feeling.
       </p>
 
       <Figure
@@ -23,19 +23,19 @@ export function MindsetContent() {
 
       <p>
         AI coding is roughly three years old. Chess is five hundred. Three years
-        of chess gets you to maybe 1200 ELO, enough to beat casual players and
+        of chess gets you to maybe 1200 Elo, enough to beat casual players and
         get crushed by anyone serious. A grandmaster beats a 1200 every single
-        game. I don&apos;t think the gap in AI coding is that wide yet, but the
+        game. I don&rsquo;t think the gap in AI coding is that wide yet, but the
         people at the frontier are getting far more done than the people who
-        decided they&apos;d figured it out.
+        decided they&rsquo;d figured it out.
       </p>
 
       <p>
-        The trouble with deciding you&apos;re an expert is that your learning
+        The trouble with deciding you&rsquo;re an expert is that your learning
         stalls. You stop reading tutorials, skip the bootcamp, ignore the
         patterns the model enabled last week. Look at where your workflow was
         twelve months ago, then project that forward. Most of the meta
-        hasn&apos;t been uncovered yet, which is the fun part.
+        hasn&rsquo;t been uncovered yet, which is the fun part.
       </p>
 
       <SectionHeading num='1.1'>Two responses</SectionHeading>
@@ -53,8 +53,8 @@ export function MindsetContent() {
         >
           <h4 className={styles.mindsetCardHeading}>Closed: Blame the AI.</h4>
           <p>
-            &ldquo;The model is bad.&rdquo; &ldquo;AI&apos;s overhyped.&rdquo;
-            &ldquo;It can&apos;t do real work.&rdquo;
+            &ldquo;The model is bad.&rdquo; &ldquo;AI&rsquo;s overhyped.&rdquo;
+            &ldquo;It can&rsquo;t do real work.&rdquo;
           </p>
         </section>
 
@@ -71,15 +71,15 @@ export function MindsetContent() {
 
       <p>
         Gaming culture has a useful phrase for this: <em>skill issue</em>. When
-        your character keeps dying, the level isn&apos;t broken, you&apos;re
+        your character keeps dying, the level isn&rsquo;t broken, you&rsquo;re
         unskilled. It sounds flippant, but the move underneath is serious:
-        assume, provisionally, that the bottleneck is you. It isn&apos;t always
-        true. It&apos;s the only version of events you can do anything about.
+        assume, provisionally, that the bottleneck is you. It isn&rsquo;t always
+        true. It&rsquo;s the only version of events you can do anything about.
       </p>
 
       <p>
-        Most of the time the model isn&apos;t the limit. Your prompt is, or your
-        context, or your patience. Assume it&apos;s you, and the same
+        Most of the time the model isn&rsquo;t the limit. Your prompt is, or
+        your context, or your patience. Assume it&rsquo;s you, and the same
         frustrating moment turns into a puzzle: which lever would have changed
         the result? Puzzles are more interesting than grudges, and you learn
         more from them.
@@ -89,8 +89,8 @@ export function MindsetContent() {
 
       <p>
         Treat each disappointment like a chess puzzle: try something, notice
-        what worked, update your repertoire. You won&apos;t feel the difference
-        in a week. You&apos;ll feel it in a quarter.
+        what worked, update your repertoire. You won&rsquo;t feel the difference
+        in a week. You&rsquo;ll feel it in a quarter.
       </p>
 
       <Figure
@@ -101,13 +101,13 @@ export function MindsetContent() {
       </Figure>
 
       <p>
-        The beginner&apos;s mindset is the faster path. Three years in, the
+        The beginner&rsquo;s mindset is the faster path. Three years in, the
         people pulling away are the ones still treating themselves like
         beginners: still reading, still experimenting, still curious when the
         model surprises them.
       </p>
 
-      <Note title="We're all beginners">
+      <Note title='We’re all beginners'>
         <p>
           Closed minds blame the model. Open minds ask what they missed, and
           find something to learn in almost every transcript. Only one of those
@@ -158,7 +158,7 @@ function EloChart() {
         viewBox='0 0 600 180'
         className={styles.eloChartSvg}
         role='img'
-        aria-label='Chess ELO distribution. Player density peaks around 1200 — where about three years of practice puts you. Magnus Carlsen, the world #1, sits at 2840 ELO, far out in the right tail.'
+        aria-label='Chess Elo distribution. Most players sit between 600 and 1000; about three years of practice puts you near 1200. Magnus Carlsen, the world #1, sits at 2840, far out in the right tail.'
         preserveAspectRatio='xMidYMid meet'
       >
         <path
@@ -205,7 +205,14 @@ function EloChart() {
 
         <g className={styles.eloChartGap}>
           <line x1='176' y1='38' x2='519' y2='128' strokeDasharray='2 4' />
-          <text x='347' y='76' textAnchor='middle'>
+          {/* Set along the leader, just above it, so the dashes never
+           * run through the words. */}
+          <text
+            x='347'
+            y='74'
+            textAnchor='middle'
+            transform='rotate(14.7 347 74)'
+          >
             Tons more to learn
           </text>
         </g>
@@ -377,7 +384,7 @@ function PracticeLoop() {
         <span className={styles.practiceLabel}>Open loop</span>
         <Sparkline
           values={PRACTICE_OPEN}
-          label='ELO climbing from 1200 to 1227 across five sessions.'
+          label='Rating climbing from 1200 to 1227 over eight sessions.'
         />
         <strong className={styles.practiceFlow}>
           try &rarr; notice &rarr; update
@@ -392,7 +399,7 @@ function PracticeLoop() {
         <Sparkline
           values={PRACTICE_CLOSED}
           muted
-          label='ELO sliding from 1200 to 1186 across four sessions.'
+          label='Rating sliding from 1200 to 1186 over seven sessions.'
         />
         <strong className={styles.practiceFlow}>
           blame &rarr; stop &rarr; regress

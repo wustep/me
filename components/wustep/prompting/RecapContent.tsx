@@ -16,8 +16,8 @@ export function RecapContent() {
       >
         <RecapMindsetViz />
         <p>
-          We&apos;re three years into a five-hundred-year skill. About 1200 ELO.
-          When the model lets you down, the closed-minded blame the AI; the
+          We&rsquo;re three years into a five-hundred-year skill. About 1200
+          Elo. When the model lets you down, the closed-minded blame the AI; the
           open-minded ask what they could have done differently. The second is
           the faster path, by a lot.
         </p>
@@ -38,14 +38,14 @@ export function RecapContent() {
         </p>
         <ul className={styles.recapList}>
           <li>What questions should you ask me before starting?</li>
-          <li>What&apos;s the smallest version of this that ships?</li>
+          <li>What&rsquo;s the smallest version of this that ships?</li>
+          <li>
+            Match the style of <code>components/PostCard.tsx</code>.
+          </li>
           <li>Give me 3 options, rank them, name the trade-offs.</li>
           <li>Argue against your last suggestion.</li>
           <li>What did you skip?</li>
           <li>How would a senior engineer review this?</li>
-          <li>
-            Match the style of <code>components/PostCard.tsx</code>.
-          </li>
           <li>Update CLAUDE.md with what you just learned.</li>
         </ul>
       </RecapItem>
@@ -64,7 +64,7 @@ export function RecapContent() {
         <RecapColleagueViz />
         <p>
           Treat the agent as a colleague: a fast, knowledgeable <s>junior</s>{' '}
-          senior who only sees what you&apos;ve shown them. The discipline gets{' '}
+          senior who only sees what you&rsquo;ve shown them. The discipline gets{' '}
           <em>more</em> important, not less, as the models get smarter.
         </p>
       </RecapItem>
@@ -85,10 +85,10 @@ export function RecapContent() {
 
       <Note title='One more thing'>
         <p>
-          We&apos;re all still beginners here. Three years into a skill that
+          We&rsquo;re all still beginners here. Three years into a skill that
           might take five hundred to map, nobody is past 1200, and most of the
-          good moves haven&apos;t been found yet. I find that more exciting than
-          daunting.
+          good moves haven&rsquo;t been found yet. I find that more exciting
+          than daunting.
         </p>
         <p>Go talk to a machine.</p>
       </Note>
@@ -129,7 +129,7 @@ export function RecapContent() {
             >
               Thariq
             </a>
-            <span className={styles.resourcesDesc}>&apos;s articles</span>
+            <span className={styles.resourcesDesc}>articles on X</span>
           </li>
         </ul>
       </section>
