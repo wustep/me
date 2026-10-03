@@ -959,7 +959,7 @@ export const SECTIONS: Section[] = [
         min: 480,
         max: 1100,
         step: 10,
-        default: 760
+        default: 820
       },
       {
         kind: 'slider',
