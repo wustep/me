@@ -200,13 +200,16 @@
   justify-content: center;
   width: 36px;
   height: 36px;
+  border-radius: var(--radius-pill);
   text-decoration: none !important;
-  background: none !important;
+  background: transparent !important;
   border: none;
   cursor: pointer;
   color: inherit;
-  opacity: 0.4;
-  transition: opacity 200ms ease;
+  opacity: 0.5;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
 }
 
 /* 44px hit area — visual size stays 36px for visual rhythm. */
@@ -219,6 +222,11 @@
 @media (hover: hover) and (pointer: fine) {
   .homeBackButton:hover {
     opacity: 1;
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  :global(.dark-mode) .homeBackButton:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
   }
 
   .homeBackButton:hover .homeBackArrow {
@@ -228,71 +236,71 @@
 
 .homeBackArrow {
   display: inline-block;
-  font-size: 1.2em;
+  font-size: 1.15em;
   line-height: 1;
-  transform: translateX(2px);
   transition: transform 200ms var(--ease-spring-snap);
 }
 
 .headerRhs {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
+/* Header chrome is one quiet family: borderless 36px circles whose
+   icons sit at reduced ink, matching the back arrow on the left. The
+   deck is a wall of saturated color — bordered white pills competed
+   with it; ghost controls step back until they're wanted. */
 .headerButton {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.5);
+  border: 0;
+  background: transparent;
   color: inherit;
   cursor: pointer;
   text-decoration: none !important;
+  opacity: 0.62;
   transition:
-    background 200ms ease,
-    border-color 200ms ease,
+    background-color 200ms ease,
+    opacity 200ms ease,
     transform 150ms var(--ease-spring-snap);
 }
 
-/* 44px hit area via pseudo-element — visual size stays 34px. */
+/* 44px hit area via pseudo-element — visual size stays 36px. */
 .headerButton::before {
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: -4px;
   border-radius: inherit;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .headerButton:hover {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.22);
+    background: rgba(0, 0, 0, 0.05);
+    opacity: 1;
   }
+
+  :global(.dark-mode) .headerButton:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+.headerButton:focus-visible {
+  opacity: 1;
 }
 
 .headerButton:active {
-  transform: scale(0.96);
-}
-
-:global(.dark-mode) .headerButton {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  :global(.dark-mode) .headerButton:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.32);
-  }
+  transform: scale(0.94);
 }
 
 .headerButton :global(svg) {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
 }
 
 /* Tooltip for the hover-revealed header buttons. Pure CSS off a
@@ -375,6 +383,11 @@
   @media (hover: hover) and (pointer: fine) {
     .header:hover .playAnimationsButton,
     .header:hover .llmsDecksLink {
+      opacity: 0.62;
+    }
+
+    .header .playAnimationsButton:hover,
+    .header .llmsDecksLink:hover {
       opacity: 1;
     }
   }
@@ -981,7 +994,23 @@
    proportion stays constant at every breakpoint. */
 .card[data-title-length='long-word'] .cardTitle {
   --cardtitle-shrink: 0.88;
-  letter-spacing: -0.018em;
+  letter-spacing: -0.024em;
+}
+
+/* A single word can't wrap, so in the dense 8-col deck give it the
+   card's width: 3px off each side of the padding, handed back to the
+   art slot (base art margin is -2px, so +1px nets the same illustration
+   box as every other card). Auto-flow layouts have room to spare, so
+   there the title keeps the shared left edge. */
+@container deck (min-width: 1000px) {
+  .card[data-title-length='long-word'] {
+    padding-left: calc(var(--card-pad-inline) - 3px);
+    padding-right: calc(var(--card-pad-inline) - 3px);
+  }
+
+  .card[data-title-length='long-word'] .cardArt {
+    margin-inline: 1px;
+  }
 }
 
 /* Multi-word long titles ("Epistemic pragmatism", "Evolutionary
@@ -993,9 +1022,29 @@
   --cardtitle-shrink: 0.93;
   letter-spacing: -0.012em;
 }
-.card[data-title-length='long'] {
-  padding-left: calc(var(--card-pad-inline) - 2px);
-  padding-right: calc(var(--card-pad-inline) - 2px);
+/* Scoped to the dense 8-col deck; auto-flow cards have the room, so
+   their titles keep the shared left edge. */
+@container deck (min-width: 1000px) {
+  .card[data-title-length='long'] {
+    padding-left: calc(var(--card-pad-inline) - 2px);
+    padding-right: calc(var(--card-pad-inline) - 2px);
+  }
+
+  /* Hand the shaved 2px back to the art slot. Cards size to their
+     content (the 4:5 ratio is a floor, not a cap), so a wider art slot
+     on long-title cards rendered a larger SVG and made those cards a
+     few px taller than their row — a visibly ragged baseline. With the
+     margin zeroed the illustration box is identical on every card. */
+  .card[data-title-length='long'] .cardArt {
+    margin-inline: 0;
+  }
+}
+
+/* Greedy wrapping for two-line titles. `balance` evens the lines by
+   splitting at the hyphen ("Second- / order effects"); filling the
+   first line keeps compounds whole ("Second-order / effects"). */
+.card[data-title-length='long'] .cardTitle {
+  text-wrap: pretty;
 }
 
 /* ── Design-panel-driven layout flips ──────────────────────────────
@@ -1159,28 +1208,26 @@
 }
 
 :global(.dark-mode) .centerCard {
-  /* The graphite center stays distinct from the dark canvas without
-     introducing a second colored material into the deck. Deep slate
-     (same violet-tinged hue family as the light card's #222226)
-     rather than mid-gray: the card's fixed cream/amber illustration
-     palette was drawn for a dark face, and on mid-gray the title fell
-     to ~2.7:1, the tagline to ~2.6:1, and the amber pupil to ~1.7:1.
-     On this slate the cream lede clears AA (tagline ≈5:1 at its 0.78
-     opacity) and the amber pupil reads again (≈3.5:1). */
+  /* Ink, not graphite. A mid-gray face read as a disabled tile next
+     to the saturated lens cards and turned the cream eye muddy. A
+     deep violet-black — the light card's #222226 lifted two steps so
+     it separates from the #161616 canvas — keeps the focal card the
+     darkest, quietest object in the deck, the same role it plays in
+     light mode. A hairline top highlight and a faint cream edge carry
+     the separation that brightness used to. Cream title ≈ 13:1,
+     tagline ≈ 9:1 at its 0.78 opacity, amber pupil ≈ 7:1. */
   background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0) 32%,
-      rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.06) 100%
+    radial-gradient(
+      120% 70% at 50% 0%,
+      rgba(246, 234, 216, 0.07) 0%,
+      rgba(246, 234, 216, 0) 70%
     ),
-    linear-gradient(180deg, #616168 0%, #4b4b52 100%);
+    linear-gradient(180deg, #2a2a31 0%, #222228 100%);
   color: #f6ead8;
   box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.55) inset,
-    0 1.5px 0 rgba(255, 255, 255, 0.28) inset,
-    0 -1.5px 0 rgba(0, 0, 0, 0.24) inset;
+    0 0 0 1px rgba(246, 234, 216, 0.09) inset,
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1.5px 0 rgba(0, 0, 0, 0.3) inset;
 }
 
 .centerCardVisible {
@@ -1283,7 +1330,7 @@
   font-weight: 400;
   line-height: 1.32;
   letter-spacing: 0.002em;
-  text-wrap: pretty;
+  text-wrap: balance;
   opacity: 0.78;
 }
 
@@ -1321,7 +1368,11 @@
   /* User drag-width (`--panel-user-width`) wins when set, else the
      design-panel/default value. The 100vw cap keeps it on-screen. */
   width: min(var(--panel-user-width, var(--design-panel-width, 540px)), 100vw);
-  background: #faf7ee;
+  /* Reading surface. Exposed as a var so the body's scroll-edge
+     shadow can paint its cover gradient in the same color. */
+  --panel-surface: #faf7ee;
+  --panel-scroll-shade: rgba(40, 30, 16, 0.2);
+  background: var(--panel-surface);
   display: flex;
   flex-direction: column;
   z-index: calc(var(--z-modal) + 1);
@@ -1333,7 +1384,9 @@
 }
 
 :global(.dark-mode) .panel {
-  background: #1c1c1c;
+  --panel-surface: #1c1c1c;
+  --panel-scroll-shade: rgba(0, 0, 0, 0.55);
+  background: var(--panel-surface);
   color: #f5f1e8;
   box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.7);
 }
@@ -1597,6 +1650,19 @@
   font-variant-numeric: var(--design-numerals, normal);
   font-weight: 400;
   animation: bodyFade 220ms var(--ease-out-quart);
+  /* Scroll-edge shade (CSS-only, the classic local/scroll pair): once
+     the essay scrolls, a soft shadow settles under the hero so lines
+     tuck beneath the color block instead of being sliced by it. The
+     `local` cover rides with the content and hides the shade at rest. */
+  background:
+    linear-gradient(var(--panel-surface) 40%, transparent) top / 100% 28px
+      no-repeat local,
+    radial-gradient(
+        farthest-side at 50% 0,
+        var(--panel-scroll-shade),
+        transparent
+      )
+      top / 100% 14px no-repeat scroll;
 }
 
 .panelBody p {
@@ -2003,7 +2069,14 @@
   height: 12px;
   border-radius: 50%;
   background: var(--chip-bg);
+  /* Hairline edge so pale lenses (Minimalism's cream, Taste's sand)
+     don't dissolve into the chip. */
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.22) inset;
   flex: 0 0 auto;
+}
+
+:global(.dark-mode) .relatedChipSwatch {
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.18) inset;
 }
 
 .relatedChipArrow {
@@ -2047,7 +2120,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(var(--design-dialog-width, 760px), calc(100vw - 32px));
+  width: min(var(--design-dialog-width, 820px), calc(100vw - 32px));
   max-height: calc(100vh - 64px); /* fallback */
   max-height: calc(100dvh - 64px);
   background: #faf7ee;
@@ -2304,9 +2377,14 @@
   --jump-fg: #f5f1e8;
   --jump-accent: #f2c04a;
 
+  position: relative;
   width: 100%;
   display: grid;
-  grid-template-columns: 56px 1fr auto;
+  /* The arrow is an overlay (see .dialogJumpArrow), not a column:
+     every row paid ~30px for a glyph that only matters on hover,
+     which pushed taglines like "Most problems are translation
+     problems." onto a second line and made rows uneven. */
+  grid-template-columns: 56px 1fr;
   align-items: center;
   gap: 14px;
   padding: var(--design-dialog-density, 12px 14px);
@@ -2340,8 +2418,8 @@
   }
 
   .dialogJumpBtn:hover .dialogJumpArrow {
-    transform: translateX(3px);
-    opacity: 1;
+    translate: 0 -50%;
+    opacity: 0.55;
   }
 }
 
@@ -2380,6 +2458,7 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  padding-right: 18px;
 }
 
 .dialogJumpCategory {
@@ -2420,9 +2499,22 @@
 }
 
 .dialogJumpArrow {
-  font-size: 1.1rem;
-  opacity: 0.4;
-  transition: transform 200ms var(--ease-spring-snap);
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  font-size: 1.05rem;
+  line-height: 1;
+  opacity: 0;
+  translate: -4px -50%;
+  transition:
+    opacity 160ms ease,
+    translate 200ms var(--ease-spring-snap);
+  pointer-events: none;
+}
+
+.dialogJumpBtn:focus-visible .dialogJumpArrow {
+  opacity: 0.55;
+  translate: 0 -50%;
 }
 
 .dialogCloseBtn {
@@ -4385,9 +4477,18 @@
    need to pull a bit harder than at wide widths. The size + spacing
    floors are already enforced by the clamp() fallbacks in the base
    rules; only the per-bucket shrink ratios are breakpoint-specific. */
-@container deck (max-width: 1019px) {
+@container deck (max-width: 1099px) {
+  /* Starts above the 1019px floor: the title size bottoms out at
+     ~1020px while cards keep narrowing, and "Communication" clipped
+     its last letters anywhere from 1000-1099px. */
   .card[data-title-length='long-word'] .cardTitle {
     --cardtitle-shrink: 0.84;
+  }
+}
+
+@container deck (max-width: 1019px) {
+  .card[data-title-length='long-word'] .cardTitle {
+    --cardtitle-shrink: 0.82;
   }
   .card[data-title-length='long'] .cardTitle {
     --cardtitle-shrink: 0.9;
