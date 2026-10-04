@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import { domain, host, name, x } from '@/lib/config'
 import { deckSlugFromBasePath, getLensImageUrl } from '@/lib/lens-card'
+import { shareCardMeta } from '@/lib/share-card'
 
 import type { Deck } from '../deck'
 import { LensesPage } from '../LensesPage'
@@ -38,13 +39,11 @@ function DeckHead({
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
       <meta property='og:url' content={canonicalUrl} />
-      <meta property='og:image' content={previewImage} />
-      <meta name='twitter:card' content='summary_large_image' />
+      {shareCardMeta(previewImage)}
       <meta name='twitter:domain' content={domain} />
       {x && <meta name='twitter:creator' content={`@${x}`} />}
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
-      <meta name='twitter:image' content={previewImage} />
     </Head>
   )
 }

@@ -3,7 +3,6 @@ import {
   githubUrl,
   linkedinUrl,
   notionContactUrl,
-  siteName,
   xUrl
 } from '@/lib/site-identity'
 
@@ -11,7 +10,7 @@ export default function ContactPage() {
   return (
     <SiteInfoPage
       title='Contact'
-      description={`How to reach ${siteName}.`}
+      description="I'm easiest to find as wustep on X, GitHub, or LinkedIn, or through a Notion contact form if you'd rather not reply in public."
       path='/contact'
     >
       <p>

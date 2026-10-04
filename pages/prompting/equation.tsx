@@ -2,6 +2,7 @@ import Head from 'next/head'
 
 import { EquationContent, PromptingLayout } from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'The equation'
@@ -9,7 +10,7 @@ const title = `${chapterTitle} — ${parentTitle}`
 const description =
   "Mental model #1: whatever a coding agent gives you falls out of two things multiplied together. Here's how to pull each lever."
 const canonicalUrl = `${host}/prompting/equation`
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('prompting-equation')
 
 export default function PromptingEquationPage() {
   return (
@@ -23,8 +24,10 @@ export default function PromptingEquationPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(
+          previewImage,
+          'The equation: (tool + model) × (prompt + context) → output'
+        )}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
       </Head>

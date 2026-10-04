@@ -5,6 +5,7 @@ import {
   PromptingLayout
 } from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'The colleague'
@@ -12,7 +13,7 @@ const title = `${chapterTitle} — ${parentTitle}`
 const description =
   'Mental model #3: treat the agent as a colleague. Onboard them, brief them, review their work. The discipline gets more important, not less, as the models get smarter.'
 const canonicalUrl = `${host}/prompting/colleague`
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('prompting-colleague')
 
 export default function PromptingColleaguePage() {
   return (
@@ -26,8 +27,10 @@ export default function PromptingColleaguePage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(
+          previewImage,
+          'The colleague: sharing the relevant file and project rules sharpens the answer'
+        )}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
       </Head>

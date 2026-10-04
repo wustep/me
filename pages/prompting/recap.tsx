@@ -2,6 +2,7 @@ import Head from 'next/head'
 
 import { PromptingLayout, RecapContent } from '@/components/wustep/prompting'
 import { host, name } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'Recap'
@@ -9,7 +10,7 @@ const title = `${chapterTitle} — ${parentTitle}`
 const description =
   'Five reminders before you go. The four mental models on one page, plus the techniques worth practicing.'
 const canonicalUrl = `${host}/prompting/recap`
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('prompting-recap')
 
 export default function PromptingRecapPage() {
   return (
@@ -23,8 +24,10 @@ export default function PromptingRecapPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(
+          previewImage,
+          'Recap: all six chapters and their figures on one page'
+        )}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
       </Head>
