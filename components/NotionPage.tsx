@@ -1,5 +1,6 @@
 import { track } from '@vercel/analytics'
 import dynamic from 'next/dynamic'
+import Head from 'next/head'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -24,7 +25,9 @@ import { formatLongDate, formatMonthYear } from '@/lib/format-date'
 import { getExternalUrlMap } from '@/lib/get-external-url-map'
 import { mapImageUrl, shouldUnoptimizeNotionImage } from '@/lib/map-image-url'
 import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
+import { getPageShareOverride } from '@/lib/page-share-overrides'
 import { searchNotion } from '@/lib/search-notion'
+import { shareCardUrl } from '@/lib/share-card'
 import { useDarkMode } from '@/lib/use-dark-mode'
 import { useSearchParam } from '@/lib/use-search-param'
 import { cn } from '@/lib/utils'
@@ -267,6 +270,24 @@ export function NotionPage({
     return <NotionPageSkeleton />
   }
 
+  if (externalRedirectUrl && block && recordMap) {
+    // Posts marked External (e.g. /dashboards → an X article) only bounce
+    // visitors to the real post. Give crawlers a real title and description
+    // instead of an empty head, but keep the stub itself out of search: the
+    // canonical copy lives at the external URL.
+    const description = getPageProperty<string>('Description', block, recordMap)
+    return (
+      <>
+        <Head>
+          <title>{getBlockTitle(block, recordMap) || site?.name}</title>
+          {description && <meta name='description' content={description} />}
+          <meta name='robots' content='noindex,follow' />
+        </Head>
+        <Loading />
+      </>
+    )
+  }
+
   if (externalRedirectUrl || notionFallbackUrl) {
     return <Loading />
   }
@@ -310,8 +331,13 @@ export function NotionPage({
     block
   )
 
+  // Index pages mounted at fixed paths (/updates, /writing…) have no
+  // Description or cover of their own; give them real share copy and cards.
+  const shareOverride = getPageShareOverride(pageId)
+
   const socialDescription =
     getPageProperty<string>('Description', block, recordMap) ||
+    shareOverride?.description ||
     config.description
 
   const shouldDisableCollectionLinks = getPageProperty<string>(
@@ -347,9 +373,10 @@ export function NotionPage({
       <PageHead
         pageId={pageId}
         site={site}
-        title={title}
+        title={shareOverride?.title ?? title}
         description={socialDescription}
         image={socialImage}
+        shareImage={shareOverride && shareCardUrl(shareOverride.card)}
         url={canonicalPageUrl}
         isBlogPost={isBlogPost}
       />

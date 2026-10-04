@@ -88,6 +88,16 @@ Layered composition:
 - `getLensImageUrl(host, deck, id?)` builds the URL; used by `pages/lenses.tsx`, `pages/lenses/[lensId].tsx` and the model-deck routes in `components/wustep/lenses/llms/deckPages.tsx` (all `summary_large_image`).
 - When adding a model deck, add it to the `DECKS` map in `lib/lens-card.ts`.
 
+### Static share cards
+
+Pages that aren't Notion posts use committed 1200×630 PNGs in [`public/og/`](../public/og/), composed from each page's own figures, covers and type:
+
+- Home, `/contact`, `/privacy`, every `/prompting` chapter, `/lenses/llms` and the Playground index, via `shareCardUrl(name)` and `shareCardMeta(url, alt?)` in [`lib/share-card.tsx`](../lib/share-card.tsx). The helper keeps `og:image` and `twitter:image` the same and always declares the size with `summary_large_image`.
+- Playground entries, through each registry entry's `ogImage` (`public/og/playground/<slug>.png`).
+- The Notion index pages mounted with `pageUrlOverrides` (`/updates`, `/writing`, `/articles`, `/essays`, `/projects`, `/notes`). They have no Description or cover of their own, so their copy and cards live in [`lib/page-share-overrides.ts`](../lib/page-share-overrides.ts). `PageHead`'s `shareImage` prop puts the card ahead of `/api/social-image`. Posts are unchanged.
+
+Posts marked `External` (e.g. `/dashboards`, which sends visitors to an X article) get a real title and description but `noindex`, and the Notion index crawl leaves them out of `sitemap.xml`.
+
 ### Caching
 
 Edge responses are cached by Vercel's CDN by default. No explicit `Cache-Control` is set, so the function may re-run more often than necessary — consider adding `s-maxage` here if it shows up as a hot path.

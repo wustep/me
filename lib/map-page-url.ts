@@ -1,7 +1,7 @@
 import { type ExtendedRecordMap } from 'notion-types'
 import { parsePageId, uuidToId } from 'notion-utils'
 
-import { includeNotionIdInUrls } from './config'
+import { includeNotionIdInUrls, inversePageUrlOverrides } from './config'
 import { getCanonicalPageId } from './get-canonical-page-id'
 import { isPublishedOnSite } from './is-published-on-site'
 import { notionSiteOrigin } from './site-identity'
@@ -36,7 +36,13 @@ export const getCanonicalPageUrl =
   (pageId = '') => {
     const pageUuid = parsePageId(pageId, { uuid: true })!
 
-    if (uuidToId(pageId) === site.rootNotionPageId) {
+    // The root Notion page is also mounted at a fixed path (/updates) while
+    // `/` is the custom home page, so a share of that page has to point at
+    // the path it actually lives on.
+    if (
+      uuidToId(pageId) === site.rootNotionPageId &&
+      !inversePageUrlOverrides[uuidToId(pageId)]
+    ) {
       return `https://${site.domain}`
     } else {
       return `https://${site.domain}/${getCanonicalPageId(pageUuid, recordMap, {
