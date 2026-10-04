@@ -31,7 +31,10 @@ export type PlaygroundEntry = {
   x?: string
   gradient?: string
   image?: string
-  /** PNG/JPEG link-preview image, when `image` is SVG/WebP (unfurlers skip those). */
+  /**
+   * 1200×630 PNG link-preview card (public/og/playground/). Without one, a
+   * PNG/JPEG `image` is used, so that image should be 1200×630 too.
+   */
   ogImage?: string
   CoverComponent?: React.ComponentType
 }
@@ -69,6 +72,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://stagebench.vercel.app/',
         x: 'https://x.com/wustep/status/2074529375043858480',
         gradient: 'from-red-600 via-red-950 to-zinc-950',
+        ogImage: '/og/playground/stagebench.png',
         CoverComponent: StageBenchCover
       },
       {
@@ -80,6 +84,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'May 2026',
         year: '2026',
         gradient: 'from-purple-500 via-fuchsia-500 to-rose-500',
+        ogImage: '/og/playground/lenses.png',
         CoverComponent: LensesCover
       },
       {
@@ -91,6 +96,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'May 2026',
         year: '2026',
         gradient: 'from-stone-800 via-amber-700 to-rose-700',
+        ogImage: '/og/playground/lenses-illustrations.png',
         CoverComponent: LensesIllustrationLabCover
       },
       {
@@ -103,6 +109,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2026',
         source: 'https://github.com/wustep/dom-ino',
         image: '/playground/covers/dom-ino.svg',
+        ogImage: '/og/playground/dom-ino.png',
         CoverComponent: DominoCover
       },
       {
@@ -114,6 +121,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2025',
         source: 'https://github.com/wustep/bookshelf',
         image: '/playground/covers/bookshelf.svg',
+        ogImage: '/og/playground/bookshelf.png',
         CoverComponent: BookshelfCover
       },
       {
@@ -127,6 +135,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source:
           'https://github.com/wustep/shadbook/blob/main/src/app/pages/experiments/physics-playground.tsx',
         image: '/playground/covers/shadcn-physics.png',
+        ogImage: '/og/playground/shadcn-physics.png',
         CoverComponent: ShadcnPhysicsCover
       }
     ]
@@ -144,6 +153,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2026',
         source: 'https://github.com/wustep/splashpanic',
         gradient: 'from-teal-300 via-sky-400 to-blue-500',
+        ogImage: '/og/playground/splashpanic.png',
         CoverComponent: SplashPanicCover
       },
       {
@@ -158,6 +168,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/spot-it',
         gradient: 'from-amber-400 to-pink-500',
         image: '/playground/covers/spot-it.png',
+        ogImage: '/og/playground/spot-it.png',
         CoverComponent: SpotItCover
       },
       {
@@ -172,6 +183,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/bomberman',
         gradient: 'from-orange-500 to-rose-500',
         image: '/playground/covers/bomberman.png',
+        ogImage: '/og/playground/bomberman.png',
         CoverComponent: BombermanCover
       }
     ]
@@ -201,6 +213,7 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Dec 2020',
         year: '2020',
         gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
+        ogImage: '/og/playground/midi-visualizer.png',
         CoverComponent: MidiVisualizerCover
       },
       {
@@ -214,7 +227,7 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/starry-sequencer',
         gradient: 'from-indigo-500 via-sky-500 to-emerald-400',
         image: '/playground/covers/starry-sequencer-poster.webp',
-        ogImage: '/playground/covers/starry-sequencer.png',
+        ogImage: '/og/playground/starry-sequencer.png',
         CoverComponent: StarrySequencerCover
       },
       {
@@ -226,7 +239,8 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2016',
         article: '/tbdbitl',
         source: 'http://github.com/wustep/tbdbitl',
-        image: '/playground/covers/tbdbitl.png'
+        image: '/playground/covers/tbdbitl.png',
+        ogImage: '/og/playground/tbdbitl.png'
       }
     ]
   }
