@@ -10,12 +10,15 @@ export function PageHead({
   description,
   pageId,
   image,
+  shareImage,
   url,
   isBlogPost
 }: types.PageProps & {
   title?: string
   description?: string
   image?: string
+  /** A finished 1200×630 card that replaces the generated social image. */
+  shareImage?: string
   url?: string
   isBlogPost?: boolean
 }) {
@@ -24,7 +27,7 @@ export function PageHead({
   title = title ?? site?.name
   description = description ?? site?.description
 
-  const socialImageUrl = getSocialImageUrl(pageId) || image
+  const socialImageUrl = shareImage || getSocialImageUrl(pageId) || image
 
   return (
     <Head>

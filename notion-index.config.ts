@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+import { type ExtendedRecordMap } from 'notion-types'
+import { getBlockValue, getPageProperty } from 'notion-utils'
+
 import { domain, isPreviewImageSupportEnabled } from './lib/config'
 import { getSiteMap } from './lib/get-site-map'
 import { buildPreviewImageMap } from './lib/preview-images'
@@ -38,7 +41,17 @@ export default async function syncNotionIndex(): Promise<void> {
       notionIndexPath,
       `${JSON.stringify({ schemaVersion: 1, canonicalPageMap }, null, 2)}\n`
     ),
-    writeAtomic(sitemapPath, createSitemap(domain, canonicalPageMap))
+    writeAtomic(
+      sitemapPath,
+      createSitemap(
+        domain,
+        Object.fromEntries(
+          Object.entries(canonicalPageMap).filter(
+            ([, pageId]) => !isExternalPage(pageId, siteMap.pageMap[pageId])
+          )
+        )
+      )
+    )
   ])
 
   console.log(
@@ -97,6 +110,18 @@ function createSitemap(
 ${urls.map((url) => `  <url>\n    <loc>${escapeXml(url)}</loc>\n  </url>`).join('\n')}
 </urlset>
 `
+}
+
+/**
+ * Posts marked External (e.g. /dashboards) only redirect to another site and
+ * are noindex, so they stay routable but out of the sitemap.
+ */
+function isExternalPage(
+  pageId: string,
+  recordMap: ExtendedRecordMap | null | undefined
+): boolean {
+  const block = recordMap && getBlockValue(recordMap.block[pageId])
+  return !!block && !!getPageProperty<boolean>('External', block, recordMap)
 }
 
 function escapeXml(value: string): string {

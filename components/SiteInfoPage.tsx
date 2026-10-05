@@ -6,6 +6,7 @@ import aboutStyles from '@/components/AboutPage.module.css'
 import { AgentOnlyLink } from '@/components/AgentOnly'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
 import { github, host, linkedin, name, x } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 import styles from './SiteInfoPage.module.css'
 
@@ -22,6 +23,9 @@ export function SiteInfoPage({
 }) {
   const [isDark, setIsDark] = React.useState(true)
   const canonicalUrl = `${host}${path}`
+  const pageTitle = `${title} · ${name}`
+  // Each info page has its own card at public/og/<path>.png.
+  const shareImage = shareCardUrl(path.slice(1))
 
   React.useEffect(() => {
     try {
@@ -37,9 +41,18 @@ export function SiteInfoPage({
   return (
     <>
       <Head>
-        <title>{`${title} · ${name}`}</title>
+        <title>{pageTitle}</title>
         <meta name='description' content={description} />
         <link rel='canonical' href={canonicalUrl} />
+        <meta property='og:type' content='website' />
+        <meta property='og:site_name' content={name} />
+        <meta property='og:title' content={pageTitle} />
+        <meta property='og:description' content={description} />
+        <meta property='og:url' content={canonicalUrl} />
+        {shareCardMeta(shareImage, `${pageTitle}: ${description}`)}
+        {x && <meta name='twitter:creator' content={`@${x}`} />}
+        <meta name='twitter:title' content={pageTitle} />
+        <meta name='twitter:description' content={description} />
       </Head>
       <main
         className={`${aboutStyles.page} ${isDark ? aboutStyles.dark : aboutStyles.light}`}

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { LensesPage } from '@/components/wustep/lenses'
 import { domain, host, name, x } from '@/lib/config'
 import { getLensImageUrl, WUSTEP_DECK_SLUG } from '@/lib/lens-card'
+import { shareCardMeta } from '@/lib/share-card'
 
 const title = 'Lenses'
 const description =
@@ -22,13 +23,14 @@ export default function LensesIndexPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary_large_image' />
+        {shareCardMeta(
+          previewImage,
+          'Lenses: a way of looking. Pick one. Try it on.'
+        )}
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={previewImage} />
       </Head>
       <LensesPage />
     </>

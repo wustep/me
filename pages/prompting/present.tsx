@@ -2,11 +2,12 @@ import Head from 'next/head'
 
 import { PromptingPresentation } from '@/components/wustep/prompting/PromptingPresentation'
 import { domain, host, name, x } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const title = 'Talking to machines'
 const description =
   'A 30-minute presentation version of How to talk to coding agents.'
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('prompting-present')
 const canonicalUrl = `${host}/prompting/present`
 
 export default function PromptingPresentationPage() {
@@ -21,13 +22,11 @@ export default function PromptingPresentationPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(previewImage, 'Talking to machines: the opening slide')}
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={previewImage} />
       </Head>
       <PromptingPresentation />
     </>

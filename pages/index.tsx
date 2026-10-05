@@ -2,9 +2,10 @@ import Head from 'next/head'
 
 import { AboutPage } from '@/components/AboutPage'
 import { domain, host, name, x } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 import { bioText, personJsonLd } from '@/lib/site-identity'
 
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('home')
 const canonicalUrl = `${host}/`
 
 export default function IndexPage() {
@@ -19,16 +20,14 @@ export default function IndexPage() {
         <meta property='og:title' content={name} />
         <meta property='og:description' content={bioText} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta property='og:image:width' content='512' />
-        <meta property='og:image:height' content='512' />
-        <meta property='og:image:type' content='image/png' />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(
+          previewImage,
+          'Stephen Wu, Engineering at Notion: portrait and bio'
+        )}
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={name} />
         <meta name='twitter:description' content={bioText} />
-        <meta name='twitter:image' content={previewImage} />
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}

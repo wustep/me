@@ -104,4 +104,15 @@ describe('getCanonicalPageUrl', () => {
     const url = getCanonicalPageUrl(site, recordMap)(rootId)
     expect(url).toBe('https://example.com')
   })
+
+  it('maps a root page mounted at an override path to that path', () => {
+    // site.config.ts mounts the real root page at /updates; `/` is the
+    // custom home page, so the bare domain would be the wrong canonical.
+    const updatesRootId = '2bc5cb08cf2c8036a1e3cddcb2c61d97'
+    const url = getCanonicalPageUrl(
+      { ...site, rootNotionPageId: updatesRootId },
+      recordMap
+    )(updatesRootId)
+    expect(url).toBe('https://example.com/updates')
+  })
 })

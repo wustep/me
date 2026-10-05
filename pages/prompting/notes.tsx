@@ -5,10 +5,13 @@ import BodyClassName from 'react-body-classname'
 import { SLIDES } from '@/components/wustep/prompting/PromptingPresentation'
 import styles from '@/components/wustep/prompting/PromptingPresentation.module.css'
 import { host, name } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const title = 'Talking to machines notes'
 const description = 'Talk-track notes for the prompting presentation.'
 const canonicalUrl = `${host}/prompting/notes`
+// The talk track shares the presentation's card.
+const previewImage = shareCardUrl('prompting-present')
 
 export default function PromptingNotesPage() {
   return (
@@ -22,6 +25,9 @@ export default function PromptingNotesPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
+        {shareCardMeta(previewImage, 'Talking to machines: the opening slide')}
+        <meta name='twitter:title' content={title} />
+        <meta name='twitter:description' content={description} />
       </Head>
       <BodyClassName className='notion dark-mode' />
       <main className={styles.notesPage}>

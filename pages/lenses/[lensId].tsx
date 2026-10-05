@@ -5,6 +5,7 @@ import { LensesPage } from '@/components/wustep/lenses'
 import { LENS_BY_ID, LENSES } from '@/components/wustep/lenses/registry'
 import { domain, host, name, x } from '@/lib/config'
 import { getLensImageUrl, WUSTEP_DECK_SLUG } from '@/lib/lens-card'
+import { shareCardMeta } from '@/lib/share-card'
 
 type LensDetailProps = {
   lensId: string
@@ -39,13 +40,11 @@ export default function LensDetailPage({
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary_large_image' />
+        {shareCardMeta(previewImage, `${lensTitle}: ${lensTagline}`)}
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={previewImage} />
       </Head>
       <LensesPage />
     </>

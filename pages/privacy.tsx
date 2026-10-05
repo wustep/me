@@ -1,11 +1,10 @@
 import { SiteInfoPage } from '@/components/SiteInfoPage'
-import { siteName } from '@/lib/site-identity'
 
 export default function PrivacyPage() {
   return (
     <SiteInfoPage
       title='Privacy'
-      description={`Privacy on ${siteName}'s personal site.`}
+      description="This is a personal site. There are no accounts, no cookies beyond hosting defaults, and I don't sell data."
       path='/privacy'
     >
       <p>

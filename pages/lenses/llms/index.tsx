@@ -2,11 +2,12 @@ import Head from 'next/head'
 
 import { LlmsDirectory } from '@/components/wustep/lenses/llms/LlmsDirectory'
 import { domain, host, name, x } from '@/lib/config'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 
 const title = 'Lenses, by language models'
 const description =
   'Each language model was handed the same empty 28-card deck, in isolation, and asked how it sees the world.'
-const previewImage = `${host}/favicon-512x512.png`
+const previewImage = shareCardUrl('lenses-llms')
 const canonicalUrl = `${host}/lenses/llms`
 
 export default function LlmLensesDirectoryPage() {
@@ -21,13 +22,14 @@ export default function LlmLensesDirectoryPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:url' content={canonicalUrl} />
-        <meta property='og:image' content={previewImage} />
-        <meta name='twitter:card' content='summary' />
+        {shareCardMeta(
+          previewImage,
+          'Lenses, by language models: the five model decks side by side'
+        )}
         <meta name='twitter:domain' content={domain} />
         {x && <meta name='twitter:creator' content={`@${x}`} />}
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={previewImage} />
       </Head>
       <LlmsDirectory />
     </>

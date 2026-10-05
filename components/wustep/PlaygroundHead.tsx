@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { domain, host, name, rootNotionPageId, x } from '@/lib/config'
-import { getSocialImageUrl } from '@/lib/get-social-image-url'
+import { domain, host, name, x } from '@/lib/config'
 import { findPlaygroundEntry, getPlaygroundMeta } from '@/lib/playground-meta'
+import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
 import { playgroundSections } from '@/playground/registry'
 
 const FALLBACK_DESCRIPTION =
@@ -30,7 +30,8 @@ export function PlaygroundHead({
     fallbackDescription: description ?? FALLBACK_DESCRIPTION,
     host
   })
-  const image = meta.image ?? getSocialImageUrl(rootNotionPageId)
+  // The index and pages outside the registry share the Playground card.
+  const image = meta.image ?? shareCardUrl('playground')
 
   return (
     <Head>
@@ -42,16 +43,11 @@ export function PlaygroundHead({
       <meta property='og:title' content={meta.title} />
       <meta property='og:description' content={meta.description} />
       <meta property='og:url' content={meta.canonicalUrl} />
-      {image && <meta property='og:image' content={image} />}
-      <meta
-        name='twitter:card'
-        content={meta.image ? 'summary_large_image' : 'summary'}
-      />
+      {shareCardMeta(image)}
       <meta name='twitter:domain' content={domain} />
       {x && <meta name='twitter:creator' content={`@${x}`} />}
       <meta name='twitter:title' content={meta.title} />
       <meta name='twitter:description' content={meta.description} />
-      {image && <meta name='twitter:image' content={image} />}
     </Head>
   )
 }
