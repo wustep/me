@@ -2,6 +2,12 @@
 
 Notes for AI agents (and humans) working in this repo.
 
+## Design system
+
+Read **[`GUI.md`](GUI.md)** before touching UI. Tokens live in
+`styles/tokens.css`; use the semantic `--ui-*`, `--type-*`, `--space-*`,
+`--radius-*` and `--duration-*` tokens rather than raw values.
+
 ## Lenses (`components/wustep/lenses/`)
 
 The Lenses deck is authored in **`lenses.md`** — that file is the source of

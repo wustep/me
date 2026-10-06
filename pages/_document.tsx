@@ -27,6 +27,22 @@ export default class MyDocument extends Document {
           <script
             dangerouslySetInnerHTML={{
               __html: `
+/** Palette preset (styles/tokens.css). ?theme-preset=<name> persists it;
+    ?theme-preset=default clears it. Unknown names are ignored. */
+;(function () {
+  var key = 'w-theme-preset'
+  var presets = ['paper', 'graphite', 'ink']
+  try {
+    var fromUrl = new URLSearchParams(location.search).get('theme-preset')
+    if (fromUrl === 'default') localStorage.removeItem(key)
+    else if (presets.indexOf(fromUrl) !== -1) localStorage.setItem(key, fromUrl)
+    var preset = localStorage.getItem(key)
+    if (presets.indexOf(preset) !== -1) {
+      document.documentElement.setAttribute('data-theme-preset', preset)
+    }
+  } catch (err) {}
+})();
+
 /** Inlined version of noflash.js from use-dark-mode */
 ;(function () {
   var storageKey = 'darkMode'

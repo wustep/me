@@ -1,0 +1,409 @@
+/**
+ * ========== Design tokens ==========
+ *
+ * The foundation layer for wustep.me. Every other token namespace
+ * (--w-*, --about-*, shadcn's --background/--foreground, react-notion-x's
+ * --fg-color/--bg-color) is re-pointed at these, so a palette change happens
+ * here once. See GUI.md at the repo root for how to use them.
+ *
+ * Layers, in order:
+ *   1. Scales      — type, space, radius, stroke, motion. Theme-independent.
+ *   2. Palette     — raw ramps per preset (--gray-*, --accent-*). Never used
+ *                    directly by components.
+ *   3. Semantic    — --ui-* roles that components consume. Light by
+ *                    default; .dark-mode swaps them.
+ *
+ * Presets: `paper` (default), `graphite`, `ink`. A preset is chosen by
+ * html[data-theme-preset] (set before first paint from localStorage
+ * `w-theme-preset`; see _document.tsx). With no attribute, `paper` applies.
+ */
+
+:root {
+  /* ---------- Typography ---------- */
+  /* Families come from next/font (lib/fonts/fonts.ts) as --font-sans and
+     --font-serif. Inter: 400/500/600. Crimson Pro: 400/600 (+ italic). Do not
+     request other weights — font-synthesis is off, so they snap to the
+     nearest loaded file. */
+  --type-weight-regular: 400;
+  --type-weight-medium: 500; /* Inter only */
+  --type-weight-semibold: 600;
+
+  /* Size scale (rem, 16px root). UI text is Inter; reading/display text is
+     Crimson Pro, which sets ~12% smaller per px than Inter, so serif prose
+     steps up one notch (--type-size-lg) to match Inter body's x-height. */
+  --type-size-2xs: 0.6875rem; /* 11 — tiny meta, kbd */
+  --type-size-xs: 0.75rem; /* 12 — caps labels, captions */
+  --type-size-sm: 0.8125rem; /* 13 — secondary UI, table meta */
+  --type-size-md: 0.9375rem; /* 15 — default UI text */
+  --type-size-base: 1rem; /* 16 — Notion body (Inter) */
+  --type-size-lg: 1.1875rem; /* 19 — serif prose */
+  --type-size-xl: 1.375rem; /* 22 — serif h3 / card titles */
+  --type-size-2xl: 1.75rem; /* 28 — serif h2 / site name */
+  --type-size-3xl: 2.25rem; /* 36 — serif h1 */
+  --type-size-4xl: 2.75rem; /* 44 — page title */
+  --type-size-display: clamp(2.5rem, 2rem + 2.5vw, 3.5rem); /* hero only */
+
+  --type-leading-tight: 1.15; /* display, page titles */
+  --type-leading-snug: 1.3; /* headings, card titles */
+  --type-leading-normal: 1.5; /* UI text */
+  --type-leading-relaxed: 1.65; /* long-form reading */
+
+  --type-tracking-display: -0.02em; /* serif ≥ --type-size-2xl */
+  --type-tracking-tight: -0.01em; /* Inter ≥ --type-size-xl */
+  --type-tracking-normal: 0;
+  --type-tracking-caps: 0.08em; /* uppercase labels only */
+
+  /* ---------- Space (4px base) ---------- */
+  --space-0-5: 0.125rem; /* 2 */
+  --space-1: 0.25rem; /* 4 */
+  --space-1-5: 0.375rem; /* 6 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.25rem; /* 20 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-10: 2.5rem; /* 40 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-24: 6rem; /* 96 */
+
+  /* Legacy t-shirt aliases (still used across wustep.css). */
+  --space-xs: var(--space-1);
+  --space-sm: var(--space-2);
+  --space-md: var(--space-4);
+  --space-lg: var(--space-6);
+  --space-xl: var(--space-8);
+  --space-xxl: var(--space-12);
+
+  /* Layout */
+  --measure-prose: 680px; /* About page column */
+  --gutter-page: var(--space-6); /* min side gutter on phones */
+  --control-h-sm: 28px;
+  --control-h-md: 36px;
+  --control-h-lg: 44px; /* minimum touch target */
+
+  /* ---------- Shape ---------- */
+  /* Concentric rule: an inner radius = outer radius − padding between them. */
+  --radius-xs: 4px; /* inline highlights, tags, kbd */
+  --radius-sm: 6px; /* small buttons, header breadcrumbs, inputs */
+  --radius-md: 8px; /* buttons, select pills, menus */
+  --radius-lg: 12px; /* callouts, panels, segmented tracks */
+  --radius-xl: 16px; /* gallery cards, media */
+  --radius-pill: 9999px;
+
+  --stroke-hairline: 1px; /* dividers, card borders */
+  --stroke-strong: 1.5px; /* selected outlines, active tab */
+  --stroke-focus: 2px; /* focus rings */
+  --focus-offset: 2px;
+
+  /* Icon sizing (Lucide, 24px grid). Stroke width scales down as size goes up
+     so line weight stays visually even next to Inter. */
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-stroke: 1.75;
+
+  /* ---------- Motion ---------- */
+  --duration-instant: 80ms; /* press feedback */
+  --duration-fast: 160ms; /* hover color, small toggles */
+  --duration-base: 240ms; /* popovers, segmented thumbs, small transforms */
+  --duration-slow: 400ms; /* panels, cards lifting, icon flourishes */
+  --duration-page: 600ms; /* page fades, theme crossfade */
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* default for anything moving */
+  --ease-enter: var(--ease-out-quint, cubic-bezier(0.23, 1, 0.32, 1));
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1); /* leaving the screen */
+  --ease-hover: cubic-bezier(0.2, 0.9, 0.2, 1); /* = --ease-out-snap */
+
+  /* Springs as CSS linear() curves. Pair with the duration noted. */
+  /* Snappy — critically damped-ish, no visible overshoot. ~300ms. */
+  --spring-snappy: linear(
+    0,
+    0.2 4.3%,
+    0.55 10.6%,
+    0.8 17.4%,
+    0.93 25%,
+    0.985 34%,
+    1.003 45%,
+    1.004 60%,
+    1
+  );
+  /* Gentle — soft settle for panels and cards. ~500ms. */
+  --spring-gentle: linear(
+    0,
+    0.09 5%,
+    0.33 12%,
+    0.62 21%,
+    0.84 31%,
+    0.95 41%,
+    1.005 54%,
+    1.012 68%,
+    1
+  );
+  /* Bouncy — one small overshoot (≈4%). Playful moments only: applause,
+     toggles, icon hops. ~450ms. */
+  --spring-bouncy: linear(
+    0,
+    0.25 6%,
+    0.68 15%,
+    0.98 24%,
+    1.04 31%,
+    1.045 37%,
+    1.02 47%,
+    0.995 60%,
+    1.002 75%,
+    1
+  );
+
+  /* ---------- States ---------- */
+  --state-press-scale: 0.97;
+  --state-disabled-opacity: 0.45;
+  --state-hover-lift: -2px; /* cards only */
+}
+
+/* ===================================================================
+ * Palette presets
+ * ================================================================ */
+
+/* ---------- Paper (default) — warm neutrals, amber accent ----------
+ * Takes its cue from what the site already does well: the peach glow on
+ * the About page, the amber Lenses accent, and Notion's own warm ink. */
+:root,
+:root[data-theme-preset='paper'] {
+  --gray-0: #fdfcfa;
+  --gray-1: #f7f6f3;
+  --gray-2: #f0eee9;
+  --gray-3: #e6e3dc;
+  --gray-4: #d7d3ca;
+  --gray-5: #b8b3a8;
+  --gray-6: #8f8a80;
+  --gray-7: #6e6a62;
+  --gray-8: #55524b;
+  --gray-9: #3b3934;
+  --gray-10: #2a2825;
+  --gray-11: #1d1c1a;
+
+  --gray-dark-0: #100f0e;
+  --gray-dark-1: #171614;
+  --gray-dark-2: #1e1d1b;
+  --gray-dark-3: #282724;
+  --gray-dark-4: #36342f;
+  --gray-dark-5: #4a4741;
+  --gray-dark-6: #6b675f;
+  --gray-dark-7: #9c978d;
+  --gray-dark-8: #bdb8ae;
+  --gray-dark-9: #d8d4cb;
+  --gray-dark-10: #e6e2da;
+  --gray-dark-11: #f1eee8;
+
+  --accent-base: #c2701f;
+  --accent-ink: #9a5313; /* text-safe on --gray-0 */
+  --accent-soft: #fbefe2;
+  --accent-dark-base: #f0a85a;
+  --accent-dark-ink: #f4b878;
+  --accent-dark-soft: rgba(240, 168, 90, 0.14);
+
+  --glow-light: rgba(255, 200, 150, 0.14);
+  --glow-dark: rgba(255, 214, 170, 0.07);
+  --shadow-tint: 40 30 15; /* warm-brown shadow, as r g b */
+}
+
+/* ---------- Graphite — today's neutral palette, cleaned into a ramp ---- */
+:root[data-theme-preset='graphite'] {
+  --gray-0: #ffffff;
+  --gray-1: #f7f7f7;
+  --gray-2: #efefef;
+  --gray-3: #e5e5e5;
+  --gray-4: #d4d4d4;
+  --gray-5: #b3b3b3;
+  --gray-6: #8c8c8c;
+  --gray-7: #6b6b6b;
+  --gray-8: #525252;
+  --gray-9: #383838;
+  --gray-10: #262626;
+  --gray-11: #1a1a1a;
+
+  --gray-dark-0: #0d0d0d;
+  --gray-dark-1: #151515;
+  --gray-dark-2: #1c1c1c;
+  --gray-dark-3: #262626;
+  --gray-dark-4: #333333;
+  --gray-dark-5: #474747;
+  --gray-dark-6: #666666;
+  --gray-dark-7: #969696;
+  --gray-dark-8: #b8b8b8;
+  --gray-dark-9: #d4d4d4;
+  --gray-dark-10: #e8e8e8;
+  --gray-dark-11: #f2f2f2;
+
+  --accent-base: #2a63d4;
+  --accent-ink: #1f50b3;
+  --accent-soft: #eaf1fd;
+  --accent-dark-base: #6ea0f5;
+  --accent-dark-ink: #8db4f7;
+  --accent-dark-soft: rgba(110, 160, 245, 0.14);
+
+  --glow-light: rgba(150, 180, 255, 0.1);
+  --glow-dark: rgba(255, 255, 255, 0.07);
+  --shadow-tint: 0 0 0;
+}
+
+/* ---------- Ink — cool paper, high-contrast ink, deep green accent ---- */
+:root[data-theme-preset='ink'] {
+  --gray-0: #fbfbf9;
+  --gray-1: #f4f5f2;
+  --gray-2: #eceee9;
+  --gray-3: #e0e3dd;
+  --gray-4: #cdd1ca;
+  --gray-5: #a9aea6;
+  --gray-6: #828880;
+  --gray-7: #61675f;
+  --gray-8: #4a4f48;
+  --gray-9: #323631;
+  --gray-10: #212421;
+  --gray-11: #121412;
+
+  --gray-dark-0: #0b0d0c;
+  --gray-dark-1: #121513;
+  --gray-dark-2: #191c1a;
+  --gray-dark-3: #222623;
+  --gray-dark-4: #2f3430;
+  --gray-dark-5: #434944;
+  --gray-dark-6: #646b65;
+  --gray-dark-7: #939a94;
+  --gray-dark-8: #b6bcb6;
+  --gray-dark-9: #d3d8d3;
+  --gray-dark-10: #e4e8e4;
+  --gray-dark-11: #f0f3f0;
+
+  --accent-base: #2e7454;
+  --accent-ink: #225c42;
+  --accent-soft: #e5f1ea;
+  --accent-dark-base: #6fc39a;
+  --accent-dark-ink: #8ed2b0;
+  --accent-dark-soft: rgba(111, 195, 154, 0.14);
+
+  --glow-light: rgba(170, 220, 190, 0.12);
+  --glow-dark: rgba(200, 255, 225, 0.06);
+  --shadow-tint: 10 25 18;
+}
+
+/* ===================================================================
+ * Semantic roles — what components consume
+ * ================================================================ */
+
+:root {
+  /* Surfaces */
+  --ui-bg: var(--gray-0); /* page canvas */
+  --ui-surface: var(--gray-1); /* callouts, cards at rest */
+  --ui-surface-hover: var(--gray-2);
+  --ui-surface-raised: #ffffff; /* menus, segmented thumb, popovers */
+  --ui-overlay: rgb(var(--shadow-tint) / 0.4); /* scrims */
+
+  /* Text */
+  --ui-text: var(--gray-11);
+  --ui-text-body: var(--gray-9); /* Notion long-form body — a hair softer */
+  --ui-text-secondary: var(--gray-8); /* body copy that is not primary */
+  --ui-text-muted: var(--gray-7); /* meta, dates, captions — AA on bg */
+  --ui-text-faint: var(--gray-6); /* decorative only, never sole info */
+  --ui-text-inverse: var(--gray-0);
+
+  /* Lines */
+  --ui-border: var(--gray-3);
+  --ui-border-strong: var(--gray-4);
+  --ui-divider: color-mix(in srgb, var(--gray-11) 8%, transparent);
+  --ui-divider-strong: color-mix(in srgb, var(--gray-11) 15%, transparent);
+
+  /* Brand */
+  --ui-accent: var(--accent-base); /* fills, icons, rules */
+  --ui-accent-text: var(--accent-ink); /* accent used as text */
+  --ui-accent-soft: var(--accent-soft); /* tinted backgrounds */
+  --ui-accent-fill: var(--accent-ink); /* filled buttons — AA with on-accent */
+  --ui-on-accent: #ffffff;
+
+  /* Status — shared across presets, tuned for AA as text on bg */
+  --ui-success: #2d7a47;
+  --ui-success-soft: #e6f2ea;
+  --ui-warning: #94620c;
+  --ui-warning-soft: #faf0dc;
+  --ui-danger: #b4372a;
+  --ui-danger-soft: #fbe9e6;
+  --ui-info: #2a63d4;
+  --ui-info-soft: #eaf1fd;
+
+  /* Interaction */
+  --ui-hover-overlay: color-mix(in srgb, var(--gray-11) 5%, transparent);
+  --ui-press-overlay: color-mix(in srgb, var(--gray-11) 9%, transparent);
+
+  --glow: var(--glow-light);
+
+  /* Elevation — tinted, layered, low-opacity. Pair with a hairline border. */
+  --elevation-xs: 0 1px 2px rgb(var(--shadow-tint) / 0.06);
+  --elevation-sm:
+    0 1px 2px rgb(var(--shadow-tint) / 0.06),
+    0 1px 3px rgb(var(--shadow-tint) / 0.08);
+  --elevation-md:
+    0 2px 4px rgb(var(--shadow-tint) / 0.05),
+    0 6px 16px rgb(var(--shadow-tint) / 0.08);
+  --elevation-lg:
+    0 4px 8px rgb(var(--shadow-tint) / 0.05),
+    0 16px 40px rgb(var(--shadow-tint) / 0.12);
+}
+
+.dark-mode {
+  --ui-bg: var(--gray-dark-0);
+  --ui-surface: var(--gray-dark-1);
+  --ui-surface-hover: var(--gray-dark-2);
+  --ui-surface-raised: var(--gray-dark-3);
+  --ui-overlay: rgb(0 0 0 / 0.6);
+
+  --ui-text: var(--gray-dark-10);
+  --ui-text-body: var(--gray-dark-10);
+  --ui-text-secondary: var(--gray-dark-8);
+  --ui-text-muted: var(--gray-dark-7);
+  --ui-text-faint: var(--gray-dark-6);
+  --ui-text-inverse: var(--gray-dark-0);
+
+  --ui-border: var(--gray-dark-3);
+  --ui-border-strong: var(--gray-dark-4);
+  --ui-divider: color-mix(in srgb, var(--gray-dark-11) 10%, transparent);
+  --ui-divider-strong: color-mix(in srgb, var(--gray-dark-11) 20%, transparent);
+
+  --ui-accent: var(--accent-dark-base);
+  --ui-accent-text: var(--accent-dark-ink);
+  --ui-accent-soft: var(--accent-dark-soft);
+  --ui-accent-fill: var(--accent-dark-base);
+  --ui-on-accent: var(--gray-dark-0);
+
+  --ui-success: #6cc48a;
+  --ui-success-soft: rgba(108, 196, 138, 0.14);
+  --ui-warning: #e4b45a;
+  --ui-warning-soft: rgba(228, 180, 90, 0.14);
+  --ui-danger: #f08474;
+  --ui-danger-soft: rgba(240, 132, 116, 0.14);
+  --ui-info: #7aa7f5;
+  --ui-info-soft: rgba(122, 167, 245, 0.14);
+
+  --ui-hover-overlay: color-mix(in srgb, var(--gray-dark-11) 6%, transparent);
+  --ui-press-overlay: color-mix(in srgb, var(--gray-dark-11) 10%, transparent);
+
+  --glow: var(--glow-dark);
+
+  /* On dark, shadows barely read — lean on borders + a lighter surface. */
+  --elevation-xs: 0 1px 2px rgb(0 0 0 / 0.3);
+  --elevation-sm: 0 1px 3px rgb(0 0 0 / 0.35);
+  --elevation-md: 0 4px 14px rgb(0 0 0 / 0.4);
+  --elevation-lg: 0 16px 40px rgb(0 0 0 / 0.5);
+}
+
+/* Aliases of other semantic roles. Declared on both :root and .dark-mode
+ * because a custom property's var() resolves where it is declared: a
+ * :root-only alias would freeze the light value and body.dark-mode would
+ * inherit it. Any token that points at another --ui-* goes here. */
+:root,
+.dark-mode {
+  --ui-focus: var(--ui-accent);
+  --ui-selection: color-mix(in srgb, var(--ui-accent) 24%, transparent);
+}

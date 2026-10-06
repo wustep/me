@@ -6,13 +6,14 @@ The styling story is deliberately two-track: the Notion-rendered content uses pl
 
 | File | Purpose |
 |---|---|
+| [`styles/tokens.css`](../styles/tokens.css) | Foundation design tokens (type, space, radius, motion, palette presets, semantic `--ui-*` colors). Imported first. See [`GUI.md`](../GUI.md). |
 | [`styles/globals.css`](../styles/globals.css) | Tailwind v4 import, shadcn tokens, baseline typography. Loaded globally. |
 | [`styles/notion.css`](../styles/notion.css) | Upstream overrides for `react-notion-x` — padding, code blocks, image framing, etc. |
 | [`styles/wustep.css`](../styles/wustep.css) | The bulk of this site's custom Notion styling — colors, dark-mode tokens, button-block styling, posts switcher, callouts, footer. |
 | [`styles/prism-theme.css`](../styles/prism-theme.css) | Syntax highlighting theme for code blocks. |
 | [`styles/applause.css`](../styles/applause.css) | Styles for the applause button. |
 
-All five are imported from `pages/_app.tsx` or via `_document.tsx`.
+All six are imported from `pages/_app.tsx` or via `_document.tsx`.
 
 ## Tailwind v4
 
@@ -27,6 +28,7 @@ The two tracks used to define the *same* variable names (`--primary`, `--backgro
 
 | Namespace | Owner | Examples | Consumers |
 |---|---|---|---|
+| `--ui-*`, `--type-*`, `--elevation-*`, `--duration-*`, `--spring-*`, palette `--gray-*` | `styles/tokens.css` | `--ui-text-muted`, `--type-size-lg`, `--radius-lg` | the foundation — `--w-*`, `--about-*` and shadcn names all alias it |
 | `--w-*` | `styles/wustep.css` | `--w-primary`, `--w-secondary`, `--w-accent`, `--w-background`, `--w-surface`, `--w-divider` | Notion pages, Page404/ErrorPage, MidiVisualizer, `/design` pages' custom CSS |
 | shadcn names | `styles/globals.css` | `--background`, `--foreground`, `--primary`, `--muted-foreground`, `--sidebar*` | Tailwind utilities + [`components/ui/`](../components/ui/) |
 | `--dw-*` | `styles/globals.css` | `--dw-accent`, `--dw-field-h`, `--dw-radius-*` | `/design` workbench shell + tools |

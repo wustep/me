@@ -338,7 +338,7 @@
 }
 
 .notion-header {
-  background: hsla(0, 0%, 100%, 0.8);
+  background: color-mix(in srgb, var(--ui-bg) 80%, transparent);
   backdrop-filter: saturate(180%) blur(16px);
 }
 
@@ -351,7 +351,7 @@
 /* Workaround for Firefox not supporting backdrop-filter yet */
 @-moz-document url-prefix() {
   .dark-mode .notion-header {
-    background: hsla(203, 8%, 20%, 0.8);
+    background: color-mix(in srgb, var(--ui-bg) 80%, transparent);
   }
 }
 
