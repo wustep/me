@@ -27,11 +27,11 @@ export default class MyDocument extends Document {
           <script
             dangerouslySetInnerHTML={{
               __html: `
-/** Palette preset (styles/tokens.css). ?theme-preset=<name> persists it;
+/** Theme preset (styles/tokens.css, gui/wustep.md). ?theme-preset=<name> persists it;
     ?theme-preset=default clears it. Unknown names are ignored. */
 ;(function () {
   var key = 'w-theme-preset'
-  var presets = ['paper', 'graphite', 'ink']
+  var presets = ['paper', 'untitled', 'ink']
   try {
     var fromUrl = new URLSearchParams(location.search).get('theme-preset')
     if (fromUrl === 'default') localStorage.removeItem(key)

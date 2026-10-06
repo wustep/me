@@ -4,9 +4,9 @@ Notes for AI agents (and humans) working in this repo.
 
 ## Design system
 
-Read **[`GUI.md`](GUI.md)** before touching UI. Tokens live in
-`styles/tokens.css`; use the semantic `--ui-*`, `--type-*`, `--space-*`,
-`--radius-*` and `--duration-*` tokens rather than raw values.
+For UI work, follow GUI.md and use graphical-ui, graphical-convert, or graphical-audit as appropriate.
+
+The skills live in `.agents/skills/`. Theme tokens are in `styles/tokens.css`, and local decisions (font roles on Crimson Pro + Inter, presets, aliases, exceptions) are in `gui/wustep.md`.
 
 ## Lenses (`components/wustep/lenses/`)
 

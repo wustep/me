@@ -145,7 +145,7 @@
   margin-top: 1.5rem;
   padding: 1rem;
   background: var(--w-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-m);
   font-size: 0.8rem;
   color: var(--w-secondary);
   max-width: 400px;

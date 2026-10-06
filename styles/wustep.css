@@ -4,77 +4,44 @@
 
 /* Fonts are now loaded via next/font/google in _app.tsx */
 
+:root,
+.dark-mode {
+  /* --w-* are the Notion-track names for theme roles in styles/tokens.css.
+     Declared on both selectors so they follow body.dark-mode (neutrals are
+     mode-aware). /design/theme previews by overriding these with
+     !important, so keep the names. */
+  --w-primary: var(--cte-text);
+  --w-secondary: var(--cte-text-muted);
+  --w-accent: var(--neutral-10); /* strongest ink — not the brand accent */
+  --w-background: var(--cte-canvas);
+  --w-surface: var(--cte-surface);
+  --w-surface-hover: var(--cte-surface-muted);
+  --w-divider: var(--border-default-color);
+  --w-divider-hover: var(--neutral-10-transparent);
+
+  /* react-notion-x's own color roles, re-pointed at the theme so Notion
+     content sits on the same canvas and ink as the rest of the site. Body
+     text keeps Notion's slightly softer ink (neutral-9). */
+  --fg-color: var(--neutral-9);
+  --bg-color: var(--cte-canvas);
+  --bg-color-1: var(--cte-surface);
+}
+
 :root {
-  /* --w-* are the Notion-track names for the semantic roles in
-     styles/tokens.css. Kept (rather than renamed at every call site) because
-     /design/theme previews by overriding exactly these names. Light values
-     live here and dark ones in --w-dark-*; .dark-mode swaps them below. */
-  --w-primary: var(--ui-text);
-  --w-secondary: var(--ui-text-muted);
-  --w-accent: var(--gray-11); /* strongest ink — not the brand accent */
-  --w-background: var(--ui-bg);
-  --w-surface: color-mix(in srgb, var(--gray-11) 3%, transparent);
-  --w-surface-hover: color-mix(in srgb, var(--gray-11) 6%, transparent);
-  --w-divider: color-mix(in srgb, var(--gray-11) 8%, transparent);
-  --w-divider-hover: color-mix(in srgb, var(--gray-11) 15%, transparent);
-
-  --w-dark-primary: var(--gray-dark-10);
-  --w-dark-secondary: var(--gray-dark-7);
-  --w-dark-accent: var(--gray-dark-11);
-  --w-dark-background: var(--gray-dark-0);
-  --w-dark-surface: color-mix(in srgb, var(--gray-dark-11) 4%, transparent);
-  --w-dark-surface-hover: color-mix(
-    in srgb,
-    var(--gray-dark-11) 8%,
-    transparent
-  );
-  --w-dark-divider: color-mix(in srgb, var(--gray-dark-11) 10%, transparent);
-  --w-dark-divider-hover: color-mix(
-    in srgb,
-    var(--gray-dark-11) 20%,
-    transparent
-  );
-
-  /* Space, radius, type, motion: see styles/tokens.css. */
+  /* Fallbacks only; pages/_app.tsx sets the real next/font families. */
   --font-serif: 'Crimson Pro', 'Georgia', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Design-workbench (--dw-*) tokens are owned by styles/globals.css */
 }
 
-/* Dark mode */
-.dark-mode {
-  --w-primary: var(--w-dark-primary);
-  --w-secondary: var(--w-dark-secondary);
-  --w-accent: var(--w-dark-accent);
-  --w-background: var(--w-dark-background);
-  --w-surface: var(--w-dark-surface);
-  --w-surface-hover: var(--w-dark-surface-hover);
-  --w-divider: var(--w-dark-divider);
-  --w-divider-hover: var(--w-dark-divider-hover);
-}
-
-/* react-notion-x's own color roles, re-pointed at the tokens so Notion
- * content sits on the same canvas and ink as the rest of the site. Body
- * text keeps Notion's slightly softer ink (--ui-text-body). */
-:root {
-  --fg-color: var(--ui-text-body);
-  --bg-color: var(--ui-bg);
-  --bg-color-1: var(--ui-surface);
-}
-
-.dark-mode {
-  --fg-color: var(--ui-text-body);
-  --bg-color: var(--ui-bg);
-}
-
 ::selection {
-  background: var(--ui-selection);
+  background: var(--color-1-transparent);
 }
 
 body {
-  font-family: var(--font-sans);
-  font-size: 16px;
+  font-family: var(--font-ui);
+  font-size: var(--size-m);
 }
 
 h1,
@@ -83,8 +50,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
-  font-weight: 600;
+  font-family: var(--font-brand);
+  font-weight: var(--weight-brand-heavy);
 }
 
 .notion-app {
@@ -92,7 +59,7 @@ h6 {
 }
 
 .dark-mode .notion-app {
-  background: var(--w-dark-background);
+  background: var(--w-background);
 }
 
 /**
@@ -100,9 +67,9 @@ h6 {
  */
 * {
   transition:
-    background-color var(--duration-slow) var(--ease-standard),
-    border-color var(--duration-slow) var(--ease-standard),
-    box-shadow var(--duration-slow) var(--ease-standard);
+    background-color var(--motion-large-duration) var(--motion-large-easing),
+    border-color var(--motion-large-duration) var(--motion-large-easing),
+    box-shadow var(--motion-large-duration) var(--motion-large-easing);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,8 +88,8 @@ h6 {
  * their own :focus-visible ring (ThemeToggle, LabsButton) still apply theirs.
  */
 .notion :where(a, button, summary, [role='button']):focus-visible {
-  outline: var(--stroke-focus) solid var(--ui-focus);
-  outline-offset: var(--focus-offset);
+  outline: var(--focus-ring-outline);
+  outline-offset: 2px;
 }
 
 /**
@@ -134,7 +101,7 @@ h6 {
 }
 
 .notion-search {
-  border-radius: var(--radius-sm) /* prev: 3px */;
+  border-radius: var(--radius-s) /* prev: 3px */;
 }
 
 /**
@@ -150,12 +117,12 @@ h6 {
 
 .notion-header .breadcrumb {
   padding: 6px 8px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-s);
 }
 
 .notion-header .breadcrumb.button {
   padding: 8px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-s);
 }
 
 .breadcrumb .title {
@@ -621,7 +588,7 @@ span[class*='_background'] {
  */
 .notion-gallery-grid {
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: var(--space-lg);
+  gap: var(--space-l);
   grid-auto-flow: row;
 }
 
@@ -845,7 +812,7 @@ span[class*='_background'] {
 .posts-heading-toggle-button.active {
   background: var(--bg-color);
   color: var(--fg-color-6);
-  box-shadow: var(--elevation-sm);
+  box-shadow: var(--shadow-s);
 }
 
 .posts-heading-toggle-button:focus-visible {
@@ -879,13 +846,13 @@ span[class*='_background'] {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
 .posts-heading__title {
   flex: 1 1 auto;
-  margin-right: var(--space-sm);
+  margin-right: var(--space-xs);
 }
 
 .posts-view-toggle {
@@ -893,14 +860,14 @@ span[class*='_background'] {
   display: inline-flex;
   align-items: center;
   padding: 0.2rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   border: 1px solid var(--w-divider);
   background: var(--w-surface);
   gap: 0.15rem;
 }
 
 .dark-mode .posts-view-toggle {
-  background: var(--w-dark-surface);
+  background: var(--w-surface);
   border-color: var(--w-divider);
 }
 
@@ -910,7 +877,7 @@ span[class*='_background'] {
   justify-content: center;
   gap: 0.35rem;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   padding: 0.3rem 0.85rem;
   background: transparent;
   font-weight: 600;
@@ -957,16 +924,16 @@ span[class*='_background'] {
    it receives keyboard focus, then pinned top-left above every surface. */
 .skip-link {
   position: fixed;
-  top: var(--space-sm);
-  left: var(--space-sm);
+  top: var(--space-xs);
+  left: var(--space-xs);
   z-index: var(--z-toast);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-m);
+  border-radius: var(--radius-m);
   background: var(--w-primary);
   color: var(--w-background);
   font: 500 14px/1.2 var(--font-sans);
   text-decoration: none;
-  transform: translateY(calc(-100% - var(--space-md)));
+  transform: translateY(calc(-100% - var(--space-m)));
 }
 
 .skip-link:focus-visible {
@@ -1344,7 +1311,7 @@ main[tabindex='-1']:focus {
  * ========== Callouts ==========
  */
 .notion-callout {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-l);
 }
 
 .notion-callout-text > div:last-child {
@@ -1378,7 +1345,7 @@ main[tabindex='-1']:focus {
 .notion-property-multi_select-item,
 .notion-property-select-item,
 .notion-property-status-item {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-m);
 }
 
 /**

@@ -173,30 +173,30 @@
 .dark-mode {
   /* shadcn roles mapped onto styles/tokens.css. Declared on both selectors
      so they re-resolve under body.dark-mode (see tokens.css, last block). */
-  --background: var(--ui-bg);
-  --foreground: var(--ui-text);
-  --card: var(--ui-bg);
-  --card-foreground: var(--ui-text);
-  --popover: var(--ui-surface-raised);
-  --popover-foreground: var(--ui-text);
-  --primary: var(--ui-text);
-  --primary-foreground: var(--ui-bg);
-  --secondary: var(--ui-surface);
-  --secondary-foreground: var(--ui-text);
-  --muted: var(--ui-surface);
-  --muted-foreground: var(--ui-text-muted);
-  --accent: var(--ui-surface-hover);
-  --accent-foreground: var(--ui-text);
-  --destructive: var(--ui-danger);
-  --border: var(--ui-border);
-  --input: var(--ui-border-strong);
-  --ring: var(--ui-focus);
-  --sidebar: var(--ui-bg);
-  --sidebar-foreground: var(--ui-text);
-  --sidebar-accent: var(--ui-surface-hover);
-  --sidebar-accent-foreground: var(--ui-text);
-  --sidebar-border: var(--ui-border);
-  --sidebar-ring: var(--ui-focus);
+  --background: var(--cte-canvas);
+  --foreground: var(--cte-text);
+  --card: var(--cte-canvas);
+  --card-foreground: var(--cte-text);
+  --popover: var(--cte-surface);
+  --popover-foreground: var(--cte-text);
+  --primary: var(--cte-text);
+  --primary-foreground: var(--cte-canvas);
+  --secondary: var(--cte-surface);
+  --secondary-foreground: var(--cte-text);
+  --muted: var(--cte-surface);
+  --muted-foreground: var(--cte-text-muted);
+  --accent: var(--cte-surface-muted);
+  --accent-foreground: var(--cte-text);
+  --destructive: var(--cte-danger);
+  --border: var(--cte-border);
+  --input: var(--neutral-4);
+  --ring: var(--cte-focus);
+  --sidebar: var(--cte-canvas);
+  --sidebar-foreground: var(--cte-text);
+  --sidebar-accent: var(--cte-surface-muted);
+  --sidebar-accent-foreground: var(--cte-text);
+  --sidebar-border: var(--cte-border);
+  --sidebar-ring: var(--cte-focus);
 }
 
 .sidebar-animate [data-sidebar='sidebar'] {
