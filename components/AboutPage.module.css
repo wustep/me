@@ -4,24 +4,26 @@
   min-height: 100dvh;
   background: var(--about-bg);
   color: var(--about-text);
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   /* CSS-only entrance so server-rendered content never waits on hydration */
-  animation: pageFadeIn 600ms ease;
+  animation: pageFadeIn var(--motion-large-duration) var(--motion-large-easing);
   transition:
-    background-color 300ms ease,
-    color 300ms ease;
+    background-color var(--motion-large-duration) var(--motion-large-easing),
+    color var(--motion-large-duration) var(--motion-large-easing);
 
-  /* Light tokens are the CSS default. The inline noflash script in
-     _document.tsx sets body.dark-mode before first paint, so dark
-     visitors never flash through this light palette. */
-  --about-bg: #ffffff;
-  --about-text: #1a1a1a;
-  --about-muted: #666;
-  --about-accent: #000;
-  --about-border: rgba(0, 0, 0, 0.08);
-  --about-border-hover: rgba(0, 0, 0, 0.15);
-  --about-card: rgba(0, 0, 0, 0.03);
-  --about-card-hover: rgba(0, 0, 0, 0.06);
+  /* --about-* alias the semantic tokens in styles/tokens.css. Declared on
+     .page (not :root), so they resolve against body.dark-mode's values with
+     no separate dark block. /design/theme overrides these names to preview. */
+  --about-bg: var(--cte-canvas);
+  --about-text: var(--cte-text);
+  --about-muted: var(--cte-text-muted);
+  --about-accent: var(--w-accent);
+  --about-border: var(--w-divider);
+  --about-border-hover: var(--w-divider-hover);
+  --about-card: var(--w-surface);
+  --about-card-hover: var(--w-surface-hover);
+  --about-glow: color-mix(in srgb, var(--color-1) 12%, transparent);
+  /* The Lenses link keeps its own identity color in every preset. */
   --about-lenses-fg: #4d4d4d;
   --about-lenses-accent: #c2701f;
 }
@@ -36,14 +38,7 @@
 }
 
 :global(body.dark-mode) .page {
-  --about-bg: #0d0d0d;
-  --about-text: #e8e8e8;
-  --about-muted: #888;
-  --about-accent: #fff;
-  --about-border: rgba(255, 255, 255, 0.1);
-  --about-border-hover: rgba(255, 255, 255, 0.2);
-  --about-card: rgba(255, 255, 255, 0.04);
-  --about-card-hover: rgba(255, 255, 255, 0.08);
+  --about-glow: color-mix(in srgb, var(--neutral-10) 7%, transparent);
   --about-lenses-fg: #e8e8e8;
   --about-lenses-accent: #f0a85a;
 }
@@ -54,18 +49,10 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse 80% 50% at 50% -10%,
-    rgba(255, 200, 150, 0.12) 0%,
+    var(--about-glow) 0%,
     transparent 60%
   );
-  transition: opacity 300ms ease;
-}
-
-:global(body.dark-mode) .glow {
-  background: radial-gradient(
-    ellipse 80% 50% at 50% -10%,
-    rgba(255, 255, 255, 0.08) 0%,
-    transparent 60%
-  );
+  transition: opacity var(--motion-large-duration) var(--motion-large-easing);
 }
 
 .container {
@@ -103,11 +90,13 @@
 }
 
 .wordmark {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: var(--font-brand);
+  font-size: var(--size-xl);
+  line-height: var(--line-xl);
+  letter-spacing: var(--letter-spacing-xl);
+  font-weight: var(--weight-brand-heavy);
   color: var(--about-text);
-  transition: color 300ms ease;
+  transition: color var(--motion-large-duration) var(--motion-large-easing);
 }
 
 @media (hover: hover) {
@@ -155,11 +144,13 @@
 }
 
 .title {
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-family: var(--font-ui);
+  font-size: var(--size-s);
+  line-height: var(--line-s);
+  letter-spacing: var(--letter-spacing-s);
+  font-weight: var(--weight-ui-regular);
   color: var(--about-muted);
-  letter-spacing: 0.01em;
-  transition: color 300ms ease;
+  transition: color var(--motion-large-duration) var(--motion-large-easing);
 }
 
 .nav {
@@ -258,11 +249,14 @@
 
 .bio {
   margin: 0;
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  line-height: 1.7;
+  text-wrap: pretty;
+  font-family: var(--font-editorial);
+  font-size: var(--size-l);
+  line-height: var(--line-l);
+  letter-spacing: var(--letter-spacing-l);
+  font-weight: var(--weight-editorial-regular);
   color: var(--about-text);
-  transition: color 300ms ease;
+  transition: color var(--motion-large-duration) var(--motion-large-easing);
 }
 
 .bioHint {
@@ -306,13 +300,16 @@ a.bioHint {
 
 .sectionHeader h2 {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-family: var(--font-ui);
+  font-size: var(--size-xs);
+  line-height: var(--line-xs);
+  font-weight: var(--weight-ui-heavy);
+  /* Uppercase labels need positive tracking; the theme has no caps step
+     (gap recorded in GUI.md), so this stays a local literal. */
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--about-muted);
-  transition: color 200ms ease;
+  transition: color var(--motion-duration) var(--motion-easing);
 }
 
 @media (hover: hover) {
@@ -493,9 +490,11 @@ a.bioHint {
 }
 
 .workCompany {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: var(--size-s);
+  line-height: var(--line-s);
+  letter-spacing: var(--letter-spacing-s);
+  font-weight: var(--weight-ui-heavy);
   color: var(--about-text);
 }
 
@@ -513,15 +512,21 @@ a.bioHint {
 }
 
 .workRole {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-family: var(--font-ui);
+  font-size: var(--size-s);
+  line-height: var(--line-s);
+  letter-spacing: var(--letter-spacing-s);
+  font-weight: var(--weight-ui-regular);
   color: var(--about-muted);
 }
 
 .workPeriod {
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 500;
+  font-family: var(--font-ui);
+  font-size: var(--size-s);
+  line-height: var(--line-s);
+  letter-spacing: var(--letter-spacing-s);
+  font-weight: var(--weight-ui-medium);
+  font-variant-numeric: tabular-nums;
   color: var(--about-muted);
   white-space: nowrap;
 }
@@ -583,7 +588,8 @@ a.bioHint {
 }
 
 .compact h3 {
-  font-size: 1.15rem;
+  font-size: var(--size-l);
+  line-height: var(--line-l);
 }
 
 .projectImage {
@@ -629,18 +635,22 @@ a.bioHint {
 
 .projectCard h3 {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-brand);
+  font-size: var(--size-l);
+  line-height: var(--line-l);
+  letter-spacing: var(--letter-spacing-l);
+  font-weight: var(--weight-brand-heavy);
   color: var(--about-accent);
 }
 
 .projectCard p {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
+  font-family: var(--font-ui);
+  font-size: var(--size-s);
+  line-height: var(--line-s);
+  letter-spacing: var(--letter-spacing-s);
+  font-weight: var(--weight-ui-regular);
   color: var(--about-muted);
-  line-height: 1.4;
 }
 
 .projectDivider {
@@ -1456,10 +1466,13 @@ a.bioHint {
 }
 
 .writingColumn h3 {
-  margin: 0 0 12px;
-  font-family: var(--font-sans);
-  font-size: 0.7rem;
-  font-weight: 600;
+  margin: var(--space-zero) var(--space-zero) var(--space-s);
+  font-family: var(--font-ui);
+  font-size: var(--size-xs);
+  line-height: var(--line-xs);
+  font-weight: var(--weight-ui-heavy);
+  /* Uppercase labels need positive tracking; the theme has no caps step
+     (gap recorded in GUI.md), so this stays a local literal. */
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--about-muted);
@@ -1506,18 +1519,24 @@ a.bioHint {
 }
 
 .writingTitle {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-family: var(--font-editorial);
+  font-size: var(--size-m);
+  line-height: var(--line-m);
+  letter-spacing: var(--letter-spacing-m);
+  font-weight: var(--weight-editorial-regular);
   color: var(--about-text);
-  transition: color 200ms ease;
+  transition: color var(--motion-duration) var(--motion-easing);
 }
 
 .writingNote {
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-family: var(--font-ui);
+  font-size: var(--size-xs);
+  line-height: var(--line-xs);
+  letter-spacing: var(--letter-spacing-xs);
+  font-weight: var(--weight-ui-regular);
   color: var(--about-muted);
   white-space: nowrap;
-  transition: color 200ms ease;
+  transition: color var(--motion-duration) var(--motion-easing);
 }
 
 .footer {
@@ -1528,12 +1547,15 @@ a.bioHint {
 
 .contactLink {
   display: inline-block;
-  font-family: var(--font-serif);
-  font-size: 0.95rem;
+  font-family: var(--font-editorial);
+  font-size: var(--size-m);
+  line-height: var(--line-m);
+  letter-spacing: var(--letter-spacing-m);
+  font-weight: var(--weight-editorial-regular);
   color: var(--about-muted);
   transition:
-    color 200ms ease-out,
-    transform 200ms ease-out;
+    color var(--motion-duration) var(--motion-easing),
+    transform var(--motion-duration) var(--motion-easing);
 }
 
 .contactLink:focus-visible {
@@ -1594,25 +1616,30 @@ a.bioHint {
   /* --tooltip-shift keeps an edge-hugging tooltip inside the viewport; it is
      measured per-trigger in AboutPage.tsx and defaults to no shift. */
   transform: translateX(calc(-50% + var(--tooltip-shift, 0px))) translateY(6px);
-  padding: 10px 14px;
-  background: #fff;
-  color: #111;
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
+  /* Graphical tooltip popover: inverted neutrals, radius s, shadow s. Text
+     steps down to xs (kit: m) — these label cards, not controls, and the
+     inline variant must fit one line inside its 300px cap. */
+  padding: var(--space-xxs) var(--space-xs);
+  background: var(--neutral-10);
+  color: var(--neutral-1);
+  font-family: var(--font-ui);
+  font-size: var(--size-xs);
+  line-height: var(--line-xs);
+  letter-spacing: var(--letter-spacing-xs);
+  font-weight: var(--weight-ui-medium);
   /* One line wherever it fits; wraps (like the inline variant) rather than
      widening the page on a narrow window — the DOM-ino label is ~400px. */
   width: max-content;
   max-width: calc(100vw - 32px);
   text-align: center;
-  border-radius: 10px;
+  border-radius: var(--radius-s);
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 200ms ease,
-    transform 200ms ease;
+    opacity var(--motion-duration) var(--motion-easing),
+    transform var(--motion-duration) var(--motion-easing);
   z-index: var(--z-tooltip);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-s);
 }
 
 .tooltipAbove {
@@ -1626,7 +1653,7 @@ a.bioHint {
   left: 50%;
   transform: translateX(calc(-50% + var(--tooltip-arrow-shift, 0px)));
   border: 7px solid transparent;
-  border-top-color: #fff;
+  border-top-color: var(--neutral-10);
 }
 
 .tooltipBelow {
@@ -1640,7 +1667,7 @@ a.bioHint {
   left: 50%;
   transform: translateX(calc(-50% + var(--tooltip-arrow-shift, 0px)));
   border: 7px solid transparent;
-  border-bottom-color: #fff;
+  border-bottom-color: var(--neutral-10);
 }
 
 @media (hover: hover) {

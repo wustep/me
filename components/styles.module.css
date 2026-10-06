@@ -122,7 +122,7 @@
 .social a:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 
 @media (hover: hover) {

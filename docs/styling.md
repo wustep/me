@@ -6,13 +6,14 @@ The styling story is deliberately two-track: the Notion-rendered content uses pl
 
 | File | Purpose |
 |---|---|
+| [`styles/tokens.css`](../styles/tokens.css) | The theme, in the Graphical vocabulary (neutrals, `color-1`, text steps, spacing, radii, borders, shadows, motion, `--cte-*` roles) with the Paper/Untitled/Ink presets. Imported first. See [`GUI.md`](../GUI.md) and [`gui/wustep.md`](../gui/wustep.md). |
 | [`styles/globals.css`](../styles/globals.css) | Tailwind v4 import, shadcn tokens, baseline typography. Loaded globally. |
 | [`styles/notion.css`](../styles/notion.css) | Upstream overrides for `react-notion-x` — padding, code blocks, image framing, etc. |
 | [`styles/wustep.css`](../styles/wustep.css) | The bulk of this site's custom Notion styling — colors, dark-mode tokens, button-block styling, posts switcher, callouts, footer. |
 | [`styles/prism-theme.css`](../styles/prism-theme.css) | Syntax highlighting theme for code blocks. |
 | [`styles/applause.css`](../styles/applause.css) | Styles for the applause button. |
 
-All five are imported from `pages/_app.tsx` or via `_document.tsx`.
+All six are imported from `pages/_app.tsx` or via `_document.tsx`.
 
 ## Tailwind v4
 
@@ -27,11 +28,12 @@ The two tracks used to define the *same* variable names (`--primary`, `--backgro
 
 | Namespace | Owner | Examples | Consumers |
 |---|---|---|---|
+| Graphical vocabulary: `--neutral-*`, `--color-1`, `--cte-*`, `--space-*`, `--size-*`/`--line-*`, `--radius-*`, `--border-*`, `--shadow-*`, `--font-ui/brand/editorial/data`, `--motion-*` | `styles/tokens.css` | `--cte-text-muted`, `--size-l`, `--radius-m` | the theme — `--w-*`, `--about-*`, shadcn and react-notion-x names alias it |
 | `--w-*` | `styles/wustep.css` | `--w-primary`, `--w-secondary`, `--w-accent`, `--w-background`, `--w-surface`, `--w-divider` | Notion pages, Page404/ErrorPage, MidiVisualizer, `/design` pages' custom CSS |
 | shadcn names | `styles/globals.css` | `--background`, `--foreground`, `--primary`, `--muted-foreground`, `--sidebar*` | Tailwind utilities + [`components/ui/`](../components/ui/) |
 | `--dw-*` | `styles/globals.css` | `--dw-accent`, `--dw-field-h`, `--dw-radius-*` | `/design` workbench shell + tools |
 | `--about-*` | `components/AboutPage.module.css` | `--about-text`, `--about-accent` | About page (theme workbench overrides them in preview) |
-| shared | `styles/wustep.css` (`--space-*`, `--radius-sm/md/lg`, `--font-*`) and `styles/globals.css` (`--z-*`, `--ease-*`) | | both tracks |
+| shared | `styles/globals.css` (`--z-*`, `--ease-out-*`) and `pages/_app.tsx` (`--font-sans`, `--font-serif` from next/font) | | both tracks |
 
 New components should still pick a track and stick with it; never redefine another namespace's token.
 

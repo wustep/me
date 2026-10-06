@@ -3492,7 +3492,7 @@
 .modelDot {
   width: 7px;
   height: 7px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   background: var(--pm-accent, #1a1918);
   box-shadow: 0 0 0 0 var(--pm-accent-line, rgba(26, 25, 24, 0.35));
   animation: dotPulse 2.4s ease-in-out infinite;

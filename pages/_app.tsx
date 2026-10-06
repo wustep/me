@@ -4,6 +4,8 @@ import 'katex/dist/katex.min.css'
 import 'prismjs/themes/prism-coy.css'
 // core styles shared by all of react-notion-x (required)
 import 'react-notion-x/src/styles.css'
+// design tokens — the foundation every other stylesheet reads (see GUI.md)
+import 'styles/tokens.css'
 // global styles shared across the entire site
 import 'styles/globals.css'
 // this might be better for dark mode

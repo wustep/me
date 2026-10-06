@@ -4,61 +4,44 @@
 
 /* Fonts are now loaded via next/font/google in _app.tsx */
 
+:root,
+.dark-mode {
+  /* --w-* are the Notion-track names for theme roles in styles/tokens.css.
+     Declared on both selectors so they follow body.dark-mode (neutrals are
+     mode-aware). /design/theme previews by overriding these with
+     !important, so keep the names. */
+  --w-primary: var(--cte-text);
+  --w-secondary: var(--cte-text-muted);
+  --w-accent: var(--neutral-10); /* strongest ink — not the brand accent */
+  --w-background: var(--cte-canvas);
+  --w-surface: var(--cte-surface);
+  --w-surface-hover: var(--cte-surface-muted);
+  --w-divider: var(--border-default-color);
+  --w-divider-hover: var(--neutral-10-transparent);
+
+  /* react-notion-x's own color roles, re-pointed at the theme so Notion
+     content sits on the same canvas and ink as the rest of the site. Body
+     text keeps Notion's slightly softer ink (neutral-9). */
+  --fg-color: var(--neutral-9);
+  --bg-color: var(--cte-canvas);
+  --bg-color-1: var(--cte-surface);
+}
+
 :root {
-  /* Color system - matching About page */
-  --w-primary: #1a1a1a;
-  --w-secondary: #666;
-  --w-accent: #000;
-  --w-background: #ffffff;
-  --w-surface: rgba(0, 0, 0, 0.03);
-  --w-surface-hover: rgba(0, 0, 0, 0.06);
-  --w-divider: rgba(0, 0, 0, 0.08);
-  --w-divider-hover: rgba(0, 0, 0, 0.15);
-
-  /* Dark mode colors - will be applied via .dark-mode class */
-  --w-dark-primary: #e8e8e8;
-  --w-dark-secondary: #888;
-  --w-dark-accent: #fff;
-  --w-dark-background: #0d0d0d;
-  --w-dark-surface: rgba(255, 255, 255, 0.04);
-  --w-dark-surface-hover: rgba(255, 255, 255, 0.08);
-  --w-dark-divider: rgba(255, 255, 255, 0.1);
-  --w-dark-divider-hover: rgba(255, 255, 255, 0.2);
-
-  /* Spacing system */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-xxl: 3rem;
-
-  /* Border radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-pill: 9999px; /* fully-rounded pills/circles */
+  /* Fallbacks only; pages/_app.tsx sets the real next/font families. */
   --font-serif: 'Crimson Pro', 'Georgia', serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Design-workbench (--dw-*) tokens are owned by styles/globals.css */
 }
 
-/* Dark mode */
-.dark-mode {
-  --w-primary: var(--w-dark-primary);
-  --w-secondary: var(--w-dark-secondary);
-  --w-accent: var(--w-dark-accent);
-  --w-background: var(--w-dark-background);
-  --w-surface: var(--w-dark-surface);
-  --w-surface-hover: var(--w-dark-surface-hover);
-  --w-divider: var(--w-dark-divider);
-  --w-divider-hover: var(--w-dark-divider-hover);
+::selection {
+  background: var(--color-1-transparent);
 }
 
 body {
-  font-family: var(--font-sans);
-  font-size: 16px;
+  font-family: var(--font-ui);
+  font-size: var(--size-m);
 }
 
 h1,
@@ -67,8 +50,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
-  font-weight: 600;
+  font-family: var(--font-brand);
+  font-weight: var(--weight-brand-heavy);
 }
 
 .notion-app {
@@ -76,7 +59,7 @@ h6 {
 }
 
 .dark-mode .notion-app {
-  background: var(--w-dark-background);
+  background: var(--w-background);
 }
 
 /**
@@ -84,9 +67,9 @@ h6 {
  */
 * {
   transition:
-    background-color 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.5s ease;
+    background-color var(--motion-large-duration) var(--motion-large-easing),
+    border-color var(--motion-large-duration) var(--motion-large-easing),
+    box-shadow var(--motion-large-duration) var(--motion-large-easing);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -105,7 +88,7 @@ h6 {
  * their own :focus-visible ring (ThemeToggle, LabsButton) still apply theirs.
  */
 .notion :where(a, button, summary, [role='button']):focus-visible {
-  outline: 2px solid var(--w-primary);
+  outline: var(--focus-ring-outline);
   outline-offset: 2px;
 }
 
@@ -118,7 +101,7 @@ h6 {
 }
 
 .notion-search {
-  border-radius: 6px /* prev: 3px */;
+  border-radius: var(--radius-s) /* prev: 3px */;
 }
 
 /**
@@ -134,12 +117,12 @@ h6 {
 
 .notion-header .breadcrumb {
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
 }
 
 .notion-header .breadcrumb.button {
   padding: 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
 }
 
 .breadcrumb .title {
@@ -441,7 +424,7 @@ h6 {
   box-shadow: none;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   display: inline-flex;
   width: unset;
 }
@@ -541,7 +524,7 @@ span.notion-gray_background > .notion-link {
 
 span[class*='_background'] {
   background-image: none;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   padding: unset;
   margin: unset;
 }
@@ -605,7 +588,7 @@ span[class*='_background'] {
  */
 .notion-gallery-grid {
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: var(--space-lg);
+  gap: var(--space-l);
   grid-auto-flow: row;
 }
 
@@ -829,9 +812,7 @@ span[class*='_background'] {
 .posts-heading-toggle-button.active {
   background: var(--bg-color);
   color: var(--fg-color-6);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-s);
 }
 
 .posts-heading-toggle-button:focus-visible {
@@ -865,13 +846,13 @@ span[class*='_background'] {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
 .posts-heading__title {
   flex: 1 1 auto;
-  margin-right: var(--space-sm);
+  margin-right: var(--space-xs);
 }
 
 .posts-view-toggle {
@@ -879,14 +860,14 @@ span[class*='_background'] {
   display: inline-flex;
   align-items: center;
   padding: 0.2rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   border: 1px solid var(--w-divider);
   background: var(--w-surface);
   gap: 0.15rem;
 }
 
 .dark-mode .posts-view-toggle {
-  background: var(--w-dark-surface);
+  background: var(--w-surface);
   border-color: var(--w-divider);
 }
 
@@ -896,7 +877,7 @@ span[class*='_background'] {
   justify-content: center;
   gap: 0.35rem;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   padding: 0.3rem 0.85rem;
   background: transparent;
   font-weight: 600;
@@ -943,16 +924,16 @@ span[class*='_background'] {
    it receives keyboard focus, then pinned top-left above every surface. */
 .skip-link {
   position: fixed;
-  top: var(--space-sm);
-  left: var(--space-sm);
+  top: var(--space-xs);
+  left: var(--space-xs);
   z-index: var(--z-toast);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-m);
+  border-radius: var(--radius-m);
   background: var(--w-primary);
   color: var(--w-background);
   font: 500 14px/1.2 var(--font-sans);
   text-decoration: none;
-  transform: translateY(calc(-100% - var(--space-md)));
+  transform: translateY(calc(-100% - var(--space-m)));
 }
 
 .skip-link:focus-visible {
@@ -1033,7 +1014,7 @@ main[tabindex='-1']:focus {
     padding: 0 4px 0 0 /* from 0 4px */;
   }
   .notion-list-item:hover {
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
   }
 }
 
@@ -1086,7 +1067,7 @@ main[tabindex='-1']:focus {
 }
 
 .notion-collection-card {
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   background: var(--w-surface);
   transition:
     transform 0.2s ease,
@@ -1114,7 +1095,7 @@ main[tabindex='-1']:focus {
 }
 
 .notion-collection-card-cover {
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   overflow: hidden;
   border-bottom: 1px solid var(--w-divider);
   aspect-ratio: 16/9;
@@ -1330,7 +1311,7 @@ main[tabindex='-1']:focus {
  * ========== Callouts ==========
  */
 .notion-callout {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-l);
 }
 
 .notion-callout-text > div:last-child {
@@ -1364,7 +1345,7 @@ main[tabindex='-1']:focus {
 .notion-property-multi_select-item,
 .notion-property-select-item,
 .notion-property-status-item {
-  border-radius: 8px;
+  border-radius: var(--radius-m);
 }
 
 /**

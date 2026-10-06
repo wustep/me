@@ -2,6 +2,12 @@
 
 Notes for AI agents (and humans) working in this repo.
 
+## Design system
+
+For UI work, follow GUI.md and use graphical-ui, graphical-convert, or graphical-audit as appropriate.
+
+The skills live in `.agents/skills/`. Theme tokens are in `styles/tokens.css`, and local decisions (font roles on Crimson Pro + Inter, presets, aliases, exceptions) are in `gui/wustep.md`.
+
 ## Lenses (`components/wustep/lenses/`)
 
 The Lenses deck is authored in **`lenses.md`** — that file is the source of
