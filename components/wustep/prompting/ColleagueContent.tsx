@@ -1,21 +1,21 @@
 import { ChapterBody } from './ChapterBody'
 import { ColleagueDemo } from './ColleagueDemo'
-import { Figure, Lever } from './parts'
+import { Figure, Lever, Note } from './parts'
 import styles from './PromptingPage.module.css'
 
 export function ColleagueContent() {
   return (
     <ChapterBody>
       <p>
-        The most useful mental shift I&apos;ve found is treating the agent as a{' '}
+        The most useful mental shift I&rsquo;ve found is treating the agent as a{' '}
         <em>colleague</em>. Specifically, a fast, infinitely patient{' '}
-        <s>junior</s> senior who has only seen what you&apos;ve shown them and
+        <s>junior</s> senior who has only seen what you&rsquo;ve shown them and
         forgets between sessions.
       </p>
 
       <p>
         Once you internalize that, a lot of what looks like prompt engineering
-        starts looking like the things you&apos;d already do for a teammate:
+        starts looking like the things you&rsquo;d already do for a teammate:
         onboard them with the right docs, brief them before each task, pair
         through ambiguity, review their work before merging.
       </p>
@@ -45,12 +45,12 @@ export function ColleagueContent() {
         </p>
         <p>
           Most of this lives in a <code>CLAUDE.md</code> or{' '}
-          <code>.cursorrules</code> at the project root. It&apos;s the
+          <code>AGENTS.md</code> at the project root. It&rsquo;s the
           highest-yield thing you can write in a codebase, because the agent
           reads it on every task. A useful rules file says things like:
         </p>
         <ul className={styles.axisList}>
-          <li>Use Tailwind classes; don&apos;t inline styles.</li>
+          <li>Use Tailwind classes; don&rsquo;t inline styles.</li>
           <li>
             Tests go next to source files, not in a <code>__tests__/</code>{' '}
             folder.
@@ -65,8 +65,8 @@ export function ColleagueContent() {
           </li>
         </ul>
         <p>
-          The paragraph that gets a new hire from &quot;lost&quot; to
-          &quot;useful&quot; in a week does the same for the agent.
+          The paragraph that gets a new hire from &ldquo;lost&rdquo; to
+          &ldquo;useful&rdquo; in a week does the same for the agent.
         </p>
       </Lever>
 
@@ -80,9 +80,10 @@ export function ColleagueContent() {
           of work is, which files matter, what good looks like, what to avoid.
         </p>
         <p>
-          The mistake is starting cold every time: &quot;fix the auth bug.&quot;
-          A colleague would ask &quot;which auth bug? where? what changed
-          recently?&quot; and you&apos;d answer. Include the answers up front.
+          The mistake is starting cold every time: &ldquo;fix the auth
+          bug.&rdquo; A colleague would ask &ldquo;which auth bug? where? what
+          changed recently?&rdquo; and you&rsquo;d answer. Include the answers
+          up front.
         </p>
         <p>
           The longer the task, the more that setup is worth: five extra minutes
@@ -96,14 +97,14 @@ export function ColleagueContent() {
         tagline='The diff is a proposal, not an answer.'
       >
         <p>
-          Whatever comes back is a colleague&apos;s PR, not a final answer, and
+          Whatever comes back is a colleague&rsquo;s PR, not a final answer, and
           your job is to evaluate it. Read the diff. Run the code. Check the
-          cases you&apos;d check on a junior&apos;s PR.
+          cases you&rsquo;d check on a new teammate&rsquo;s PR.
         </p>
         <p>
-          Don&apos;t accept what you can&apos;t verify. If you can&apos;t tell
-          whether the result is right, that&apos;s a signal that the task needed
-          to be smaller, or that the agent needed more context.
+          Don&rsquo;t accept what you can&rsquo;t verify. If you can&rsquo;t
+          tell whether the result is right, that&rsquo;s a signal that the task
+          needed to be smaller, or that the agent needed more context.
         </p>
         <p>
           The rubber-stamp failure mode, clicking accept on diff after diff, is
@@ -111,6 +112,16 @@ export function ColleagueContent() {
           it before merging.
         </p>
       </Lever>
+
+      <Note title='Smarter models, same job'>
+        <p>
+          It&rsquo;s tempting to think better models make all this unnecessary.
+          It works the other way. A smarter colleague takes on bigger, vaguer
+          tasks, and runs further on a bad brief before anyone notices. The more
+          you hand off, the more the onboarding, the briefing, and the review
+          matter.
+        </p>
+      </Note>
     </ChapterBody>
   )
 }

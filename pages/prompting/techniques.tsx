@@ -11,7 +11,7 @@ const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'Techniques'
 const title = `${chapterTitle} — ${parentTitle}`
 const description =
-  "Chapter 04: a small repertoire of prompting techniques worth practicing. AI coding is roughly three years old; we're all about 1200 ELO at this."
+  'A repertoire of prompting moves worth stealing: what to ask before you start, how to open up the options, and how to pressure-test what comes back.'
 const canonicalUrl = `${host}/prompting/techniques`
 const previewImage = shareCardUrl('prompting-techniques')
 

@@ -8,7 +8,7 @@ const parentTitle = 'How to talk to coding agents'
 const chapterTitle = 'The beginner’s mindset'
 const title = `${chapterTitle} — ${parentTitle}`
 const description =
-  "Chapter 01: AI coding is three years old. We're all around 1200 ELO. The fastest learners stay beginners — they don't blame the model, they ask what they could have done differently."
+  "Chapter 01: AI coding is three years old. We're all around 1200 Elo. The fastest learners stay beginners — they don't blame the model, they ask what they could have done differently."
 const canonicalUrl = `${host}/prompting/mindset`
 const previewImage = shareCardUrl('prompting-mindset')
 

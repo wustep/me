@@ -84,7 +84,7 @@ export function IntroContent() {
 
       <div className={`${styles.prose} ${revealed ? styles.bodyVisible : ''}`}>
         <p className={styles.bodyItem} style={bodyDelay(0)}>
-          It&apos;s 2026, and more and more of coding looks like this:
+          It&rsquo;s 2026, and more and more of coding looks like this:
         </p>
 
         <div className={styles.bodyItem} style={bodyDelay(1)}>
