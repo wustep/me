@@ -24,6 +24,17 @@ export function isAttachmentSource(source: string): boolean {
   return source.startsWith('attachment:')
 }
 
+/**
+ * GIF stored as a raw Notion file URL (older uploads keep the unsigned
+ * `prod-files-secure` S3 URL as their source). Not fetchable without signing.
+ */
+const NOTION_FILE_HOST_RE =
+  /^https:\/\/(?:prod-files-secure\.s3\.[a-z0-9-]+\.amazonaws\.com|s3[.-][a-z0-9-]+\.amazonaws\.com\/secure\.notion-static\.com|file\.notion\.(?:com|so))\//i
+
+export function isLegacyFileGifSource(source: string): boolean {
+  return isGifSource(source) && NOTION_FILE_HOST_RE.test(source)
+}
+
 /** Same-origin re-signer. Absolute so react-notion-x can `new URL(source)`. */
 export function notionFileProxyUrl(blockId: string, source: string): string {
   const params = new URLSearchParams({
@@ -58,7 +69,10 @@ export function rewriteVideoSources(recordMap: ExtendedRecordMap): void {
     // Image proxy handles stills; only attachment GIFs need the file API.
     if (
       block.type === 'image' &&
-      !(isGifSource(source) && isAttachmentSource(source))
+      !(
+        (isGifSource(source) && isAttachmentSource(source)) ||
+        isLegacyFileGifSource(source)
+      )
     ) {
       continue
     }

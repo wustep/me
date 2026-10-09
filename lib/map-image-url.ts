@@ -5,6 +5,7 @@ import { defaultPageCover, defaultPageIcon } from './config'
 import {
   isAttachmentSource,
   isGifSource,
+  isLegacyFileGifSource,
   notionFileProxyUrl
 } from './rewrite-video-urls'
 
@@ -46,6 +47,13 @@ export const mapImageUrl = (url: string | undefined, block: Block) => {
       return notionFileProxyUrl(block.id, clean)
     }
     return notionImageProxyUrl(clean, block)
+  }
+
+  // Older uploads store a raw, unsigned S3 URL as the source. Stills are
+  // fine through the image proxy below, but GIFs pass through unproxied and
+  // S3 answers 403. Re-sign those the same way as attachment GIFs.
+  if (isLegacyFileGifSource(url)) {
+    return notionFileProxyUrl(block.id, url)
   }
 
   return defaultMapImageUrl(url, block)
