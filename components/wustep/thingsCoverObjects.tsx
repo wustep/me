@@ -1,9 +1,9 @@
 /**
  * thingsCoverObjects
  *
- *   The cut-outs the Things cover variants stand on their shelves: real
- *   things from the collection (data/items.json in wustep/things), each
- *   drawn as a few flat shapes in its own colours — the app has no accent
+ *   The cut-outs ThingsCover stands on its shelf: real things from the
+ *   collection (data/items.json in wustep/things), each drawn as a few
+ *   flat shapes in its own colours — the app has no accent
  *   colour, "the objects bring their own". Every shape is drawn with its
  *   bottom-centre at (0, 0), standing up into negative y, so a caller only
  *   has to translate it onto a shelf lip. Flat fills only (no gradient
@@ -21,8 +21,6 @@ export type ThingKind =
   | 'kalimba'
   | 'mouse'
   | 'cardBar'
-  | 'nord'
-  | 'loopStation'
   | 'jamcorder'
 
 /** Half the drawn width of each thing, for contact shadows under it. */
@@ -35,8 +33,6 @@ export const THING_HALF_W: Record<ThingKind, number> = {
   kalimba: 26,
   mouse: 22,
   cardBar: 26,
-  nord: 70,
-  loopStation: 34,
   jamcorder: 17
 }
 
@@ -263,55 +259,6 @@ function CardBar() {
   )
 }
 
-// Nord Stage 4 88: the long red keyboard (StageBench's muse).
-function Nord() {
-  return (
-    <g>
-      <rect x='-70' y='-24' width='140' height='24' rx='3' fill='#c8202e' />
-      <rect x='-70' y='-24' width='140' height='2' rx='1' fill='#e04a55' />
-      <rect x='-22' y='-20' width='22' height='6' rx='1' fill='#1b1416' />
-      {[-50, -42, -34, 20, 28, 36, 44].map((cx) => (
-        <circle key={cx} cx={cx} cy='-17' r='2' fill='#3a3438' />
-      ))}
-      <rect x='-64' y='-10' width='128' height='8' fill='#f2efe8' />
-      {Array.from({ length: 21 }).map((_, i) =>
-        // Black keys in the 2-then-3 octave pattern.
-        [0, 1, 3, 4, 5].includes(i % 7) ? (
-          <rect
-            key={i}
-            x={-64 + (i + 1) * (128 / 22) - 1.6}
-            y='-10'
-            width='3.2'
-            height='4.8'
-            fill='#1d1a19'
-          />
-        ) : null
-      )}
-    </g>
-  )
-}
-
-// BOSS RC-505mkII: a dark slab with five coloured track rings.
-function LoopStation() {
-  return (
-    <g>
-      <rect x='-34' y='-17' width='68' height='17' rx='2.5' fill='#3b3d40' />
-      <rect x='-34' y='-17' width='68' height='2' rx='1' fill='#55585c' />
-      {['#e64646', '#f2a33a', '#4fbf6b', '#4a90e2', '#b56be0'].map((c, i) => (
-        <circle
-          key={c}
-          cx={-24 + i * 12}
-          cy='-8'
-          r='3.6'
-          fill='none'
-          stroke={c}
-          strokeWidth='1.6'
-        />
-      ))}
-    </g>
-  )
-}
-
 // Jamcorder: a small dark box with one amber recording light.
 function Jamcorder() {
   return (
@@ -334,8 +281,6 @@ const SHAPES: Record<ThingKind, () => ReactElement> = {
   kalimba: Kalimba,
   mouse: Mouse,
   cardBar: CardBar,
-  nord: Nord,
-  loopStation: LoopStation,
   jamcorder: Jamcorder
 }
 

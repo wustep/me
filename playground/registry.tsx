@@ -14,7 +14,7 @@ import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SpotItCover } from '@/components/wustep/SpotItCover'
 import { StageBenchCover } from '@/components/wustep/StageBenchCover'
 import { StarrySequencerCover } from '@/components/wustep/StarrySequencerCover'
-import { ThingsCoverA } from '@/components/wustep/ThingsCoverA'
+import { ThingsCover } from '@/components/wustep/ThingsCover'
 
 export type PlaygroundEntry = {
   title: string
@@ -66,14 +66,14 @@ export const playgroundSections: PlaygroundSection[] = [
         title: 'Things',
         url: '/playground/things',
         description:
-          'A dark shelf of the real things I own, from desk to carry, with notes on each.',
+          'A shelf of the real things that I own, from furniture to daily carry',
         summary: 'A shelf of the real things I own',
         date: 'Oct 2026',
         year: '2026',
         source: 'https://github.com/wustep/things',
         gradient: 'from-stone-800 via-stone-950 to-stone-950',
         image: '/playground/covers/things.png',
-        CoverComponent: ThingsCoverA
+        CoverComponent: ThingsCover
       },
       {
         title: 'StageBench',
