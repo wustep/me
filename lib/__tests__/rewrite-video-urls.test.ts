@@ -37,6 +37,24 @@ describe('rewriteVideoSources', () => {
     expect(href.searchParams.get('url')).toContain('attachment:')
   })
 
+  it('points raw S3 GIFs from older uploads at the re-signer', () => {
+    const gifId = '2bc5cb08-cf2c-81b5-83c3-cfdb72249c1e'
+    const source =
+      'https://prod-files-secure.s3.us-west-2.amazonaws.com/30725683-e071-41f1-988d-e6e6fa72abd8/c529f997-53a4-4bbb-b01c-cf68c2fb4c24/2024-04-14_at_22.27.14.gif'
+    const recordMap = recordMapWith({
+      [gifId]: {
+        role: 'reader',
+        value: { id: gifId, type: 'image', properties: { source: [[source]] } }
+      }
+    })
+
+    rewriteVideoSources(recordMap)
+
+    const href = new URL(recordMap.signed_urls![gifId]!)
+    expect(href.pathname).toBe('/api/notion-file')
+    expect(href.searchParams.get('url')).toBe(source)
+  })
+
   it('points attachment GIFs at the same-origin re-signer', () => {
     const gifId = '3c25cb08-cf2c-80c4-b4ac-db1746dad068'
     const recordMap = recordMapWith({

@@ -52,6 +52,21 @@ describe('mapImageUrl', () => {
     expect(mapped).toContain('id=1285cb08-cf2c-806c-83d9-ce2bbaaa663f')
   })
 
+  it('sends raw S3 GIFs from older uploads through the file re-signer', () => {
+    const url =
+      'https://prod-files-secure.s3.us-west-2.amazonaws.com/30725683-e071-41f1-988d-e6e6fa72abd8/c529f997-53a4-4bbb-b01c-cf68c2fb4c24/2024-04-14_at_22.27.14.gif'
+
+    const mapped = mapImageUrl(url, block)
+    expect(mapped).toMatch(/\/api\/notion-file\?/)
+    expect(mapped).toContain(encodeURIComponent(url))
+    expect(mapped).toContain('id=1285cb08-cf2c-806c-83d9-ce2bbaaa663f')
+  })
+
+  it('leaves public, non-Notion GIFs alone', () => {
+    const url = 'https://media.giphy.com/media/abc/giphy.gif'
+    expect(mapImageUrl(url, block)).toBe(url)
+  })
+
   it('sends attachment: GIFs through the same-origin file re-signer', () => {
     const url =
       'attachment:1fd40ffb-941b-4878-89fc-c651829cbcaf:White_Lotus_Ba_Sing_Se.gif?spaceId=30725683-e071-41f1-988d-e6e6fa72abd8'
