@@ -62,6 +62,18 @@ export const playgroundSections: PlaygroundSection[] = [
       //   CoverComponent: JevCover
       // },
       {
+        title: 'Things',
+        url: '/playground/things',
+        description:
+          'A dark shelf of the real things I own, from desk to carry, with notes on each.',
+        summary: 'A shelf of the real things I own',
+        date: 'Oct 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/things',
+        gradient: 'from-stone-700 via-stone-900 to-zinc-950',
+        image: '/playground/covers/things.png'
+      },
+      {
         title: 'StageBench',
         url: '/playground/stagebench',
         description:
