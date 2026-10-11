@@ -13,14 +13,21 @@ import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SplashPanicCoverB } from '@/components/wustep/SplashPanicCoverB'
 import { SplashPanicCoverC } from '@/components/wustep/SplashPanicCoverC'
+import { ThingsCoverA } from '@/components/wustep/ThingsCoverA'
+import { ThingsCoverB } from '@/components/wustep/ThingsCoverB'
+import { ThingsCoverC } from '@/components/wustep/ThingsCoverC'
+import { ThingsCoverD } from '@/components/wustep/ThingsCoverD'
 
 // Dev-only workbench for playground covers: one tab per project, each
 // rendering its covers inside real card markup at the two widths that
 // matter — the shipped cover first, then the unshipped variants from the
 // exploration (playground-entry skill), kept so the comparison record
-// survives the pick.
+// survives the pick. 404s on the production deploy, but renders on Vercel
+// preview deploys (VERCEL_ENV 'preview') so a PR's covers can be compared
+// there; a local `next build` has no VERCEL_ENV and stays 404.
 export const getStaticProps = () =>
-  process.env.NODE_ENV === 'production'
+  process.env.VERCEL_ENV === 'production' ||
+  (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV)
     ? { notFound: true as const }
     : { props: {} }
 
@@ -40,6 +47,33 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'things',
+    title: 'Things',
+    summary: 'A shelf of the real things I own',
+    covers: [
+      {
+        label: "A — The docent's lamp",
+        hint: 'Hover: a pool of lamplight walks the shelf one thing at a time; each lifts and its name warms as the light reaches it.',
+        Cover: ThingsCoverA
+      },
+      {
+        label: 'B — The name on the shelf',
+        hint: 'Hover: the lamp flickers on, the word lifts off the lip and warms to paper, the case counts come up left to right.',
+        Cover: ThingsCoverB
+      },
+      {
+        label: 'C — Up close',
+        hint: 'Hover: the Bambino lifts, then opens — grows into focus as the shelf goes dark and its detail sets in — and closes back home.',
+        Cover: ThingsCoverC
+      },
+      {
+        label: 'D — Joins Music',
+        hint: 'Hover: the Jamcorder is let down into its place on the Music shelf; MUSIC 4 → 5 and THINGS · 57 → 58 tick as it lands.',
+        Cover: ThingsCoverD
+      }
+    ]
+  },
   {
     id: 'jev',
     title: 'Jev Playground',

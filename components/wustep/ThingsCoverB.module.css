@@ -1,0 +1,193 @@
+/* Cover for Things — the name on the shelf. One wide SVG (1200×240) sliced
+   to the cover box over the app's own room: walnut-black, a little
+   warmth falling from above, corners sinking into shadow, and the app's fine
+   warm grain. Things is dark in both of the site's themes, so the cover is
+   too. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* The --room stack from things/src/style.css, grain and all. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .78 .065 0 0 0 -.015'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(
+      90% 55% at 50% -8%,
+      rgba(255, 214, 165, 0.05),
+      transparent 70%
+    ),
+    radial-gradient(130% 95% at 50% 40%, transparent 52%, rgba(0, 0, 0, 0.38)),
+    #13110e;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Text (viewBox units) ----------
+   The app self-hosts Spectral and IBM Plex Mono; this site doesn't load
+   them, so the stacks fall back the way the app's own do. */
+
+/* Light (300), as the app sets its larger serif. The baseline is the lip,
+   so the g's descender hangs over the shelf's front edge. */
+.wordText {
+  font-family: 'Spectral', 'Iowan Old Style', Georgia, serif;
+  font-size: 104px;
+  font-weight: 300;
+  letter-spacing: -1px;
+  text-anchor: middle;
+  fill: #b8ae9f;
+  /* The app's --ease, at its thing-lift duration. */
+  transition:
+    transform 450ms cubic-bezier(0.2, 0.7, 0.1, 1),
+    fill 300ms cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.makerText {
+  font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  text-anchor: middle;
+  fill: #8e8577;
+}
+
+.nameText {
+  font-family: 'Spectral', 'Iowan Old Style', Georgia, serif;
+  font-size: 12px;
+  font-style: italic;
+  text-anchor: middle;
+  fill: #b8ae9f;
+}
+
+.caseText {
+  font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7px;
+  letter-spacing: 1.4px;
+  text-anchor: middle;
+  fill: #8e8577;
+  opacity: 0.55;
+  transition: opacity 400ms cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+.caseCount {
+  fill: #b8ae9f;
+}
+
+/* ---------- Lamp ----------
+   Apply-on-hover: the rest pose must be exact (lamp low, word down), and
+   switching the lamp on is a one-shot moment, not a loop. The lift and ink
+   are transitions, so hovering out settles the word back onto the lip
+   instead of snapping; the flicker is an animation that only exists under
+   hover, so it replays from dark each time. */
+.pool {
+  opacity: 0.4;
+  transition: opacity 600ms ease-out;
+}
+
+.shadow {
+  opacity: 0.6;
+  transition: opacity 450ms cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+/* A warm bulb catching: up, a dip, then full. Ends at the hovered opacity
+   so `forwards` hands off cleanly. */
+@keyframes lampOn {
+  0% {
+    opacity: 0.4;
+  }
+  18% {
+    opacity: 0.85;
+  }
+  30% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .pool,
+  .cover:hover .pool {
+    opacity: 1;
+    animation: lampOn 900ms ease-out forwards;
+  }
+  /* 6 units — the app's 7px lift, scaled to a word this size reads loud. */
+  :global(.group):hover .wordText,
+  .cover:hover .wordText {
+    transform: translateY(-6px);
+    fill: #ede6da;
+  }
+  :global(.group):hover .shadow,
+  .cover:hover .shadow {
+    opacity: 0.25;
+  }
+  /* Cases come up left to right once the lamp has caught. */
+  :global(.group):hover .caseText,
+  .cover:hover .caseText {
+    opacity: 1;
+    transition-delay: calc(350ms + var(--i) * 140ms);
+  }
+}
+
+/* Touch + keyboard: focus switches the lamp on the same way. */
+:global(.group):focus-within .pool,
+.cover:focus-within .pool {
+  opacity: 1;
+  animation: lampOn 900ms ease-out forwards;
+}
+:global(.group):focus-within .wordText,
+.cover:focus-within .wordText {
+  transform: translateY(-6px);
+  fill: #ede6da;
+}
+:global(.group):focus-within .shadow,
+.cover:focus-within .shadow {
+  opacity: 0.25;
+}
+:global(.group):focus-within .caseText,
+.cover:focus-within .caseText {
+  opacity: 1;
+  transition-delay: calc(350ms + var(--i) * 140ms);
+}
+
+/* Touch has no hover to give, so the lamp comes on while this cover holds
+   the grid's spotlight — the one nearest the middle of the screen
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .pool {
+    opacity: 1;
+    animation: lampOn 900ms ease-out forwards;
+  }
+  :global([data-cover-awake]) .wordText {
+    transform: translateY(-6px);
+    fill: #ede6da;
+  }
+  :global([data-cover-awake]) .shadow {
+    opacity: 0.25;
+  }
+  :global([data-cover-awake]) .caseText {
+    opacity: 1;
+    transition-delay: calc(350ms + var(--i) * 140ms);
+  }
+}
+
+/* Still: no flicker, no lift; the lamp just sits a little higher than its
+   hover-less low, so the poster reads lit and finished. */
+@media (prefers-reduced-motion: reduce) {
+  .pool,
+  .wordText,
+  .shadow,
+  .caseText {
+    animation: none !important;
+    transition: none !important;
+  }
+  .pool {
+    opacity: 0.7;
+  }
+  .wordText {
+    transform: none !important;
+  }
+}

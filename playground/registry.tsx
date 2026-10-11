@@ -14,6 +14,7 @@ import { SplashPanicCover } from '@/components/wustep/SplashPanicCover'
 import { SpotItCover } from '@/components/wustep/SpotItCover'
 import { StageBenchCover } from '@/components/wustep/StageBenchCover'
 import { StarrySequencerCover } from '@/components/wustep/StarrySequencerCover'
+import { ThingsCoverA } from '@/components/wustep/ThingsCoverA'
 
 export type PlaygroundEntry = {
   title: string
@@ -70,8 +71,9 @@ export const playgroundSections: PlaygroundSection[] = [
         date: 'Oct 2026',
         year: '2026',
         source: 'https://github.com/wustep/things',
-        gradient: 'from-stone-700 via-stone-900 to-zinc-950',
-        image: '/playground/covers/things.png'
+        gradient: 'from-stone-800 via-stone-950 to-stone-950',
+        image: '/playground/covers/things.png',
+        CoverComponent: ThingsCoverA
       },
       {
         title: 'StageBench',

@@ -1,0 +1,331 @@
+/* Cover for Things — joins Music. One wide SVG (1200×240) sliced to the
+   cover box over the app's own room: walnut-black, a little warmth
+   falling from above, corners sinking into shadow, and the app's fine warm
+   grain. Things is dark in both of the site's themes, so the cover is too. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* The --room stack from things/src/style.css, grain and all. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .78 .065 0 0 0 -.015'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(
+      90% 55% at 50% -8%,
+      rgba(255, 214, 165, 0.05),
+      transparent 70%
+    ),
+    radial-gradient(130% 95% at 50% 40%, transparent 52%, rgba(0, 0, 0, 0.38)),
+    #13110e;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Text (viewBox units) ----------
+   The app's tag: maker in small spaced mono caps, name in serif. The app
+   self-hosts Spectral and IBM Plex Mono; this site doesn't load them, so
+   the stacks fall back the way the app's own do. */
+
+.makerText {
+  font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 6.5px;
+  letter-spacing: 1px;
+  text-anchor: middle;
+  fill: #8e8577;
+}
+
+.nameText {
+  font-family: 'Spectral', 'Iowan Old Style', Georgia, serif;
+  font-size: 10.5px;
+  text-anchor: middle;
+  fill: #b8ae9f;
+}
+
+/* The app's mark and case label: mono caps, the mark a shade brighter. */
+.markText,
+.markCountText {
+  font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7.5px;
+  letter-spacing: 1.5px;
+}
+
+.markText {
+  fill: #b8ae9f;
+}
+
+.markCountText {
+  fill: #8e8577;
+}
+
+.caseText {
+  font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7px;
+  letter-spacing: 1.4px;
+  fill: #8e8577;
+}
+
+/* ---------- Joining ----------
+   Apply-on-hover: the rest pose must be exact (the Jamcorder hanging just
+   over its place, counts at 57 and 4), so the loop is only assigned under
+   hover/focus and starts from that pose each time. One 6s loop, shared by
+   every part:
+     0–30%    let down onto the lip, easing in, a hair of give at the bottom
+     30–34%   settles; the counts tick and its name warms
+     34–80%   on the shelf
+     80–86%   fades out where it stands (counts tick back)
+     86–100%  fades back in above its place — the rest pose — so the loop
+              seam is invisible */
+
+.newThing,
+.tone,
+.newShadow,
+.newName,
+.countBefore,
+.countAfter {
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+/* Rest: hanging 28 units above its place, the place-glow on, no contact
+   shadow yet, its name still the app's faint not-here-yet grey. */
+.newThing {
+  transform: translateY(-28px);
+}
+
+.tone {
+  opacity: 0.9;
+}
+
+.newShadow {
+  opacity: 0;
+}
+
+.newName {
+  fill: #8e8577;
+}
+
+.countAfter {
+  opacity: 0;
+}
+
+@keyframes newThingJoin {
+  0% {
+    transform: translateY(-28px);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  30% {
+    transform: translateY(1.2px);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  34%,
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  86% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  87% {
+    transform: translateY(-28px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-28px);
+    opacity: 1;
+  }
+}
+
+/* The place-glow goes as the thing arrives, as the app's placeholder
+   fades once the picture loads. */
+@keyframes toneJoin {
+  0% {
+    opacity: 0.9;
+  }
+  32%,
+  86% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+/* The contact shadow gathers as it nears the lip. */
+@keyframes newShadowJoin {
+  0% {
+    opacity: 0;
+  }
+  30%,
+  80% {
+    opacity: 0.55;
+  }
+  86%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Warms past the tag grey to the app's paper ink on arrival — new on the
+   shelf — then settles to the tag grey every other thing wears. */
+@keyframes newNameJoin {
+  0%,
+  29% {
+    fill: #8e8577;
+  }
+  34%,
+  52% {
+    fill: #ede6da;
+  }
+  64%,
+  80% {
+    fill: #b8ae9f;
+  }
+  86%,
+  100% {
+    fill: #8e8577;
+  }
+}
+
+/* The counts flip, not crossfade, like the app re-rendering its mark. */
+@keyframes countBeforeJoin {
+  0%,
+  31% {
+    opacity: 1;
+  }
+  32%,
+  83% {
+    opacity: 0;
+  }
+  84%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes countAfterJoin {
+  0%,
+  31% {
+    opacity: 0;
+  }
+  32%,
+  83% {
+    opacity: 1;
+  }
+  84%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .newThing,
+  .cover:hover .newThing {
+    animation-name: newThingJoin;
+  }
+  :global(.group):hover .tone,
+  .cover:hover .tone {
+    animation-name: toneJoin;
+  }
+  :global(.group):hover .newShadow,
+  .cover:hover .newShadow {
+    animation-name: newShadowJoin;
+  }
+  :global(.group):hover .newName,
+  .cover:hover .newName {
+    animation-name: newNameJoin;
+  }
+  :global(.group):hover .countBefore,
+  .cover:hover .countBefore {
+    animation-name: countBeforeJoin;
+  }
+  :global(.group):hover .countAfter,
+  .cover:hover .countAfter {
+    animation-name: countAfterJoin;
+  }
+}
+
+/* Touch + keyboard: focus lets it down the same way. */
+:global(.group):focus-within .newThing,
+.cover:focus-within .newThing {
+  animation-name: newThingJoin;
+}
+:global(.group):focus-within .tone,
+.cover:focus-within .tone {
+  animation-name: toneJoin;
+}
+:global(.group):focus-within .newShadow,
+.cover:focus-within .newShadow {
+  animation-name: newShadowJoin;
+}
+:global(.group):focus-within .newName,
+.cover:focus-within .newName {
+  animation-name: newNameJoin;
+}
+:global(.group):focus-within .countBefore,
+.cover:focus-within .countBefore {
+  animation-name: countBeforeJoin;
+}
+:global(.group):focus-within .countAfter,
+.cover:focus-within .countAfter {
+  animation-name: countAfterJoin;
+}
+
+/* Touch has no hover to give, so it joins while this cover holds the
+   grid's spotlight — the one nearest the middle of the screen
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .newThing {
+    animation-name: newThingJoin;
+  }
+  :global([data-cover-awake]) .tone {
+    animation-name: toneJoin;
+  }
+  :global([data-cover-awake]) .newShadow {
+    animation-name: newShadowJoin;
+  }
+  :global([data-cover-awake]) .newName {
+    animation-name: newNameJoin;
+  }
+  :global([data-cover-awake]) .countBefore {
+    animation-name: countBeforeJoin;
+  }
+  :global([data-cover-awake]) .countAfter {
+    animation-name: countAfterJoin;
+  }
+}
+
+/* Still: the arrival, done — on the shelf, counted, name in tag grey. */
+@media (prefers-reduced-motion: reduce) {
+  .newThing,
+  .tone,
+  .newShadow,
+  .newName,
+  .countBefore,
+  .countAfter {
+    animation: none !important;
+  }
+  .newThing {
+    transform: none;
+  }
+  .tone,
+  .countBefore {
+    opacity: 0;
+  }
+  .newShadow {
+    opacity: 0.55;
+  }
+  .newName {
+    fill: #b8ae9f;
+  }
+  .countAfter {
+    opacity: 1;
+  }
+}
