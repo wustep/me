@@ -13,7 +13,7 @@ export default function PlaygroundBombermanPage() {
         title='Bomberman'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='fullscreen *; gamepad *'
+        allow='autoplay *; fullscreen *; gamepad *'
         allowFullScreen
       />
     </PlaygroundLayout>

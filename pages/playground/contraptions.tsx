@@ -17,7 +17,7 @@ export default function PlaygroundContraptionsPage() {
         title='Contraptions'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='fullscreen *'
+        allow='autoplay *; fullscreen *'
         allowFullScreen
       />
     </PlaygroundLayout>
