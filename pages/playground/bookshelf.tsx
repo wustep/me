@@ -71,7 +71,7 @@ export default function PlaygroundBookshelfPage() {
             src={`https://wustep-bookshelf.vercel.app/?mode=${mode}`}
             title='Bookshelf'
             className='absolute inset-0 h-full w-full border-0'
-            allow='fullscreen *'
+            allow='autoplay *; fullscreen *'
             allowFullScreen
             onLoad={() => setLoaded(true)}
           />
