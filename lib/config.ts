@@ -63,9 +63,7 @@ export const homePostsHeadingBlockId = rawHomePostsHeadingBlockId
   : null
 
 const rawHomeGalleryBlockIds = getSiteConfig('homeGalleryBlockIds', []) as
-  | string[]
-  | string
-  | null
+  string[] | string | null
 export const homeGalleryBlockIds = Array.isArray(rawHomeGalleryBlockIds)
   ? rawHomeGalleryBlockIds
       .map((id) => normalizeBlockId(id))

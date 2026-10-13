@@ -1,12 +1,7 @@
 import * as React from 'react'
 
 export type TurtleShellPattern =
-  | 'plain'
-  | 'ring'
-  | 'segments'
-  | 'spiral'
-  | 'split'
-  | 'wave'
+  'plain' | 'ring' | 'segments' | 'spiral' | 'split' | 'wave'
 
 export type TurtlePose = 'top' | 'side' | 'soft' | 'pixel' | 'swim' | 'shell'
 
