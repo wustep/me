@@ -7,6 +7,11 @@ const EMBED_HOST_RE =
   /youtube|youtu\.be|vimeo|wistia|loom|videoask|getcloudapp|tella/i
 
 export function mediaProxyOrigin(): string {
+  // Production pages are served from the custom domain; VERCEL_URL is the
+  // per-deployment *.vercel.app host, which sits behind Vercel SSO.
+  if (process.env.VERCEL_ENV === 'production') {
+    return siteUrl
+  }
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`
   }
