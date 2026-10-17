@@ -1,10 +1,7 @@
 import type { Block, Decoration, ExtendedRecordMap } from 'notion-types'
 
 export type DesignBlockCategory =
-  | 'Typography'
-  | 'Lists'
-  | 'Rich content'
-  | 'Media'
+  'Typography' | 'Lists' | 'Rich content' | 'Media'
 
 const id = (value: number) =>
   `00000000-0000-4000-8000-${String(value).padStart(12, '0')}`

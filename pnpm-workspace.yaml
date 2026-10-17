@@ -10,5 +10,7 @@ onlyBuiltDependencies:
   - simple-git-hooks
 
 packageManagerStrict: false
+overrides:
+  lqip-modern>sharp: ^0.35.5
 patchedDependencies:
   notion-client@7.10.0: patches/notion-client@7.10.0.patch
