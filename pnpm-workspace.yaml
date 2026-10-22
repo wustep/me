@@ -12,3 +12,7 @@ onlyBuiltDependencies:
 packageManagerStrict: false
 patchedDependencies:
   notion-client@7.10.0: patches/notion-client@7.10.0.patch
+
+overrides:
+  katex: ^0.19.0
+  sharp: ^0.35.5
