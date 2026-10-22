@@ -8,7 +8,8 @@ const scriptPath = path.join(rootDir, 'notion-index.config.ts')
 const scriptModule = await transpileConfig({
   nextConfigPath: scriptPath,
   configFileName: path.basename(scriptPath),
-  cwd: rootDir
+  cwd: rootDir,
+  dir: rootDir
 })
 
 await scriptModule.default()
