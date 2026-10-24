@@ -4,6 +4,7 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
+import { JammingCover } from '@/components/wustep/JammingCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
@@ -58,7 +59,9 @@ export const playgroundSections: PlaygroundSection[] = [
         summary: 'Doodled animals improvising music together',
         date: 'Oct 2026',
         year: '2026',
-        source: 'https://github.com/wustep/jamming'
+        source: 'https://github.com/wustep/jamming',
+        gradient: 'from-amber-50 via-orange-200 to-lime-300',
+        CoverComponent: JammingCover
       },
       {
         title: 'Jev Playground',

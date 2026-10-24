@@ -5,6 +5,7 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
+import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
 import { JevCoverC } from '@/components/wustep/JevCoverC'
@@ -40,6 +41,18 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'jamming',
+    title: 'Jamming',
+    summary: 'Doodled animals improvising music together',
+    covers: [
+      {
+        label: 'The trio (shipped)',
+        hint: 'Follows the site theme — stage paper in light, the stage after dark in dark; the band keeps its colours either way. Hover: two bars on a loop — Olive bows down a bar and up the next, Lily plucks every beat and nods, Rusty rocks and his notes float up out of the bell.',
+        Cover: JammingCover
+      }
+    ]
+  },
   {
     id: 'jev',
     title: 'Jev Playground',
