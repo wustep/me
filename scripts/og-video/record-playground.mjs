@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 /* ─────────────────────────────────────────────────────────
  * Records the /playground link-preview video: the live page,
- * restaged as its 1200×630 share card (stage.js), with the
- * real cover grid scrolling up one full pass while a spotlight
- * zig-zags down it, waking one cover at a time — the same
+ * restaged as a 1200×630 share card (stage.js), with eight of
+ * the real covers scrolling up one full pass while a spotlight
+ * zig-zags down them, waking one cover at a time — the same
  * data-cover-awake flag the page sets on touch screens.
  *
  * Every frame is posed and screenshotted on a virtual clock
  * (clock.js), so the output is identical run to run, and the
- * strip is three copies of the grid long so the last frame
+ * strip is three copies of those covers long so the last frame
  * leads straight back into the first.
  *
  *   pnpm dev   # in another terminal, or pass --base
  *   node scripts/og-video/record-playground.mjs [--base URL] [--out DIR]
  *
- * Writes playground.mp4 and playground.png (the first frame)
- * to public/playground/og/. Needs ffmpeg on PATH and
+ * Writes playground.mp4 and its poster, playground.png (frame
+ * 0), to public/playground/og/. Needs ffmpeg on PATH and
  * Playwright's Chromium (pnpm exec playwright install chromium).
  * ───────────────────────────────────────────────────────── */
 
@@ -45,32 +45,53 @@ const WIDTH = 1200
 const HEIGHT = 630
 const SCALE = 2
 const FPS = 30
-const SECONDS = 10
+const SECONDS = 6
 const FRAMES = FPS * SECONDS
-/** Where the first copy's top row sits when the loop starts (CSS px). */
-const TOP = -20
+
+/**
+ * The strip, two to a row and in the page's order: eight covers, so a pass
+ * is four rows and the loop stays short. Five take the spotlight below;
+ * Things, StageBench and Spot it! fill out their rows. The rest sit out:
+ * most barely move when woken, Starry Night's cover is an animated WebP
+ * that plays in real time (it can't be posed frame by frame), and Shadcn's
+ * words fall out with `forwards`, leaving an empty black card.
+ */
+const CARDS = [
+  'Things',
+  'Contraptions',
+  'Splash Panic!',
+  'StageBench',
+  'Lenses Illustration Lab',
+  'Spot it!',
+  'Bomberman',
+  'MIDI Visualizer'
+]
+
+/**
+ * Where the visible copy's first row sits at frame 0 (CSS px). With 192px
+ * covers and a 20px gap, that centers the Things and Splash Panic! rows,
+ * with equal slivers of the rows above and below: the poster frame.
+ */
+const TOP = 113
 
 /**
  * Who holds the spotlight, in strip order, and for how long. The windows
  * run back to back — one cover awake at a time, as on the page — and add up
- * to the loop. Starry Night's cover is an animated WebP that plays in real
- * time, so it can't be posed frame by frame and stays asleep, and Shadcn's
- * words fall out with `forwards`, leaving an empty black card beside MIDI's
- * dark rest frame, so it sits this one out too.
+ * to the loop. Each is long enough for its cover's beat: the marble's roll,
+ * both explosions, the bow's draw, the first notes.
  */
 const SPOTLIGHT = [
-  { title: 'Contraptions', seconds: 1.3 },
-  { title: 'Splash Panic!', seconds: 1.9 },
-  { title: 'Lenses Illustration Lab', seconds: 1.2 },
-  { title: 'DOM-ino', seconds: 0.7 },
-  { title: 'Bookshelf', seconds: 0.7 },
-  { title: 'Spot it!', seconds: 0.9 },
-  { title: 'MIDI Visualizer', seconds: 1.4 },
-  { title: 'Bomberman', seconds: 1.4 },
-  { title: null, seconds: 0.5 }
+  { title: 'Contraptions', seconds: 1.2 },
+  { title: 'Splash Panic!', seconds: 1.8 },
+  { title: 'Lenses Illustration Lab', seconds: 0.8 },
+  { title: 'Bomberman', seconds: 1.7 },
+  { title: 'MIDI Visualizer', seconds: 0.5 }
 ]
-/** The frame-space y of Contraptions' center when its window opens. */
-const FIRST_WAKE_Y = 430
+/**
+ * The frame-space y of Contraptions' center when its window opens. Frame
+ * 0 lands 0.8s into that window, with the marble mid-roll.
+ */
+const FIRST_WAKE_Y = 322
 
 const outDir = path.resolve(args.out)
 const framesDir = args.frames
@@ -99,7 +120,12 @@ await page.goto(new URL('/playground', args.base).toString(), {
 })
 await page.evaluate(() => document.fonts.ready)
 
-const strip = await page.evaluate(restagePlayground, { copies: 3 })
+const strip = await page.evaluate(restagePlayground, {
+  copies: 3,
+  cards: CARDS
+})
+// Copies only tile seamlessly if each one fills its last row.
+if (strip.count % 2) throw new Error('The strip needs an even card count')
 await page.waitForLoadState('networkidle')
 await page.evaluate(() =>
   Promise.all([...document.images].map((img) => img.decode().catch(() => null)))
@@ -121,7 +147,7 @@ const pxPerSecond = strip.period / SECONDS
 let start = coverCenter(indexOf(SPOTLIGHT[0].title)) + HEIGHT / 2 - FIRST_WAKE_Y
 const windows = SPOTLIGHT.map(({ title, seconds }) => {
   const window = {
-    index: title ? indexOf(title) : -1,
+    index: indexOf(title),
     from: start,
     to: start + seconds * pxPerSecond
   }
@@ -132,6 +158,16 @@ const total = windows.at(-1).to - windows[0].from
 if (Math.abs(total - strip.period) > 0.5) {
   throw new Error(`Spotlight covers ${total}px, not the ${strip.period}px loop`)
 }
+// As on the page, a cover only wakes while it's wholly on screen.
+for (const { index, from, to } of windows) {
+  for (const m of [from, to]) {
+    const y = coverCenter(index) + HEIGHT / 2 - m
+    const half = strip.coverHeight / 2
+    if (y < half || y > HEIGHT - half) {
+      throw new Error(`${strip.titles[index]} is awake while clipped (y ${y})`)
+    }
+  }
+}
 
 function scene(frame) {
   const translateY = TOP - strip.period - (strip.period * frame) / FRAMES
@@ -140,7 +176,7 @@ function scene(frame) {
   for (let copy = 0; copy < 3; copy++) {
     const shift = copy * strip.period
     for (const { index, from, to } of windows) {
-      if (index !== -1 && m >= from + shift && m < to + shift) {
+      if (m >= from + shift && m < to + shift) {
         awake.push(copy * strip.count + index)
       }
     }
@@ -191,15 +227,18 @@ const downscale = `scale=${WIDTH}:${HEIGHT}:flags=lanczos`
 
 // H.264 High at yuv420p for every player, a keyframe every 2s, the moov
 // atom up front (+faststart) so it starts before it's fully fetched, and no
-// audio track at all.
+// audio track at all. CRF 24 still measures ~46 dB against the frames, at
+// about half the size of CRF 20.
 // prettier-ignore
 const encode = ffmpeg(
   '-framerate', String(FPS), '-i', framePath('%05d.png'),
   '-vf', `${downscale},format=yuv420p`,
-  '-c:v', 'libx264', '-preset', 'veryslow', '-crf', '20', '-tune', 'animation',
+  '-c:v', 'libx264', '-preset', 'veryslow', '-crf', '24', '-tune', 'animation',
   '-g', String(FPS * 2), '-movflags', '+faststart', '-an',
   path.join(outDir, 'playground.mp4')
 )
+// The poster is frame 0, so an unfurler that shows it and then starts the
+// video doesn't jump. TOP is what makes frame 0 the composed one.
 // prettier-ignore
 const poster = ffmpeg(
   '-i', framePath('00000.png'), '-vf', downscale,
@@ -211,7 +250,8 @@ for (const { status, stderr } of [encode, poster]) {
 
 if (args['check-loop']) {
   // PSNR of the would-be frame N against frame 0. Sub-pixel raster noise
-  // alone lands around 70 dB; a visible seam is far lower.
+  // alone lands around 60–70 dB; two neighboring frames, with the strip
+  // moving, are ~18 dB apart, and a visible seam is far lower still.
   // prettier-ignore
   const { stderr } = ffmpeg(
     '-i', framePath('00000.png'), '-i', framePath('loop-check.png'),

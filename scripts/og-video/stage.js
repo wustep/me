@@ -3,45 +3,52 @@
  * card, in the browser, from the page's own elements: the
  * sidebar's flask mark, the page's h1 and lede on the left,
  * and the real cover grid (CSS modules, inline keyframes and
- * all) as a two-column strip on the right, laid out like the
- * still card in public/og/playground.png.
+ * all) as a two-column strip on the right.
  *
- * The grid's cards are cloned twice below the originals so
- * the strip can scroll by exactly one copy and land where it
+ * Only the named cards show, in the given order (the rest are
+ * hidden), and they're cloned below the originals so the
+ * strip can scroll by exactly one copy and land where it
  * started — the loop point. Card bodies and quick links are
  * hidden; only covers show.
+ *
+ * Layout: the text and the strip both sit 72px in from the
+ * side edges, clear of the rounded corners and title overlays
+ * unfurlers draw, with a wide gutter between them. The text
+ * block is centered vertically. Only the strip runs off the
+ * top and bottom, since it scrolls.
  *
  * Runs inside the page (page.evaluate), so it must stay
  * self-contained. Returns the strip's geometry in CSS px.
  * ───────────────────────────────────────────────────────── */
 
-export function restagePlayground({ copies }) {
+export async function restagePlayground({ copies, cards }) {
   const css = `
     nextjs-portal { display: none !important; }
     html, body { overflow: hidden !important; }
     .og-hidden { visibility: hidden !important; }
+    .og-gone { display: none !important; }
     .og-brand {
-      position: fixed; left: 80px; top: 176px; z-index: 5;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 22px; line-height: 1;
+      position: fixed; left: 72px; top: 190px; z-index: 5;
+      display: flex; align-items: center; gap: 9px;
+      font-size: 20px; line-height: 1;
     }
-    .og-brand svg { width: 22px; height: 22px; }
+    .og-brand svg { width: 20px; height: 20px; }
     .og-brand .og-name { font-weight: 600; color: var(--foreground); }
     .og-brand .og-by { color: var(--muted-foreground); }
     .og-title {
-      position: fixed !important; left: 78px; top: 214px; z-index: 5;
-      margin: 0 !important; font-size: 84px !important;
+      position: fixed !important; left: 70px; top: 222px; z-index: 5;
+      margin: 0 !important; font-size: 76px !important;
       line-height: 1.1 !important; letter-spacing: -0.01em;
     }
     .og-lede {
-      position: fixed !important; left: 80px; top: 336px; z-index: 5;
-      width: 400px; margin: 0 !important;
-      font-size: 28px !important; line-height: 1.36 !important;
+      position: fixed !important; left: 72px; top: 330px; z-index: 5;
+      width: 360px; margin: 0 !important;
+      font-size: 25px !important; line-height: 1.36 !important;
     }
     .og-grid {
-      position: fixed !important; left: 532px; top: 0; z-index: 1;
-      width: 678px; grid-template-columns: 330px 330px !important;
-      gap: 18px !important;
+      position: fixed !important; left: 500px; top: 0; z-index: 1;
+      width: 628px; grid-template-columns: 304px 304px !important;
+      gap: 20px !important;
     }
     .og-grid .notion-collection-card { border-radius: 16px; }
     .og-grid .notion-collection-card-cover { border-radius: 16px; }
@@ -70,9 +77,40 @@ export function restagePlayground({ copies }) {
   lede.classList.add('og-lede')
   grid.classList.add('og-grid')
 
-  const originals = [...grid.children]
-  for (let copy = 1; copy < copies; copy++) {
-    for (const card of originals) grid.append(card.cloneNode(true))
+  // The strip shows only `cards`, in that order. CSS `order` places the
+  // copies after the originals, and data-og-index is each card's place in
+  // the strip, which poseStrip goes by.
+  const byTitle = new Map(
+    [...grid.children].map((card) => [
+      card.querySelector('h3')?.textContent,
+      card
+    ])
+  )
+  const originals = cards.map((cardTitle) => {
+    const card = byTitle.get(cardTitle)
+    if (!card) throw new Error(`No playground card titled "${cardTitle}"`)
+    return card
+  })
+  for (const card of grid.children) {
+    if (!originals.includes(card)) card.classList.add('og-gone')
+  }
+  // Some covers lay themselves out for their width (a ResizeObserver and a
+  // React render: the MIDI keyboard, the Things shelf). Let them catch up
+  // with the strip's narrower columns before copying, or the copies keep
+  // the page's layout while the originals change.
+  let settled = ''
+  while (settled !== grid.innerHTML) {
+    settled = grid.innerHTML
+    await new Promise((resolve) => setTimeout(resolve, 200))
+  }
+  for (let copy = 0; copy < copies; copy++) {
+    for (const [index, original] of originals.entries()) {
+      const card = copy ? original.cloneNode(true) : original
+      const place = copy * originals.length + index
+      card.style.order = String(place)
+      card.dataset.ogIndex = String(place)
+      if (copy) grid.append(card)
+    }
   }
 
   // The page flags off-screen covers paused (CoverCell) and, on touch,
@@ -102,7 +140,7 @@ export function restagePlayground({ copies }) {
   const pitch = originals[2].getBoundingClientRect().top - first.top
   return {
     count: originals.length,
-    titles: originals.map((card) => card.querySelector('h3')?.textContent),
+    titles: cards,
     gridTop: grid.getBoundingClientRect().top,
     coverHeight: first.height,
     pitch,
@@ -118,7 +156,8 @@ export function restagePlayground({ copies }) {
 export function poseStrip({ translateY, awake }) {
   const grid = document.querySelector('.og-grid')
   grid.style.transform = `translateY(${translateY}px)`
-  for (const [index, card] of [...grid.children].entries()) {
+  for (const card of grid.querySelectorAll('[data-og-index]')) {
+    const index = Number(card.dataset.ogIndex)
     const cell = card.querySelector('[data-cover-cell]')
     if (!cell) continue
     // ogAwake marks the flags the capture set, so the observer above lets
