@@ -24,6 +24,11 @@ export type PlaygroundEntry = {
   disabled?: boolean
   /** Hidden from Playground navigation unless owner mode is active. */
   ownerOnly?: boolean
+  /**
+   * Pins the entry, starred, to the top of the sidebar (ascending order)
+   * instead of listing it in its own section.
+   */
+  starred?: number
   article?: string
   source?: string
   /** Companion X post; linked like `article` from cards and the sidebar. */
@@ -61,6 +66,19 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/jamming'
       },
       {
+        title: 'Things',
+        url: '/playground/things',
+        description:
+          'A shelf of the real things that I own, from furniture to daily carry',
+        summary: 'A shelf of the real things I own',
+        date: 'Oct 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/things',
+        gradient: 'from-stone-800 via-stone-950 to-stone-950',
+        image: '/playground/covers/things.png',
+        CoverComponent: ThingsCover
+      },
+      {
         title: 'Jev Playground',
         url: '/playground/jev',
         description:
@@ -81,20 +99,8 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'https://github.com/wustep/maths'
       },
       {
-        title: 'Things',
-        url: '/playground/things',
-        description:
-          'A shelf of the real things that I own, from furniture to daily carry',
-        summary: 'A shelf of the real things I own',
-        date: 'Oct 2026',
-        year: '2026',
-        source: 'https://github.com/wustep/things',
-        gradient: 'from-stone-800 via-stone-950 to-stone-950',
-        image: '/playground/covers/things.png',
-        CoverComponent: ThingsCover
-      },
-      {
         title: 'StageBench',
+        starred: 1,
         url: '/playground/stagebench',
         description:
           'A benchmark for evaluating models by having them generate a replica of the Nord Stage 4.',
@@ -109,6 +115,7 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'Lenses',
+        starred: 2,
         url: '/playground/lenses',
         description:
           'A canvas of lenses for seeing the world. Each card is a different frame — headspace, evolutionary psychology, minimalism, utility, status — and no single one sees everything.',
@@ -177,6 +184,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Splash Panic!',
+        starred: 4,
         url: '/playground/splashpanic',
         description:
           'A multiplayer water-balloon battle arena game inspired by Crazy Arcade and Bomberman.',
@@ -225,6 +233,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Contraptions',
+        starred: 3,
         url: '/playground/contraptions',
         description:
           'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',
@@ -286,8 +295,8 @@ export const playgroundSections: PlaygroundSection[] = [
           'An interactive guide to every Nord Stage 4 button, knob, light, and menu, with page references to the manual.',
         summary: 'Every Nord Stage 4 control, explained',
         date: 'Oct 2026',
-        year: '2026',
-        source: 'https://nordstage4.vercel.app/'
+        year: '2026'
+        // No `source`: wustep/nordstage4 is private, so a GitHub link would 404.
       },
       {
         title: 'EP-133 K.O. II',
@@ -296,8 +305,8 @@ export const playgroundSections: PlaygroundSection[] = [
           'An unofficial, playable guide to the teenage engineering EP-133 K.O. II: every control, sampling, sequencing, and whole beats, cited to the official guide.',
         summary: 'A playable, unofficial guide to the EP-133',
         date: 'Oct 2026',
-        year: '2026',
-        source: 'https://ko-ii.vercel.app/'
+        year: '2026'
+        // No `source`: wustep/ko2 is private, so a GitHub link would 404.
       },
       {
         title: 'Prompting',
@@ -306,7 +315,8 @@ export const playgroundSections: PlaygroundSection[] = [
           "A field guide to prompting coding agents: what works, what doesn't, and why.",
         summary: 'A field guide to prompting coding agents',
         date: 'Apr 2026',
-        year: '2026'
+        year: '2026',
+        source: 'https://github.com/wustep/me/tree/main/pages/prompting'
       }
     ]
   }
