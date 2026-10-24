@@ -24,6 +24,7 @@ import { OwnerModeToggle } from '@/components/wustep/OwnerModeToggle'
 import { PlaygroundHead } from '@/components/wustep/PlaygroundHead'
 import { PlaygroundSidebar } from '@/components/wustep/PlaygroundSidebar'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
+import { type ShareVideo } from '@/lib/share-card'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 type PlaygroundThemeContextValue = {
@@ -67,6 +68,8 @@ interface PlaygroundLayoutProps {
   title: string
   /** Meta description for pages not in the registry (entries use theirs). */
   description?: string
+  /** Looping link-preview clip (og:video), shown beside the share card. */
+  shareVideo?: ShareVideo
   breadcrumbs?: { label: string; href?: string }[]
   /** When true, children fill the entire frame (no padding, no title, no max-width) */
   fullFrame?: boolean
@@ -78,6 +81,7 @@ export function PlaygroundLayout({
   children,
   title,
   description,
+  shareVideo,
   breadcrumbs = [],
   fullFrame = false,
   openHref
@@ -106,7 +110,11 @@ export function PlaygroundLayout({
 
   return (
     <PlaygroundThemeContext.Provider value={playgroundTheme}>
-      <PlaygroundHead title={title} description={description} />
+      <PlaygroundHead
+        title={title}
+        description={description}
+        shareVideo={shareVideo}
+      />
       <SidebarProvider
         open={isSidebarOpen}
         onOpenChange={handleSidebarOpenChange}

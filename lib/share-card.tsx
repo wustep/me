@@ -9,6 +9,47 @@ export function shareCardUrl(name: string) {
   return `${host}/og/${name}.png`
 }
 
+/** A looping, silent link-preview video. */
+export type ShareVideo = {
+  /** Absolute URL. */
+  url: string
+  width: number
+  height: number
+  /** MIME type, e.g. `video/mp4`. */
+  type: string
+}
+
+/**
+ * A committed 1200×630 H.264 preview in public/ — e.g.
+ * `shareVideo('playground/og/playground')` for
+ * public/playground/og/playground.mp4 (made by scripts/og-video/).
+ */
+export function shareVideo(name: string): ShareVideo {
+  return {
+    url: `${host}/${name}.mp4`,
+    width: 1200,
+    height: 630,
+    type: 'video/mp4'
+  }
+}
+
+/**
+ * og:video tags, alongside (never instead of) the og:image card: unfurlers
+ * that play og:video show the clip, and the rest keep the still. Like
+ * shareCardMeta, a fragment for use directly inside next/head.
+ */
+export function shareVideoMeta(video: ShareVideo) {
+  return (
+    <>
+      <meta property='og:video' content={video.url} />
+      <meta property='og:video:secure_url' content={video.url} />
+      <meta property='og:video:type' content={video.type} />
+      <meta property='og:video:width' content={String(video.width)} />
+      <meta property='og:video:height' content={String(video.height)} />
+    </>
+  )
+}
+
 /**
  * Link-preview image tags for a 1200×630 card, for use directly inside
  * next/head (a fragment, not a component, so next/head still picks the tags
