@@ -1,8 +1,8 @@
 /* ─────────────────────────────────────────────────────────
  * Restages the live /playground page as a 1200×630 share
  * card, in the browser, from the page's own elements: the
- * sidebar's flask mark and a "wustep" credit over the page's
- * h1 and lede on the left, and the real cover grid (CSS
+ * sidebar's flask mark and a "wustep.me" credit over the
+ * page's h1 and lede on the left, and the real cover grid (CSS
  * modules, inline keyframes and all) as a two-column strip on
  * the right.
  *
@@ -20,6 +20,13 @@
  * block is centered vertically. Only the strip runs off the
  * top and bottom, since it scrolls.
  *
+ * Color: two neutral inks on the page's white, so the flask is
+ * the only accent and the text has no chroma for the 4:2:0
+ * encode to smear. The credit and title take wustep.me's
+ * --w-primary (#1a1a1a, 17.4:1). The lede is #4d4d4d (8.5:1),
+ * dark enough to survive a thumbnail-sized unfurl, where the
+ * page's muted gray (#737373, 4.7:1) washes out.
+ *
  * Runs inside the page (page.evaluate), so it must stay
  * self-contained. Returns the strip's geometry in CSS px.
  * ───────────────────────────────────────────────────────── */
@@ -36,16 +43,18 @@ export async function restagePlayground({ copies, cards, phases = {} }) {
       font-size: 20px; line-height: 1;
     }
     .og-brand svg { width: 20px; height: 20px; }
-    .og-brand .og-name { font-weight: 500; color: var(--muted-foreground); }
+    .og-brand .og-name { font-weight: 600; color: #1a1a1a; }
     .og-title {
       position: fixed !important; left: 70px; top: 222px; z-index: 5;
       margin: 0 !important; font-size: 76px !important;
       line-height: 1.1 !important; letter-spacing: -0.01em;
+      color: #1a1a1a !important;
     }
     .og-lede {
       position: fixed !important; left: 72px; top: 330px; z-index: 5;
       width: 360px; margin: 0 !important;
       font-size: 25px !important; line-height: 1.36 !important;
+      color: #4d4d4d !important;
     }
     .og-grid {
       position: fixed !important; left: 500px; top: 0; z-index: 1;
@@ -71,7 +80,7 @@ export async function restagePlayground({ copies, cards, phases = {} }) {
   const brand = document.createElement('div')
   brand.className = 'og-brand'
   // The title already says Playground; the mark stands in for it here.
-  brand.innerHTML = `${sidebar.querySelector('svg.playground-sidebar-lab').outerHTML}<span class="og-name">wustep</span>`
+  brand.innerHTML = `${sidebar.querySelector('svg.playground-sidebar-lab').outerHTML}<span class="og-name">wustep.me</span>`
   document.body.append(brand)
 
   sidebar.classList.add('og-hidden')

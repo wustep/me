@@ -7,13 +7,17 @@ Link-preview videos (`og:video`) recorded from the real site.
 `record-playground.mjs` makes `public/playground/og/playground.mp4` and its
 poster, `playground.png` (frame 0). It opens the live `/playground` page in
 Playwright and restages it in place as a 1200×630 share card (`stage.js`).
-The left column has the sidebar's flask mark with a "wustep" credit above the
-page's own `h1` and lede. The flask stands in for the word, so "Playground"
-appears only once. On the right, eight of the real covers make a two-column
-strip, in page order: Things, Contraptions, Splash Panic!, StageBench,
-Lenses, Lenses Illustration Lab, Bomberman and MIDI Visualizer. The strip
-scrolls up through them once, and every cover plays at once the whole time,
-woken by the same `data-cover-awake` flag the page sets on touch screens.
+The left column has the sidebar's flask mark with a "wustep.me" credit above
+the page's own `h1` and lede. The flask stands in for the word, so
+"Playground" appears only once. The text uses two neutral inks on white, so
+the blue flask is the only accent. The credit and title use wustep.me's
+`--w-primary` (#1a1a1a, 17.4:1). The lede uses #4d4d4d (8.5:1) rather than
+the page's muted #737373 (4.7:1), which washes out at thumbnail size. On the
+right, eight of the real covers make a two-column strip, in page order:
+Things, Contraptions, Splash Panic!, StageBench, Lenses, Lenses Illustration
+Lab, Bomberman and MIDI Visualizer. The strip scrolls up through them once,
+and every cover plays at once the whole time, woken by the same
+`data-cover-awake` flag the page sets on touch screens.
 
 The text and the strip both sit 72px in from the side edges, clear of the
 rounded corners and title overlays that X, Slack and iMessage draw, with a
