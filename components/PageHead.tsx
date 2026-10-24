@@ -3,6 +3,7 @@ import Head from 'next/head'
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
 import { getSocialImageUrl } from '@/lib/get-social-image-url'
+import { type ShareVideo, shareVideoMeta } from '@/lib/share-card'
 
 export function PageHead({
   site,
@@ -11,6 +12,7 @@ export function PageHead({
   pageId,
   image,
   shareImage,
+  shareVideo,
   url,
   isBlogPost
 }: types.PageProps & {
@@ -19,6 +21,8 @@ export function PageHead({
   image?: string
   /** A finished 1200×630 card that replaces the generated social image. */
   shareImage?: string
+  /** A looping preview clip, emitted as og:video next to the image. */
+  shareVideo?: ShareVideo
   url?: string
   isBlogPost?: boolean
 }) {
@@ -83,6 +87,8 @@ export function PageHead({
       ) : (
         <meta name='twitter:card' content='summary' />
       )}
+
+      {shareVideo && shareVideoMeta(shareVideo)}
 
       {url && (
         <>

@@ -3,7 +3,12 @@ import { useRouter } from 'next/router'
 
 import { domain, host, name, x } from '@/lib/config'
 import { findPlaygroundEntry, getPlaygroundMeta } from '@/lib/playground-meta'
-import { shareCardMeta, shareCardUrl } from '@/lib/share-card'
+import {
+  shareCardMeta,
+  shareCardUrl,
+  type ShareVideo,
+  shareVideoMeta
+} from '@/lib/share-card'
 import { playgroundSections } from '@/playground/registry'
 
 const FALLBACK_DESCRIPTION =
@@ -17,10 +22,13 @@ const FALLBACK_DESCRIPTION =
  */
 export function PlaygroundHead({
   title,
-  description
+  description,
+  shareVideo
 }: {
   title: string
   description?: string
+  /** A looping preview clip, emitted as og:video next to the card. */
+  shareVideo?: ShareVideo
 }) {
   const { pathname } = useRouter()
   const meta = getPlaygroundMeta({
@@ -44,6 +52,7 @@ export function PlaygroundHead({
       <meta property='og:description' content={meta.description} />
       <meta property='og:url' content={meta.canonicalUrl} />
       {shareCardMeta(image)}
+      {shareVideo && shareVideoMeta(shareVideo)}
       <meta name='twitter:domain' content={domain} />
       {x && <meta name='twitter:creator' content={`@${x}`} />}
       <meta name='twitter:title' content={meta.title} />
