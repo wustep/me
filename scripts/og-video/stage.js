@@ -12,7 +12,8 @@
  * started — the loop point. Card bodies and quick links are
  * hidden; only covers show, and every one of them is awake
  * (data-cover-awake, the page's touch-screen wake flag) for
- * the whole capture.
+ * the whole capture. Spot it!'s one-shot match rings get a
+ * recording-only loop in their place, so they keep moving.
  *
  * Layout: the text and the strip both sit 72px in from the
  * side edges, clear of the rounded corners and title overlays
@@ -32,6 +33,16 @@
  * ───────────────────────────────────────────────────────── */
 
 export async function restagePlayground({ copies, cards, phases = {} }) {
+  // Spot it!'s match rings draw once when the cover wakes (a CSS transition)
+  // and then hold, so in the strip they'd sit still. Here they replay the
+  // page's own hover in and out as a loop instead: the ring sweeps on, holds,
+  // fades and retracts the way it does on mouse-out, and the cards sit bare
+  // for a beat before the next match. Timings and easings are the cover's
+  // (SpotItCover.module.css). A 3.8s cycle plays twice per loop at live pace.
+  const ring = { cycle: 3800, sweep: 1100, fade: 450, release: 2600 }
+  const at = (ms) => `${((ms / ring.cycle) * 100).toFixed(3)}%`
+  const sweepEase = 'cubic-bezier(0.16, 1, 0.3, 1)'
+
   const css = `
     nextjs-portal { display: none !important; }
     html, body { overflow: hidden !important; }
@@ -66,6 +77,26 @@ export async function restagePlayground({ copies, cards, phases = {} }) {
     .og-grid .notion-collection-card-body,
     .og-grid .group > .absolute.z-\\[2\\] { display: none !important; }
     .og-grid [data-cover-cell] { content-visibility: visible !important; }
+    .og-grid [data-og-card='Spot it!'] [data-cover-awake] circle {
+      transition: none !important;
+      animation:
+        og-ring-sweep ${ring.cycle}ms linear infinite,
+        og-ring-fade ${ring.cycle}ms linear infinite;
+    }
+    @keyframes og-ring-sweep {
+      0% { stroke-dashoffset: 1; animation-timing-function: ${sweepEase}; }
+      ${at(ring.sweep)} { stroke-dashoffset: 0; }
+      ${at(ring.release)} {
+        stroke-dashoffset: 0; animation-timing-function: ${sweepEase};
+      }
+      ${at(ring.release + ring.sweep)}, 100% { stroke-dashoffset: 1; }
+    }
+    @keyframes og-ring-fade {
+      0% { opacity: 0; animation-timing-function: ease-out; }
+      ${at(ring.fade)} { opacity: 1; }
+      ${at(ring.release)} { opacity: 1; animation-timing-function: ease-out; }
+      ${at(ring.release + ring.fade)}, 100% { opacity: 0; }
+    }
   `
   const style = document.createElement('style')
   style.textContent = css
@@ -121,6 +152,7 @@ export async function restagePlayground({ copies, cards, phases = {} }) {
       const place = copy * originals.length + index
       card.style.order = String(place)
       card.dataset.ogIndex = String(place)
+      card.dataset.ogCard = cards[index]
       if (copy) grid.append(card)
     }
   }

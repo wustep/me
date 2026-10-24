@@ -15,7 +15,7 @@ the blue flask is the only accent. The credit and title use wustep.me's
 the page's muted #737373 (4.7:1), which washes out at thumbnail size. On the
 right, eight of the real covers make a two-column strip, in page order:
 Things, Contraptions, Splash Panic!, StageBench, Lenses, Lenses Illustration
-Lab, Bomberman and MIDI Visualizer. The strip scrolls up through them once,
+Lab, Spot it! and MIDI Visualizer. The strip scrolls up through them once,
 and every cover plays at once the whole time, woken by the same
 `data-cover-awake` flag the page sets on touch screens.
 
@@ -26,7 +26,9 @@ rounded corners and title overlays that X, Slack and iMessage draw, with a
 below, and it's the poster, so playback starts without a jump. Each cover
 starts its loop at a hand-picked offset (`PHASES`), so the poster catches
 all of them mid-beat: the splash at full stretch, the marble off the spring,
-a StageBench key down, the bow drawn.
+a StageBench key down, the bow drawn. Spot it!'s rings sit just above its
+sliver in that frame, so its offset times both of its sweeps to land while
+it's on screen instead (2.6 s and 6.4 s in).
 
 ```sh
 pnpm dev                                    # serves :6363
@@ -57,8 +59,17 @@ Needs `ffmpeg` on `PATH` and Playwright's Chromium
   whole number of its cycles per 7.6 s loop. The rate depends only on an
   animation's duration, so tracks that share a period stay in step, and
   nothing plays more than about 25% off its live pace. Things, Contraptions,
-  Splash Panic!, the bow and Bomberman play twice per loop, MIDI three times,
-  and the Lenses eye and StageBench once.
+  Splash Panic!, the bow and Spot it!'s rings play twice per loop, MIDI three
+  times, and the Lenses eye and StageBench once.
+- **Spot it! on a loop.** On the page its match rings sweep on once when the
+  cover wakes (a CSS transition) and then hold, so in the strip they'd sit
+  still. `stage.js` swaps that transition for a recording-only keyframe loop
+  that replays a hover in and out with the cover's own timings and easings:
+  each ring sweeps around its match (1.1 s, fading up over the first
+  0.45 s), holds for 1.5 s, then fades and retracts the way it does on
+  mouse-out, and the cards sit bare for 0.75 s before the next match. At
+  3.8 s the cycle plays twice per loop at live pace, and there's no reset:
+  each cycle ends on the same bare cards the next one starts from.
 - **Seamless loop.** The eight cards are cloned so the strip is three copies
   long, and the loop scrolls exactly one copy. A full warm-up loop runs
   before capture, so every cover on screen at frame 0 has the same history
@@ -67,23 +78,25 @@ Needs `ffmpeg` on `PATH` and Playwright's Chromium
   column width, or the copies would differ from the originals. To check the
   encoded seam too, concat the clip with itself (ffmpeg's concat demuxer)
   and step across the join. The step from the last frame into the first
-  should measure like any other step (about 17.5 dB, the strip's own motion).
+  should measure like any other step (about 18.5 dB, the strip's own motion).
 - **Settled frames.** Chromium can screenshot before a newly exposed tile is
   rastered, which drops a cover for a single frame. Every frame is retaken
   until two shots in a row match.
 - **Touch emulation** (`hasTouch`) makes `(hover: none)` match, which is
   where the covers' `data-cover-awake` rules live. No cursor is ever drawn.
 
-The other covers sit out, because none of them loops. Spot it!, DOM-ino and
-Bookshelf ease into a pose when woken and then hold it, so they'd stand still
-for the whole clip. Starry Night's is an animated WebP that plays in real
-time, so it can't be posed frame by frame. Shadcn's words fall out with
-`forwards` and leave an empty black card, and TBDBITL is a still.
+The other covers sit out. DOM-ino and Bookshelf ease into a pose when woken
+and then hold it, so they'd stand still for the whole clip. Starry Night's is
+an animated WebP that plays in real time, so it can't be posed frame by
+frame. Shadcn's words fall out with `forwards` and leave an empty black card,
+and TBDBITL is a still. Bomberman loops, but its board is built from emoji,
+and the recording's Linux Chromium draws them in Noto Color Emoji, whose
+outlined ⬜ floor tiles turn the board into a heavy black grid.
 
 ### Output
 
 1200×630, 30 fps, 7.6 s, H.264 High (CRF 24), yuv420p, `+faststart`, no
-audio, about 0.45 MB. Frames are captured at 2× and downscaled with Lanczos.
+audio, about 0.42 MB. Frames are captured at 2× and downscaled with Lanczos.
 
 ## /playground/dom-ino
 

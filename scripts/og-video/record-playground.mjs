@@ -49,19 +49,21 @@ const FPS = 30
 /**
  * The loop. Every cover's animations are retimed to fit it a whole number of
  * times (clock.js), and 7.6s keeps each within about 25% of its own pace:
- * Things, Contraptions, Splash Panic!, the bow and Bomberman twice, MIDI
- * three times, the Lenses eye and StageBench's run and melody once.
+ * Things, Contraptions, Splash Panic!, the bow and Spot it!'s rings twice,
+ * MIDI three times, the Lenses eye and StageBench's run and melody once.
  */
 const SECONDS = 7.6
 const FRAMES = Math.round(FPS * SECONDS)
 
 /**
  * The strip, two to a row and in the page's order: eight covers, so a pass
- * is four rows and the loop stays short. All eight loop forever while awake.
- * The rest sit out: Spot it!, DOM-ino and Bookshelf only ease into a pose
- * and hold it, Starry Night's cover is an animated WebP that plays in real
- * time (it can't be posed frame by frame), Shadcn's words fall out with
- * `forwards`, leaving an empty black card, and TBDBITL is a still.
+ * is four rows and the loop stays short. Seven loop forever while awake;
+ * Spot it!'s rings draw once and hold, so stage.js replays them as a loop.
+ * The rest sit out: DOM-ino and Bookshelf only ease into a pose and hold it,
+ * Starry Night's cover is an animated WebP that plays in real time (it can't
+ * be posed frame by frame), Shadcn's words fall out with `forwards`, leaving
+ * an empty black card, TBDBITL is a still, and Bomberman's emoji board comes
+ * out as a black grid in Linux Chromium's Noto Color Emoji.
  */
 const CARDS = [
   'Things',
@@ -70,7 +72,7 @@ const CARDS = [
   'StageBench',
   'Lenses',
   'Lenses Illustration Lab',
-  'Bomberman',
+  'Spot it!',
   'MIDI Visualizer'
 ]
 
@@ -85,7 +87,9 @@ const TOP = 113
  * How far into the loop (ms) each cover starts, so frame 0, the poster,
  * catches every one mid-beat instead of at rest: the lamp on the watch, the
  * marble off the spring, the splash at full stretch, a key down, the bow
- * drawn, the bomb about to blossom, the bars mid-rise. Retimed, five of
+ * drawn, the bars mid-rise. Spot it!'s rings sit just above its sliver at
+ * frame 0, so its offset times both sweeps for when they're on screen
+ * instead: low in the frame at 2.6s, near the top at 6.4s. Retimed, five of
  * them share a 3.8s beat; these offsets also keep them from firing in
  * unison.
  */
@@ -96,7 +100,7 @@ const PHASES = {
   StageBench: 1600,
   Lenses: 3200,
   'Lenses Illustration Lab': 2000,
-  Bomberman: 1200,
+  'Spot it!': 1200,
   'MIDI Visualizer': 1000
 }
 
