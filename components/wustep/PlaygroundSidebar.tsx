@@ -138,9 +138,8 @@ export function PlaygroundSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const { isOwner } = useOwnerMode()
-  // Starred entries are pinned, unlabeled, above the sections they'd
-  // otherwise appear in.
-  const { pinned, sections: visibleSections } = React.useMemo(
+  // Starred entries are pinned to the top of their own section.
+  const visibleSections = React.useMemo(
     () =>
       pinStarred(
         playgroundSections.map((section) => ({
@@ -151,8 +150,8 @@ export function PlaygroundSidebar({
     [isOwner]
   )
   const visibleItems = React.useMemo(
-    () => [...pinned, ...visibleSections.flatMap((section) => section.items)],
-    [pinned, visibleSections]
+    () => visibleSections.flatMap((section) => section.items),
+    [visibleSections]
   )
   const activeItem =
     visibleItems.find((item) => {
@@ -247,13 +246,6 @@ export function PlaygroundSidebar({
         onMouseLeave={() => setPreviewItem(null)}
         onBlur={handleMenuBlur}
       >
-        {pinned.length > 0 ? (
-          <SidebarGroup aria-label='Starred'>
-            <SidebarGroupContent>
-              <SidebarMenu>{pinned.map(renderItem)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ) : null}
         {visibleSections.map((section) => (
           <SidebarGroup key={section.title}>
             <SidebarGroupLabel>{section.title}</SidebarGroupLabel>

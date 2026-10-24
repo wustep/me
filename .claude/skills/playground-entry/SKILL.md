@@ -48,6 +48,10 @@ Add to the right section of `playgroundSections` in `playground/registry.tsx`
 - `source` — GitHub repo if public, else the deployed app URL.
 - `article` — site path of a companion write-up, if one exists. Shows as an
   Article link in the sidebar About panel and as an icon chip on the card.
+- `starred: starRank('<title>')` — optional; stars the entry and pins it to
+  the top of its own sidebar section (not a separate group). Add the title to
+  `starredOrder` in `playground/starred.ts`, which keeps Contraptions above
+  StageBench above Lenses. The grid ignores it and stays sorted by `date`.
 - `x` — URL of a companion X post; same treatments as `article`.
 - `gradient` — Tailwind stops (`'from-… via-… to-…'`) matching the cover's
   palette. It's the fallback if the cover ever fails to render, so make it
