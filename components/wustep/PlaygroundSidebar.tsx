@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react'
+import { Info, Star } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
@@ -19,16 +19,118 @@ import {
 } from '@/components/ui/sidebar'
 import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
 import { PlaygroundDescription } from '@/components/wustep/PlaygroundDescription'
-import { playgroundSections } from '@/playground/registry'
+import {
+  loadSidebarScrollTop,
+  saveSidebarScrollTop,
+  scrollTopToReveal
+} from '@/lib/sidebar-scroll'
+import { withStarredSection } from '@/lib/sidebar-sections'
+import { type PlaygroundEntry, playgroundSections } from '@/playground/registry'
 
 const defaultDescription = "Welcome to Stephen's code playground."
 
-type AboutState = {
-  description: string
-  date?: string
-  article?: string
-  source?: string
-  x?: string
+type AboutInfo = Pick<
+  PlaygroundEntry,
+  'description' | 'date' | 'article' | 'source' | 'x'
+>
+
+const defaultAbout: AboutInfo = { description: defaultDescription }
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect
+
+const metadataLinkClass =
+  'underline underline-offset-2 hover:text-sidebar-primary transition-colors'
+
+function AboutContent({ info }: { info: AboutInfo }) {
+  const metadataItems: React.ReactNode[] = []
+  if (info.date) metadataItems.push(<span key='date'>{info.date}</span>)
+  if (info.article) {
+    metadataItems.push(
+      <Link key='article' href={info.article} className={metadataLinkClass}>
+        Article
+      </Link>
+    )
+  }
+  if (info.x) {
+    metadataItems.push(
+      <Link key='x' href={info.x} className={metadataLinkClass}>
+        Post
+      </Link>
+    )
+  }
+  if (info.source) {
+    metadataItems.push(
+      <Link key='source' href={info.source} className={metadataLinkClass}>
+        Source
+      </Link>
+    )
+  }
+
+  return (
+    <>
+      <p>
+        <PlaygroundDescription text={info.description} />
+      </p>
+      {metadataItems.length ? (
+        <p className='mt-1 text-[11px] text-muted-foreground flex items-center gap-1'>
+          {metadataItems.map((item, index) => (
+            <React.Fragment key={index}>
+              {index > 0 ? <span aria-hidden='true'>&bull;</span> : null}
+              {item}
+            </React.Fragment>
+          ))}
+        </p>
+      ) : null}
+    </>
+  )
+}
+
+/**
+ * The menu's scroll box. Each playground page mounts its own layout, so this
+ * remounts on every navigation (and each time the phone drawer opens). It
+ * restores the last scrollTop before paint, then nudges the active item into
+ * view only when it would otherwise be off-screen.
+ */
+function PersistentSidebarContent({
+  children,
+  ...props
+}: React.ComponentProps<typeof SidebarContent>) {
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  useIsomorphicLayoutEffect(() => {
+    const el = ref.current
+    // Phones first render the desktop sidebar hidden (display: none) before
+    // switching to the drawer; a hidden box reads scrollTop 0, so leave the
+    // saved position alone until a visible copy mounts.
+    if (!el || el.clientHeight === 0) return
+
+    const stored = loadSidebarScrollTop()
+    if (stored !== null) el.scrollTop = stored
+
+    const active = el.querySelector<HTMLElement>('[aria-current="page"]')
+    if (active) {
+      const elRect = el.getBoundingClientRect()
+      const activeRect = active.getBoundingClientRect()
+      el.scrollTop = scrollTopToReveal({
+        scrollTop: el.scrollTop,
+        viewportHeight: el.clientHeight,
+        itemTop: activeRect.top - elRect.top + el.scrollTop,
+        itemHeight: activeRect.height
+      })
+    }
+    saveSidebarScrollTop(el.scrollTop)
+
+    const onScroll = () => saveSidebarScrollTop(el.scrollTop)
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <SidebarContent ref={ref} {...props}>
+      {children}
+    </SidebarContent>
+  )
 }
 
 export function PlaygroundSidebar({
@@ -38,12 +140,12 @@ export function PlaygroundSidebar({
   const { isOwner } = useOwnerMode()
   const visibleSections = React.useMemo(
     () =>
-      playgroundSections
-        .map((section) => ({
+      withStarredSection(
+        playgroundSections.map((section) => ({
           ...section,
           items: section.items.filter((item) => !item.ownerOnly || isOwner)
         }))
-        .filter((section) => section.items.length > 0),
+      ),
     [isOwner]
   )
   const activeItem =
@@ -53,69 +155,25 @@ export function PlaygroundSidebar({
         return item.url === router.pathname
       }) ?? null
 
-  const [aboutInfo, setAboutInfo] = React.useState<AboutState>({
-    description: activeItem?.description ?? defaultDescription,
-    date: activeItem?.date,
-    article: activeItem?.article,
-    source: activeItem?.source,
-    x: activeItem?.x
-  })
+  // The hovered/focused item previews in About; leaving the whole menu (not
+  // each item) returns to the active page, so crossing the gaps between
+  // items doesn't flash the active description in between.
+  const [previewItem, setPreviewItem] = React.useState<PlaygroundEntry | null>(
+    null
+  )
+  const aboutInfo: AboutInfo = previewItem ?? activeItem ?? defaultAbout
+  const aboutCandidates = React.useMemo<AboutInfo[]>(
+    () => [
+      defaultAbout,
+      ...visibleSections.flatMap((section) => section.items)
+    ],
+    [visibleSections]
+  )
 
-  React.useEffect(() => {
-    setAboutInfo({
-      description: activeItem?.description ?? defaultDescription,
-      date: activeItem?.date,
-      article: activeItem?.article,
-      source: activeItem?.source,
-      x: activeItem?.x
-    })
-  }, [activeItem])
-
-  const resetDescription = () =>
-    setAboutInfo({
-      description: activeItem?.description ?? defaultDescription,
-      date: activeItem?.date,
-      article: activeItem?.article,
-      source: activeItem?.source,
-      x: activeItem?.x
-    })
-
-  const metadataItems: React.ReactNode[] = []
-  if (aboutInfo.date) {
-    metadataItems.push(<span key='date'>{aboutInfo.date}</span>)
-  }
-  if (aboutInfo.article) {
-    metadataItems.push(
-      <Link
-        key='article'
-        href={aboutInfo.article}
-        className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
-      >
-        Article
-      </Link>
-    )
-  }
-  if (aboutInfo.x) {
-    metadataItems.push(
-      <Link
-        key='x'
-        href={aboutInfo.x}
-        className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
-      >
-        Post
-      </Link>
-    )
-  }
-  if (aboutInfo.source) {
-    metadataItems.push(
-      <Link
-        key='source'
-        href={aboutInfo.source}
-        className='underline underline-offset-2 hover:text-sidebar-primary transition-colors'
-      >
-        Source
-      </Link>
-    )
+  const handleMenuBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      setPreviewItem(null)
+    }
   }
 
   return (
@@ -140,7 +198,10 @@ export function PlaygroundSidebar({
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <PersistentSidebarContent
+        onMouseLeave={() => setPreviewItem(null)}
+        onBlur={handleMenuBlur}
+      >
         {visibleSections.map((section) => (
           <SidebarGroup key={section.title}>
             <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
@@ -152,26 +213,8 @@ export function PlaygroundSidebar({
                       asChild
                       isActive={router.pathname === item.url}
                       disabled={!!item.disabled}
-                      onMouseEnter={() =>
-                        setAboutInfo({
-                          description: item.description,
-                          date: item.date,
-                          article: item.article,
-                          source: item.source,
-                          x: item.x
-                        })
-                      }
-                      onFocus={() =>
-                        setAboutInfo({
-                          description: item.description,
-                          date: item.date,
-                          article: item.article,
-                          source: item.source,
-                          x: item.x
-                        })
-                      }
-                      onMouseLeave={resetDescription}
-                      onBlur={resetDescription}
+                      onMouseEnter={() => setPreviewItem(item)}
+                      onFocus={() => setPreviewItem(item)}
                     >
                       {item.disabled ? (
                         // The menu button's aria-disabled:opacity-50 is the
@@ -190,7 +233,15 @@ export function PlaygroundSidebar({
                           }
                           className='flex w-full items-center justify-between gap-2'
                         >
-                          <span className='truncate'>{item.title}</span>
+                          <span className='flex min-w-0 items-center gap-1.5'>
+                            <span className='truncate'>{item.title}</span>
+                            {item.starred ? (
+                              <Star
+                                aria-label='Starred'
+                                className='size-3 shrink-0 fill-amber-400 text-amber-400'
+                              />
+                            ) : null}
+                          </span>
                           {item.year ? (
                             <span className='text-[11px] text-muted-foreground'>
                               {item.year}
@@ -205,25 +256,30 @@ export function PlaygroundSidebar({
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-      </SidebarContent>
-      <SidebarFooter className='border-t border-sidebar-border/50 px-4 py-3 text-xs leading-relaxed text-muted-foreground min-h-[145px]'>
+      </PersistentSidebarContent>
+      <SidebarFooter className='border-t border-sidebar-border/50 px-4 py-3 text-xs leading-relaxed text-muted-foreground'>
         <div className='flex items-center gap-1 text-sidebar-foreground mb-1 font-medium'>
           <Info className='size-3.5' />
           <span>About</span>
         </div>
-        <p>
-          <PlaygroundDescription text={aboutInfo.description} />
-        </p>
-        {metadataItems.length ? (
-          <p className='mt-1 text-[11px] text-muted-foreground flex items-center gap-1'>
-            {metadataItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {index > 0 ? <span aria-hidden='true'>&bull;</span> : null}
-                {item}
-              </React.Fragment>
-            ))}
-          </p>
-        ) : null}
+        {/* Every entry's text is stacked invisibly in one grid cell, so the
+            footer is always as tall as the longest one. A footer that grew
+            on hover used to cover the bottom links, so the hover flipped on
+            and off under a still pointer. */}
+        <div className='grid' data-playground-about>
+          {aboutCandidates.map((info, index) => (
+            <div
+              key={index}
+              aria-hidden='true'
+              className='invisible col-start-1 row-start-1'
+            >
+              <AboutContent info={info} />
+            </div>
+          ))}
+          <div className='col-start-1 row-start-1'>
+            <AboutContent info={aboutInfo} />
+          </div>
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
