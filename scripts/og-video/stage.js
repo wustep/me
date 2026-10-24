@@ -1,15 +1,18 @@
 /* ─────────────────────────────────────────────────────────
  * Restages the live /playground page as a 1200×630 share
  * card, in the browser, from the page's own elements: the
- * sidebar's flask mark, the page's h1 and lede on the left,
- * and the real cover grid (CSS modules, inline keyframes and
- * all) as a two-column strip on the right.
+ * sidebar's flask mark and a "wustep" credit over the page's
+ * h1 and lede on the left, and the real cover grid (CSS
+ * modules, inline keyframes and all) as a two-column strip on
+ * the right.
  *
  * Only the named cards show, in the given order (the rest are
  * hidden), and they're cloned below the originals so the
  * strip can scroll by exactly one copy and land where it
  * started — the loop point. Card bodies and quick links are
- * hidden; only covers show.
+ * hidden; only covers show, and every one of them is awake
+ * (data-cover-awake, the page's touch-screen wake flag) for
+ * the whole capture.
  *
  * Layout: the text and the strip both sit 72px in from the
  * side edges, clear of the rounded corners and title overlays
@@ -21,7 +24,7 @@
  * self-contained. Returns the strip's geometry in CSS px.
  * ───────────────────────────────────────────────────────── */
 
-export async function restagePlayground({ copies, cards }) {
+export async function restagePlayground({ copies, cards, phases = {} }) {
   const css = `
     nextjs-portal { display: none !important; }
     html, body { overflow: hidden !important; }
@@ -33,8 +36,7 @@ export async function restagePlayground({ copies, cards }) {
       font-size: 20px; line-height: 1;
     }
     .og-brand svg { width: 20px; height: 20px; }
-    .og-brand .og-name { font-weight: 600; color: var(--foreground); }
-    .og-brand .og-by { color: var(--muted-foreground); }
+    .og-brand .og-name { font-weight: 500; color: var(--muted-foreground); }
     .og-title {
       position: fixed !important; left: 70px; top: 222px; z-index: 5;
       margin: 0 !important; font-size: 76px !important;
@@ -68,7 +70,8 @@ export async function restagePlayground({ copies, cards }) {
 
   const brand = document.createElement('div')
   brand.className = 'og-brand'
-  brand.innerHTML = `${sidebar.querySelector('svg.playground-sidebar-lab').outerHTML}<span class="og-name">Playground</span><span class="og-by">by wustep</span>`
+  // The title already says Playground; the mark stands in for it here.
+  brand.innerHTML = `${sidebar.querySelector('svg.playground-sidebar-lab').outerHTML}<span class="og-name">wustep</span>`
   document.body.append(brand)
 
   sidebar.classList.add('og-hidden')
@@ -113,21 +116,28 @@ export async function restagePlayground({ copies, cards }) {
     }
   }
 
-  // The page flags off-screen covers paused (CoverCell) and, on touch,
-  // spotlights the one nearest the middle (useSpotlightCover). The capture
-  // decides both itself, so strip the page's flags whenever it sets them.
-  for (const cell of grid.querySelectorAll('[data-cover-cell]')) {
-    delete cell.dataset.animationsPaused
-    delete cell.dataset.coverAwake
+  // Every cover in the strip is awake for good, and starts its loops at its
+  // `phases` entry (ms, read by clock.js). The page flags off-screen covers
+  // paused (CoverCell) and, on touch, wakes only the one nearest the middle
+  // (useSpotlightCover), so undo whatever it sets.
+  // (Only touch what's missing or wrong: setting an attribute to the value it
+  // already has still notifies the observer, which would never settle.)
+  // Stays inside restagePlayground: page.evaluate serializes this one function.
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const wake = (cell) => {
+    if ('animationsPaused' in cell.dataset) delete cell.dataset.animationsPaused
+    if (!('coverAwake' in cell.dataset)) cell.dataset.coverAwake = ''
+  }
+  for (const card of grid.querySelectorAll('[data-og-index]')) {
+    const cell = card.querySelector('[data-cover-cell]')
+    if (!cell) continue
+    wake(cell)
+    const phase = phases[card.querySelector('h3')?.textContent] ?? 0
+    cell.dataset.ogPhase = String(phase)
   }
   new MutationObserver((records) => {
-    for (const { target, attributeName } of records) {
-      if (
-        attributeName === 'data-animations-paused' ||
-        !('ogAwake' in target.dataset)
-      ) {
-        target.removeAttribute(attributeName)
-      }
+    for (const { target } of records) {
+      if (target.closest('[data-og-index]')) wake(target)
     }
   }).observe(grid, {
     subtree: true,
@@ -136,38 +146,17 @@ export async function restagePlayground({ copies, cards }) {
 
   for (const img of document.images) img.loading = 'eager'
 
-  const first = originals[0].getBoundingClientRect()
-  const pitch = originals[2].getBoundingClientRect().top - first.top
+  const pitch =
+    originals[2].getBoundingClientRect().top -
+    originals[0].getBoundingClientRect().top
   return {
     count: originals.length,
-    titles: cards,
-    gridTop: grid.getBoundingClientRect().top,
-    coverHeight: first.height,
-    pitch,
     period: Math.ceil(originals.length / 2) * pitch
   }
 }
 
-/**
- * Per-frame scene update: slide the strip and wake the given cards (by
- * index into the strip) — the same data-cover-awake flag the page sets on
- * touch screens.
- */
-export function poseStrip({ translateY, awake }) {
+/** Per-frame scene update: slide the strip. */
+export function poseStrip({ translateY }) {
   const grid = document.querySelector('.og-grid')
   grid.style.transform = `translateY(${translateY}px)`
-  for (const card of grid.querySelectorAll('[data-og-index]')) {
-    const index = Number(card.dataset.ogIndex)
-    const cell = card.querySelector('[data-cover-cell]')
-    if (!cell) continue
-    // ogAwake marks the flags the capture set, so the observer above lets
-    // them stand.
-    if (awake.includes(index)) {
-      cell.dataset.ogAwake = ''
-      cell.dataset.coverAwake = ''
-    } else if ('ogAwake' in cell.dataset) {
-      delete cell.dataset.ogAwake
-      delete cell.dataset.coverAwake
-    }
-  }
 }

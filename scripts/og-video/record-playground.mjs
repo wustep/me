@@ -2,14 +2,15 @@
 /* ─────────────────────────────────────────────────────────
  * Records the /playground link-preview video: the live page,
  * restaged as a 1200×630 share card (stage.js), with eight of
- * the real covers scrolling up one full pass while a spotlight
- * zig-zags down them, waking one cover at a time — the same
- * data-cover-awake flag the page sets on touch screens.
+ * the real covers scrolling up one full pass, every one of
+ * them awake and playing at once — the same data-cover-awake
+ * flag the page sets on touch screens.
  *
  * Every frame is posed and screenshotted on a virtual clock
- * (clock.js), so the output is identical run to run, and the
- * strip is three copies of those covers long so the last frame
- * leads straight back into the first.
+ * (clock.js), which also retimes each cover's loop to a whole
+ * number of cycles per video loop. Output is the same run to
+ * run, and the strip is three copies of those covers long, so
+ * the last frame leads straight back into the first.
  *
  *   pnpm dev   # in another terminal, or pass --base
  *   node scripts/og-video/record-playground.mjs [--base URL] [--out DIR]
@@ -45,24 +46,30 @@ const WIDTH = 1200
 const HEIGHT = 630
 const SCALE = 2
 const FPS = 30
-const SECONDS = 6
-const FRAMES = FPS * SECONDS
+/**
+ * The loop. Every cover's animations are retimed to fit it a whole number of
+ * times (clock.js), and 7.6s keeps each within about 25% of its own pace:
+ * Things, Contraptions, Splash Panic!, the bow and Bomberman twice, MIDI
+ * three times, the Lenses eye and StageBench's run and melody once.
+ */
+const SECONDS = 7.6
+const FRAMES = Math.round(FPS * SECONDS)
 
 /**
  * The strip, two to a row and in the page's order: eight covers, so a pass
- * is four rows and the loop stays short. Five take the spotlight below;
- * Things, StageBench and Spot it! fill out their rows. The rest sit out:
- * most barely move when woken, Starry Night's cover is an animated WebP
- * that plays in real time (it can't be posed frame by frame), and Shadcn's
- * words fall out with `forwards`, leaving an empty black card.
+ * is four rows and the loop stays short. All eight loop forever while awake.
+ * The rest sit out: Spot it!, DOM-ino and Bookshelf only ease into a pose
+ * and hold it, Starry Night's cover is an animated WebP that plays in real
+ * time (it can't be posed frame by frame), Shadcn's words fall out with
+ * `forwards`, leaving an empty black card, and TBDBITL is a still.
  */
 const CARDS = [
   'Things',
   'Contraptions',
   'Splash Panic!',
   'StageBench',
+  'Lenses',
   'Lenses Illustration Lab',
-  'Spot it!',
   'Bomberman',
   'MIDI Visualizer'
 ]
@@ -75,23 +82,23 @@ const CARDS = [
 const TOP = 113
 
 /**
- * Who holds the spotlight, in strip order, and for how long. The windows
- * run back to back — one cover awake at a time, as on the page — and add up
- * to the loop. Each is long enough for its cover's beat: the marble's roll,
- * both explosions, the bow's draw, the first notes.
+ * How far into the loop (ms) each cover starts, so frame 0, the poster,
+ * catches every one mid-beat instead of at rest: the lamp on the watch, the
+ * marble off the spring, the splash at full stretch, a key down, the bow
+ * drawn, the bomb about to blossom, the bars mid-rise. Retimed, five of
+ * them share a 3.8s beat; these offsets also keep them from firing in
+ * unison.
  */
-const SPOTLIGHT = [
-  { title: 'Contraptions', seconds: 1.2 },
-  { title: 'Splash Panic!', seconds: 1.8 },
-  { title: 'Lenses Illustration Lab', seconds: 0.8 },
-  { title: 'Bomberman', seconds: 1.7 },
-  { title: 'MIDI Visualizer', seconds: 0.5 }
-]
-/**
- * The frame-space y of Contraptions' center when its window opens. Frame
- * 0 lands 0.8s into that window, with the marble mid-roll.
- */
-const FIRST_WAKE_Y = 322
+const PHASES = {
+  Things: 3300,
+  Contraptions: 3400,
+  'Splash Panic!': 2000,
+  StageBench: 1600,
+  Lenses: 3200,
+  'Lenses Illustration Lab': 2000,
+  Bomberman: 1200,
+  'MIDI Visualizer': 1000
+}
 
 const outDir = path.resolve(args.out)
 const framesDir = args.frames
@@ -122,7 +129,8 @@ await page.evaluate(() => document.fonts.ready)
 
 const strip = await page.evaluate(restagePlayground, {
   copies: 3,
-  cards: CARDS
+  cards: CARDS,
+  phases: PHASES
 })
 // Copies only tile seamlessly if each one fills its last row.
 if (strip.count % 2) throw new Error('The strip needs an even card count')
@@ -130,59 +138,12 @@ await page.waitForLoadState('networkidle')
 await page.evaluate(() =>
   Promise.all([...document.images].map((img) => img.decode().catch(() => null)))
 )
-await page.evaluate(installClock)
+await page.evaluate(installClock, { loop: SECONDS * 1000 })
 
-const indexOf = (title) => {
-  const index = strip.titles.indexOf(title)
-  if (index === -1) throw new Error(`No playground card titled "${title}"`)
-  return index
-}
-const coverCenter = (index) =>
-  Math.floor(index / 2) * strip.pitch + strip.coverHeight / 2
-
-// Spotlight windows in strip space, where m is the strip coordinate under
-// the frame's vertical middle. A cover's frame-space center is
-// `center + HEIGHT / 2 - m`.
-const pxPerSecond = strip.period / SECONDS
-let start = coverCenter(indexOf(SPOTLIGHT[0].title)) + HEIGHT / 2 - FIRST_WAKE_Y
-const windows = SPOTLIGHT.map(({ title, seconds }) => {
-  const window = {
-    index: indexOf(title),
-    from: start,
-    to: start + seconds * pxPerSecond
-  }
-  start = window.to
-  return window
+// The strip scrolls up exactly one copy per loop.
+const scene = (frame) => ({
+  translateY: TOP - strip.period - (strip.period * frame) / FRAMES
 })
-const total = windows.at(-1).to - windows[0].from
-if (Math.abs(total - strip.period) > 0.5) {
-  throw new Error(`Spotlight covers ${total}px, not the ${strip.period}px loop`)
-}
-// As on the page, a cover only wakes while it's wholly on screen.
-for (const { index, from, to } of windows) {
-  for (const m of [from, to]) {
-    const y = coverCenter(index) + HEIGHT / 2 - m
-    const half = strip.coverHeight / 2
-    if (y < half || y > HEIGHT - half) {
-      throw new Error(`${strip.titles[index]} is awake while clipped (y ${y})`)
-    }
-  }
-}
-
-function scene(frame) {
-  const translateY = TOP - strip.period - (strip.period * frame) / FRAMES
-  const m = HEIGHT / 2 - strip.gridTop - translateY
-  const awake = []
-  for (let copy = 0; copy < 3; copy++) {
-    const shift = copy * strip.period
-    for (const { index, from, to } of windows) {
-      if (m >= from + shift && m < to + shift) {
-        awake.push(copy * strip.count + index)
-      }
-    }
-  }
-  return { translateY, awake }
-}
 
 // Chromium rasterizes tiles off the main thread, and a screenshot can land
 // before a newly exposed tile (or a large image's decode) is ready — a cover
