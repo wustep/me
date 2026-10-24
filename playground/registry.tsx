@@ -37,7 +37,7 @@ export type PlaygroundEntry = {
   ogImage?: string
   /**
    * Animated cover for the /playground grid. An entry with neither this nor
-   * `image` is coverless: it shows as a compact text card below the grid.
+   * `image` is coverless: it's listed in the sidebar only, not on the grid.
    */
   CoverComponent?: React.ComponentType
 }

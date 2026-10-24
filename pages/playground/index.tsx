@@ -9,7 +9,7 @@ import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
 import { host } from '@/lib/config'
 import { shareVideo } from '@/lib/share-card'
 import { useInView } from '@/lib/use-in-view'
-import { type PlaygroundEntry, playgroundSections } from '@/playground/registry'
+import { playgroundEntries } from '@/playground/registry'
 
 /**
  * Cover cell that pauses its (looping) CSS animations while scrolled
@@ -111,45 +111,22 @@ const parseDate = (dateStr?: string): Date => {
   return new Date(Number.parseInt(year), monthIndex)
 }
 
-const byDateDesc = (a: PlaygroundEntry, b: PlaygroundEntry) =>
-  parseDate(b.date).getTime() - parseDate(a.date).getTime()
-
-const hasCover = (entry: PlaygroundEntry) =>
-  Boolean(entry.CoverComponent || entry.image)
-
 export default function PlaygroundPage() {
   const { isOwner } = useOwnerMode()
-  const sections = React.useMemo(
-    () =>
-      playgroundSections.map((section) => ({
-        title: section.title,
-        items: section.items.filter(
-          (project) => !project.disabled && (!project.ownerOnly || isOwner)
-        )
-      })),
-    [isOwner]
-  )
-  // Covered entries share one date-sorted grid; coverless ones get compact
-  // text cards below it, grouped under their sidebar section.
   const projects = React.useMemo(
     () =>
-      sections
-        .flatMap((section) => section.items)
-        .filter(hasCover)
-        .toSorted(byDateDesc),
-    [sections]
-  )
-  const coverlessSections = React.useMemo(
-    () =>
-      sections
-        .map((section) => ({
-          title: section.title,
-          items: section.items
-            .filter((project) => !hasCover(project))
-            .toSorted(byDateDesc)
-        }))
-        .filter((section) => section.items.length > 0),
-    [sections]
+      playgroundEntries
+        // Coverless entries live only in the sidebar, not on this grid.
+        .filter(
+          (project) =>
+            !project.disabled &&
+            (!project.ownerOnly || isOwner) &&
+            Boolean(project.CoverComponent || project.image)
+        )
+        .toSorted(
+          (a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()
+        ),
+    [isOwner]
   )
 
   const gridRef = React.useRef<HTMLDivElement>(null)
@@ -232,35 +209,6 @@ export default function PlaygroundPage() {
           </div>
         ))}
       </div>
-
-      {coverlessSections.map((section) => (
-        <section key={section.title} className='mt-12'>
-          <h2 className='mb-3 text-sm font-medium text-muted-foreground'>
-            {section.title}
-          </h2>
-          <div className='grid gap-x-6 gap-y-3 md:grid-cols-2'>
-            {section.items.map((project) => (
-              <Link
-                key={project.url}
-                href={project.url}
-                className='notion-collection-card flex flex-col gap-1 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
-              >
-                <div className='flex items-baseline justify-between gap-3'>
-                  <h3 className='font-semibold'>{project.title}</h3>
-                  {project.year ? (
-                    <span className='text-xs text-muted-foreground'>
-                      {project.year}
-                    </span>
-                  ) : null}
-                </div>
-                <p className='text-sm text-muted-foreground'>
-                  {project.summary ?? plainDescription(project.description)}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ))}
     </PlaygroundLayout>
   )
 }
