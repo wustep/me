@@ -23,12 +23,15 @@ const FALLBACK_DESCRIPTION =
 export function PlaygroundHead({
   title,
   description,
-  shareVideo
+  shareVideo,
+  shareImage
 }: {
   title: string
   description?: string
   /** A looping preview clip, emitted as og:video next to the card. */
   shareVideo?: ShareVideo
+  /** Absolute URL of a 1200×630 share card that replaces the registry one. */
+  shareImage?: string
 }) {
   const { pathname } = useRouter()
   const meta = getPlaygroundMeta({
@@ -39,7 +42,7 @@ export function PlaygroundHead({
     host
   })
   // The index and pages outside the registry share the Playground card.
-  const image = meta.image ?? shareCardUrl('playground')
+  const image = shareImage ?? meta.image ?? shareCardUrl('playground')
 
   return (
     <Head>
