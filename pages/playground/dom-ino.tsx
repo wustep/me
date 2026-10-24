@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
+import { shareVideo } from '@/lib/share-card'
 
 export default function PlaygroundDominoPage() {
   const [hasMounted, setHasMounted] = useState(false)
@@ -13,6 +14,7 @@ export default function PlaygroundDominoPage() {
     <PlaygroundLayout
       title='DOMino'
       breadcrumbs={[{ label: 'DOMino' }]}
+      shareVideo={shareVideo('playground/og/dom-ino')}
       fullFrame
     >
       {hasMounted && (

@@ -55,6 +55,12 @@ with `forwards` and leave an empty black card, so it stays asleep too.
 1200×630, 30 fps, 10 s, H.264 High, yuv420p, `+faststart`, no audio,
 about 1.6 MB. Frames are captured at 2× and downscaled with Lanczos.
 
+## /playground/dom-ino
+
+`public/playground/og/dom-ino.mp4` is recorded from the app itself in the
+DOM-ino repo (wustep/dom-ino, `scripts/og-video/`) and copied here. The page
+keeps its `public/og/playground/dom-ino.png` card as `og:image`.
+
 ## Wiring
 
 `shareVideo()` and `shareVideoMeta()` in `lib/share-card.tsx` emit
