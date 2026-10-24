@@ -15,7 +15,7 @@ lib/notion.ts            ← getPage / search with TTL caches
     ↓
 lib/resolve-notion-page.ts
     ↓
-pages/[pageId].tsx       ← getStaticProps (ISR, 24h revalidate)
+pages/[pageId].tsx       ← getStaticProps (ISR, 30 min revalidate)
     ↓
 components/NotionPage    ← react-notion-x renderer
     ↓
@@ -48,7 +48,7 @@ Browser (HTML + hydrated React)
 ## Rendering modes
 
 - **Homepage (`/`)** — pure static, no Notion data. See [`pages/index.tsx`](../pages/index.tsx).
-- **Notion pages (`/[pageId]`)** — ISR with 24h revalidate. Built paths come from the generated Notion index; unknown slugs fall through to `fallback: 'blocking'` and 404 if they do not resolve.
+- **Notion pages (`/[pageId]`)** — ISR with a 30-minute revalidate (`revalidate: 1800`). Built paths come from the generated Notion index; unknown slugs fall through to `fallback: 'blocking'` and 404 if they do not resolve.
 - **Sitemap** — static XML generated before the build. **Feed** — `getServerSideProps` with long CDN `Cache-Control`.
 - **Social image** — edge API route using `next/og`, regenerated on demand and cached by the CDN.
 - **Search** — client calls `/api/search-notion`, which proxies to Notion. Currently disabled (`isSearchEnabled: false`).

@@ -4,11 +4,11 @@ This site pulls content from the Notion API, which rate-limits to ~300 requests 
 
 ## Layer 1 — Next.js ISR (the dominant cache)
 
-Notion pages are rendered by [`pages/[pageId].tsx`](../pages/[pageId].tsx) with `getStaticProps` + `revalidate: 86_400`.
+Notion pages are rendered by [`pages/[pageId].tsx`](../pages/[pageId].tsx) with `getStaticProps` + `revalidate: 1800`.
 
 - Pages are statically generated at build time from the generated Notion index.
 - After deploy, each page is served from Vercel's edge cache.
-- A page is re-rendered on-demand at most once per 24 hours per region, and only when someone requests it.
+- A page is re-rendered on-demand at most once per 30 minutes per region, and only when someone requests it.
 - `fallback: 'blocking'` means pages not in the sitemap can still be generated on first request, without a 200 spinner shell. Missing pages return HTTP 404.
 - Error responses use `revalidate: 10` so transient failures clear quickly.
 
@@ -103,7 +103,7 @@ User → Vercel CDN (ISR hit) → HTML
 
 Zero Notion API calls.
 
-**An ISR revalidation after 24h:**
+**An ISR revalidation after 30 minutes:**
 
 ```
 User → Vercel CDN (stale) → serverless fn
