@@ -24,8 +24,11 @@ export type PlaygroundEntry = {
   disabled?: boolean
   /** Hidden from Playground navigation unless owner mode is active. */
   ownerOnly?: boolean
-  /** Pinned to the sidebar's Starred group instead of its own section. */
-  starred?: boolean
+  /**
+   * Pins the entry, starred, to the top of the sidebar (ascending order)
+   * instead of listing it in its own section.
+   */
+  starred?: number
   article?: string
   source?: string
   /** Companion X post; linked like `article` from cards and the sidebar. */
@@ -97,7 +100,7 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'StageBench',
-        starred: true,
+        starred: 1,
         url: '/playground/stagebench',
         description:
           'A benchmark for evaluating models by having them generate a replica of the Nord Stage 4.',
@@ -112,7 +115,7 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'Lenses',
-        starred: true,
+        starred: 2,
         url: '/playground/lenses',
         description:
           'A canvas of lenses for seeing the world. Each card is a different frame — headspace, evolutionary psychology, minimalism, utility, status — and no single one sees everything.',
@@ -181,7 +184,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Splash Panic!',
-        starred: true,
+        starred: 4,
         url: '/playground/splashpanic',
         description:
           'A multiplayer water-balloon battle arena game inspired by Crazy Arcade and Bomberman.',
@@ -230,7 +233,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Contraptions',
-        starred: true,
+        starred: 3,
         url: '/playground/contraptions',
         description:
           'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',

@@ -24,7 +24,7 @@ import {
   saveSidebarScrollTop,
   scrollTopToReveal
 } from '@/lib/sidebar-scroll'
-import { withStarredSection } from '@/lib/sidebar-sections'
+import { pinStarred } from '@/lib/sidebar-sections'
 import { type PlaygroundEntry, playgroundSections } from '@/playground/registry'
 
 const defaultDescription = "Welcome to Stephen's code playground."
@@ -138,9 +138,11 @@ export function PlaygroundSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const { isOwner } = useOwnerMode()
-  const visibleSections = React.useMemo(
+  // Starred entries are pinned, unlabeled, above the sections they'd
+  // otherwise appear in.
+  const { pinned, sections: visibleSections } = React.useMemo(
     () =>
-      withStarredSection(
+      pinStarred(
         playgroundSections.map((section) => ({
           ...section,
           items: section.items.filter((item) => !item.ownerOnly || isOwner)
@@ -148,12 +150,14 @@ export function PlaygroundSidebar({
       ),
     [isOwner]
   )
+  const visibleItems = React.useMemo(
+    () => [...pinned, ...visibleSections.flatMap((section) => section.items)],
+    [pinned, visibleSections]
+  )
   const activeItem =
-    visibleSections
-      .flatMap((section) => section.items)
-      .find((item) => {
-        return item.url === router.pathname
-      }) ?? null
+    visibleItems.find((item) => {
+      return item.url === router.pathname
+    }) ?? null
 
   // The hovered/focused item previews in About; leaving the whole menu (not
   // each item) returns to the active page, so crossing the gaps between
@@ -163,11 +167,52 @@ export function PlaygroundSidebar({
   )
   const aboutInfo: AboutInfo = previewItem ?? activeItem ?? defaultAbout
   const aboutCandidates = React.useMemo<AboutInfo[]>(
-    () => [
-      defaultAbout,
-      ...visibleSections.flatMap((section) => section.items)
-    ],
-    [visibleSections]
+    () => [defaultAbout, ...visibleItems],
+    [visibleItems]
+  )
+
+  const renderItem = (item: PlaygroundEntry) => (
+    <SidebarMenuItem key={item.title}>
+      <SidebarMenuButton
+        asChild
+        isActive={router.pathname === item.url}
+        disabled={!!item.disabled}
+        onMouseEnter={() => setPreviewItem(item)}
+        onFocus={() => setPreviewItem(item)}
+      >
+        {item.disabled ? (
+          // The menu button's aria-disabled:opacity-50 is the
+          // single dimmer; don't stack a second opacity here.
+          <span className='flex w-full items-center justify-between gap-2 text-muted-foreground'>
+            <span className='truncate'>{item.title}</span>
+            {item.year ? (
+              <span className='text-[11px]'>{item.year}</span>
+            ) : null}
+          </span>
+        ) : (
+          <Link
+            href={item.url}
+            aria-current={router.pathname === item.url ? 'page' : undefined}
+            className='flex w-full items-center justify-between gap-2'
+          >
+            <span className='flex min-w-0 items-center gap-1.5'>
+              <span className='truncate'>{item.title}</span>
+              {item.starred !== undefined ? (
+                <Star
+                  aria-label='Starred'
+                  className='size-3 shrink-0 fill-amber-400 text-amber-400'
+                />
+              ) : null}
+            </span>
+            {item.year ? (
+              <span className='text-[11px] text-muted-foreground'>
+                {item.year}
+              </span>
+            ) : null}
+          </Link>
+        )}
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   )
 
   const handleMenuBlur = (event: React.FocusEvent<HTMLDivElement>) => {
@@ -202,57 +247,18 @@ export function PlaygroundSidebar({
         onMouseLeave={() => setPreviewItem(null)}
         onBlur={handleMenuBlur}
       >
+        {pinned.length > 0 ? (
+          <SidebarGroup aria-label='Starred'>
+            <SidebarGroupContent>
+              <SidebarMenu>{pinned.map(renderItem)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ) : null}
         {visibleSections.map((section) => (
           <SidebarGroup key={section.title}>
             <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname === item.url}
-                      disabled={!!item.disabled}
-                      onMouseEnter={() => setPreviewItem(item)}
-                      onFocus={() => setPreviewItem(item)}
-                    >
-                      {item.disabled ? (
-                        // The menu button's aria-disabled:opacity-50 is the
-                        // single dimmer; don't stack a second opacity here.
-                        <span className='flex w-full items-center justify-between gap-2 text-muted-foreground'>
-                          <span className='truncate'>{item.title}</span>
-                          {item.year ? (
-                            <span className='text-[11px]'>{item.year}</span>
-                          ) : null}
-                        </span>
-                      ) : (
-                        <Link
-                          href={item.url}
-                          aria-current={
-                            router.pathname === item.url ? 'page' : undefined
-                          }
-                          className='flex w-full items-center justify-between gap-2'
-                        >
-                          <span className='flex min-w-0 items-center gap-1.5'>
-                            <span className='truncate'>{item.title}</span>
-                            {item.starred ? (
-                              <Star
-                                aria-label='Starred'
-                                className='size-3 shrink-0 fill-amber-400 text-amber-400'
-                              />
-                            ) : null}
-                          </span>
-                          {item.year ? (
-                            <span className='text-[11px] text-muted-foreground'>
-                              {item.year}
-                            </span>
-                          ) : null}
-                        </Link>
-                      )}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
+              <SidebarMenu>{section.items.map(renderItem)}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
