@@ -116,8 +116,12 @@ export default function PlaygroundPage() {
   const projects = React.useMemo(
     () =>
       playgroundEntries
+        // Coverless entries live only in the sidebar, not on this grid.
         .filter(
-          (project) => !project.disabled && (!project.ownerOnly || isOwner)
+          (project) =>
+            !project.disabled &&
+            (!project.ownerOnly || isOwner) &&
+            Boolean(project.CoverComponent || project.image)
         )
         .toSorted(
           (a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()

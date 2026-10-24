@@ -4,8 +4,6 @@ import { BombermanCover } from '@/components/wustep/BombermanCover'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
-// Temporarily hidden — bring back later
-// import { JevCover } from '@/components/wustep/JevCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
 import { MidiVisualizerCover } from '@/components/wustep/MidiVisualizerCover'
@@ -37,6 +35,10 @@ export type PlaygroundEntry = {
    * PNG/JPEG `image` is used, so that image should be 1200×630 too.
    */
   ogImage?: string
+  /**
+   * Animated cover for the /playground grid. An entry with neither this nor
+   * `image` is coverless: it's listed in the sidebar only, not on the grid.
+   */
   CoverComponent?: React.ComponentType
 }
 
@@ -49,19 +51,35 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Experiments',
     items: [
-      // Temporarily hidden — bring back later
-      // {
-      //   title: 'Jev Playground',
-      //   url: '/playground/jev',
-      //   description:
-      //     'Can a System One model steer music? Jev chooses only enums — character, form, key, chords — and the app writes the sheet, the sound, and the MIDI. Trolley problems, inbox triage, and match ranking sit in the other rooms.',
-      //   summary: 'Jev picks the labels; code writes the notes',
-      //   date: 'Sep 2026',
-      //   year: '2026',
-      //   source: 'https://github.com/wustep/jev-playground',
-      //   gradient: 'from-stone-100 via-amber-100 to-amber-800',
-      //   CoverComponent: JevCover
-      // },
+      {
+        title: 'Jamming',
+        url: '/playground/jamming',
+        description: 'A band of doodled animals that improvise music together.',
+        summary: 'Doodled animals improvising music together',
+        date: 'Oct 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/jamming'
+      },
+      {
+        title: 'Jev Playground',
+        url: '/playground/jev',
+        description:
+          'Can a System One model steer music? Jev chooses only enums — character, form, key, chords — and the app writes the sheet, the sound, and the MIDI. Trolley problems, inbox triage, and match ranking sit in the other rooms.',
+        summary: 'Jev picks the labels; code writes the notes',
+        date: 'Sep 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/jev-playground'
+      },
+      {
+        title: 'Maths',
+        url: '/playground/maths',
+        description:
+          'A public notebook where AI agents take runs at open math problems and log what they find.',
+        summary: 'AI agents taking runs at open math problems',
+        date: 'Aug 2026',
+        year: '2026',
+        source: 'https://github.com/wustep/maths'
+      },
       {
         title: 'Things',
         url: '/playground/things',
@@ -255,6 +273,40 @@ export const playgroundSections: PlaygroundSection[] = [
         source: 'http://github.com/wustep/tbdbitl',
         image: '/playground/covers/tbdbitl.png',
         ogImage: '/og/playground/tbdbitl.png'
+      }
+    ]
+  },
+  {
+    title: 'Guides',
+    items: [
+      {
+        title: 'Nord Stage 4',
+        url: '/playground/nordstage4',
+        description:
+          'An interactive guide to every Nord Stage 4 button, knob, light, and menu, with page references to the manual.',
+        summary: 'Every Nord Stage 4 control, explained',
+        date: 'Oct 2026',
+        year: '2026',
+        source: 'https://nordstage4.vercel.app/'
+      },
+      {
+        title: 'EP-133 K.O. II',
+        url: '/playground/ko-ii',
+        description:
+          'An unofficial, playable guide to the teenage engineering EP-133 K.O. II: every control, sampling, sequencing, and whole beats, cited to the official guide.',
+        summary: 'A playable, unofficial guide to the EP-133',
+        date: 'Oct 2026',
+        year: '2026',
+        source: 'https://ko-ii.vercel.app/'
+      },
+      {
+        title: 'Prompting',
+        url: '/prompting',
+        description:
+          "A field guide to prompting coding agents: what works, what doesn't, and why.",
+        summary: 'A field guide to prompting coding agents',
+        date: 'Apr 2026',
+        year: '2026'
       }
     ]
   }
