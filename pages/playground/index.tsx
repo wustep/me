@@ -6,6 +6,7 @@ import { RiTwitterX } from '@/components/icons/InlineIcons'
 import { useOwnerMode } from '@/components/wustep/OwnerModeProvider'
 import { plainDescription } from '@/components/wustep/PlaygroundDescription'
 import { PlaygroundLayout } from '@/components/wustep/PlaygroundLayout'
+import { host } from '@/lib/config'
 import { shareVideo } from '@/lib/share-card'
 import { useInView } from '@/lib/use-in-view'
 import { playgroundEntries } from '@/playground/registry'
@@ -131,6 +132,7 @@ export default function PlaygroundPage() {
     <PlaygroundLayout
       title='Playground'
       shareVideo={shareVideo('playground/og/playground')}
+      shareImage={`${host}/playground/og/playground.png`}
     >
       <p className='text-muted-foreground mb-8'>
         A collection of interactive experiments, demos, and creative projects.

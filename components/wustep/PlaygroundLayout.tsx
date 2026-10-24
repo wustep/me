@@ -70,6 +70,8 @@ interface PlaygroundLayoutProps {
   description?: string
   /** Looping link-preview clip (og:video), shown beside the share card. */
   shareVideo?: ShareVideo
+  /** Absolute URL of a 1200×630 share card that replaces the registry one. */
+  shareImage?: string
   breadcrumbs?: { label: string; href?: string }[]
   /** When true, children fill the entire frame (no padding, no title, no max-width) */
   fullFrame?: boolean
@@ -82,6 +84,7 @@ export function PlaygroundLayout({
   title,
   description,
   shareVideo,
+  shareImage,
   breadcrumbs = [],
   fullFrame = false,
   openHref
@@ -114,6 +117,7 @@ export function PlaygroundLayout({
         title={title}
         description={description}
         shareVideo={shareVideo}
+        shareImage={shareImage}
       />
       <SidebarProvider
         open={isSidebarOpen}
