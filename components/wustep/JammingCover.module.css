@@ -1,0 +1,126 @@
+/* Cover for Jamming — the trio. One SVG stage (640×360) over the app's own
+   stage paper: warm cream, a dot grid, a faint wash of green pencil lines
+   and a little warmth from the floor (jamming's globals.css, body and
+   .stage-paper). The box is wider than the stage at every grid width, and
+   `meet` leaves the wings to the paper, which is CSS so it runs on under
+   them, and to the bunting, which the SVG draws on past its edges.
+
+   The players keep the app's colours in both themes; the app is light
+   only, and its animals carry their own ink. What the stage paints in
+   pencil — the paper, the pennants' outlines, the floor hatching, the
+   notes — comes from these variables, which dark mode swaps for the stage
+   after dark, the way ContraptionsCover keeps one map for both. */
+.cover {
+  --jc-paper: #f6f0e1;
+  --jc-ink: #2c2a35;
+  /* the app's soft ink, so the notes sit behind the players */
+  --jc-note: #5b5666;
+  --jc-shadow: #b9ab8c;
+  --jc-dot: rgba(201, 190, 166, 0.35);
+  --jc-dot-soft: rgba(201, 190, 166, 0.25);
+  --jc-rule: rgba(79, 138, 58, 0.05);
+  --jc-glow: rgba(226, 169, 59, 0.12);
+  --jc-pennant: 0.28;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 55% at 50% 100%, var(--jc-glow), transparent 70%),
+    repeating-linear-gradient(
+      -38deg,
+      transparent 0 7px,
+      var(--jc-rule) 7px 8px
+    ),
+    radial-gradient(var(--jc-dot) 1px, transparent 1px) 0 0 / 23px 23px,
+    radial-gradient(var(--jc-dot-soft) 1px, transparent 1px) 11px 17px / 37px
+      37px,
+    var(--jc-paper);
+}
+
+/* After dark: the same paper turned to the app's darkest ink, bone pencil,
+   and the floor's warm glow kept, so the band still reads as lit. */
+:global(body.dark-mode) .cover {
+  --jc-paper: #1d1b23;
+  --jc-ink: #ece4d2;
+  --jc-note: #d9cfbb;
+  --jc-shadow: rgba(236, 228, 210, 0.3);
+  --jc-dot: rgba(236, 228, 210, 0.08);
+  --jc-dot-soft: rgba(236, 228, 210, 0.05);
+  --jc-rule: rgba(236, 228, 210, 0.03);
+  --jc-glow: rgba(226, 169, 59, 0.14);
+  --jc-pennant: 0.4;
+}
+
+/* Two layers at one scale (see the component): the band's stage fills the
+   box and stands on its floor; the bunting's strip is the top 64 of the
+   stage's 360 units and hangs from the top. Neither clips, so the bunting
+   and the paper run on into the wings. */
+.stage,
+.bunting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.stage {
+  height: 100%;
+}
+
+.bunting {
+  height: calc(100% * 64 / 360);
+}
+
+.pennant {
+  fill-opacity: var(--jc-pennant);
+}
+
+/* Paused-timeline idiom: every moving part is declared up front and held,
+   so the card is a finished frame at rest and hover strikes up the band.
+   Hovering out freezes it mid-bar; hovering back picks the bar up.
+
+   Each part gets its keyframe name, its period (the loop, or one beat) and
+   a negative delay inline from the component — the delay is what parks the
+   whole band on the rest pose. The keyframes are sampled densely and played
+   linearly, so the element default is linear. */
+.run {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+/* ---------- Hover / focus / in view: play ---------- */
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch has no hover to give, so the band plays while this cover holds the
+   grid's spotlight — the one nearest the middle of the screen
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* With no animation at all, every part falls back to the attributes the
+   component drew it with, which are the rest pose: mid-bow, notes in the
+   air. */
+@media (prefers-reduced-motion: reduce) {
+  .run {
+    animation: none !important;
+  }
+}
