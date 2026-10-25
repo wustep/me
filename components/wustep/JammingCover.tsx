@@ -58,12 +58,15 @@ const K = 1
 /** Where the players stand, in stage units. */
 const FLOOR = 340
 /**
- * Each player's centre line, in stage units. The band and Rusty's notes
- * span about 24–612: the whole stage a phone's card shows (its box is 190px
- * tall and about 1.8 times as wide), centred. Wider cards show more paper
- * and bunting either side.
+ * Each player's centre line, in stage units. The lines average a little
+ * left of the stage middle (x 320) so the drawing's ink centres there:
+ * the trumpet reaches well past Rusty, and centring the bodies on 320
+ * would leave the bell and his notes heavy on the right. `xMid` puts that
+ * middle on the middle of the card. The bell and the notes stay inside
+ * what a phone shows — the box is 190px tall and about 1.87 times as wide,
+ * so only a little of the viewBox's right wing is in frame.
  */
-const AT = { lily: 84, olive: 253, rusty: 432 }
+const AT = { lily: 140, olive: 309, rusty: 488 }
 
 // ---- the tune --------------------------------------------------------------
 
@@ -609,11 +612,18 @@ const BELL = (() => {
 })()
 /** A note's flight, seconds. Four are let go a loop, so two or three are up at once. */
 const NOTE_LIFE = 2.9
+/**
+ * How far right of the bell a note leans, and how wide it wanders. The
+ * bell already sits toward the right of the centred trio, and the phone
+ * card (190px tall, about 1.87 times as wide) shows only a little past
+ * the viewBox, so a longer lean walks the highest note off that edge.
+ * They still rise on a lazy S.
+ */
 const NOTES = [
-  { at: 0.1, kind: 'eighth', drift: 44, sway: 7, phase: 0 },
-  { at: 1.05, kind: 'pair', drift: 30, sway: 5, phase: 0.4 },
-  { at: 2, kind: 'quarter', drift: 52, sway: 8, phase: 0.75 },
-  { at: 2.95, kind: 'eighth', drift: 36, sway: 6, phase: 0.2 }
+  { at: 0.1, kind: 'eighth', drift: 16, sway: 5, phase: 0 },
+  { at: 1.05, kind: 'pair', drift: 8, sway: 4, phase: 0.4 },
+  { at: 2, kind: 'quarter', drift: 22, sway: 6, phase: 0.75 },
+  { at: 2.95, kind: 'eighth', drift: 12, sway: 5, phase: 0.2 }
 ] as const
 const NOTE_STEPS = [
   0, 0.04, 0.08, 0.12, 0.17, 0.24, 0.32, 0.41, 0.5, 0.6, 0.7, 0.8, 0.9, 1
