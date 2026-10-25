@@ -13,6 +13,7 @@ import { SpotItCover } from '@/components/wustep/SpotItCover'
 import { StageBenchCover } from '@/components/wustep/StageBenchCover'
 import { StarrySequencerCover } from '@/components/wustep/StarrySequencerCover'
 import { ThingsCover } from '@/components/wustep/ThingsCover'
+import { starRank } from '@/playground/starred'
 
 export type PlaygroundEntry = {
   title: string
@@ -25,8 +26,8 @@ export type PlaygroundEntry = {
   /** Hidden from Playground navigation unless owner mode is active. */
   ownerOnly?: boolean
   /**
-   * Pins the entry, starred, to the top of the sidebar (ascending order)
-   * instead of listing it in its own section.
+   * Stars the entry and pins it to the top of its own sidebar section.
+   * Set it with `starRank(title)`; the order lives in `playground/starred.ts`.
    */
   starred?: number
   article?: string
@@ -100,7 +101,7 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'StageBench',
-        starred: 1,
+        starred: starRank('StageBench'),
         url: '/playground/stagebench',
         description:
           'A benchmark for evaluating models by having them generate a replica of the Nord Stage 4.',
@@ -115,7 +116,7 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'Lenses',
-        starred: 2,
+        starred: starRank('Lenses'),
         url: '/playground/lenses',
         description:
           'A canvas of lenses for seeing the world. Each card is a different frame — headspace, evolutionary psychology, minimalism, utility, status — and no single one sees everything.',
@@ -184,7 +185,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Splash Panic!',
-        starred: 4,
+        starred: starRank('Splash Panic!'),
         url: '/playground/splashpanic',
         description:
           'A multiplayer water-balloon battle arena game inspired by Crazy Arcade and Bomberman.',
@@ -233,7 +234,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Contraptions',
-        starred: 3,
+        starred: starRank('Contraptions'),
         url: '/playground/contraptions',
         description:
           'One ball on a Rube Goldberg chain that never ends, with a new world behind every portal.',
