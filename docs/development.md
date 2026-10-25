@@ -4,7 +4,8 @@ Local setup, commands, and conventions.
 
 ## Requirements
 
-- Node 22 and pnpm 10.34.5, pinned in [`mise.toml`](../mise.toml) — the single source of truth for local dev and CI. Run `mise install` to match. (`engines` in [`package.json`](../package.json) allows Node ≥ 20; `packageManager` pins the same pnpm version for Corepack users.)
+- Node 22 and pnpm 10.34.7, pinned in [`mise.toml`](../mise.toml) — the single source of truth for local dev and CI. Run `mise install` to match. (`engines` in [`package.json`](../package.json) allows Node ≥ 20; `packageManager` pins the same pnpm version for Corepack users.)
+- pnpm 10 switches itself to the `packageManager` version when run in this repo, so that pin wins whatever pnpm you start with. When bumping pnpm, change `mise.toml`, `packageManager` and the `installCommand` in [`vercel.json`](../vercel.json) together.
 
 ## Commands
 

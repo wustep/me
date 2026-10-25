@@ -171,10 +171,13 @@ usually with a colocated `.module.css`, rendered in a 16:9 cell.
 
 Toolchain:
 
-- [`mise.toml`](mise.toml) pins Node 22 and pnpm 10.34.5. CI uses these
+- [`mise.toml`](mise.toml) pins Node 22 and pnpm 10.34.7. CI uses these
   versions; run `mise install` to match.
 - `package.json` declares `engines.node >=20` and
   `packageManager: pnpm@10.34.7`.
+- pnpm 10 switches itself to the `packageManager` version inside this repo.
+  When bumping pnpm, change `mise.toml`, `packageManager` and the
+  `vercel.json` install command together.
 
 ```sh
 pnpm install          # also installs git hooks (simple-git-hooks)
@@ -271,7 +274,7 @@ Top-level config: `site.config.ts`, `notion-index.config.ts`, `next.config.js`,
 The site deploys on Vercel.
 
 - [`vercel.json`](vercel.json) only sets the install command
-  (`npx --yes pnpm@10.12.1 install --frozen-lockfile`).
+  (`npx --yes pnpm@10.34.7 install --frozen-lockfile`).
 - Per the CI workflow, production builds on Vercel run the full `pnpm build`,
   so they crawl Notion first. `next.config.js` renders static pages one at a
   time to stay under Notion's rate limit.
@@ -287,7 +290,8 @@ The site deploys on Vercel.
 ## Adding a playground entry
 
 The [`playground-entry`](.claude/skills/playground-entry/SKILL.md) skill
-covers the full cover-design workflow. The short version:
+covers the full workflow: registry, page, link preview and, for grid entries,
+the cover-design exploration. The short version:
 
 1. **Page.** Create `pages/playground/<slug>.tsx` and wrap it in
    `PlaygroundLayout` with `title` and `breadcrumbs`.
