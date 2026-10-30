@@ -14,6 +14,11 @@ export const config: PageConfig = {
   maxDuration: 60
 }
 
+// notion-client throws this when the record map has no block for the page.
+function isNotionPageNotFound(err: unknown): boolean {
+  return err instanceof Error && err.message.startsWith('Notion page not found')
+}
+
 async function getNotionFallbackUrl(rawPageId: string): Promise<string | null> {
   const notionPageId = resolvePageIdFromMaps(rawPageId, {
     pageUrlOverrides,
@@ -50,6 +55,13 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
       context.revalidateReason === 'on-demand'
     ) {
       throw err
+    }
+
+    // A page Notion can't find (deleted or unshared) is a 404, not a 500.
+    // Revalidations rethrow above so a flaky Notion response never swaps a
+    // good cached page for a 404.
+    if (isNotionPageNotFound(err)) {
+      return { notFound: true, revalidate: 10 }
     }
 
     const fallbackUrl = await getNotionFallbackUrl(normalizedPageId)

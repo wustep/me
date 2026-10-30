@@ -1,8 +1,10 @@
 import ExpiryMap from 'expiry-map'
 import { type CollectionInstance, type ExtendedRecordMap } from 'notion-types'
+import { parsePageId } from 'notion-utils'
 import pMemoize from 'p-memoize'
 
 import * as config from './config'
+import { isIndexedPageId } from './is-published-on-site'
 import { notion } from './notion-api'
 import { collectPublicPageSlugs } from './page-slug'
 
@@ -52,3 +54,21 @@ export const getOverrideCollectionSlugMap = pMemoize(
     cache: new ExpiryMap<undefined, Record<string, string>>(SLUG_MAP_TTL_MS)
   }
 )
+
+/**
+ * True when `pageId` is a page the site publishes: the committed index, a
+ * URL override, or a public post in an override page's collection. Gate for
+ * anything that takes a raw Notion id from a request — otherwise any page in
+ * the workspace that Notion will serve renders under this domain.
+ */
+export async function isPublishedPageId(pageId: string): Promise<boolean> {
+  if (isIndexedPageId(pageId)) return true
+
+  const normalized = parsePageId(pageId, { uuid: false })
+  if (!normalized) return false
+
+  const slugMap = await getOverrideCollectionSlugMap()
+  return Object.values(slugMap).some(
+    (id) => parsePageId(id, { uuid: false }) === normalized
+  )
+}
