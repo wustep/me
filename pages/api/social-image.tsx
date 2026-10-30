@@ -42,9 +42,12 @@ export default async function OGImage(
   try {
     pageInfoOrError = await getNotionPageInfo({ pageId })
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : 'Could not load Notion page'
-    return apiErrorResponse(502, 'page_lookup_failed', message)
+    console.error('social-image: page lookup failed', pageId, err)
+    return apiErrorResponse(
+      502,
+      'page_lookup_failed',
+      'Could not load Notion page.'
+    )
   }
   if (pageInfoOrError.type === 'error') {
     return apiErrorResponse(

@@ -67,8 +67,12 @@ export default async function notionFile(
     )
     res.redirect(302, signedUrl)
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : 'Failed to sign Notion file URL'
-    return sendApiError(res, 502, 'sign_failed', message)
+    console.error('notion-file: failed to sign', pageId, err)
+    return sendApiError(
+      res,
+      502,
+      'sign_failed',
+      'Failed to sign Notion file URL.'
+    )
   }
 }
