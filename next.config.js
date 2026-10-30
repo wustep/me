@@ -66,7 +66,18 @@ export default withBundleAnalyzer({
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'abs.twimg.com' },
       { protocol: 'https', hostname: 'pbs.twimg.com' },
-      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' }
+      // Notion's buckets only — a bare S3 host would let any public bucket
+      // in the region be optimized (and billed) through this domain.
+      {
+        protocol: 'https',
+        hostname: 's3.us-west-2.amazonaws.com',
+        pathname: '/secure.notion-static.com/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.us-west-2.amazonaws.com',
+        pathname: '/public.notion-static.com/**'
+      }
     ],
     // Keep optimized copies around after Notion file URLs expire (~1h).
     minimumCacheTTL: 60 * 60 * 24,
