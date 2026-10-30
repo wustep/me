@@ -10,7 +10,7 @@ describe('validateEnv', () => {
   it('passes on a valid environment', () => {
     expect(() =>
       validateEnv({
-        OWNER_MODE_SECRET: 'a-long-enough-secret',
+        OWNER_MODE_SECRET: 'a-long-enough-secret-of-32-chars',
         NOTION_API_BASE_URL: 'https://notion.example.com',
         PORT: '3000'
       })
@@ -21,6 +21,9 @@ describe('validateEnv', () => {
     expect(() => validateEnv({ OWNER_MODE_SECRET: 'short' })).toThrow(
       /OWNER_MODE_SECRET/
     )
+    expect(() =>
+      validateEnv({ OWNER_MODE_SECRET: 'twenty-chars-secret!' })
+    ).toThrow(/at least 32 characters/)
   })
 
   it('rejects a malformed URL', () => {

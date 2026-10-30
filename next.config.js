@@ -10,6 +10,41 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
+// eslint-disable-next-line no-process-env
+const isDev = process.env.NODE_ENV === 'development'
+
+// Baseline browser hardening for every response. Permissions-Policy only
+// turns off features nothing here uses — the playground iframes delegate
+// autoplay/fullscreen/midi/gamepad/sensors, and /playground uses Web MIDI.
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+  }
+]
+
+// Report-only for now: Notion content can embed arbitrary https iframes,
+// images and media, so watch the console for violations before enforcing.
+// 'unsafe-inline' scripts cover the dark-mode bootstrap in _document.tsx.
+const contentSecurityPolicyReportOnly = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' data: blob: https:",
+  "connect-src 'self' https:",
+  "frame-src 'self' https:",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'"
+].join('; ')
+
 export default withBundleAnalyzer({
   staticPageGenerationTimeout: 300,
   experimental: {
@@ -31,7 +66,18 @@ export default withBundleAnalyzer({
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'abs.twimg.com' },
       { protocol: 'https', hostname: 'pbs.twimg.com' },
-      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' }
+      // Notion's buckets only — a bare S3 host would let any public bucket
+      // in the region be optimized (and billed) through this domain.
+      {
+        protocol: 'https',
+        hostname: 's3.us-west-2.amazonaws.com',
+        pathname: '/secure.notion-static.com/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.us-west-2.amazonaws.com',
+        pathname: '/public.notion-static.com/**'
+      }
     ],
     // Keep optimized copies around after Notion file URLs expire (~1h).
     minimumCacheTTL: 60 * 60 * 24,
@@ -65,6 +111,25 @@ export default withBundleAnalyzer({
   },
   headers: async () => {
     return [
+      {
+        source: '/:path*',
+        headers: securityHeaders
+      },
+      // Pages only: /_next/image sets its own sandboxing CSP for SVGs, and
+      // API routes return JSON/images. Skipped in dev (eval, HMR sockets).
+      ...(isDev
+        ? []
+        : [
+            {
+              source: '/((?!_next/|api/).*)',
+              headers: [
+                {
+                  key: 'Content-Security-Policy-Report-Only',
+                  value: contentSecurityPolicyReportOnly
+                }
+              ]
+            }
+          ]),
       {
         source: '/giscus/:path',
         headers: [

@@ -27,6 +27,12 @@ function hasPublishedSlug(slug: string): boolean {
   )
 }
 
+/** True when the id is in the committed index or a configured URL override. */
+export function isIndexedPageId(pageId: string): boolean {
+  const normalized = parsePageId(pageId, { uuid: false })
+  return Boolean(normalized && publishedPageIds.has(normalized))
+}
+
 /**
  * True when this page is a URL the site can render (committed index or
  * configured override). Mentions of unpublished Notion pages must not be
@@ -36,9 +42,5 @@ export function isPublishedOnSite(
   pageId: string,
   slug?: string | undefined
 ): boolean {
-  const normalized = parsePageId(pageId, { uuid: false })
-  if (normalized && publishedPageIds.has(normalized)) {
-    return true
-  }
-  return Boolean(slug && hasPublishedSlug(slug))
+  return isIndexedPageId(pageId) || Boolean(slug && hasPublishedSlug(slug))
 }

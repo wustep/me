@@ -30,7 +30,10 @@ export default function IndexPage() {
         <meta name='twitter:description' content={bioText} />
         <script
           type='application/ld+json'
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}
+          // Escape `<` so a `</script>` inside any string can't end the tag.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd()).replaceAll('<', '\\u003c')
+          }}
         />
       </Head>
       <AboutPage />

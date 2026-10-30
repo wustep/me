@@ -15,7 +15,7 @@ export default function PlaygroundThingsPage() {
         title='Things'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *'
+        allow='autoplay; fullscreen'
         allowFullScreen
       />
     </PlaygroundLayout>

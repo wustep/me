@@ -1,14 +1,13 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
-import { parsePageId } from 'notion-utils'
+import { getBlockValue, parsePageId } from 'notion-utils'
 
 import { sendApiError } from '@/lib/api-error'
+import { rootNotionSpaceId } from '@/lib/config'
 import { notion } from '@/lib/notion-api'
-import { isExpiringSignedFileUrl } from '@/lib/signed-file-urls'
-
-function isSignableFileUrl(url: string): boolean {
-  if (url.startsWith('attachment:')) return true
-  return isExpiringSignedFileUrl(url)
-}
+import {
+  blockReferencesFile,
+  isSignableNotionFileUrl
+} from '@/lib/signed-file-urls'
 
 export default async function notionFile(
   req: NextApiRequest,
@@ -28,7 +27,7 @@ export default async function notionFile(
   const source = typeof req.query.url === 'string' ? req.query.url : ''
   const pageId = parsePageId(blockId, { uuid: true })
 
-  if (!pageId || !source || !isSignableFileUrl(source)) {
+  if (!pageId || !source || !isSignableNotionFileUrl(source)) {
     return sendApiError(
       res,
       400,
@@ -38,6 +37,19 @@ export default async function notionFile(
   }
 
   try {
+    // Only sign files that belong to a block in this site's workspace, and
+    // only the file that block actually references. Otherwise this route is
+    // an open signer for any Notion file whose block and file ids are known.
+    const { recordMap } = await notion.getBlocks([pageId])
+    const block = getBlockValue(recordMap?.block?.[pageId])
+    if (
+      !block ||
+      (rootNotionSpaceId && block.space_id !== rootNotionSpaceId) ||
+      !blockReferencesFile(block, source)
+    ) {
+      return sendApiError(res, 404, 'not_found', 'No signed URL for that file.')
+    }
+
     const { signedUrls } = await notion.getSignedFileUrls([
       {
         permissionRecord: { table: 'block', id: pageId },
@@ -55,8 +67,12 @@ export default async function notionFile(
     )
     res.redirect(302, signedUrl)
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : 'Failed to sign Notion file URL'
-    return sendApiError(res, 502, 'sign_failed', message)
+    console.error('notion-file: failed to sign', pageId, err)
+    return sendApiError(
+      res,
+      502,
+      'sign_failed',
+      'Failed to sign Notion file URL.'
+    )
   }
 }

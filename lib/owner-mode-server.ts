@@ -4,18 +4,40 @@ import type { NextApiRequest } from 'next'
 
 export const OWNER_MODE_COOKIE = 'wustep_owner_mode'
 
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365
-const MIN_OWNER_SECRET_LENGTH = 8
-const SESSION_PURPOSE = 'wustep.me owner mode v1'
+// Sessions carry their issue time and expire server-side, so a copied cookie
+// stops working on its own instead of only when the secret is rotated.
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 90
+const CLOCK_SKEW_SECONDS = 60
+// Long enough that guessing online is hopeless even without rate limiting.
+// Keep in sync with lib/validate-env.ts.
+const MIN_OWNER_SECRET_LENGTH = 32
+const SESSION_PURPOSE = 'wustep.me owner mode v2'
 
 function getOwnerSecret() {
   return process.env.OWNER_MODE_SECRET
 }
 
-function createSessionToken(secret: string) {
+function signSession(secret: string, issuedAt: number) {
   return createHmac('sha256', secret)
-    .update(SESSION_PURPOSE)
+    .update(`${SESSION_PURPOSE}:${issuedAt}`)
     .digest('base64url')
+}
+
+/** `<issued-at seconds>.<HMAC>` */
+function createSessionToken(secret: string) {
+  const issuedAt = Math.floor(Date.now() / 1000)
+  return `${issuedAt}.${signSession(secret, issuedAt)}`
+}
+
+function verifySessionToken(secret: string, token: string) {
+  const match = /^(\d{1,12})\.([\w-]+)$/.exec(token)
+  if (!match) return false
+
+  const issuedAt = Number(match[1])
+  const age = Math.floor(Date.now() / 1000) - issuedAt
+  if (age > SESSION_MAX_AGE_SECONDS || age < -CLOCK_SKEW_SECONDS) return false
+
+  return safelyEqual(match[2]!, signSession(secret, issuedAt))
 }
 
 function safelyEqual(left: string, right: string) {
@@ -46,7 +68,7 @@ export function isOwnerRequest(req: Pick<NextApiRequest, 'cookies'>): boolean {
   const token = req.cookies[OWNER_MODE_COOKIE]
   if (!secret || secret.length < MIN_OWNER_SECRET_LENGTH || !token) return false
 
-  return safelyEqual(token, createSessionToken(secret))
+  return verifySessionToken(secret, token)
 }
 
 export function createOwnerCookie() {
@@ -58,7 +80,7 @@ export function createOwnerCookie() {
   }
 
   const secure = process.env.NODE_ENV === 'production' ? '; Secure' : ''
-  return `${OWNER_MODE_COOKIE}=${createSessionToken(secret)}; Path=/; Max-Age=${COOKIE_MAX_AGE_SECONDS}; HttpOnly; SameSite=Lax${secure}`
+  return `${OWNER_MODE_COOKIE}=${createSessionToken(secret)}; Path=/; Max-Age=${SESSION_MAX_AGE_SECONDS}; HttpOnly; SameSite=Lax${secure}`
 }
 
 export function clearOwnerCookie() {

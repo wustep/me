@@ -12,7 +12,7 @@ export default function PlaygroundStageBenchPage() {
         title='StageBench'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *'
+        allow='autoplay; fullscreen'
         allowFullScreen
       />
     </PlaygroundLayout>

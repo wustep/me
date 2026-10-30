@@ -102,11 +102,11 @@ back on. The flag is stored in same-origin `localStorage` as `va-disable`.
 
 | Var | Notes |
 |---|---|
-| `OWNER_MODE_SECRET` | A value of at least 8 characters used to activate `/owner`. Keep it server-only; a random value from `openssl rand -base64 32` is recommended. |
+| `OWNER_MODE_SECRET` | A value of at least 32 characters used to activate `/owner`. Keep it server-only; generate one with `openssl rand -base64 32`. Owner sessions last 90 days, then `/owner` asks for the key again. |
 
 Set `OWNER_MODE_SECRET` for Development, Preview, and Production in Vercel if owner mode should work in every environment. After changing the value, redeploy the site and activate each browser once at `/owner`.
 
-Owner mode issues a signed, `HttpOnly`, same-site cookie for one year. A local access marker reveals the hover-only agent toggle after successful activation, while a separate active marker controls presentation and suppresses Vercel Analytics, Fathom, PostHog, and Google Analytics. The header toggle can pause or resume owner mode without forgetting the browser; “Forget this browser” at `/owner` clears both the cookie and local access.
+Owner mode issues a signed, `HttpOnly`, same-site cookie that carries its issue time and expires after 90 days. A local access marker reveals the hover-only agent toggle after successful activation, while a separate active marker controls presentation and suppresses Vercel Analytics, Fathom, PostHog, and Google Analytics. The header toggle can pause or resume owner mode without forgetting the browser; “Forget this browser” at `/owner` clears both the cookie and local access.
 
 ### Notion auth (optional hardening)
 

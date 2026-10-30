@@ -15,7 +15,7 @@ export default function PlaygroundNordStage4Page() {
         title='Nord Stage 4'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *; midi *'
+        allow='autoplay; fullscreen; midi'
         allowFullScreen
       />
     </PlaygroundLayout>

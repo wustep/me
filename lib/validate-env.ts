@@ -9,7 +9,8 @@
  * Only vars that are actually set are checked, so it never fails a valid
  * minimal setup. Server-only.
  */
-const MIN_OWNER_SECRET_LENGTH = 8
+// Keep in sync with lib/owner-mode-server.ts.
+const MIN_OWNER_SECRET_LENGTH = 32
 
 function isValidUrl(value: string): boolean {
   try {

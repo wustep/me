@@ -17,7 +17,7 @@ export default function PlaygroundJevPage() {
         title='Jev Playground'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *'
+        allow='autoplay; fullscreen'
         allowFullScreen
       />
     </PlaygroundLayout>

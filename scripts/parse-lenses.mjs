@@ -17,10 +17,25 @@ export const REQUIRED = [
   'body'
 ]
 
+// Every href a lens renders (body links, readings, quote cites) must be
+// http(s), site-relative, an in-page anchor, or mailto. Model-authored decks
+// flow through the same renderer, so `javascript:`/`data:` never get in.
+const SAFE_HREF = /^(?:https?:\/\/|\/(?!\/)|#|mailto:)/i
+const BODY_LINK = /\[[^\]]+\]\(([^)]+)\)/g
+
+function unsafeHrefs(rec) {
+  const hrefs = [
+    ...[...(rec.body ?? '').matchAll(BODY_LINK)].map((m) => m[1]),
+    ...(rec.readings ?? []).map((r) => r.href),
+    rec.quote?.citeHref
+  ]
+  return hrefs.filter((href) => href !== undefined && !SAFE_HREF.test(href))
+}
+
 /**
  * Parse the raw lenses.md contents into `{ records, errors }`.
  * `records` is always in a stable key order; `errors` lists every problem
- * (missing required field, malformed reading, duplicate id).
+ * (missing required field, malformed reading, unsafe link, duplicate id).
  */
 export function parseLenses(raw) {
   // Each lens is a section opened by an H1. Everything before the first
@@ -97,6 +112,11 @@ export function parseLenses(raw) {
 
     for (const key of REQUIRED) {
       if (!rec[key]) errors.push(`${title || '(untitled)'}: missing "${key}"`)
+    }
+    for (const href of unsafeHrefs(rec)) {
+      errors.push(
+        `${title || '(untitled)'}: link must be http(s), /path, #anchor or mailto → "${href}"`
+      )
     }
     records.push(rec)
   }

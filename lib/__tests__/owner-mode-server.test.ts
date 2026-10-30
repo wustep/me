@@ -9,7 +9,9 @@ import {
   verifyOwnerSecret
 } from '../owner-mode-server'
 
-const SECRET = 'correct horse battery staple'
+const SECRET = 'correct horse battery staple, mark 2'
+const OTHER_SECRET = 'a different secret that is long enough'
+const DAY_MS = 24 * 60 * 60 * 1000
 
 /** `name=value` from a Set-Cookie string, as a request's parsed cookies. */
 function cookiesFrom(setCookie: string): Record<string, string> {
@@ -20,6 +22,7 @@ function cookiesFrom(setCookie: string): Record<string, string> {
 
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.useRealTimers()
 })
 
 describe('owner mode configuration', () => {
@@ -28,7 +31,10 @@ describe('owner mode configuration', () => {
     expect(isOwnerModeConfigured()).toBe(false)
     vi.stubEnv('OWNER_MODE_SECRET', 'short')
     expect(isOwnerModeConfigured()).toBe(false)
-    expect(() => createOwnerCookie()).toThrow(/at least 8 characters/)
+    // Eight characters used to be enough; it is now guessable territory.
+    vi.stubEnv('OWNER_MODE_SECRET', 'twenty-chars-secret!')
+    expect(isOwnerModeConfigured()).toBe(false)
+    expect(() => createOwnerCookie()).toThrow(/at least 32 characters/)
   })
 
   it('is on with a long enough secret', () => {
@@ -79,10 +85,50 @@ describe('owner session cookie', () => {
     )
 
     // A token minted under a different secret stops working on rotation.
-    vi.stubEnv('OWNER_MODE_SECRET', 'a different secret')
+    vi.stubEnv('OWNER_MODE_SECRET', OTHER_SECRET)
     expect(isOwnerRequest({ cookies: { [OWNER_MODE_COOKIE]: token } })).toBe(
       false
     )
+  })
+
+  it('expires sessions after 90 days', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-10-30T00:00:00Z'))
+    vi.stubEnv('OWNER_MODE_SECRET', SECRET)
+    const cookie = createOwnerCookie()
+    const cookies = cookiesFrom(cookie)
+    expect(cookie).toContain(`Max-Age=${90 * 24 * 60 * 60}`)
+
+    vi.setSystemTime(Date.now() + 89 * DAY_MS)
+    expect(isOwnerRequest({ cookies })).toBe(true)
+    vi.setSystemTime(Date.now() + 2 * DAY_MS)
+    expect(isOwnerRequest({ cookies })).toBe(false)
+  })
+
+  it('rejects a re-dated or future-dated token', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-10-30T00:00:00Z'))
+    vi.stubEnv('OWNER_MODE_SECRET', SECRET)
+    const token = cookiesFrom(createOwnerCookie())[OWNER_MODE_COOKIE]!
+    const [issuedAt, signature] = token.split('.')
+
+    // 60 days on, moving the timestamp forward 59 days (so it looks a day
+    // old) to dodge expiry breaks the signature.
+    vi.setSystemTime(Date.now() + 60 * DAY_MS)
+    const redated = `${Number(issuedAt) + 59 * 24 * 60 * 60}.${signature}`
+    expect(isOwnerRequest({ cookies: { [OWNER_MODE_COOKIE]: redated } })).toBe(
+      false
+    )
+    expect(isOwnerRequest({ cookies: { [OWNER_MODE_COOKIE]: token } })).toBe(
+      true
+    )
+    vi.setSystemTime(Date.now() - 60 * DAY_MS)
+
+    // A token issued a day "from now" (clock tampering) is not accepted.
+    vi.setSystemTime(Date.now() + DAY_MS)
+    const future = cookiesFrom(createOwnerCookie())
+    vi.setSystemTime(Date.now() - DAY_MS)
+    expect(isOwnerRequest({ cookies: future })).toBe(false)
   })
 
   it('rejects every token once the secret is unset', () => {

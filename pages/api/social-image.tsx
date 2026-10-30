@@ -16,6 +16,7 @@ import * as libConfig from '@/lib/config'
 import interSemiBoldFont from '@/lib/fonts/inter-semibold'
 import { mapImageUrl } from '@/lib/map-image-url'
 import { notion } from '@/lib/notion-api'
+import { isPublishedPageId } from '@/lib/posts-collection'
 import { type NotionPageInfo, type PageError } from '@/lib/types'
 
 export const runtime = 'edge'
@@ -31,14 +32,22 @@ export default async function OGImage(
   if (!pageId) {
     return apiErrorResponse(400, 'invalid_page_id', 'Invalid notion page id')
   }
+  // Only draw cards for pages the site publishes, so this can't be used to
+  // read titles/covers of other pages in the workspace.
+  if (!(await isPublishedPageId(pageId))) {
+    return apiErrorResponse(404, 'not_found', 'No published page with that id')
+  }
 
   let pageInfoOrError: Awaited<ReturnType<typeof getNotionPageInfo>>
   try {
     pageInfoOrError = await getNotionPageInfo({ pageId })
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : 'Could not load Notion page'
-    return apiErrorResponse(502, 'page_lookup_failed', message)
+    console.error('social-image: page lookup failed', pageId, err)
+    return apiErrorResponse(
+      502,
+      'page_lookup_failed',
+      'Could not load Notion page.'
+    )
   }
   if (pageInfoOrError.type === 'error') {
     return apiErrorResponse(

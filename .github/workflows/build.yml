@@ -2,6 +2,10 @@ name: CI
 
 on: [push]
 
+# Read-only token: the job only checks out, installs, lints and builds.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Typecheck, lint & build
@@ -12,7 +16,9 @@ jobs:
 
       # Node + pnpm versions come from mise.toml (single source of truth).
       - name: Set up toolchain
-        uses: jdx/mise-action@v2
+        # Third-party action pinned to a commit (v2.4.4) so a moved tag can't
+        # change what runs here; Dependabot bumps the SHA.
+        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
 
       # Cache the pnpm content-addressable store so installs are near-instant
       # on a lockfile hit instead of re-downloading every dependency.

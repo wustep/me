@@ -44,7 +44,7 @@ export default async function searchNotion(
     )
     return res.status(200).json(results)
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Notion search failed'
-    return sendApiError(res, 502, 'search_failed', message)
+    console.error('search-notion: search failed', err)
+    return sendApiError(res, 502, 'search_failed', 'Notion search failed.')
   }
 }

@@ -10,5 +10,6 @@ Notes on how this site works. Each doc is focused on a single concern and links 
 - [development.md](development.md) — local setup, commands, debugging tips
 - [styling.md](styling.md) — CSS file structure, Tailwind/shadcn vs. the Notion stylesheet
 - [customizations.md](customizations.md) — this site's extensions on top of nextjs-notion-starter-kit
+- [security-audit-2026-10-30-claude.md](security-audit-2026-10-30-claude.md) / [-codex.md](security-audit-2026-10-30-codex.md) — two independent security audits and their fix list
 
 Start with `architecture.md` if you're new to the repo.

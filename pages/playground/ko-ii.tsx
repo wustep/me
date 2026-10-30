@@ -15,7 +15,7 @@ export default function PlaygroundKoIIPage() {
         title='EP-133 K.O. II'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *; midi *'
+        allow='autoplay; fullscreen; midi'
         allowFullScreen
       />
     </PlaygroundLayout>

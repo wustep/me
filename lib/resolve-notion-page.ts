@@ -5,7 +5,10 @@ import * as acl from './acl'
 import { pageUrlAdditions, pageUrlOverrides, site } from './config'
 import { getPage } from './notion'
 import { canonicalPageMap } from './notion-index'
-import { getOverrideCollectionSlugMap } from './posts-collection'
+import {
+  getOverrideCollectionSlugMap,
+  isPublishedPageId
+} from './posts-collection'
 import { lookupSlug, resolvePageIdFromMaps } from './resolve-page-id'
 
 export async function resolveNotionPage(
@@ -29,7 +32,9 @@ export async function resolveNotionPage(
       pageId = lookupSlug(rawPageId, await getOverrideCollectionSlugMap())
     }
 
-    if (pageId) {
+    // A raw id in the path (`/<id>`, `/<slug>-<id>`) can name any page in
+    // the workspace. Only render pages the site publishes.
+    if (pageId && (await isPublishedPageId(pageId))) {
       recordMap = await getPage(pageId)
     } else {
       return {

@@ -50,6 +50,27 @@ describe('parseLenses', () => {
     expect(errors.some((e) => /reading must be/.test(e))).toBe(true)
   })
 
+  it('accepts http(s), site-relative, anchor and mailto links', () => {
+    const raw = validLens.replace(
+      'Body text goes here.',
+      'See [a](https://example.com), [b](/lenses/agency), [c](#top), [d](mailto:a@b.co).'
+    )
+    expect(parseLenses(raw).errors).toEqual([])
+  })
+
+  it('flags unsafe link schemes in the body, readings and quote cites', () => {
+    const raw = validLens
+      .replace('Body text goes here.', 'Click [here](javascript:alert(1)).')
+      .replace('https://example.com/book', 'data:text/html,hi')
+      .replace(
+        'illustration: eye',
+        'illustration: eye\nquote: Hi\nquote-cite-href: //evil.example'
+      )
+    const { errors } = parseLenses(raw)
+    const linkErrors = errors.filter((e) => /link must be/.test(e))
+    expect(linkErrors).toHaveLength(3)
+  })
+
   it('detects duplicate ids', () => {
     const { errors } = parseLenses(validLens + '\n' + validLens)
     expect(errors.some((e) => /duplicate id "agency"/.test(e))).toBe(true)
