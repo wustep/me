@@ -190,7 +190,7 @@ workspace configured in `site.config.ts`. For overrides, copy
 
 | Variable                                                                                      | Purpose                                                     |
 | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `OWNER_MODE_SECRET`                                                                           | Enables `/owner` (at least 8 characters)                    |
+| `OWNER_MODE_SECRET`                                                                           | Enables `/owner` (at least 32 characters)                   |
 | `NOTION_TOKEN_V2`, `NOTION_ACTIVE_USER`                                                       | Send Notion requests as a logged-in session if 403s persist |
 | `NOTION_API_BASE_URL`                                                                         | Override the Notion API base URL                            |
 | `REDIS_HOST`, `REDIS_PASSWORD`, `REDIS_USER`, `REDIS_URL`, `REDIS_NAMESPACE`, `REDIS_ENABLED` | Redis cache for preview images (off by default)             |
