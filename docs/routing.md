@@ -28,14 +28,21 @@ Logic lives in [`lib/resolve-notion-page.ts`](../lib/resolve-notion-page.ts). Fo
 
 4. If still no UUID, check the generated page index
    canonicalPageMap[rawPath]
+   …then public posts in override pages' collections (getOverrideCollectionSlugMap)
 
-5. If resolved, fetch
+5. Require a published page
+   isPublishedPageId(pageId)          ← lib/posts-collection.ts: index,
+                                        overrides/additions, or an override
+                                        collection post; anything else 404s
+                                        without calling Notion
+
+6. If resolved, fetch
    getPage(pageId) → ExtendedRecordMap
 
-6. Run ACL check (lib/acl.ts) to reject pages from other workspaces
+7. Run ACL check (lib/acl.ts) to reject pages from other workspaces
 ```
 
-If nothing resolves, return a 404. Newly-added or renamed pages appear after `pnpm notion:index` runs, which also happens automatically before a production build.
+If nothing resolves, return a 404. A raw id in the path (`/<id>`, `/<slug>-<id>`) only renders when step 5 passes, so unlisted pages in the workspace never render under this domain. `/api/social-image` applies the same gate. If Notion reports a published page missing on first render, it's a 404 rather than a 500. Newly-added or renamed pages appear after `pnpm notion:index` runs, which also happens automatically before a production build.
 
 ## `pageUrlOverrides` vs. `pageUrlAdditions`
 
