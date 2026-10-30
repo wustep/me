@@ -15,7 +15,7 @@ export default function PlaygroundJammingPage() {
         title='Jamming'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *; midi *'
+        allow='autoplay; fullscreen; midi'
         allowFullScreen
       />
     </PlaygroundLayout>

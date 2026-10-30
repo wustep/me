@@ -13,7 +13,7 @@ export default function PlaygroundSpotItPage() {
         title='Spot it! iframe'
         className='flex-1 w-full border-0'
         loading='lazy'
-        allow='autoplay *; fullscreen *'
+        allow='autoplay; fullscreen'
         allowFullScreen
       />
     </PlaygroundLayout>
