@@ -1,5 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
+import { SIDEBAR_NOFLASH_SCRIPT } from '@/lib/playground-sidebar'
+
 export default class MyDocument extends Document {
   override render() {
     return (
@@ -63,6 +65,11 @@ export default class MyDocument extends Document {
 })();
 `
             }}
+          />
+          {/* Collapses the Playground sidebar before paint; see
+              lib/playground-sidebar.ts. */}
+          <script
+            dangerouslySetInnerHTML={{ __html: SIDEBAR_NOFLASH_SCRIPT }}
           />
           <Main />
 
