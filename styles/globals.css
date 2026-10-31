@@ -221,6 +221,24 @@
   animation: sidebar-appear 200ms ease-out;
 }
 
+/* Playground sidebar noflash. Static HTML renders the sidebar open; when the
+   stored preference is collapsed, the _document script marks <html> and these
+   rules draw the desktop sidebar collapsed (offcanvas, as in
+   components/ui/sidebar.tsx) until React renders it so — without
+   transitions, so the handover never animates. The phone drawer is a
+   separate Sheet and isn't touched. See lib/playground-sidebar.ts. */
+html[data-playground-sidebar='collapsed']:not([data-playground-sidebar-ready])
+  [data-slot='sidebar-gap'] {
+  width: 0;
+  transition: none;
+}
+
+html[data-playground-sidebar='collapsed']:not([data-playground-sidebar-ready])
+  [data-slot='sidebar-container'] {
+  left: calc(var(--sidebar-width) * -1);
+  transition: none;
+}
+
 /* shadcn end */
 
 a {

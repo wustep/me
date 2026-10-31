@@ -17,13 +17,19 @@ import { Separator } from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
-  useSidebar
+  SidebarTrigger
 } from '@/components/ui/sidebar'
 import { OwnerModeToggle } from '@/components/wustep/OwnerModeToggle'
 import { PlaygroundHead } from '@/components/wustep/PlaygroundHead'
 import { PlaygroundSidebar } from '@/components/wustep/PlaygroundSidebar'
 import { ThemeToggle } from '@/components/wustep/ThemeToggle'
+import {
+  migrateSidebarCookie,
+  readSidebarOpen,
+  SIDEBAR_READY_ATTR,
+  subscribeSidebarOpen,
+  writeSidebarOpen
+} from '@/lib/playground-sidebar'
 import { type ShareVideo } from '@/lib/share-card'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
@@ -36,28 +42,10 @@ type PlaygroundThemeContextValue = {
 const PlaygroundThemeContext =
   React.createContext<PlaygroundThemeContextValue | null>(null)
 
-const PLAYGROUND_SIDEBAR_STORAGE_KEY = 'playground-sidebar-open:v1'
-
-function loadStoredSidebarOpen() {
-  try {
-    const storedValue = window.localStorage.getItem(
-      PLAYGROUND_SIDEBAR_STORAGE_KEY
-    )
-    if (storedValue === 'true') return true
-    if (storedValue === 'false') return false
-    return null
-  } catch {
-    return null
-  }
-}
-
-function storeSidebarOpen(open: boolean) {
-  try {
-    window.localStorage.setItem(PLAYGROUND_SIDEBAR_STORAGE_KEY, String(open))
-  } catch {
-    // localStorage can be disabled or unavailable in private browsing.
-  }
-}
+const getClientSidebarOpen = () => readSidebarOpen() ?? true
+// Static HTML is always rendered open, so hydration must start open too —
+// React doesn't patch attributes that differ from the server HTML.
+const getServerSidebarOpen = () => true
 
 export function usePlaygroundTheme() {
   return React.useContext(PlaygroundThemeContext)
@@ -90,20 +78,25 @@ export function PlaygroundLayout({
   openHref
 }: PlaygroundLayoutProps) {
   const [hasMounted, setHasMounted] = React.useState(false)
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true)
+  // Client-side navigations mount with the stored preference. A hard load
+  // hydrates open and then re-renders collapsed if that's the preference;
+  // the _document noflash script has the CSS showing it collapsed already.
+  const isSidebarOpen = React.useSyncExternalStore(
+    subscribeSidebarOpen,
+    getClientSidebarOpen,
+    getServerSidebarOpen
+  )
   const { isDarkMode, toggleDarkMode } = useDarkMode()
 
   React.useEffect(() => {
     setHasMounted(true)
-    const storedSidebarOpen = loadStoredSidebarOpen()
-    if (storedSidebarOpen !== null) {
-      setIsSidebarOpen(storedSidebarOpen)
-    }
-  }, [])
-
-  const handleSidebarOpenChange = React.useCallback((open: boolean) => {
-    setIsSidebarOpen(open)
-    storeSidebarOpen(open)
+    migrateSidebarCookie()
+    // The store re-render above has committed by the next frame; hand the
+    // sidebar back to its own classes (and transitions) then.
+    const frame = requestAnimationFrame(() => {
+      document.documentElement.setAttribute(SIDEBAR_READY_ATTR, '')
+    })
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   const playgroundTheme = React.useMemo(
@@ -121,7 +114,7 @@ export function PlaygroundLayout({
       />
       <SidebarProvider
         open={isSidebarOpen}
-        onOpenChange={handleSidebarOpenChange}
+        onOpenChange={writeSidebarOpen}
         style={
           {
             '--sidebar-width': '16rem'
@@ -161,23 +154,8 @@ function LayoutContent({
   fullFrame,
   openHref
 }: LayoutContentProps) {
-  const { state, isMobile } = useSidebar()
-  const insetStyle = React.useMemo(() => {
-    if (isMobile) return undefined
-
-    const paddingLeft =
-      state === 'collapsed'
-        ? 'calc(var(--sidebar-width-icon) + theme(spacing.8))'
-        : 'calc(var(--sidebar-width) + theme(spacing.8))'
-
-    return { paddingLeft }
-  }, [state, isMobile])
-
   return (
-    <SidebarInset
-      className='transition-[padding] duration-200 bg-background'
-      style={insetStyle as React.CSSProperties}
-    >
+    <SidebarInset className='bg-background'>
       <header className='owner-mode-toggle-reveal-group flex h-[55px] shrink-0 items-center gap-2 border-b px-4 pr-3 bg-background'>
         <SidebarTrigger className='-ml-1' />
         <Separator
