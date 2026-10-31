@@ -1,4 +1,4 @@
-import { crimsonPro, geist, inter } from './fonts'
+import { geist, geistSerif, inter } from './fonts'
 
 export type DesignFont = {
   id: string
@@ -17,6 +17,7 @@ const googleFontRequests = [
   'Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600',
   'Bricolage Grotesque:wght@400;500;600;700',
   'Cormorant Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600',
+  'Crimson Pro:ital,wght@0,400;0,600;1,400;1,600',
   'DM Serif Text:ital@0;1',
   'EB Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600',
   'Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600',
@@ -132,10 +133,16 @@ export const designSansFonts: DesignFont[] = [
 
 export const designSerifFonts: DesignFont[] = [
   {
+    id: 'geist-serif',
+    name: 'Geist Serif',
+    family: geistSerif.style.fontFamily,
+    note: 'Current · sharp, high-contrast display'
+  },
+  {
     id: 'crimson-pro',
     name: 'Crimson Pro',
-    family: crimsonPro.style.fontFamily,
-    note: 'Current · literary and familiar'
+    family: serifFamily('Crimson Pro'),
+    note: 'Previous · literary and familiar'
   },
   {
     id: 'newsreader',
@@ -216,8 +223,8 @@ export const designFontPairs = [
     id: 'current',
     name: 'Current',
     sansId: 'inter',
-    serifId: 'crimson-pro',
-    note: 'Familiar and literary'
+    serifId: 'geist-serif',
+    note: 'Neutral chrome, sharp serif'
   },
   {
     id: 'modern-editorial',

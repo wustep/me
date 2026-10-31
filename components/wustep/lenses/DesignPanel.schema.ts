@@ -508,7 +508,7 @@ export const SECTIONS: Section[] = [
         options: [
           {
             value: "var(--font-serif, 'Crimson Pro', Georgia, serif)",
-            label: 'Crimson Pro (default)'
+            label: 'Geist Serif (default)'
           },
           { value: "Georgia, 'Times New Roman', serif", label: 'Georgia' },
           {

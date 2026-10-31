@@ -5,7 +5,7 @@ import { Fraunces, JetBrains_Mono } from 'next/font/google'
  *
  *   The app sets Fraunces for names and JetBrains Mono for the small
  *   tags. Loading them here (and nowhere else) keeps a cover from falling
- *   back to the site's Crimson Pro, which would stop reading as the app.
+ *   back to the site's serif, which would stop reading as the app.
  *   `preload: false` — these faces belong to the playground grid, not to
  *   every route that happens to share a document.
  */

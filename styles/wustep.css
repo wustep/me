@@ -1347,10 +1347,11 @@ main[tabindex='-1']:focus {
 .notion-hr {
   margin: 1.2em 0 /* from 2em 0 */;
 }
-/* Quotes speak in Crimson italic, a step larger than the sans around them
-   since Crimson's x-height is small. A hairline in the text's own ink
-   replaces notion.css's 4px sky-blue bar, the one off-palette color in the
-   prose. */
+/* Quotes speak in the serif, a step larger than the sans around them (sized
+   for Crimson Pro's small x-height; Geist Serif has no italic, so the
+   notion.css italic renders upright during the trial). A hairline in the
+   text's own ink replaces notion.css's 4px sky-blue bar, the one
+   off-palette color in the prose. */
 .notion-quote {
   font-family: var(--font-serif);
   font-size: 1.25em /* from 1.2em */;

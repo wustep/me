@@ -108,7 +108,7 @@ function normalizeLocalPath(value: string) {
 export default function FontTesterPage() {
   const iframeRef = React.useRef<HTMLIFrameElement>(null)
   const [sansId, setSansId] = React.useState('inter')
-  const [serifId, setSerifId] = React.useState('crimson-pro')
+  const [serifId, setSerifId] = React.useState('geist-serif')
   const [scale, setScale] = React.useState(1)
   const [previewPath, setPreviewPath] = React.useState('/')
   const [draftPath, setDraftPath] = React.useState('/')
@@ -121,7 +121,7 @@ export default function FontTesterPage() {
   const [fontSearch, setFontSearch] = React.useState('')
 
   const sansFont = getDesignFont(designSansFonts, sansId, 'inter')
-  const serifFont = getDesignFont(designSerifFonts, serifId, 'crimson-pro')
+  const serifFont = getDesignFont(designSerifFonts, serifId, 'geist-serif')
 
   const activePair = designFontPairs.find(
     (pair) => pair.sansId === sansFont.id && pair.serifId === serifFont.id
@@ -174,7 +174,7 @@ export default function FontTesterPage() {
       ) as StoredSettings | null
 
       const nextSansId = params.get('sans') || saved?.sansId || 'inter'
-      const nextSerifId = params.get('serif') || saved?.serifId || 'crimson-pro'
+      const nextSerifId = params.get('serif') || saved?.serifId || 'geist-serif'
       const nextScale = Number(params.get('scale') || saved?.scale || 1)
       const nextPath = normalizeLocalPath(
         params.get('path') || saved?.path || '/'
@@ -278,7 +278,7 @@ export default function FontTesterPage() {
 
   const resetSettings = () => {
     setSansId('inter')
-    setSerifId('crimson-pro')
+    setSerifId('geist-serif')
     setScale(1)
   }
 
@@ -425,7 +425,7 @@ export default function FontTesterPage() {
                       const pairSerif = getDesignFont(
                         designSerifFonts,
                         pair.serifId,
-                        'crimson-pro'
+                        'geist-serif'
                       )
 
                       return (
