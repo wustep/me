@@ -5,6 +5,7 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
+import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
@@ -41,6 +42,18 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'instruments',
+    title: 'Instruments',
+    summary: 'Physically modeled piano, strings, and winds',
+    covers: [
+      {
+        label: 'The grand, from above (shipped)',
+        hint: "The app's 2D piano view in plan, on its warm black ground in both themes. At rest C3 is still ringing. Hover: a rolled C major chord strikes bass to treble — each key warms, its hammer flashes, its string lights and blurs, then rings down.",
+        Cover: InstrumentsCover
+      }
+    ]
+  },
   {
     id: 'jamming',
     title: 'Jamming',
