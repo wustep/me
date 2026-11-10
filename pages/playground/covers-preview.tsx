@@ -6,6 +6,10 @@ import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
+import { InstrumentsCoverB } from '@/components/wustep/InstrumentsCoverB'
+import { InstrumentsCoverC } from '@/components/wustep/InstrumentsCoverC'
+import { InstrumentsCoverD } from '@/components/wustep/InstrumentsCoverD'
+import { InstrumentsCoverPiano } from '@/components/wustep/InstrumentsCoverPiano'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
@@ -48,9 +52,29 @@ const tabs: [Tab, ...Tab[]] = [
     summary: 'Physically modeled piano, strings, and winds',
     covers: [
       {
-        label: 'The grand, from above (shipped)',
-        hint: "The app's 2D piano view in plan, on its warm black ground in both themes. At rest C3 is still ringing. Hover: a rolled C major chord strikes bass to treble — each key warms, its hammer flashes, its string lights and blurs, then rings down.",
+        label: 'A — The picker (shipped)',
+        hint: 'The app’s vector lines on black in both themes: its seven instruments in the picker row, the picked one large in the frame with what sounds on it lit amber. At rest the cello, bowed. Hover: the pick walks the row — flute, trumpet, grand, upright, violin, viola — each taking the stage and ringing down; the strings are bowed.',
         Cover: InstrumentsCover
+      },
+      {
+        label: 'B — The bow (unshipped)',
+        hint: 'One violin in vector lines, its D string amber, cello and viola in the wings. Hover: the bow draws down and up, the string widening into its blur.',
+        Cover: InstrumentsCoverB
+      },
+      {
+        label: 'C — Hammer, bow, breath (unshipped)',
+        hint: 'The three ways the app starts a sound, in its painted palette. Hover: the hammer strikes, the bow draws, the jet blows, in turn.',
+        Cover: InstrumentsCoverC
+      },
+      {
+        label: 'D — Seven voices (unshipped)',
+        hint: 'A score of standing waves, one line and one mode per instrument. Hover: every wave swings through its envelope.',
+        Cover: InstrumentsCoverD
+      },
+      {
+        label: 'Previous — The grand, from above (unshipped)',
+        hint: 'The first cover: the app’s 2D piano view in plan, painted palette. At rest C3 is still ringing. Hover: a rolled C major chord strikes bass to treble.',
+        Cover: InstrumentsCoverPiano
       }
     ]
   },

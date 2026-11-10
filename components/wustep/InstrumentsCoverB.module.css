@@ -1,0 +1,235 @@
+/* The app's "vector lines" ground: black, a faint pool of its panel blue
+   behind the violin. Sized in px so it stays on the instrument (~355px
+   long at the fixed 190px cover height) however wide the card gets. Dark
+   in both site themes, as the app is.
+
+   Palette, from the app's vector-style :root tokens:
+     #4fb6f2  --v-blue      outlines, bow hair
+     #3487c4  --v-blue-mid  detail lines
+     #1f5f8c  --v-blue-dim  strings at rest, dashes, the wings
+     #133954  --v-frame     the axis
+     #d9f1ff  --v-text      the bow's stick
+     #ffb340  --v-amber     the bowed string
+   The contact target's green is read off the app's canvas; it has no
+   token. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      400px 190px at 52% 50%,
+      #06202f 0%,
+      rgba(3, 18, 28, 0.6) 55%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    #000;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Furniture ---------- */
+
+/* Long dash, short dash: a drafting centre line. */
+.axis {
+  stroke: #133954;
+  stroke-width: 1.2;
+  stroke-dasharray: 26 6 4 6;
+}
+
+.frameDash {
+  fill: none;
+  stroke: #1f5f8c;
+  stroke-width: 1.2;
+  stroke-dasharray: 2 7;
+}
+
+.frameCorners {
+  fill: none;
+  stroke: #3487c4;
+  stroke-width: 1.8;
+}
+
+/* ---------- Instruments ----------
+   Stroke widths here are in glyph units: the violin is drawn at 21 stage
+   units to one, and a stage unit is ~0.53px at the cover's 190px height,
+   so 0.14 is ~1.5px on screen. */
+
+.violin [data-part],
+.wing [data-part] {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.violin {
+  /* The tube glow of the app's vector style. */
+  filter: drop-shadow(0 0 0.16px rgba(79, 182, 242, 0.9));
+}
+
+.violin [data-part='body'] {
+  stroke: #4fb6f2;
+  stroke-width: 0.15;
+}
+
+.violin [data-part='thin'] {
+  stroke: #3487c4;
+  stroke-width: 0.09;
+}
+
+.violin [data-part='str'] {
+  stroke: #3487c4;
+  stroke-width: 0.06;
+}
+
+/* The cello and viola waiting either side: dim, no glow, one weight. */
+.wing [data-part] {
+  stroke: #1f5f8c;
+  stroke-width: 0.05;
+}
+
+.wing [data-part='str'] {
+  stroke: #133954;
+}
+
+/* ---------- The bowed string ---------- */
+
+.string {
+  fill: none;
+  stroke: #ffb340;
+  stroke-width: 0.1;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 0.2px rgba(255, 179, 64, 0.95));
+}
+
+/* The blur narrows and widens about the string's own line. */
+.spindle {
+  fill: rgba(255, 179, 64, 0.32);
+  stroke: rgba(255, 179, 64, 0.55);
+  stroke-width: 0.04;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleX(0.3);
+}
+
+/* ---------- The bow ---------- */
+
+.hair {
+  stroke: #4fb6f2;
+  stroke-width: 2;
+}
+
+.stick {
+  fill: none;
+  stroke: #d9f1ff;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px rgba(79, 182, 242, 0.8));
+}
+
+.target {
+  fill: none;
+  stroke: #6fdc8c;
+  stroke-width: 1.5;
+}
+
+/* ---------- The stroke ----------
+   Paused timeline: everything below is declared up front and paused, and
+   the wake rules at the bottom only flip the play state. The rest frame is
+   therefore each animation's 0%: the bow at the top of a down-bow, its
+   head just inside the frame, the string lit and barely blurred.
+
+   One stroke takes 1.5s; `alternate` turns it round, so a down-bow and an
+   up-bow make a 3s loop. The bow eases in and out of each stroke, and the
+   string's blur (icbRing) is widest when the bow is fastest, mid-stroke:
+   both run on the same 1.5s so they stay locked. */
+
+.bow {
+  animation: icbStroke 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  animation-play-state: paused;
+}
+
+/* 96 stage units: the head travels from the top of the frame to just
+   short of the strings. */
+@keyframes icbStroke {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(96px);
+  }
+}
+
+.spindle {
+  animation: icbRing 1.5s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+@keyframes icbRing {
+  0%,
+  100% {
+    transform: scaleX(0.3);
+  }
+  50% {
+    transform: scaleX(1);
+  }
+}
+
+/* The string shivers inside its blur: 0.12 glyph units (~2.5 stage units)
+   either way, 16 times a second. */
+.string {
+  animation: icbBuzz 0.06s linear infinite alternate;
+  animation-play-state: paused;
+}
+
+@keyframes icbBuzz {
+  from {
+    transform: translateX(-0.12px);
+  }
+  to {
+    transform: translateX(0.12px);
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+/* Keyboard focus gets what hover gets. */
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch: play while this cover holds the grid's spotlight
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* Reduced motion: no stroke. The bow rests mid-stroke on the string, and
+   the string keeps a half-wide blur so it still reads as sounding. */
+@media (prefers-reduced-motion: reduce) {
+  .bow,
+  .spindle,
+  .string {
+    animation: none !important;
+  }
+  .bow {
+    transform: translateY(48px);
+  }
+  .spindle {
+    transform: scaleX(0.6);
+  }
+}

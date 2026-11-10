@@ -247,7 +247,7 @@ export const playgroundSections: PlaygroundSection[] = [
         year: '2026',
         // wustep/instruments is private, so link the app, not a 404.
         source: 'https://instruments-wustep.vercel.app/',
-        gradient: 'from-stone-950 via-amber-950 to-amber-700',
+        gradient: 'from-black via-sky-950 to-sky-400',
         ogImage: '/og/playground/instruments.png',
         CoverComponent: InstrumentsCover
       },
