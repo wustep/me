@@ -10,7 +10,8 @@
 }
 
 /* The still and the clip are the same 1752×380 picture, stacked. `cover`
-   crops their wings on any card narrower than 4.6:1. */
+   crops their wings on any card narrower than 4.6:1, evenly from both
+   sides: the instruments are framed in the picture's centre 840px. */
 .fill {
   position: absolute;
   inset: 0;
@@ -18,6 +19,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 /* The clip sits over the still, hidden until it is really playing
