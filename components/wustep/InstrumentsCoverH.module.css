@@ -6,30 +6,35 @@
   background: #000;
 }
 
-/* The line drawing: InstrumentsCover, whole. */
+/* The line drawing: InstrumentsCover, whole and live. Its own hover,
+   focus and touch rules run its walk; nothing here holds it.
+
+   Once the clip has the frame the drawing is taken out of paint (it is
+   under an opaque video and would otherwise repaint 14 times a second for
+   nobody). The delay is the clip's fade-in, so it goes only when it is
+   fully covered; on the way back it returns at once, under the fade-out. */
 .rest {
   position: absolute;
   inset: 0;
+  visibility: visible;
 }
 
-/* Held on its rest frame: the clip is what hover plays here, and the
-   dissolve should start from the picked cello. InstrumentsCover applies
-   its animations on hover, so with none it is exactly its rest frame.
-   Dropped if the clip fails (data-clip='failed', from useCoverClip), which
-   hands hover back to the drawing. */
-.cover:not([data-clip='failed']) .rest * {
-  animation: none !important;
+.cover[data-clip='showing'] .rest {
+  visibility: hidden;
+  transition: visibility 0s linear 520ms;
 }
 
 /* The clip, over the drawing: 1752×380 (4.6:1), `cover` cropping its
    empty wings on narrower cards. Hidden until it is really playing
-   (data-clip='showing').
+   (data-clip='showing', from useCoverClip), which is 2.75s into a wake at
+   the earliest.
 
-   In: 520ms, ease-out quint. Long enough to read as the drawing turning
-   into the instrument and not as a cut; front-loaded so the 3D view is
-   mostly there within ~200ms of the first frame.
-   Out: 320ms back to the drawing, after which the hook rewinds the clip
-   (FADE_OUT_MS). */
+   In: 520ms, ease-out quint. Long enough to read as the drawn grand
+   turning into the 3D one and not as a cut; front-loaded so the 3D view
+   is mostly there within ~200ms, and done before the walk underneath
+   would leave the grand.
+   Out: 320ms back to the drawing's rest frame, after which the hook
+   rewinds the clip (FADE_OUT_MS). */
 .clip {
   position: absolute;
   inset: 0;

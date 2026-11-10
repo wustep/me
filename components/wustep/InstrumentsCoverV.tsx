@@ -4,37 +4,45 @@ import styles from './InstrumentsCoverV.module.css'
 import { useCoverClip } from './useCoverClip'
 
 /**
- * InstrumentsCoverV — the recording: the app's 3D view, on video.
+ * InstrumentsCoverV — the tour: the app changing looks, on video.
  * Unshipped variant, kept for the covers-preview workbench.
  *
- *   At rest a still of the app's 3D cello under its spotlight, bow on the
- *   string. Awake, a clip recorded from the app plays: its seven
- *   instruments in the picker's order (cello, flute, trumpet, grand,
- *   upright, violin, viola), each playing as the camera drifts round it,
- *   dissolving one into the next, 1.2s each on an 8.4s loop.
+ *   One clip recorded from the live app, its instruments playing
+ *   throughout, driven through its own style and view toggles:
  *
- *   The still is the clip's first frame, so the hand-over from one to the
- *   other can't be seen; the short fades only cover the rewind on the way
- *   out. Both are 1752×380 (4.6:1), as wide as the widest card at the
- *   cover's fixed 190px height and twice its pixels, with the instrument
- *   in the middle 800px: `object-fit: cover` crops the empty wings on a
- *   narrower card and never the instrument.
+ *     vector lines, 2D   cello, flute, violin
+ *     painted, 2D        violin, trumpet, cello
+ *     3D                 cello, grand, flute
  *
- *   Load: the still (7 KB) comes with the card, lazily. The clip (310 KB)
- *   is fetched the first time the card wakes; see useCoverClip.
+ *   Each look hands over on an instrument the two share, so what changes
+ *   across the dissolve is the look: the violin's lines fill in with
+ *   paint in place (the two 2D styles draw to one layout), and the
+ *   painted cello stands up into 3D. 1.3s a shot; 0.3s dissolves between
+ *   instruments, 0.6s between looks and across the loop point; 11.7s.
+ *
+ *   At rest a still of the vector-lines cello, bowed: the clip's first
+ *   frame, so the hand-over from still to clip can't be seen and the
+ *   short fades only cover the rewind on the way out. Both are 1752×380
+ *   (4.6:1), as wide as the widest card at the cover's fixed 190px height
+ *   and twice its pixels, with the instrument in the middle: `object-fit:
+ *   cover` crops the wings on a narrower card. Those are empty down to
+ *   about 450px wide; below that the 2D cello and flute, the longest
+ *   things in the tour, lose their ends (the cello its scroll and endpin).
+ *
+ *   Load: the still (21 KB) comes with the card, lazily. The clip
+ *   (647 KB) is fetched the first time the card wakes; see useCoverClip.
  */
 
-export const INSTRUMENTS_CLIP = '/playground/covers/instruments-3d.mp4'
-const POSTER = '/playground/covers/instruments-3d-poster.webp'
+const CLIP = '/playground/covers/instruments-tour.mp4'
+const POSTER = '/playground/covers/instruments-tour-poster.webp'
 
 /** Matches the fade-out in the stylesheet: rewind once the clip is hidden. */
 const FADE_OUT_MS = 240
 
 export function InstrumentsCoverV() {
-  const { rootRef, videoRef, clip } = useCoverClip(
-    INSTRUMENTS_CLIP,
-    FADE_OUT_MS
-  )
+  const { rootRef, videoRef, clip } = useCoverClip(CLIP, {
+    fadeOutMs: FADE_OUT_MS
+  })
 
   return (
     <div

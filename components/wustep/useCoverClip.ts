@@ -21,12 +21,28 @@ import * as React from 'react'
  *   It only turns to `showing` once the video is really playing, so the
  *   rest frame holds while the bytes are in flight and nothing flashes
  *   black. Asleep, the clip fades out for `fadeOutMs` and then rewinds, so
- *   every wake starts on its first frame.
+ *   every wake starts on the same frame.
+ *
+ *   `leadMs` and `startAt` are for a cover that plays something of its own
+ *   first: the clip is fetched as soon as the card wakes, but only starts,
+ *   from `startAt` seconds in, once the card has been awake for `leadMs`.
  */
 
 export type CoverClipState = 'rest' | 'showing' | 'failed'
 
-export function useCoverClip(src: string, fadeOutMs: number) {
+export type CoverClipOptions = {
+  /** How long the cover's CSS takes to fade the clip out. */
+  fadeOutMs: number
+  /** How long the card is awake before the clip starts. Default 0. */
+  leadMs?: number
+  /** Where in the clip each wake starts, in seconds. Default 0. */
+  startAt?: number
+}
+
+export function useCoverClip(
+  src: string,
+  { fadeOutMs, leadMs = 0, startAt = 0 }: CoverClipOptions
+) {
   const rootRef = React.useRef<HTMLDivElement>(null)
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const [clip, setClip] = React.useState<CoverClipState>('rest')
@@ -42,27 +58,45 @@ export function useCoverClip(src: string, fadeOutMs: number) {
 
     let awake = false
     let failed = false
+    let lead: number | undefined
     let rewind: number | undefined
 
-    const play = () => {
-      if (reduceMotion.matches || failed) return
-      awake = true
-      window.clearTimeout(rewind)
-      // The lazy src: the first wake is what fetches the clip.
-      if (!video.getAttribute('src')) video.src = src
+    const start = () => {
+      // Before the metadata is in, this sets where playback will begin.
+      video.currentTime = startAt
       // Rejects if a quick leave pauses it first; nothing to do about that.
       void video.play().catch(() => undefined)
-      // Woken again before the rewind: still playing, so no `playing` event.
-      if (!video.paused && video.readyState > 2) setClip('showing')
+    }
+    const play = () => {
+      // Already awake: hover and focus together must not restart the lead.
+      if (reduceMotion.matches || failed || awake) return
+      awake = true
+      window.clearTimeout(rewind)
+      // The lazy src: the first wake is what fetches the clip. With a lead,
+      // `auto` lets it load while the cover plays its own opening.
+      if (!video.getAttribute('src')) {
+        video.preload = 'auto'
+        video.src = src
+      }
+      if (!video.paused) {
+        // Woken again before the rewind: still playing, so no `playing`
+        // event is coming. Pick the clip back up where it is.
+        setClip('showing')
+      } else if (leadMs > 0) {
+        lead = window.setTimeout(start, leadMs)
+      } else {
+        start()
+      }
     }
     const stop = () => {
       awake = false
+      window.clearTimeout(lead)
       if (failed) return
       setClip('rest')
       window.clearTimeout(rewind)
       rewind = window.setTimeout(() => {
         video.pause()
-        if (video.readyState > 0) video.currentTime = 0
+        if (video.readyState > 0) video.currentTime = startAt
       }, fadeOutMs)
     }
     const onPlaying = () => {
@@ -97,6 +131,7 @@ export function useCoverClip(src: string, fadeOutMs: number) {
     hoverTarget.addEventListener('focusout', stop)
 
     return () => {
+      window.clearTimeout(lead)
       window.clearTimeout(rewind)
       attributes?.disconnect()
       video.removeEventListener('playing', onPlaying)
@@ -107,7 +142,7 @@ export function useCoverClip(src: string, fadeOutMs: number) {
       hoverTarget.removeEventListener('focusout', stop)
       video.pause()
     }
-  }, [src, fadeOutMs])
+  }, [src, fadeOutMs, leadMs, startAt])
 
   return { rootRef, videoRef, clip }
 }

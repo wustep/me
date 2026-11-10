@@ -1,17 +1,16 @@
-/* The ground is the recording's own edge colour (#0d0d09, the app's 3D
-   backdrop away from the spotlight), so the box reads as the same dark
-   stage before the still has loaded. Dark in both site themes, as the app
-   is. */
+/* The ground is the vector-lines style's own black, the still's edge
+   colour, so the box reads as the same dark stage before the still has
+   loaded. Dark in both site themes, as the app is. */
 .cover {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0d0d09;
+  background: #000;
 }
 
 /* The still and the clip are the same 1752×380 picture, stacked. `cover`
-   crops their empty wings on any card narrower than 4.6:1. */
+   crops their wings on any card narrower than 4.6:1. */
 .fill {
   position: absolute;
   inset: 0;

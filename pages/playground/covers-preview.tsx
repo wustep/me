@@ -59,13 +59,13 @@ const tabs: [Tab, ...Tab[]] = [
         Cover: InstrumentsCover
       },
       {
-        label: 'V — The recording (unshipped)',
-        hint: 'Video only. At rest a still of the app’s 3D cello under its spotlight. Hover: a clip recorded from the app’s 3D view — cello, flute, trumpet, grand, upright, violin, viola — each playing as the camera drifts round it, dissolving into the next. The still is the clip’s first frame; the clip is fetched on first hover.',
+        label: 'V — The tour (unshipped)',
+        hint: 'Video only: the app changing looks. At rest a still of the vector-lines cello. Hover: one clip recorded from the app, playing throughout — vector lines 2D (cello, flute, violin), painted 2D (violin, trumpet, cello), then 3D (cello, grand, flute) — each look dissolving into the next on a shared instrument. The still is the clip’s first frame; the clip is fetched on first hover.',
         Cover: InstrumentsCoverV
       },
       {
         label: 'H — Lines, then the real thing (unshipped)',
-        hint: 'Hybrid. At rest the shipped line drawing, live SVG, held on the bowed cello. Hover: it dissolves into the same 3D clip, which opens on the cello; leaving dissolves back. The clip is fetched on first hover and the drawing holds until it plays.',
+        hint: 'Hybrid. At rest the shipped line drawing. Hover: its own walk runs live — cello, flute, trumpet — and when it picks the grand, the drawn grand dissolves into the 3D grand of a recorded 3D clip, which carries on through the rest. The clip is fetched on first hover, during the walk.',
         Cover: InstrumentsCoverH
       },
       {
