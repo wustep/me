@@ -5,6 +5,12 @@ import { BombermanCoverA } from '@/components/wustep/BombermanCoverA'
 import { BombermanCoverC } from '@/components/wustep/BombermanCoverC'
 import { BombermanCoverD } from '@/components/wustep/BombermanCoverD'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
+import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
+import { InstrumentsCoverB } from '@/components/wustep/InstrumentsCoverB'
+import { InstrumentsCoverC } from '@/components/wustep/InstrumentsCoverC'
+import { InstrumentsCoverD } from '@/components/wustep/InstrumentsCoverD'
+import { InstrumentsCoverPiano } from '@/components/wustep/InstrumentsCoverPiano'
+import { InstrumentsCoverPicker } from '@/components/wustep/InstrumentsCoverPicker'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
@@ -41,6 +47,43 @@ type Tab = {
 // Non-empty tuple type so the active-tab fallback below typechecks under
 // noUncheckedIndexedAccess.
 const tabs: [Tab, ...Tab[]] = [
+  {
+    id: 'instruments',
+    title: 'Instruments',
+    summary: 'Physically modeled piano, strings, and winds',
+    covers: [
+      {
+        label: 'The tour (shipped)',
+        hint: 'Video only: the app changing looks. At rest a still of the vector-lines cello. Hover: one clip recorded from the app, playing throughout — vector lines 2D (cello, flute, violin), painted 2D (violin, trumpet, cello), then 3D (cello, grand, flute) — each look dissolving into the next on a shared instrument. The still is the clip’s first frame; the clip is fetched on first hover.',
+        Cover: InstrumentsCover
+      },
+      {
+        label: 'The picker (unshipped)',
+        hint: 'The app’s vector lines on black in both themes: its seven instruments in the picker row, the picked one large in the frame with what sounds on it lit amber. At rest the cello, bowed. Hover: the pick walks the row — flute, trumpet, grand, upright, violin, viola — each taking the stage and ringing down; the strings are bowed.',
+        Cover: InstrumentsCoverPicker
+      },
+      {
+        label: 'B — The bow (unshipped)',
+        hint: 'One violin in vector lines, its D string amber, cello and viola in the wings. Hover: the bow draws down and up, the string widening into its blur.',
+        Cover: InstrumentsCoverB
+      },
+      {
+        label: 'C — Hammer, bow, breath (unshipped)',
+        hint: 'The three ways the app starts a sound, in its painted palette. Hover: the hammer strikes, the bow draws, the jet blows, in turn.',
+        Cover: InstrumentsCoverC
+      },
+      {
+        label: 'D — Seven voices (unshipped)',
+        hint: 'A score of standing waves, one line and one mode per instrument. Hover: every wave swings through its envelope.',
+        Cover: InstrumentsCoverD
+      },
+      {
+        label: 'Previous — The grand, from above (unshipped)',
+        hint: 'The first cover: the app’s 2D piano view in plan, painted palette. At rest C3 is still ringing. Hover: a rolled C major chord strikes bass to treble.',
+        Cover: InstrumentsCoverPiano
+      }
+    ]
+  },
   {
     id: 'jamming',
     title: 'Jamming',

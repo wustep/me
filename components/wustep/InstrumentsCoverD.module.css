@@ -1,0 +1,140 @@
+/* The app's "vector lines" ground: black, a faint pool of its panel blue
+   behind the figure. Sized in px so it stays on the waves (~370px wide at
+   the fixed 190px cover height) however wide the card gets. Dark in both
+   site themes, as the app is.
+
+   Palette, from the app's vector-style :root tokens:
+     #4fb6f2  --v-blue      glyph outlines, the ends of each line
+     #3487c4  --v-blue-mid  envelopes, glyph detail
+     #1f5f8c  --v-blue-dim  inner nodes, glyph strings
+     #133954  --v-frame     the lines themselves
+     #ffb340  --v-amber     the live wave */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      440px 210px at 50% 50%,
+      #06202f 0%,
+      rgba(3, 18, 28, 0.6) 55%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    #000;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Lines ---------- */
+
+.string {
+  stroke: #133954;
+  stroke-width: 1.2;
+}
+
+.envelope {
+  fill: rgba(52, 135, 196, 0.1);
+  stroke: #3487c4;
+  stroke-width: 1.1;
+  stroke-opacity: 0.7;
+}
+
+.node {
+  fill: #4fb6f2;
+}
+
+/* ---------- Glyphs ----------
+   Stroke widths are in stage units times --icd-u (one stage unit in the
+   glyph's own units), so every glyph shares a line weight though each is
+   drawn at its own scale. */
+
+.glyph [data-part] {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyph [data-part='body'] {
+  stroke: #4fb6f2;
+  stroke-width: calc(var(--icd-u) * 1.9);
+}
+
+.glyph [data-part='thin'] {
+  stroke: #3487c4;
+  stroke-width: calc(var(--icd-u) * 1.1);
+}
+
+.glyph [data-part='str'] {
+  stroke: #1f5f8c;
+  stroke-width: calc(var(--icd-u) * 0.9);
+}
+
+.glyph [data-part='fill'] {
+  fill: #3487c4;
+  stroke: none;
+}
+
+/* ---------- The live wave ----------
+   Paused timeline: declared up front and paused; the wake rules below only
+   flip the play state. A standing wave keeps its shape and only its
+   height changes, so one swing is scaleY 1 → −1 about the line (the
+   transform-origin is set inline to the line's y), and `alternate` brings
+   it back. The easing is a sine's: slow at the peaks, fastest through the
+   line. Each line has its own period (--icd-swing) and starts part-way in
+   (--icd-delay, negative), which is what the rest frame shows. */
+
+.live {
+  fill: none;
+  stroke: #ffb340;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2.5px rgba(255, 179, 64, 0.85));
+  transform-box: view-box;
+  animation: icdSwing var(--icd-swing) cubic-bezier(0.37, 0, 0.63, 1)
+    var(--icd-delay) infinite alternate;
+  animation-play-state: paused;
+}
+
+@keyframes icdSwing {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-1);
+  }
+}
+
+@media (hover: hover) {
+  :global(.group):hover .cover *,
+  .cover:hover * {
+    animation-play-state: running;
+  }
+}
+
+/* Keyboard focus gets what hover gets. */
+:global(.group):focus-within .cover *,
+.cover:focus-within * {
+  animation-play-state: running;
+}
+
+/* Touch: play while this cover holds the grid's spotlight
+   (data-cover-awake, set in pages/playground/index.tsx). */
+@media (hover: none) {
+  :global([data-cover-awake]) .cover * {
+    animation-play-state: running;
+  }
+}
+
+/* Reduced motion: every wave held at its peak, filling its envelope: the
+   figure as a textbook prints it. */
+@media (prefers-reduced-motion: reduce) {
+  .live {
+    animation: none !important;
+    transform: none;
+  }
+}

@@ -4,6 +4,7 @@ import type React from 'react'
 import { BookshelfCover } from '@/components/wustep/BookshelfCover'
 import { ContraptionsCover } from '@/components/wustep/ContraptionsCover'
 import { DominoCover } from '@/components/wustep/DominoCover'
+import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { LensesCover } from '@/components/wustep/LensesCover'
 import { LensesIllustrationLabCover } from '@/components/wustep/LensesIllustrationLabCover'
@@ -236,6 +237,20 @@ export const playgroundSections: PlaygroundSection[] = [
   {
     title: 'Visualizations',
     items: [
+      {
+        title: 'Instruments',
+        url: '/playground/instruments',
+        description:
+          'Piano, violin, viola, cello, flute, and trumpet, physically modeled and played live in the browser, with no samples. Watch the hammers, bows, and strings move in 2D, or see each instrument lit in 3D.',
+        summary: 'Physically modeled piano, strings, and winds',
+        date: 'Nov 2026',
+        year: '2026',
+        // wustep/instruments is private, so link the app, not a 404.
+        source: 'https://instruments-wustep.vercel.app/',
+        gradient: 'from-black via-sky-950 to-sky-400',
+        ogImage: '/og/playground/instruments.png',
+        CoverComponent: InstrumentsCover
+      },
       {
         title: 'Contraptions',
         starred: starRank('Contraptions'),

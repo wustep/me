@@ -1,0 +1,325 @@
+/* The app's painted-style ground: warm black, lit from above like its 3D
+   stage. The light is sized in px, not %, so it stays a pool over the
+   three stations (~380px wide at the fixed 190px cover height) however
+   wide the card gets. Dark in both site themes, as the app is. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      360px 150px at 50% 38%,
+      rgba(242, 166, 70, 0.08) 0%,
+      rgba(242, 166, 70, 0) 100%
+    ),
+    radial-gradient(
+      560px 260px at 50% 30%,
+      #1f1c16 0%,
+      #141210 55%,
+      #0e0d0b 100%
+    );
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- What is sounding ----------
+   Each station's wave is a lit line and the spindle of its blur. All dark
+   at rest except the struck string, which is still ringing. */
+
+.blur,
+.lit {
+  opacity: 0;
+}
+
+/* The spindle collapses onto the line as the sound dies. */
+.blur {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.waveHammer .blur {
+  opacity: 0.3;
+  transform: scaleY(0.55);
+}
+.waveHammer .lit {
+  opacity: 1;
+}
+
+/* ---------- Exciters at rest ---------- */
+
+/* The hammer swings about its brass centre pin, at stage (−346, 322). */
+.hammer {
+  transform-box: view-box;
+  transform-origin: -346px 322px;
+}
+
+.jet {
+  opacity: 0.28;
+  stroke-dasharray: 16 9;
+}
+
+/* ---------- The three turns ----------
+   Applied only while the card is awake (apply-on-hover, as LensesCover
+   does), so the rest frame above is exact and each hover starts with the
+   strike. One 4.8s loop, a third each:
+     0–33%    hammer: flies at 0, strikes at 1.5% (~70ms), falls back; the
+              string rings down until 30%
+     33–66%   bow: one slow down-bow; the string speaks while it moves
+     66–100%  jet: the streaks run and the air column stands, then a short
+              breath of silence before the next strike
+   The bow slips back to where it started under the hammer's turn. */
+
+@keyframes iccHammer {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.6);
+  }
+  1.5% {
+    transform: rotate(-8.6deg);
+    animation-timing-function: cubic-bezier(0.1, 0.6, 0.4, 1);
+  }
+  7%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes iccHammerBlur {
+  0%,
+  1.4% {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+  2% {
+    opacity: 0.5;
+    transform: scaleY(1);
+    animation-timing-function: cubic-bezier(0.2, 0.4, 0.5, 1);
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes iccHammerLit {
+  0%,
+  1.4% {
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  28%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* A down-bow of 90 stage units along the bow's own length. */
+@keyframes iccBow {
+  0% {
+    transform: translateX(46px);
+  }
+  30%,
+  34% {
+    transform: translateX(-44px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  64%,
+  100% {
+    transform: translateX(46px);
+  }
+}
+
+@keyframes iccSustainBlur {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+  38%,
+  60% {
+    opacity: 0.5;
+    transform: scaleY(1);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+}
+
+@keyframes iccSustainLit {
+  0%,
+  33% {
+    opacity: 0;
+  }
+  36%,
+  62% {
+    opacity: 1;
+  }
+  66%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The streaks brighten and their dashes run toward the hole (25 units is
+   one dash period, so the loop point is seamless). */
+@keyframes iccJetOn {
+  0%,
+  66% {
+    opacity: 0.28;
+  }
+  69%,
+  92% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    opacity: 0.28;
+  }
+}
+
+@keyframes iccJetFlow {
+  to {
+    stroke-dashoffset: -25;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    :global(.group):hover .hammer,
+    .cover:hover .hammer {
+      animation: iccHammer 4.8s linear infinite;
+    }
+    :global(.group):hover .waveHammer .blur,
+    .cover:hover .waveHammer .blur {
+      animation: iccHammerBlur 4.8s linear infinite;
+    }
+    :global(.group):hover .waveHammer .lit,
+    .cover:hover .waveHammer .lit {
+      animation: iccHammerLit 4.8s linear infinite;
+    }
+    :global(.group):hover .bow,
+    .cover:hover .bow {
+      animation: iccBow 4.8s linear infinite;
+    }
+    :global(.group):hover .waveBow .blur,
+    .cover:hover .waveBow .blur {
+      animation: iccSustainBlur 4.8s linear infinite;
+    }
+    :global(.group):hover .waveBow .lit,
+    .cover:hover .waveBow .lit {
+      animation: iccSustainLit 4.8s linear infinite;
+    }
+    /* The jet's turn is the bow's, a third of a loop later. */
+    :global(.group):hover .waveJet .blur,
+    .cover:hover .waveJet .blur {
+      animation: iccSustainBlur 4.8s linear 1.6s infinite backwards;
+    }
+    :global(.group):hover .waveJet .lit,
+    .cover:hover .waveJet .lit {
+      animation: iccSustainLit 4.8s linear 1.6s infinite backwards;
+    }
+    :global(.group):hover .jet,
+    .cover:hover .jet {
+      animation:
+        iccJetOn 4.8s linear infinite,
+        iccJetFlow 0.32s linear infinite;
+    }
+  }
+
+  /* Keyboard focus gets what hover gets. */
+  :global(.group):focus-within .hammer,
+  .cover:focus-within .hammer {
+    animation: iccHammer 4.8s linear infinite;
+  }
+  :global(.group):focus-within .waveHammer .blur,
+  .cover:focus-within .waveHammer .blur {
+    animation: iccHammerBlur 4.8s linear infinite;
+  }
+  :global(.group):focus-within .waveHammer .lit,
+  .cover:focus-within .waveHammer .lit {
+    animation: iccHammerLit 4.8s linear infinite;
+  }
+  :global(.group):focus-within .bow,
+  .cover:focus-within .bow {
+    animation: iccBow 4.8s linear infinite;
+  }
+  :global(.group):focus-within .waveBow .blur,
+  .cover:focus-within .waveBow .blur {
+    animation: iccSustainBlur 4.8s linear infinite;
+  }
+  :global(.group):focus-within .waveBow .lit,
+  .cover:focus-within .waveBow .lit {
+    animation: iccSustainLit 4.8s linear infinite;
+  }
+  :global(.group):focus-within .waveJet .blur,
+  .cover:focus-within .waveJet .blur {
+    animation: iccSustainBlur 4.8s linear 1.6s infinite backwards;
+  }
+  :global(.group):focus-within .waveJet .lit,
+  .cover:focus-within .waveJet .lit {
+    animation: iccSustainLit 4.8s linear 1.6s infinite backwards;
+  }
+  :global(.group):focus-within .jet,
+  .cover:focus-within .jet {
+    animation:
+      iccJetOn 4.8s linear infinite,
+      iccJetFlow 0.32s linear infinite;
+  }
+
+  /* Touch: play while this cover holds the grid's spotlight
+     (data-cover-awake, set in pages/playground/index.tsx). */
+  @media (hover: none) {
+    :global([data-cover-awake]) .hammer {
+      animation: iccHammer 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .waveHammer .blur {
+      animation: iccHammerBlur 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .waveHammer .lit {
+      animation: iccHammerLit 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .bow {
+      animation: iccBow 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .waveBow .blur {
+      animation: iccSustainBlur 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .waveBow .lit {
+      animation: iccSustainLit 4.8s linear infinite;
+    }
+    :global([data-cover-awake]) .waveJet .blur {
+      animation: iccSustainBlur 4.8s linear 1.6s infinite backwards;
+    }
+    :global([data-cover-awake]) .waveJet .lit {
+      animation: iccSustainLit 4.8s linear 1.6s infinite backwards;
+    }
+    :global([data-cover-awake]) .jet {
+      animation:
+        iccJetOn 4.8s linear infinite,
+        iccJetFlow 0.32s linear infinite;
+    }
+  }
+}
+
+/* Reduced motion keeps the rest frame: hammer down, the struck string
+   ringing, bow and jet waiting. The wake rules above already sit behind
+   no-preference; this pins it. */
+@media (prefers-reduced-motion: reduce) {
+  .hammer,
+  .bow,
+  .jet,
+  .blur,
+  .lit {
+    animation: none !important;
+  }
+}

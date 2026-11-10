@@ -1,0 +1,232 @@
+/* The grand in plan on the app's warm black ground, lit from above like
+   its 3D stage. The light is sized in px, not %, so it stays a pool round
+   the piano (~325px wide at the fixed 190px cover height) however wide
+   the card gets. The cover stays dark in both site themes, as the app
+   does. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      300px 170px at 50% 32%,
+      rgba(242, 166, 70, 0.07) 0%,
+      rgba(242, 166, 70, 0) 100%
+    ),
+    radial-gradient(
+      560px 260px at 50% 30%,
+      #1f1c16 0%,
+      #141210 55%,
+      #0e0d0b 100%
+    );
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Notes ----------
+   Each note is a lit key, a lit string, the blur of the string ringing
+   (the spindle) and a flash on its hammer. At rest they're all dark
+   except the one still ringing (.restNote). */
+
+.keyLit,
+.ring,
+.lit,
+.strike {
+  opacity: 0;
+}
+
+/* The spindle narrows as the string rings down; scale it about its own
+   centre line. */
+.ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* C3, ringing at rest: half way down, the blur already narrowing. */
+.restNote .keyLit {
+  opacity: 0.2;
+}
+.restNote .ring {
+  opacity: 0.6;
+  transform: scaleX(0.7);
+}
+.restNote .lit {
+  opacity: 1;
+}
+
+/* ---------- The roll ----------
+   Applied only while the card is awake (apply-on-hover, as LensesCover
+   does), so the rest frame above is exact and each hover starts the roll
+   from its first note. Every note shares one loop (--ic-loop, 4.2s) and
+   the same keyframes; --ic-delay staggers the roll 0.24s a note. Before
+   its first strike a note holds its 0% frame (dark), via `backwards`.
+
+   Keyframe times are percentages of the 4.2s loop:
+     0%      dark, then struck over ~80ms (2%)
+     2–60%   rings down: the blur narrows and the string cools
+     60–100% silent until the next roll (the last note rolls in at 23%,
+             so the whole chord is quiet from ~83%: a breath). */
+
+.rollNote .keyLit,
+.rollNote .ring,
+.rollNote .lit,
+.rollNote .strike {
+  animation-duration: var(--ic-loop);
+  animation-delay: var(--ic-delay);
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards;
+  animation-timing-function: linear;
+}
+
+/* A real string falls off fast and then lingers, but at card size a true
+   exponential is gone before the roll reaches the top note. The decay
+   legs hold the glow a beat, then let it go, so the whole chord is lit
+   together once it has rolled. */
+@keyframes icRing {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+  2% {
+    opacity: 0.9;
+    transform: scaleX(1);
+    animation-timing-function: cubic-bezier(0.3, 0.2, 0.5, 1);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0.15);
+  }
+}
+
+@keyframes icLit {
+  0% {
+    opacity: 0;
+  }
+  1.5% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.4, 0.1, 0.6, 1);
+  }
+  58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The key warms on the strike and lets go well before the string does. */
+@keyframes icKey {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 0.75;
+    animation-timing-function: cubic-bezier(0.4, 0.1, 0.6, 1);
+  }
+  36%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The hammer flashes as it meets the string and drops straight away. */
+@keyframes icStrike {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  7%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The note left ringing at rest dies away as the roll begins. */
+@keyframes icHush {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    :global(.group):hover .rollNote .ring,
+    .cover:hover .rollNote .ring {
+      animation-name: icRing;
+    }
+    :global(.group):hover .rollNote .lit,
+    .cover:hover .rollNote .lit {
+      animation-name: icLit;
+    }
+    :global(.group):hover .rollNote .keyLit,
+    .cover:hover .rollNote .keyLit {
+      animation-name: icKey;
+    }
+    :global(.group):hover .rollNote .strike,
+    .cover:hover .rollNote .strike {
+      animation-name: icStrike;
+    }
+    :global(.group):hover .restNote,
+    .cover:hover .restNote {
+      animation: icHush 0.5s ease-out forwards;
+    }
+  }
+
+  /* Keyboard focus gets what hover gets. */
+  :global(.group):focus-within .rollNote .ring,
+  .cover:focus-within .rollNote .ring {
+    animation-name: icRing;
+  }
+  :global(.group):focus-within .rollNote .lit,
+  .cover:focus-within .rollNote .lit {
+    animation-name: icLit;
+  }
+  :global(.group):focus-within .rollNote .keyLit,
+  .cover:focus-within .rollNote .keyLit {
+    animation-name: icKey;
+  }
+  :global(.group):focus-within .rollNote .strike,
+  .cover:focus-within .rollNote .strike {
+    animation-name: icStrike;
+  }
+  :global(.group):focus-within .restNote,
+  .cover:focus-within .restNote {
+    animation: icHush 0.5s ease-out forwards;
+  }
+
+  /* Touch: play while this cover holds the grid's spotlight
+     (data-cover-awake, set in pages/playground/index.tsx). */
+  @media (hover: none) {
+    :global([data-cover-awake]) .rollNote .ring {
+      animation-name: icRing;
+    }
+    :global([data-cover-awake]) .rollNote .lit {
+      animation-name: icLit;
+    }
+    :global([data-cover-awake]) .rollNote .keyLit {
+      animation-name: icKey;
+    }
+    :global([data-cover-awake]) .rollNote .strike {
+      animation-name: icStrike;
+    }
+    :global([data-cover-awake]) .restNote {
+      animation: icHush 0.5s ease-out forwards;
+    }
+  }
+}
+
+/* Reduced motion keeps the rest frame: C3 ringing, the rest quiet. The
+   wake rules above already sit behind no-preference; this pins it. */
+@media (prefers-reduced-motion: reduce) {
+  .note,
+  .note * {
+    animation: none !important;
+  }
+}
