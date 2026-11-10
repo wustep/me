@@ -28,6 +28,11 @@ export type PlaygroundEntry = {
   /** Hidden from Playground navigation unless owner mode is active. */
   ownerOnly?: boolean
   /**
+   * Hidden from the /playground cover grid. The sidebar and the entry's
+   * own route are unchanged.
+   */
+  hideFromGrid?: boolean
+  /**
    * Stars the entry and pins it to the top of its own sidebar section.
    * Set it with `starRank(title)`; the order lives in `playground/starred.ts`.
    */
@@ -301,7 +306,8 @@ export const playgroundSections: PlaygroundSection[] = [
         article: '/tbdbitl',
         source: 'http://github.com/wustep/tbdbitl',
         image: '/playground/covers/tbdbitl.png',
-        ogImage: '/og/playground/tbdbitl.png'
+        ogImage: '/og/playground/tbdbitl.png',
+        hideFromGrid: true
       }
     ]
   },

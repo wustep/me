@@ -116,10 +116,11 @@ export default function PlaygroundPage() {
   const projects = React.useMemo(
     () =>
       playgroundEntries
-        // Coverless entries live only in the sidebar, not on this grid.
+        // Coverless / hideFromGrid entries live only in the sidebar, not on this grid.
         .filter(
           (project) =>
             !project.disabled &&
+            !project.hideFromGrid &&
             (!project.ownerOnly || isOwner) &&
             Boolean(project.CoverComponent || project.image)
         )
