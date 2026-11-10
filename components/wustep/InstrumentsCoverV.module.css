@@ -1,0 +1,45 @@
+/* The ground is the recording's own edge colour (#0d0d09, the app's 3D
+   backdrop away from the spotlight), so the box reads as the same dark
+   stage before the still has loaded. Dark in both site themes, as the app
+   is. */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0d0d09;
+}
+
+/* The still and the clip are the same 1752×380 picture, stacked. `cover`
+   crops their empty wings on any card narrower than 4.6:1. */
+.fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The clip sits over the still, hidden until it is really playing
+   (data-clip='showing', from useCoverClip). In: 160ms, only to soften the
+   first decoded frame landing on the identical still. Out: 240ms back to
+   the still, after which the hook rewinds the clip (FADE_OUT_MS). */
+.clip {
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+
+.cover[data-clip='showing'] .clip {
+  opacity: 1;
+  transition-duration: 160ms;
+}
+
+/* Reduced motion: the hook never wakes the clip, so it is never fetched
+   and the still is the cover. Belt and braces for a preference that
+   changes mid-hover. */
+@media (prefers-reduced-motion: reduce) {
+  .clip {
+    display: none;
+  }
+}

@@ -9,7 +9,9 @@ import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
 import { InstrumentsCoverB } from '@/components/wustep/InstrumentsCoverB'
 import { InstrumentsCoverC } from '@/components/wustep/InstrumentsCoverC'
 import { InstrumentsCoverD } from '@/components/wustep/InstrumentsCoverD'
+import { InstrumentsCoverH } from '@/components/wustep/InstrumentsCoverH'
 import { InstrumentsCoverPiano } from '@/components/wustep/InstrumentsCoverPiano'
+import { InstrumentsCoverV } from '@/components/wustep/InstrumentsCoverV'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
@@ -55,6 +57,16 @@ const tabs: [Tab, ...Tab[]] = [
         label: 'A — The picker (shipped)',
         hint: 'The app’s vector lines on black in both themes: its seven instruments in the picker row, the picked one large in the frame with what sounds on it lit amber. At rest the cello, bowed. Hover: the pick walks the row — flute, trumpet, grand, upright, violin, viola — each taking the stage and ringing down; the strings are bowed.',
         Cover: InstrumentsCover
+      },
+      {
+        label: 'V — The recording (unshipped)',
+        hint: 'Video only. At rest a still of the app’s 3D cello under its spotlight. Hover: a clip recorded from the app’s 3D view — cello, flute, trumpet, grand, upright, violin, viola — each playing as the camera drifts round it, dissolving into the next. The still is the clip’s first frame; the clip is fetched on first hover.',
+        Cover: InstrumentsCoverV
+      },
+      {
+        label: 'H — Lines, then the real thing (unshipped)',
+        hint: 'Hybrid. At rest the shipped line drawing, live SVG, held on the bowed cello. Hover: it dissolves into the same 3D clip, which opens on the cello; leaving dissolves back. The clip is fetched on first hover and the drawing holds until it plays.',
+        Cover: InstrumentsCoverH
       },
       {
         label: 'B — The bow (unshipped)',
