@@ -54,7 +54,7 @@ const tabs: [Tab, ...Tab[]] = [
     covers: [
       {
         label: 'The tour (shipped)',
-        hint: 'Video only: the app changing looks. At rest a still of the vector-lines cello. Hover: one clip recorded from the app, playing throughout — vector lines 2D (cello, flute, violin), painted 2D (violin, trumpet, cello), then 3D (cello, grand, flute) — each look dissolving into the next on a shared instrument. The still is the clip’s first frame; the clip is fetched on first hover.',
+        hint: 'Video only: the app changing looks. At rest a still of the vector-lines trumpet. Hover: one clip recorded from the app, playing slow lines throughout — the trumpet in vector lines, then painted, then 3D, one phrase dissolving through the three looks, then a close 3D cello bowing long strokes and the open 3D grand, which dissolves back into the vector trumpet at the loop. The still is the clip’s first frame; the clip is fetched on first hover.',
         Cover: InstrumentsCover
       },
       {
