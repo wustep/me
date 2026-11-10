@@ -9,9 +9,8 @@ import { InstrumentsCover } from '@/components/wustep/InstrumentsCover'
 import { InstrumentsCoverB } from '@/components/wustep/InstrumentsCoverB'
 import { InstrumentsCoverC } from '@/components/wustep/InstrumentsCoverC'
 import { InstrumentsCoverD } from '@/components/wustep/InstrumentsCoverD'
-import { InstrumentsCoverH } from '@/components/wustep/InstrumentsCoverH'
 import { InstrumentsCoverPiano } from '@/components/wustep/InstrumentsCoverPiano'
-import { InstrumentsCoverV } from '@/components/wustep/InstrumentsCoverV'
+import { InstrumentsCoverPicker } from '@/components/wustep/InstrumentsCoverPicker'
 import { JammingCover } from '@/components/wustep/JammingCover'
 import { JevCover } from '@/components/wustep/JevCover'
 import { JevCoverB } from '@/components/wustep/JevCoverB'
@@ -54,19 +53,14 @@ const tabs: [Tab, ...Tab[]] = [
     summary: 'Physically modeled piano, strings, and winds',
     covers: [
       {
-        label: 'A — The picker (shipped)',
-        hint: 'The app’s vector lines on black in both themes: its seven instruments in the picker row, the picked one large in the frame with what sounds on it lit amber. At rest the cello, bowed. Hover: the pick walks the row — flute, trumpet, grand, upright, violin, viola — each taking the stage and ringing down; the strings are bowed.',
+        label: 'The tour (shipped)',
+        hint: 'Video only: the app changing looks. At rest a still of the vector-lines cello. Hover: one clip recorded from the app, playing throughout — vector lines 2D (cello, flute, violin), painted 2D (violin, trumpet, cello), then 3D (cello, grand, flute) — each look dissolving into the next on a shared instrument. The still is the clip’s first frame; the clip is fetched on first hover.',
         Cover: InstrumentsCover
       },
       {
-        label: 'V — The tour (unshipped)',
-        hint: 'Video only: the app changing looks. At rest a still of the vector-lines cello. Hover: one clip recorded from the app, playing throughout — vector lines 2D (cello, flute, violin), painted 2D (violin, trumpet, cello), then 3D (cello, grand, flute) — each look dissolving into the next on a shared instrument. The still is the clip’s first frame; the clip is fetched on first hover.',
-        Cover: InstrumentsCoverV
-      },
-      {
-        label: 'H — Lines, then the real thing (unshipped)',
-        hint: 'Hybrid. At rest the shipped line drawing. Hover: its own walk runs live — cello, flute, trumpet — and when it picks the grand, the drawn grand dissolves into the 3D grand of a recorded 3D clip, which carries on through the rest. The clip is fetched on first hover, during the walk.',
-        Cover: InstrumentsCoverH
+        label: 'The picker (unshipped)',
+        hint: 'The app’s vector lines on black in both themes: its seven instruments in the picker row, the picked one large in the frame with what sounds on it lit amber. At rest the cello, bowed. Hover: the pick walks the row — flute, trumpet, grand, upright, violin, viola — each taking the stage and ringing down; the strings are bowed.',
+        Cover: InstrumentsCoverPicker
       },
       {
         label: 'B — The bow (unshipped)',

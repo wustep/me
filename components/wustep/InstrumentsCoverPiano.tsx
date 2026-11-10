@@ -7,7 +7,7 @@ import styles from './InstrumentsCoverPiano.module.css'
  *
  *   Unshipped variant, kept for the covers-preview workbench: this was the
  *   Instruments entry's first cover, replaced by the picker
- *   (InstrumentsCover). The app's 2D piano view in miniature. The case is seen in plan, keyboard at the bottom, with its
+ *   (now unshipped). The app's 2D piano view in miniature. The case is seen in plan, keyboard at the bottom, with its
  *   88 strings running back from the hammers to the bentside: copper-wound
  *   bass on the left, steel treble shortening toward the right, the plate's
  *   struts in shadow underneath. The palette is the app's own (its :root

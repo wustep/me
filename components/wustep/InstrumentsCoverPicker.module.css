@@ -1,0 +1,325 @@
+/* The app's "vector lines" ground: black, with the faint blue of its
+   panels pooled behind the stage. The pool is sized in px, not %, so it
+   stays behind the frame (~380px wide at the fixed 190px cover height)
+   however wide the card gets. The cover stays dark in both site themes,
+   as the app does.
+
+   Palette, from the app's vector-style :root tokens:
+     #4fb6f2  --v-blue      outlines
+     #3487c4  --v-blue-mid  detail lines, frame corners, unpicked glyphs
+     #1f5f8c  --v-blue-dim  the frame's dashes
+     #133954  --v-frame     the rule
+     #d9f1ff  --v-text      the picked glyph, the bow's stick
+     #ffb340  --v-amber     what is sounding, and the pick mark */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      420px 170px at 50% 38%,
+      #06202f 0%,
+      rgba(3, 18, 28, 0.6) 55%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    #000;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Furniture ---------- */
+
+.rule line {
+  stroke: #133954;
+  stroke-width: 1.4;
+}
+
+/* The app frames the instrument in view with a dashed box and four
+   corner brackets. */
+.frameDash {
+  fill: none;
+  stroke: #1f5f8c;
+  stroke-width: 1.2;
+  stroke-dasharray: 2 7;
+}
+
+.frameCorners {
+  fill: none;
+  stroke: #3487c4;
+  stroke-width: 1.8;
+}
+
+/* ---------- Line drawings ----------
+   Stroke widths are in stage units times --ic-u (one stage unit in the
+   glyph's own units), so a hero drawn at 19 to 1 and a picker glyph at
+   1.2 to 1 can share these rules. At the cover's 190px height a stage
+   unit is ~0.53px: the hero's outline lands at ~1.5px. */
+
+.lines [data-part],
+.pick [data-part] {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lines {
+  /* The tube glow of the app's vector style. */
+  filter: drop-shadow(0 0 calc(var(--ic-u) * 3) rgba(79, 182, 242, 0.9));
+}
+
+.lines [data-part='body'] {
+  stroke: #4fb6f2;
+  stroke-width: calc(var(--ic-u) * 2.8);
+}
+
+.lines [data-part='thin'] {
+  stroke: #3487c4;
+  stroke-width: calc(var(--ic-u) * 1.7);
+}
+
+.lines [data-part='str'] {
+  stroke: #3487c4;
+  stroke-width: calc(var(--ic-u) * 1.2);
+}
+
+.lines [data-part='fill'] {
+  fill: #3487c4;
+  stroke: none;
+}
+
+/* What sounds, laid over the instrument in amber. */
+.voice {
+  fill: none;
+  stroke: #ffb340;
+  stroke-width: calc(var(--ic-u) * 2);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 calc(var(--ic-u) * 3.5) rgba(255, 179, 64, 0.95));
+}
+
+/* ---------- The bow ----------
+   In stage units (it is not inside a glyph's scale). */
+
+.hair {
+  stroke: #4fb6f2;
+  stroke-width: 2;
+}
+
+.stick {
+  fill: none;
+  stroke: #d9f1ff;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px rgba(79, 182, 242, 0.8));
+}
+
+/* Only the picked instrument is on the stage. */
+.hero {
+  opacity: 0;
+}
+.rest .hero {
+  opacity: 1;
+}
+
+/* ---------- Picker ----------
+   Unpicked glyphs sit back in the dim blue; the picked one comes up to
+   the app's text colour and gets an amber mark on the rule above it. */
+
+.pick {
+  color: #3487c4;
+}
+.rest .pick {
+  color: #d9f1ff;
+}
+
+.pick [data-part] {
+  stroke: currentColor;
+  stroke-width: calc(var(--ic-u) * 1.5);
+}
+
+.pick [data-part='thin'],
+.pick [data-part='str'] {
+  stroke-width: calc(var(--ic-u) * 0.9);
+}
+
+.pick [data-part='fill'] {
+  fill: currentColor;
+  stroke: none;
+}
+
+.mark {
+  fill: #ffb340;
+  opacity: 0;
+}
+.rest .mark {
+  opacity: 1;
+}
+
+/* ---------- The walk ----------
+   Applied only while the card is awake (apply-on-hover, as LensesCover
+   does), so the rest frame above is exact. Every instrument shares one
+   loop (--ic-loop: 7 turns of 0.85s) and the same keyframes;
+   --ic-delay puts its turn in order, starting from the cello. Fill mode
+   is left at `none` on purpose: until its first turn an instrument shows
+   its base style (off stage, dim in the picker), and the cello, whose
+   turn is first, is already up, so the walk picks up from the rest frame
+   without a jump.
+
+   A turn is 1/7 of the loop (14.3%). The cut between instruments is hard,
+   the way a vector display redraws; only the last ~60ms dims, so the next
+   instrument's attack lands on a clean frame. */
+
+@keyframes icTurn {
+  0%,
+  13.3% {
+    opacity: 1;
+  }
+  14.3%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes icPicked {
+  0%,
+  13.3% {
+    color: #d9f1ff;
+  }
+  14.3%,
+  100% {
+    color: #3487c4;
+  }
+}
+
+/* The note rings down across its turn: struck (or bowed, or blown) bright,
+   then falling to about half. */
+@keyframes icRing {
+  0% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.5, 0.4, 1);
+  }
+  14.3%,
+  100% {
+    opacity: 0.55;
+  }
+}
+
+/* One stroke of the bow: its head travels 58 stage units down the frame,
+   stopping short of the violin's strings (the smallest of the three),
+   and `alternate` brings it back, a down-bow and an up-bow to each turn
+   (2 × 0.425s = the 0.85s step), so the bow changes direction exactly as
+   the next instrument is picked. */
+@keyframes icStroke {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(58px);
+  }
+}
+
+/* The sounding parts shiver across their own length: 0.6 of a stage unit
+   either way, 14 times a second. In the glyph's own axes, so strings move
+   sideways and the trumpet's wavefronts move out of the bell. */
+@keyframes icBuzz {
+  from {
+    transform: translateX(calc(var(--ic-u) * -0.6));
+  }
+  to {
+    transform: translateX(calc(var(--ic-u) * 0.6));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    :global(.group):hover .hero,
+    .cover:hover .hero,
+    :global(.group):hover .mark,
+    .cover:hover .mark {
+      animation: icTurn var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global(.group):hover .pick,
+    .cover:hover .pick {
+      animation: icPicked var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global(.group):hover .voice,
+    .cover:hover .voice {
+      animation: icRing var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global(.group):hover .buzz,
+    .cover:hover .buzz {
+      animation: icBuzz 0.07s linear infinite alternate;
+    }
+    :global(.group):hover .bow,
+    .cover:hover .bow {
+      animation: icStroke 0.425s cubic-bezier(0.45, 0, 0.55, 1) infinite
+        alternate;
+    }
+  }
+
+  /* Keyboard focus gets what hover gets. */
+  :global(.group):focus-within .hero,
+  .cover:focus-within .hero,
+  :global(.group):focus-within .mark,
+  .cover:focus-within .mark {
+    animation: icTurn var(--ic-loop) linear var(--ic-delay) infinite;
+  }
+  :global(.group):focus-within .pick,
+  .cover:focus-within .pick {
+    animation: icPicked var(--ic-loop) linear var(--ic-delay) infinite;
+  }
+  :global(.group):focus-within .voice,
+  .cover:focus-within .voice {
+    animation: icRing var(--ic-loop) linear var(--ic-delay) infinite;
+  }
+  :global(.group):focus-within .buzz,
+  .cover:focus-within .buzz {
+    animation: icBuzz 0.07s linear infinite alternate;
+  }
+  :global(.group):focus-within .bow,
+  .cover:focus-within .bow {
+    animation: icStroke 0.425s cubic-bezier(0.45, 0, 0.55, 1) infinite
+      alternate;
+  }
+
+  /* Touch: play while this cover holds the grid's spotlight
+     (data-cover-awake, set in pages/playground/index.tsx). */
+  @media (hover: none) {
+    :global([data-cover-awake]) .hero,
+    :global([data-cover-awake]) .mark {
+      animation: icTurn var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global([data-cover-awake]) .pick {
+      animation: icPicked var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global([data-cover-awake]) .voice {
+      animation: icRing var(--ic-loop) linear var(--ic-delay) infinite;
+    }
+    :global([data-cover-awake]) .buzz {
+      animation: icBuzz 0.07s linear infinite alternate;
+    }
+    :global([data-cover-awake]) .bow {
+      animation: icStroke 0.425s cubic-bezier(0.45, 0, 0.55, 1) infinite
+        alternate;
+    }
+  }
+}
+
+/* Reduced motion keeps the rest frame: the cello on the stage, bow on its
+   lit strings, picked in the row of seven. The wake rules above already
+   sit behind no-preference; this pins it. */
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .mark,
+  .pick,
+  .voice,
+  .buzz,
+  .bow {
+    animation: none !important;
+  }
+}
