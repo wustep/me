@@ -15,6 +15,7 @@ import { DesignButton } from './wustep/DesignButton'
 import { LabsButton } from './wustep/LabsButton'
 import { Illustration } from './wustep/lenses/illustrations'
 import { OwnerModeToggle } from './wustep/OwnerModeToggle'
+import { PianoPhrase } from './wustep/PianoPhrase'
 import { ThemeToggle } from './wustep/ThemeToggle'
 
 export { bioText } from '@/lib/site-identity'
@@ -273,7 +274,16 @@ export function AboutPage() {
               >
                 <span className={styles.bioHint}>roguelike deckbuilders</span>
               </Tooltip>
-              , piano improvisation, and making{' '}
+              ,{' '}
+              <Tooltip
+                inline
+                label='Click to hear a lil improv, new every time'
+              >
+                <PianoPhrase className={styles.bioHint}>
+                  piano improvisation
+                </PianoPhrase>
+              </Tooltip>
+              , and making{' '}
               <Tooltip inline label='Check out my playground of lil tech demos'>
                 <Link href='/playground' className={styles.bioHint}>
                   random web projects

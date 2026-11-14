@@ -1,0 +1,30 @@
+/* The letters of a PianoPhrase are its keys. Each stays an ordinary inline
+   box so the phrase keeps its kerning and wraps like the text around it; a
+   struck key takes the accent color and, when motion is welcome, dips a
+   hair like a pressed key. `top` on a relatively positioned inline moves
+   only that letter, so nothing around it reflows. */
+.phrase {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key {
+  position: relative;
+  top: 0;
+  /* Release: ease back up and let the color fade. */
+  transition:
+    color 320ms ease,
+    top 160ms ease;
+}
+
+.key[data-down] {
+  color: var(--about-lenses-accent, currentColor);
+  /* Strike: near-instant. */
+  transition-duration: 40ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .key[data-down] {
+    top: 0.075em;
+  }
+}
