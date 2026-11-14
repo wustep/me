@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { setThemeRevealOrigin } from '@/lib/use-dark-mode'
 import { cn } from '@/lib/utils'
 
 import styles from './ThemeToggle.module.css'
@@ -19,12 +20,24 @@ export type ThemeToggleProps = {
  * so screen readers hear "Dark mode, toggle button, pressed" — not an action
  * label that contradicts the pressed state. The action wording stays in the
  * hover tooltip.
+ *
+ * The click also tells the dark-mode hook where the button is, so the new
+ * theme spreads out of the sun or moon (see lib/use-dark-mode.ts). The
+ * origin only exists for the length of the `onToggle` call, so an `onToggle`
+ * that does not go through the hook simply ignores it.
  */
 export function ThemeToggle({ isDark, onToggle, className }: ThemeToggleProps) {
   return (
     <button
       type='button'
-      onClick={onToggle}
+      onClick={(event) => {
+        setThemeRevealOrigin(event.currentTarget)
+        try {
+          onToggle()
+        } finally {
+          setThemeRevealOrigin(null)
+        }
+      }}
       className={cn(styles.themeToggle, className)}
       aria-label='Dark mode'
       aria-pressed={isDark}
