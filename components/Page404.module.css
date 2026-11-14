@@ -43,6 +43,69 @@
   animation: fadeIn 1000ms var(--ease-out-quart) both;
 }
 
+/* The zero is an eye. Its pupil sits in the middle of the counter and moves
+   inside an ellipse a little smaller than the counter itself; --look-x and
+   --look-y are a point in the unit disc (Page404.tsx sets them while a
+   pointer is about). The measurements are Crimson Pro's zero, in em, so the
+   eye scales with the fluid font size. */
+.zero {
+  position: relative;
+  display: inline-block;
+  --look-x: 0;
+  --look-y: 0.45;
+}
+
+.pupil {
+  position: absolute;
+  /* Keep in sync with EYE_X / EYE_Y in Page404.tsx. */
+  left: 0.2845em;
+  top: 0.5555em;
+  width: 0.1em;
+  height: 0.1em;
+  margin: -0.05em 0 0 -0.05em;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(
+    calc(var(--look-x) * 0.066em),
+    calc(var(--look-y) * 0.155em)
+  );
+  animation: searching 9s ease-in-out 1200ms infinite;
+}
+
+/* Following the pointer: the script owns the pose, eased between frames. */
+.zero[data-tracking] .pupil {
+  animation: none;
+  transition: transform 140ms ease-out;
+}
+
+/* Looking around for the page: left, right, down at the message, a glance
+   up, then back to rest. */
+@keyframes searching {
+  0%,
+  6% {
+    transform: translate(0, 0.07em);
+  }
+  13%,
+  27% {
+    transform: translate(-0.062em, -0.012em);
+  }
+  36%,
+  50% {
+    transform: translate(0.062em, -0.012em);
+  }
+  59%,
+  74% {
+    transform: translate(0, 0.15em);
+  }
+  82%,
+  90% {
+    transform: translate(-0.03em, -0.125em);
+  }
+  100% {
+    transform: translate(0, 0.07em);
+  }
+}
+
 .divider {
   width: 48px;
   height: 1px;
