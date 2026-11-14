@@ -92,6 +92,46 @@ h6 {
   animation-timing-function: ease;
 }
 
+/**
+ * A switch made with the ThemeToggle button reveals the new theme in a
+ * circle growing out of the button instead: day spreading from the sun,
+ * night from the moon. lib/use-dark-mode.ts sets the attribute and the
+ * --theme-reveal-* variables for the length of the transition. The old page
+ * holds still underneath while the new one is unclipped over it.
+ */
+:root[data-theme-reveal]::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-reveal]::view-transition-new(root) {
+  animation: theme-reveal 560ms cubic-bezier(0.3, 0, 0.2, 1) both;
+  mix-blend-mode: normal;
+}
+
+/* The incoming page is drawn live, so anything that eases its own colors
+   between themes would still be mid-fade inside the circle. Land every
+   element on its new colors at once and let the circle do the revealing. */
+:root[data-theme-reveal] *,
+:root[data-theme-reveal] *::before,
+:root[data-theme-reveal] *::after {
+  transition: none !important;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(
+      0 at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 0%)
+    );
+  }
+  to {
+    clip-path: circle(
+      var(--theme-reveal-radius, 150vmax) at var(--theme-reveal-x, 50%)
+        var(--theme-reveal-y, 0%)
+    );
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
