@@ -1,0 +1,15 @@
+/* The live line and its invisible sizer share one grid cell, so the
+   paragraph is always as tall as the longest line it could ever show. */
+.line {
+  display: grid;
+  color: var(--about-muted);
+}
+
+.line > * {
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
+  user-select: none;
+}

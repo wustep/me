@@ -1,4 +1,5 @@
 import { SiteInfoPage } from '@/components/SiteInfoPage'
+import { SanFranciscoTime } from '@/components/wustep/SanFranciscoTime'
 import {
   githubUrl,
   linkedinUrl,
@@ -22,6 +23,7 @@ export default function ContactPage() {
         </a>{' '}
         if you&apos;d rather not reply in public.
       </p>
+      <SanFranciscoTime />
     </SiteInfoPage>
   )
 }
