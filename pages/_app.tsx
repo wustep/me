@@ -27,6 +27,7 @@ import {
   OwnerModeProvider,
   useOwnerMode
 } from '@/components/wustep/OwnerModeProvider'
+import { ShyFavicon } from '@/components/wustep/ShyFavicon'
 import {
   applyVaDisableQueryParam,
   isVaDisableSet
@@ -82,6 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <SkipLink />
         <Component {...pageProps} />
       </div>
+      <ShyFavicon />
       <SiteAnalytics />
     </OwnerModeProvider>
   )
