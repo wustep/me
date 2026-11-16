@@ -8,8 +8,8 @@
  *   dialog listing every lens. Each surrounding card opens a side panel.
  *
  *   Type stack:
- *     • Card titles + dialog/panel titles → --font-geist (clean modern sans)
- *     • Eyebrows / labels                 → --font-geist or --font-sans
+ *     • Card titles + dialog/panel titles → --font-display (Onest)
+ *     • Eyebrows / labels                 → --font-display or --font-sans
  *     • Body essay text + taglines        → --font-serif (Crimson Pro)
  *     • UI chrome                         → --font-sans (Inter)
  *
@@ -604,7 +604,7 @@
   flex-direction: column;
   text-align: left;
   cursor: pointer;
-  font-family: var(--font-geist, var(--font-sans, system-ui), sans-serif);
+  font-family: var(--font-display, var(--font-sans, system-ui), sans-serif);
   opacity: 0;
   /* Not just transparent: unclickable and out of the a11y tree until
      the entrance reveals it (visibility flips instantly — it's not in
@@ -876,7 +876,7 @@
 .cardTitle {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   /* Sized to fit the longest titles ("Evolutionary psychology",
      "Probabilistic thinking") on two lines without crowding the
@@ -884,7 +884,7 @@
      scale because the cards are dense and the illustration is
      the primary read — the title is the label.
      Bumped from 0.78rem / weight 600 to 0.8rem / weight 650 for
-     better legibility on color-saturated backgrounds — Geist
+     better legibility on color-saturated backgrounds — Onest
      supports the in-between weight and the extra ~10% of stroke
      width reads cleaner at 12-13px without changing layout.
      `--cardtitle-size`, `--cardtitle-shrink`, and
@@ -1183,7 +1183,7 @@
   flex-direction: column;
   text-align: left;
   cursor: pointer;
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-family: var(--font-display, var(--font-sans), system-ui, sans-serif);
   opacity: 0;
   /* Unclickable and out of the a11y tree until revealed (see .card). */
   visibility: hidden;
@@ -1305,7 +1305,7 @@
 .centerCardTitle {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: calc(
     clamp(1.05rem, -1.255rem + 0.226cqi, 2rem) * var(--design-title-scale, 1)
@@ -1542,7 +1542,7 @@
   display: inline-block;
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: 0.68rem;
   text-transform: var(--design-eyebrow-case, uppercase);
@@ -1555,7 +1555,7 @@
 .panelTitle {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: calc(1.85rem * var(--design-title-scale, 1));
   font-weight: var(--design-title-weight, 700);
@@ -1903,7 +1903,7 @@
 .quoteCite {
   display: block;
   margin-top: 6px;
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-family: var(--font-display, var(--font-sans), system-ui, sans-serif);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -1990,7 +1990,7 @@
 
 .relatedLabel {
   display: block;
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-family: var(--font-display, var(--font-sans), system-ui, sans-serif);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -2018,7 +2018,7 @@
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-pill);
-  font-family: var(--font-geist, var(--font-sans), system-ui, sans-serif);
+  font-family: var(--font-display, var(--font-sans), system-ui, sans-serif);
   font-size: 0.84rem;
   font-weight: 500;
   color: inherit;
@@ -2182,7 +2182,7 @@
 .dialogTitle {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: calc(
     clamp(1.55rem, 2.8vw, 1.95rem) * var(--design-title-scale, 1)
@@ -2212,7 +2212,7 @@
   margin: 2px 0 0;
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: 0.75rem;
   line-height: 1.35;
@@ -2328,7 +2328,7 @@
 .dialogGroupHead {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: 0.7rem;
   font-weight: var(--design-eyebrow-weight, 600);
@@ -2464,7 +2464,7 @@
 .dialogJumpCategory {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: 0.62rem;
   text-transform: var(--design-eyebrow-case, uppercase);
@@ -2478,7 +2478,7 @@
 .dialogJumpTitle {
   font-family: var(
     --design-sans,
-    var(--font-geist, var(--font-sans), system-ui, sans-serif)
+    var(--font-display, var(--font-sans), system-ui, sans-serif)
   );
   font-size: calc(1rem * var(--design-title-scale, 1));
   font-weight: var(--design-title-weight, 700);

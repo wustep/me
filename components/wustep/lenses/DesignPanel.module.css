@@ -27,7 +27,7 @@
   right: 18px;
   z-index: var(--z-toast); /* top band: floats above the lenses modal ladder */
   font-family:
-    var(--font-geist, var(--font-sans, system-ui)),
+    var(--font-display, var(--font-sans, system-ui)),
     system-ui,
     sans-serif;
   font-size: 12px;

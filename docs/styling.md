@@ -69,7 +69,7 @@ Any new UI component should follow this pattern rather than adding to the global
 
 ## Fonts
 
-Loaded via `next/font/google` in [`pages/_app.tsx`](../pages/_app.tsx). The OG image generator separately bundles Inter SemiBold as a binary blob in [`lib/fonts/`](../lib/fonts/) because Edge runtime can't read network fonts at request time.
+Self-hosted with `next/font/local`: the woff2 files are committed under [`lib/fonts/files/`](../lib/fonts/files/) and wired up in [`lib/fonts/fonts.ts`](../lib/fonts/fonts.ts) (applied in [`pages/_app.tsx`](../pages/_app.tsx)). The build never fetches fonts — `next/font/google` is banned by lint because Turbopack can fail the build when Google Fonts returns an unusual file URL; see [`lib/fonts/files/README.md`](../lib/fonts/files/README.md). The OG image generator separately bundles Inter SemiBold as a binary blob in [`lib/fonts/`](../lib/fonts/) because Edge runtime can't read network fonts at request time.
 
 ## Notion-specific styling notes
 

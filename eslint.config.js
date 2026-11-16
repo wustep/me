@@ -24,6 +24,11 @@ export default [
             {
               name: 'classnames',
               message: "Use `cn` from '@/lib/utils' instead of classnames."
+            },
+            {
+              name: 'next/font/google',
+              message:
+                'Self-host fonts with next/font/local instead (see lib/fonts/files/README.md): fetching from Google Fonts at build time can fail the Turbopack build.'
             }
           ]
         }
