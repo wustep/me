@@ -2,7 +2,7 @@
  * ========== Core Styling ========== 
  */
 
-/* Fonts are now loaded via next/font/google in _app.tsx */
+/* Fonts are self-hosted via next/font/local (lib/fonts/fonts.ts), applied in _app.tsx */
 
 :root {
   /* Color system - matching About page */

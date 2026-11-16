@@ -1,4 +1,4 @@
-import { Geist_Mono, Source_Serif_4 } from 'next/font/google'
+import localFont from 'next/font/local'
 
 /**
  * Quiet-craft type system, scoped to the /prompting pages.
@@ -11,25 +11,41 @@ import { Geist_Mono, Source_Serif_4 } from 'next/font/google'
  *
  *   Geist Mono — what you type into the machine: prompts, specimens,
  *   inline code. A terminal voice rather than a typewriter costume.
+ *
+ * Both are self-hosted from lib/fonts/files (see the README there): the
+ * variable Latin files Google Fonts serves, opsz axis included.
  */
-export const manualSerif = Source_Serif_4({
-  subsets: ['latin'],
-  weight: 'variable',
-  style: ['normal', 'italic'],
-  axes: ['opsz'],
+export const manualSerif = localFont({
+  src: [
+    {
+      path: '../../../lib/fonts/files/source-serif-4/source-serif-4-latin.woff2',
+      weight: '200 900',
+      style: 'normal'
+    },
+    {
+      path: '../../../lib/fonts/files/source-serif-4/source-serif-4-latin-italic.woff2',
+      weight: '200 900',
+      style: 'italic'
+    }
+  ],
   variable: '--pm-serif',
   display: 'swap',
   preload: true,
-  adjustFontFallback: true,
+  adjustFontFallback: false,
   fallback: ['Iowan Old Style', 'Palatino Linotype', 'Georgia', 'serif']
 })
 
-export const manualMono = Geist_Mono({
-  subsets: ['latin'],
-  weight: 'variable',
+export const manualMono = localFont({
+  src: [
+    {
+      path: '../../../lib/fonts/files/geist-mono/geist-mono-latin.woff2',
+      weight: '100 900',
+      style: 'normal'
+    }
+  ],
   variable: '--pm-mono',
   display: 'swap',
   preload: true,
-  adjustFontFallback: true,
+  adjustFontFallback: false,
   fallback: ['SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
 })

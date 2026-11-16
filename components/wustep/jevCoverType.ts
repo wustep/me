@@ -1,4 +1,4 @@
-import { Fraunces, JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 
 /**
  * Jev Playground's own faces, scoped to its covers.
@@ -8,25 +8,51 @@ import { Fraunces, JetBrains_Mono } from 'next/font/google'
  *   back to the site's Crimson Pro, which would stop reading as the app.
  *   `preload: false` — these faces belong to the playground grid, not to
  *   every route that happens to share a document.
+ *
+ * Both are self-hosted from lib/fonts/files (see the README there).
  */
-export const jevSerif = Fraunces({
-  subsets: ['latin'],
-  weight: ['500', '600'],
-  style: ['normal', 'italic'],
+export const jevSerif = localFont({
+  src: [
+    {
+      path: '../../lib/fonts/files/fraunces/fraunces-latin.woff2',
+      weight: '500',
+      style: 'normal'
+    },
+    {
+      path: '../../lib/fonts/files/fraunces/fraunces-latin.woff2',
+      weight: '600',
+      style: 'normal'
+    },
+    {
+      path: '../../lib/fonts/files/fraunces/fraunces-latin-italic.woff2',
+      weight: '500',
+      style: 'italic'
+    },
+    {
+      path: '../../lib/fonts/files/fraunces/fraunces-latin-italic.woff2',
+      weight: '600',
+      style: 'italic'
+    }
+  ],
   variable: '--jev-serif',
   display: 'swap',
   preload: false,
-  adjustFontFallback: true,
+  adjustFontFallback: false,
   fallback: ['Georgia', 'Times New Roman', 'serif']
 })
 
-export const jevMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['500'],
+export const jevMono = localFont({
+  src: [
+    {
+      path: '../../lib/fonts/files/jetbrains-mono/jetbrains-mono-latin-500.woff2',
+      weight: '500',
+      style: 'normal'
+    }
+  ],
   variable: '--jev-mono',
   display: 'swap',
   preload: false,
-  adjustFontFallback: true,
+  adjustFontFallback: false,
   fallback: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
 })
 
