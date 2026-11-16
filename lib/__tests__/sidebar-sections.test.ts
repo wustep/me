@@ -37,20 +37,20 @@ describe('pinStarred', () => {
     expect(pinStarred(plain)).toEqual(plain)
   })
 
-  it('orders Contraptions above StageBench above Lenses', () => {
+  it('orders Instruments above Contraptions above StageBench', () => {
     expect(starredOrder.slice(0, 3)).toEqual([
+      'Instruments',
       'Contraptions',
-      'StageBench',
-      'Lenses'
+      'StageBench'
     ])
-    // Registry-shaped: StageBench and Lenses share Experiments, so the
-    // star order (not registry order) decides which leads that section.
+    // Registry-shaped: Instruments and Contraptions share Visualizations,
+    // so the star order (not registry order) decides which leads that section.
     const sections = [
       {
         title: 'Experiments',
         items: [
           { title: 'Jamming' },
-          { title: 'Lenses', starred: starRank('Lenses') },
+          { title: 'Lenses' },
           { title: 'StageBench', starred: starRank('StageBench') }
         ]
       },
@@ -58,13 +58,14 @@ describe('pinStarred', () => {
         title: 'Visualizations',
         items: [
           { title: 'MIDI Visualizer' },
-          { title: 'Contraptions', starred: starRank('Contraptions') }
+          { title: 'Contraptions', starred: starRank('Contraptions') },
+          { title: 'Instruments', starred: starRank('Instruments') }
         ]
       }
     ]
     expect(titles(pinStarred(sections))).toEqual([
-      ['Experiments', ['StageBench', 'Lenses', 'Jamming']],
-      ['Visualizations', ['Contraptions', 'MIDI Visualizer']]
+      ['Experiments', ['StageBench', 'Jamming', 'Lenses']],
+      ['Visualizations', ['Instruments', 'Contraptions', 'MIDI Visualizer']]
     ])
   })
 })

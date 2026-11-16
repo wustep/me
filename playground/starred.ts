@@ -4,9 +4,9 @@
  * covers) so plain unit tests can import it.
  */
 export const starredOrder = [
+  'Instruments',
   'Contraptions',
   'StageBench',
-  'Lenses',
   'Splash Panic!'
 ] as const
 

@@ -125,7 +125,6 @@ export const playgroundSections: PlaygroundSection[] = [
       },
       {
         title: 'Lenses',
-        starred: starRank('Lenses'),
         url: '/playground/lenses',
         description:
           'A canvas of lenses for seeing the world. Each card is a different frame — headspace, evolutionary psychology, minimalism, utility, status — and no single one sees everything.',
@@ -244,6 +243,7 @@ export const playgroundSections: PlaygroundSection[] = [
     items: [
       {
         title: 'Instruments',
+        starred: starRank('Instruments'),
         url: '/playground/instruments',
         description:
           'Piano, violin, viola, cello, flute, and trumpet, physically modeled and played live in the browser, with no samples. Watch the hammers, bows, and strings move in 2D, or see each instrument lit in 3D.',
