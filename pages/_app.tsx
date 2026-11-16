@@ -32,7 +32,7 @@ import {
   applyVaDisableQueryParam,
   isVaDisableSet
 } from '@/lib/analytics-opt-out'
-import { crimsonPro, geist, inter } from '@/lib/fonts/fonts'
+import { crimsonPro, inter, onest } from '@/lib/fonts/fonts'
 import { shouldSkipAnalytics } from '@/lib/owner-mode'
 
 function filterAnalytics(event: BeforeSendEvent) {
@@ -73,12 +73,15 @@ export default function App({ Component, pageProps }: AppProps) {
         :root {
           --font-sans: ${inter.style.fontFamily};
           --font-serif: ${crimsonPro.style.fontFamily};
-          --font-geist: ${geist.style.fontFamily};
+          --font-display: ${onest.style.fontFamily};
+          /* Older name for --font-display, kept so branches that still use
+             it render the same. Prefer --font-display. */
+          --font-geist: var(--font-display);
         }
       `}</style>
       <div
         data-font-root
-        className={`${inter.variable} ${crimsonPro.variable} ${geist.variable}`}
+        className={`${inter.variable} ${crimsonPro.variable} ${onest.variable}`}
       >
         <SkipLink />
         <Component {...pageProps} />

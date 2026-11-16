@@ -1,4 +1,4 @@
-import { crimsonPro, geist, inter } from './fonts'
+import { crimsonPro, inter, onest } from './fonts'
 
 export type DesignFont = {
   id: string
@@ -69,9 +69,9 @@ export const designSansFonts: DesignFont[] = [
     note: 'Open and geometric'
   },
   {
-    id: 'geist',
-    name: 'Geist',
-    family: geist.style.fontFamily,
+    id: 'onest',
+    name: 'Onest',
+    family: onest.style.fontFamily,
     note: 'Crisp, contemporary interface'
   },
   {
@@ -243,7 +243,7 @@ export const designFontPairs = [
   {
     id: 'digital-journal',
     name: 'Digital journal',
-    sansId: 'geist',
+    sansId: 'onest',
     serifId: 'newsreader',
     note: 'Clean chrome with a reading voice'
   },

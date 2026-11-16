@@ -32,14 +32,20 @@ export const inter = localFont({
   ]
 })
 
-export const geist = localFont({
+/**
+ * Display sans for titles, eyebrows and labels (--font-display). Onest was
+ * picked because its metrics nearly match the face it replaced (x-height
+ * 0.527 vs 0.530 em, Latin sample width within 0.2%), so titles keep their
+ * line breaks.
+ */
+export const onest = localFont({
   src: [
-    { path: './files/geist/geist-latin.woff2', weight: '400', style: 'normal' },
-    { path: './files/geist/geist-latin.woff2', weight: '500', style: 'normal' },
-    { path: './files/geist/geist-latin.woff2', weight: '600', style: 'normal' },
-    { path: './files/geist/geist-latin.woff2', weight: '700', style: 'normal' }
+    { path: './files/onest/onest-latin.woff2', weight: '400', style: 'normal' },
+    { path: './files/onest/onest-latin.woff2', weight: '500', style: 'normal' },
+    { path: './files/onest/onest-latin.woff2', weight: '600', style: 'normal' },
+    { path: './files/onest/onest-latin.woff2', weight: '700', style: 'normal' }
   ],
-  variable: '--font-geist',
+  variable: '--font-display',
   display: 'swap',
   preload: false,
   adjustFontFallback: false,

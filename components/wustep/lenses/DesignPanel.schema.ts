@@ -518,8 +518,8 @@ export const SECTIONS: Section[] = [
           { value: 'ui-serif, serif', label: 'System serif' },
           {
             value:
-              'var(--font-geist, var(--font-sans, system-ui)), system-ui, sans-serif',
-            label: 'Geist (sans)'
+              'var(--font-display, var(--font-sans, system-ui)), system-ui, sans-serif',
+            label: 'Onest (sans)'
           },
           {
             value:
@@ -541,8 +541,9 @@ export const SECTIONS: Section[] = [
         cssVar: '--design-sans',
         options: [
           {
-            value: 'var(--font-geist, var(--font-sans, system-ui), sans-serif)',
-            label: 'Geist (default)'
+            value:
+              'var(--font-display, var(--font-sans, system-ui), sans-serif)',
+            label: 'Onest (default)'
           },
           {
             value:
@@ -564,7 +565,7 @@ export const SECTIONS: Section[] = [
             label: 'System default'
           }
         ],
-        default: 'var(--font-geist, var(--font-sans, system-ui), sans-serif)'
+        default: 'var(--font-display, var(--font-sans, system-ui), sans-serif)'
       },
       {
         kind: 'select',
