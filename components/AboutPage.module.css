@@ -275,8 +275,7 @@
   transition: text-decoration-color 200ms ease;
 }
 
-a.bioHint,
-.bioHint[role='button'] {
+a.bioHint {
   cursor: pointer;
 }
 
