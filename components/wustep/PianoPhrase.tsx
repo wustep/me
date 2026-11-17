@@ -16,11 +16,18 @@ function getAudioContext(): AudioContextConstructor | undefined {
   )
 }
 
+// A piece runs up to a minute, so its notes are handed to Web Audio a little
+// ahead of the clock as it plays rather than all at once: every TICK
+// milliseconds, the next LOOKAHEAD seconds' worth.
+const LOOKAHEAD = 1.5
+const TICK = 250
+
 /**
- * A phrase of text that plays itself: clicking it improvises a few bars of
- * piano (a new phrase every time, see lib/improvise.ts) and the letters dip
- * like keys as their notes sound, low notes to the left and high to the
- * right.
+ * A phrase of text that plays itself: clicking it improvises a short piano
+ * piece, half a minute to a minute long and new every time (see
+ * lib/improvise.ts), and the letters dip like keys as the right hand's notes
+ * sound, low notes to the left and high to the right. Clicking again starts a
+ * fresh piece; Escape stops it.
  *
  * It stays ordinary inline text — it wraps, selects and copies like the
  * sentence around it — so it is a `span` with a button role rather than a
@@ -93,48 +100,65 @@ export function PianoPhrase({
     // A little lead time so the first note is not clipped by scheduling.
     const lead = 0.04
     const audio = audioRef.current
+    let phrase: GainNode | undefined
     if (audio) {
-      const { context, limiter } = audio
-      void context.resume()
-      const phrase = context.createGain()
+      void audio.context.resume()
+      phrase = audio.context.createGain()
       phrase.gain.value = 0.9
-      phrase.connect(limiter)
+      phrase.connect(audio.limiter)
       phraseRef.current = phrase
-
-      const at = context.currentTime + lead
-      let end = 0
-      for (const note of notes) {
-        scheduleNote(context, phrase, note, at)
-        end = Math.max(end, note.start + ringSeconds(note.midi))
-      }
-      // Once the last note has rung out, drop the phrase's nodes.
-      timersRef.current.push(
-        setTimeout(
-          () => {
-            phrase.disconnect()
-            if (phraseRef.current === phrase) phraseRef.current = null
-          },
-          (end + lead + 0.2) * 1000
-        )
-      )
     }
 
+    // Seconds into the piece, on the audio clock when there is one, so the
+    // keys stay with the sound.
+    const clock = () =>
+      audio ? audio.context.currentTime : performance.now() / 1000
+    const origin = clock() + lead
     const keys = keysRef.current.filter(Boolean) as HTMLSpanElement[]
-    for (const note of notes) {
-      if (note.key === undefined || keys.length === 0) continue
-      const key = keys[Math.round(note.key * (keys.length - 1))]!
-      const down = (note.start + lead) * 1000
-      // Lift a little before the next note so a repeated key re-strikes.
-      const held = Math.max(70, Math.min(note.duration * 1000 - 40, 420))
-      timersRef.current.push(
-        setTimeout(() => {
-          key.dataset.down = ''
-        }, down),
-        setTimeout(() => {
-          delete key.dataset.down
-        }, down + held)
-      )
+    let next = 0
+    let end = 0
+
+    const tick = () => {
+      const now = clock() - origin
+      while (next < notes.length && notes[next]!.start < now + LOOKAHEAD) {
+        const note = notes[next++]!
+        // A note the clock has already passed (a stalled tab) is skipped.
+        if (note.start < now - 0.1) continue
+        end = Math.max(end, note.start + ringSeconds(note.midi, note.duration))
+        if (audio && phrase) scheduleNote(audio.context, phrase, note, origin)
+
+        if (note.key === undefined || keys.length === 0) continue
+        const key = keys[Math.round(note.key * (keys.length - 1))]!
+        const down = Math.max(0, (note.start - now) * 1000)
+        // Lift a little before the next note so a repeated key re-strikes.
+        const held = Math.max(70, Math.min(note.duration * 1000 - 40, 420))
+        timersRef.current.push(
+          setTimeout(() => {
+            key.dataset.down = ''
+          }, down),
+          setTimeout(() => {
+            delete key.dataset.down
+          }, down + held)
+        )
+      }
+
+      if (next < notes.length) {
+        timersRef.current.push(setTimeout(tick, TICK))
+      } else if (phrase) {
+        // Once the last note has rung out, drop the phrase's nodes.
+        const done = phrase
+        timersRef.current.push(
+          setTimeout(
+            () => {
+              done.disconnect()
+              if (phraseRef.current === done) phraseRef.current = null
+            },
+            (end - now + 0.2) * 1000
+          )
+        )
+      }
     }
+    tick()
   }, [stop])
 
   let letter = 0
@@ -151,6 +175,8 @@ export function PianoPhrase({
           // Space would otherwise scroll the page.
           event.preventDefault()
           if (!event.repeat) play()
+        } else if (event.key === 'Escape') {
+          stop()
         }
       }}
     >
