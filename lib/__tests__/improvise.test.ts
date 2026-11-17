@@ -175,12 +175,29 @@ describe('improvise', () => {
     }
   })
 
-  it('lasts half a minute to a minute', () => {
+  it('lasts fifteen to thirty seconds, in every texture and key', () => {
     for (const seed of SEEDS) {
       for (const texture of IMPROV_TEXTURES) {
-        const { duration } = improvise(seededRandom(seed), { texture })
-        expect(duration).toBeGreaterThanOrEqual(30)
-        expect(duration).toBeLessThanOrEqual(60)
+        for (const key of IMPROV_KEYS) {
+          const { duration } = improvise(seededRandom(seed), { texture, key })
+          expect(duration).toBeGreaterThanOrEqual(15)
+          expect(duration).toBeLessThanOrEqual(30)
+        }
+      }
+    }
+  })
+
+  it('lands on its last chord and lets it ring', () => {
+    for (const seed of SEEDS) {
+      const { notes, duration } = improvise(seededRandom(seed))
+      const chord = finalChord(notes, duration)
+      // A whole chord, struck together and held for seconds, not a clipped
+      // gesture: every note of it sounds right to the end.
+      expect(chord.length).toBeGreaterThanOrEqual(4)
+      const struck = Math.min(...chord.map((note) => note.start))
+      expect(duration - struck).toBeGreaterThan(2.5)
+      for (const note of chord) {
+        expect(note.start + note.duration).toBeCloseTo(duration, 6)
       }
     }
   })
@@ -218,14 +235,41 @@ describe('improvise', () => {
 
   it('plays with two hands, enough for a real piece', () => {
     for (const seed of SEEDS) {
-      const { notes } = improvise(seededRandom(seed))
-      const left = leftHand(notes)
-      const right = rightHand(notes)
-      expect(notes.length).toBeGreaterThan(80)
-      expect(left.length).toBeGreaterThan(30)
-      expect(right.length).toBeGreaterThan(20)
-      // The left hand sits under the right.
-      expect(averagePitch(left)).toBeLessThan(averagePitch(right) - 7)
+      for (const texture of IMPROV_TEXTURES) {
+        const { notes, duration } = improvise(seededRandom(seed), { texture })
+        const left = leftHand(notes)
+        const right = rightHand(notes)
+        // Short, but never just a few notes: at least one and a half a
+        // second, a left hand that keeps going, and a tune.
+        expect(notes.length).toBeGreaterThan(duration * 1.5)
+        expect(left.length).toBeGreaterThanOrEqual(10)
+        expect(right.length).toBeGreaterThanOrEqual(10)
+        // The left hand sits under the right.
+        expect(averagePitch(left)).toBeLessThan(averagePitch(right) - 7)
+      }
+    }
+  })
+
+  it('keeps the low register clear', () => {
+    for (const seed of SEEDS) {
+      for (const texture of IMPROV_TEXTURES) {
+        const { notes } = improvise(seededRandom(seed), { texture })
+        // Left-hand notes struck together (a rolled chord counts), low to
+        // high: no third under C3 and no second under E3.
+        const left = leftHand(notes)
+        for (const [i, note] of left.entries()) {
+          const together = left
+            .filter((other, j) => j >= i && other.start - note.start < 0.15)
+            .map((other) => other.midi)
+            .toSorted((a, b) => a - b)
+          for (let k = 1; k < together.length; k++) {
+            const lower = together[k - 1]!
+            const gap = together[k]! - lower
+            if (gap <= 2) expect(lower).toBeGreaterThanOrEqual(51)
+            else if (gap <= 4) expect(lower).toBeGreaterThanOrEqual(46)
+          }
+        }
+      }
     }
   })
 
@@ -255,21 +299,27 @@ describe('improvise', () => {
         const gap = notes[i]!.start - notes[i - 1]!.start
         if (gap > 0.03) gaps.add(Math.round(gap * 1000))
       }
-      expect(gaps.size).toBeGreaterThan(30)
+      expect(gaps.size).toBeGreaterThan(12)
 
-      // Loudness changes across the piece, and it ends softer than its peak.
-      const windows = Array.from({ length: 5 }, () => ({ sum: 0, count: 0 }))
-      for (const note of rightHand(notes)) {
-        const window =
-          windows[Math.min(4, Math.floor((note.start / duration) * 5))]!
-        window.sum += note.velocity
-        window.count++
+      // The tune's loudness changes as it goes on: its loudest note in each
+      // fifth of the playing (not counting the last chord's ring).
+      const right = rightHand(notes)
+      const playing = right.at(-1)!.start
+      const windows: number[] = Array.from({ length: 5 }, () => 0)
+      for (const note of right) {
+        const i = Math.min(4, Math.floor((note.start / playing) * 5))
+        windows[i] = Math.max(windows[i]!, note.velocity)
       }
-      const levels = windows
-        .filter((window) => window.count > 0)
-        .map((window) => window.sum / window.count)
-      expect(Math.max(...levels) - Math.min(...levels)).toBeGreaterThan(0.03)
-      expect(levels.at(-1)!).toBeLessThan(Math.max(...levels))
+      const levels = windows.filter((level) => level > 0)
+      expect(Math.max(...levels) - Math.min(...levels)).toBeGreaterThan(0.05)
+
+      // And it comes down from its height: the last chord is softer than
+      // the loudest note before it.
+      const ending = finalChord(notes, duration)
+      const loudest = Math.max(...right.map((note) => note.velocity))
+      expect(Math.max(...ending.map((note) => note.velocity))).toBeLessThan(
+        loudest * 0.9
+      )
     }
   })
 

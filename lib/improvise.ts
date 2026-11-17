@@ -1,28 +1,41 @@
 /**
- * A short solo-piano piece, composed fresh on every call: 30 to 60 seconds
- * in E, D or B major, with a left-hand accompaniment under a right-hand
- * melody, a form that sets out, wanders and comes home, and the small
- * unevenness of a person playing.
+ * A short solo-piano piece, composed fresh on every call: fifteen to thirty
+ * seconds in E, D or B major, with a left-hand accompaniment under a
+ * right-hand melody, a small form with a clear shape (it sets out, moves,
+ * and comes home to a cadence), and the small unevenness of a person
+ * playing.
  *
  * Nothing is borrowed note for note. Each piece rolls a texture, and with it
  * a handful of habits from a few pianists' toolkits:
  *
- * - waltz: a sparse slow-waltz left hand (a low bass, then a soft chord off
- *   the beat) under a plain, modal melody with lots of air.
+ * - waltz: a sparse slow-waltz left hand (a low bass, then a soft close chord
+ *   off the beat, pedalled through the bar) under a plain, modal melody with
+ *   lots of air.
  * - arpeggio: one broken-chord cell, repeated, that fills in and climbs as
- *   the piece builds over a clear pulse.
+ *   the piece builds over a clear pulse, the tune doubled in octaves at its
+ *   height.
  * - loop: a gentle repeated right-hand figure, voice-led through warm major
  *   harmony, that a melody grows out of.
  * - planing: chord shapes sliding in parallel under the melody, added-sixth
- *   and ninth colour, pentatonic and whole-tone touches, a deep pedal bass.
- * - neosoul: rolled ninths and elevenths, upper-structure dyads, rubato,
- *   grace notes and quick fills.
+ *   and ninth colour, pentatonic and whole-tone touches, a deep held bass.
+ * - neosoul: rolled ninths and elevenths, upper-structure dyads, laid-back
+ *   rubato, grace notes and quick fills.
  *
- * The contrasting middle may borrow another texture's left or right hand, and
- * colour (a mixolydian ♭VII, a borrowed iv or ♭VI, applied dominants, an
- * augmented V) is switched on piece by piece. The harmony comes from a small
- * grammar with real cadences; the melody from a motif that is stated,
- * answered, sequenced and brought back.
+ * The forms are small enough to hear whole: a period (a phrase that asks,
+ * one that answers), a sentence (an idea, the idea again, then a run to the
+ * cadence), or out, away and back. The harmony comes from a small grammar
+ * with real cadences, its colour (a mixolydian ♭VII, a borrowed iv or ♭VI,
+ * applied dominants, an augmented V) switched on piece by piece. The melody
+ * comes from a motif that is stated, repeated or sequenced, and brought
+ * home; it may lean into its last note from a step away, and a soft, high
+ * chime may answer it while the last chord rings.
+ *
+ * The left hand is voice-led and kept out of the low register's mud. The
+ * sustain pedal changes with the harmony, catching the old chord a moment
+ * into the new one, and lets passing notes go. The playing bends: phrases
+ * lean in and broaden out, the tune sings a hair ahead of the hands (or, in
+ * neo-soul, lays back), its high point lingers, and the end slows into a
+ * last chord that is left to ring.
  *
  * Pure: pass a seeded `random` to get the same piece back (the tests do).
  * Playing it is the caller's job; see components/wustep/PianoPhrase.tsx.
@@ -150,7 +163,6 @@ const mod = (n: number, m: number) => ((n % m) + m) % m
 const clamp = (x: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, x))
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
-const anything = () => true
 
 /** Whether two pitch classes are a step (one or two semitones) apart. */
 function isStep(from: number, to: number) {
@@ -398,12 +410,17 @@ function makeChord(degree: Degree, tones: readonly number[]): Chord {
 // Textures and form
 // ---------------------------------------------------------------------------
 
-type Role = 'intro' | 'A' | 'A2' | 'B' | 'B2' | 'R' | 'coda'
+/**
+ * A phrase's job: the opening idea (A), that idea again (A2), a contrast
+ * (B), a continuation that runs to the cadence (C), or the return (R).
+ */
+type Role = 'intro' | 'A' | 'A2' | 'B' | 'C' | 'R'
 type Cadence = 'authentic' | 'plagal' | 'half' | 'deceptive' | 'open'
 type LeftMode = 'waltz' | 'arpeggio' | 'pulse' | 'deep' | 'shell'
 type RightMode = 'melody' | 'figure' | 'planing' | 'upper'
 type Borrowing = 'none' | LeftMode | 'planing'
 type Dynamics = 'arc' | 'valley' | 'swell'
+type Form = 'period' | 'sentence' | 'short' | 'ternary'
 
 /** What a contrasting section takes from another texture. */
 const BORROWINGS: Record<Borrowing, { left?: LeftMode; right?: RightMode }> = {
@@ -425,7 +442,7 @@ type TextureSpec = {
   rubato: number
   /** Beats an off-beat eighth is held back. */
   swing: number
-  /** Seconds the melody sits behind the beat. */
+  /** Seconds the tune sits behind the hands (negative: it sings ahead). */
   lag: number
   left: LeftMode
   right: RightMode
@@ -443,7 +460,9 @@ type TextureSpec = {
   /** How busy the melody is, 0–1. */
   density: readonly [number, number]
   introBars: readonly [number, number]
-  /** What the contrasting middle may borrow. */
+  /** Forms it likes, by weight; only those that fit the clock are played. */
+  forms: Partial<Record<Form, number>>
+  /** What a contrasting middle may borrow. */
   borrow: Partial<Record<Borrowing, number>>
   /** Chance of a tonic pedal under the opening. */
   pedal: number
@@ -455,15 +474,19 @@ type TextureSpec = {
   fills: number
   /** Chance the opening melody keeps to the pentatonic. */
   pentatonic: number
+  /** Chance the tune leans into its last note from a step away. */
+  appoggiatura: number
+  /** Chance of a soft, high chime over the last chord. */
+  chime: number
 }
 
 const TEXTURES: Record<ImprovTexture, TextureSpec> = {
   waltz: {
     fourFour: 0,
-    beat: [0.62, 0.8],
+    beat: [0.64, 0.82],
     rubato: 0.3,
     swing: 0,
-    lag: 0,
+    lag: -0.012,
     left: 'waltz',
     right: 'melody',
     flavours: { plain: 0.6, lush: 0.4 },
@@ -473,20 +496,23 @@ const TEXTURES: Record<ImprovTexture, TextureSpec> = {
     splits: false,
     authentic: 0.4,
     density: [0.1, 0.35],
-    introBars: [2, 2],
+    introBars: [1, 1],
+    forms: { period: 0.45, ternary: 0.35, sentence: 0.2 },
     borrow: { none: 0.4, arpeggio: 0.35, planing: 0.25 },
     pedal: 0.15,
     inversions: 0.25,
     ornament: 0.04,
     fills: 0.05,
-    pentatonic: 0.3
+    pentatonic: 0.3,
+    appoggiatura: 0.35,
+    chime: 0.3
   },
   arpeggio: {
     fourFour: 0.7,
-    beat: [0.66, 0.84],
+    beat: [0.58, 0.74],
     rubato: 0.15,
     swing: 0,
-    lag: 0,
+    lag: -0.016,
     left: 'arpeggio',
     right: 'melody',
     flavours: { plain: 0.7, lush: 0.3 },
@@ -495,21 +521,24 @@ const TEXTURES: Record<ImprovTexture, TextureSpec> = {
     hold: 0.2,
     splits: false,
     authentic: 0.6,
-    density: [0.25, 0.5],
-    introBars: [1, 2],
+    density: [0.3, 0.55],
+    introBars: [0, 1],
+    forms: { period: 0.4, sentence: 0.4, short: 0.2, ternary: 0.15 },
     borrow: { none: 0.5, planing: 0.25, pulse: 0.25 },
     pedal: 0.3,
     inversions: 0.5,
     ornament: 0.03,
     fills: 0.08,
-    pentatonic: 0.25
+    pentatonic: 0.25,
+    appoggiatura: 0.3,
+    chime: 0.25
   },
   loop: {
     fourFour: 0.75,
-    beat: [0.6, 0.76],
+    beat: [0.54, 0.7],
     rubato: 0.15,
     swing: 0,
-    lag: 0,
+    lag: -0.01,
     left: 'pulse',
     right: 'figure',
     flavours: { plain: 0.5, lush: 0.5 },
@@ -519,20 +548,23 @@ const TEXTURES: Record<ImprovTexture, TextureSpec> = {
     splits: false,
     authentic: 0.5,
     density: [0.1, 0.3],
-    introBars: [1, 2],
+    introBars: [1, 1],
+    forms: { period: 0.35, sentence: 0.45, short: 0.2 },
     borrow: { none: 0.4, arpeggio: 0.4, deep: 0.2 },
     pedal: 0.35,
     inversions: 0.5,
     ornament: 0.04,
     fills: 0.1,
-    pentatonic: 0.4
+    pentatonic: 0.4,
+    appoggiatura: 0.25,
+    chime: 0.35
   },
   planing: {
     fourFour: 0.7,
-    beat: [0.78, 0.98],
+    beat: [0.68, 0.88],
     rubato: 0.5,
     swing: 0,
-    lag: 0.008,
+    lag: -0.006,
     left: 'deep',
     right: 'planing',
     flavours: { lush: 0.7, jazzy: 0.3 },
@@ -543,19 +575,22 @@ const TEXTURES: Record<ImprovTexture, TextureSpec> = {
     authentic: 0.45,
     density: [0.25, 0.5],
     introBars: [0, 1],
+    forms: { period: 0.35, short: 0.35, sentence: 0.3, ternary: 0.15 },
     borrow: { none: 0.45, shell: 0.3, arpeggio: 0.25 },
     pedal: 0.45,
     inversions: 0.2,
     ornament: 0.1,
     fills: 0.3,
-    pentatonic: 0.5
+    pentatonic: 0.5,
+    appoggiatura: 0.3,
+    chime: 0.45
   },
   neosoul: {
     fourFour: 1,
-    beat: [0.8, 0.98],
+    beat: [0.68, 0.86],
     rubato: 0.5,
     swing: 0.06,
-    lag: 0.014,
+    lag: 0.016,
     left: 'shell',
     right: 'upper',
     flavours: { jazzy: 0.8, lush: 0.2 },
@@ -566,76 +601,88 @@ const TEXTURES: Record<ImprovTexture, TextureSpec> = {
     authentic: 0.7,
     density: [0.3, 0.55],
     introBars: [0, 1],
+    forms: { short: 0.4, period: 0.35, sentence: 0.25 },
     borrow: { none: 0.5, planing: 0.35, arpeggio: 0.15 },
     pedal: 0.1,
     inversions: 0.3,
     ornament: 0.18,
     fills: 0.6,
-    pentatonic: 0.2
+    pentatonic: 0.2,
+    appoggiatura: 0.4,
+    chime: 0.3
   }
 }
 
-/** Phrases, by how many fit. */
-const FORMS: Record<number, readonly Role[]> = {
-  3: ['A', 'B', 'R'],
-  4: ['A', 'A2', 'B', 'R'],
-  5: ['A', 'A2', 'B', 'B2', 'R']
+/** Each form's phrases, in bars. The last phrase closes on the tonic. */
+const FORMS: Record<Form, ReadonlyArray<readonly [Role, number]>> = {
+  // A phrase that asks, and one that answers.
+  period: [
+    ['A', 4],
+    ['R', 4]
+  ],
+  // An idea, the idea again, then a longer run to the cadence.
+  sentence: [
+    ['A', 2],
+    ['A2', 2],
+    ['C', 4]
+  ],
+  // The same in two-bar breaths.
+  short: [
+    ['A', 2],
+    ['A2', 2],
+    ['C', 2]
+  ],
+  // Out, away and back.
+  ternary: [
+    ['A', 4],
+    ['B', 2],
+    ['R', 4]
+  ]
 }
 
 /** How a phrase that doesn't close the piece may end. */
-const CADENCES: Record<'A' | 'B' | 'B2', Partial<Record<Cadence, number>>> = {
-  A: { half: 0.5, open: 0.25, deceptive: 0.25 },
-  B: { half: 0.45, deceptive: 0.3, open: 0.25 },
-  B2: { half: 0.6, deceptive: 0.4 }
+const CADENCES: Record<'A' | 'A2' | 'B', Partial<Record<Cadence, number>>> = {
+  A: { half: 0.45, open: 0.3, deceptive: 0.25 },
+  A2: { half: 0.5, open: 0.5 },
+  B: { half: 0.55, deceptive: 0.45 }
 }
 
 /** Loudness at the start and end of each section, per dynamic shape. */
 const LEVELS: Record<Dynamics, Record<Role, readonly [number, number]>> = {
-  // Builds to the middle, then a quieter return.
+  // Builds into the last phrase, then lets go.
   arc: {
     intro: [0.76, 0.8],
-    A: [0.85, 0.92],
-    A2: [0.92, 1],
-    B: [1, 1.16],
-    B2: [1.12, 1.2],
-    R: [0.96, 0.84],
-    coda: [0.76, 0.64]
+    A: [0.8, 0.92],
+    A2: [0.9, 1.02],
+    B: [1, 1.14],
+    C: [1.12, 0.78],
+    R: [1.1, 0.78]
   },
   // A quieter middle, then a fuller return.
   valley: {
-    intro: [0.82, 0.86],
-    A: [0.96, 1],
-    A2: [0.98, 0.92],
-    B: [0.76, 0.82],
-    B2: [0.84, 0.98],
-    R: [1.05, 0.92],
-    coda: [0.8, 0.64]
+    intro: [0.84, 0.88],
+    A: [0.96, 1.04],
+    A2: [1, 0.86],
+    B: [0.76, 0.84],
+    C: [1.08, 0.76],
+    R: [1.08, 0.76]
   },
-  // One long crescendo, let go at the very end.
+  // One long crescendo, let go only at the very end.
   swell: {
     intro: [0.7, 0.74],
-    A: [0.76, 0.84],
-    A2: [0.86, 0.96],
-    B: [0.98, 1.08],
-    B2: [1.08, 1.18],
-    R: [1.12, 0.96],
-    coda: [0.8, 0.62]
+    A: [0.74, 0.86],
+    A2: [0.86, 0.98],
+    B: [0.98, 1.1],
+    C: [1.16, 0.8],
+    R: [1.16, 0.8]
   }
 }
 
 /** How busy the accompaniment is in each section, per dynamic shape. */
 const ENERGY: Record<Dynamics, Record<Role, number>> = {
-  arc: { intro: 0.2, A: 0.3, A2: 0.45, B: 0.7, B2: 0.9, R: 0.35, coda: 0.15 },
-  valley: {
-    intro: 0.25,
-    A: 0.45,
-    A2: 0.5,
-    B: 0.3,
-    B2: 0.5,
-    R: 0.6,
-    coda: 0.15
-  },
-  swell: { intro: 0.15, A: 0.25, A2: 0.4, B: 0.6, B2: 0.8, R: 0.75, coda: 0.15 }
+  arc: { intro: 0.2, A: 0.3, A2: 0.45, B: 0.7, C: 0.6, R: 0.5 },
+  valley: { intro: 0.25, A: 0.45, A2: 0.5, B: 0.3, C: 0.45, R: 0.55 },
+  swell: { intro: 0.15, A: 0.25, A2: 0.4, B: 0.65, C: 0.8, R: 0.75 }
 }
 
 type Section = {
@@ -653,7 +700,7 @@ type Section = {
   levels: readonly [number, number]
   /** A tonic pedal under the first two bars. */
   pedal: boolean
-  /** Whether this is the last phrase before the coda. */
+  /** Whether this phrase closes the piece. */
   final: boolean
 }
 
@@ -669,11 +716,22 @@ type Plan = {
   beat: number
   flavour: Flavour
   colours: ReadonlySet<Colour>
+  form: Form
   sections: Section[]
   bars: number
-  coda: 'hold' | 'echo' | 'tag'
   pentatonic: boolean
   density: number
+  /** Whether the tune leans into its last note from a step away. */
+  appoggiatura: boolean
+  /** Whether a high chime answers it over the last chord. */
+  chime: boolean
+  /** Seconds the last chord rings before the hands and pedal lift. */
+  ring: number
+}
+
+/** Seconds the last chord rings: a slow bar and a half, within reason. */
+function lastRing(meter: number, beat: number, rubato: number) {
+  return clamp(meter * beat * 1.5, 3.2, 4.4) + 0.6 * rubato
 }
 
 function planPiece(d: Dice, keyName: ImprovKey, texture: ImprovTexture): Plan {
@@ -685,30 +743,53 @@ function planPiece(d: Dice, keyName: ImprovKey, texture: ImprovTexture): Plan {
   for (const colour of Object.keys(spec.colours) as Colour[]) {
     if (d.chance(spec.colours[colour])) colours.add(colour)
   }
-  const dynamics = d.choose<Dynamics>({ arc: 0.45, valley: 0.25, swell: 0.3 })
   const closing = (): Cadence =>
     d.chance(spec.authentic) ? 'authentic' : 'plagal'
 
-  // Seconds of music before the last chord rings out; the tempo bends to
-  // land near it with whole four-bar phrases.
-  const target = d.between(36, 50)
-  const stretch = 1 + spec.rubato * 0.12
+  // Seconds from the first note until the last chord is let go. A form is
+  // picked from those that land near it at a tempo the texture likes, and
+  // then the tempo bends to fit.
+  const target = d.between(19.5, 27)
   const intro = d.int(spec.introBars[0], spec.introBars[1])
-  const coda = d.choose<Plan['coda']>({ hold: 0.4, echo: 0.35, tag: 0.25 })
-  const codaBars = coda === 'hold' ? 1 : 2
+  // Phrase-end ritardandos, breaths and the slowing into the last chord.
+  const stretch = 1.12 + spec.rubato * 0.2
   const preferred = d.between(spec.beat[0], spec.beat[1])
-  const fits = (target / (meter * preferred * stretch) - intro - codaBars) / 4
-  // At least three phrases, for somewhere to go and come back from.
-  const roles = FORMS[clamp(Math.round(fits), 3, 5)]!
-  const borrowed = BORROWINGS[d.choose(spec.borrow)]
+  const barsOf = (form: Form) =>
+    intro + FORMS[form].reduce((sum, [, bars]) => sum + bars, 0)
+  const estimate = (form: Form, beat: number) =>
+    (barsOf(form) - 1) * meter * beat * stretch +
+    lastRing(meter, beat, spec.rubato)
+  const fits: Partial<Record<Form, number>> = {}
+  for (const [form, weight] of Object.entries(spec.forms) as Array<
+    [Form, number]
+  >) {
+    const miss = (estimate(form, preferred) - target) / (0.12 * target)
+    fits[form] = weight * Math.exp(-miss * miss)
+  }
+  const form = d.choose(fits)
+  const bars = barsOf(form)
+  // A quieter middle needs a middle to be quiet in.
+  const dynamics = d.choose<Dynamics>(
+    form === 'ternary'
+      ? { arc: 0.4, valley: 0.35, swell: 0.25 }
+      : { arc: 0.55, swell: 0.45 }
+  )
+  let beat = preferred
+  for (let i = 0; i < 3; i++) {
+    beat =
+      (target - lastRing(meter, beat, spec.rubato)) /
+      ((bars - 1) * meter * stretch)
+  }
+  // Within a hair of the tempos the texture likes; the length gives instead.
+  beat = clamp(beat, spec.beat[0] * 0.94, spec.beat[1] * 1.06)
 
   const sections: Section[] = []
   let bar = 0
-  const add = (role: Role, bars: number, extra: Partial<Section>) => {
+  const add = (role: Role, length: number, extra: Partial<Section>) => {
     sections.push({
       role,
       bar,
-      bars,
+      bars: length,
       cadence: 'authentic',
       left: spec.left,
       right: spec.right,
@@ -719,32 +800,30 @@ function planPiece(d: Dice, keyName: ImprovKey, texture: ImprovTexture): Plan {
       final: false,
       ...extra
     })
-    bar += bars
+    bar += length
   }
   if (intro > 0) add('intro', intro, { melody: false })
   const pedal = d.chance(spec.pedal)
-  for (const [index, role] of roles.entries()) {
-    const final = index === roles.length - 1
-    const contrast = role === 'B' || role === 'B2'
-    add(role, final && d.chance(0.3) ? 5 : 4, {
-      cadence:
-        final || role === 'A2'
-          ? closing()
-          : d.choose(CADENCES[role as keyof typeof CADENCES]),
-      ...(contrast ? borrowed : {}),
-      // The loop sometimes lets its figure play alone before a tune joins.
-      melody: !(spec.right === 'figure' && role === 'A' && d.chance(0.4)),
-      pedal: !contrast && pedal,
+  const borrowed = BORROWINGS[d.choose(spec.borrow)]
+  const phrases = FORMS[form]
+  for (const [index, [role, length]] of phrases.entries()) {
+    const final = index === phrases.length - 1
+    let cadence: Cadence
+    if (final) {
+      cadence = closing()
+    } else if (role === 'A' && length <= 2) {
+      // Two bars can't open on a deceptive V.
+      cadence = d.choose<Cadence>({ half: 0.55, open: 0.45 })
+    } else {
+      cadence = d.choose(CADENCES[role as keyof typeof CADENCES])
+    }
+    add(role, length, {
+      cadence,
+      ...(role === 'B' ? borrowed : {}),
+      pedal: (role === 'A' || role === 'R') && pedal,
       final
     })
   }
-  add('coda', codaBars, { melody: false })
-
-  const beat = clamp(
-    target / (bar * meter * stretch),
-    spec.beat[0] * 0.88,
-    spec.beat[1] * 1.12
-  )
 
   return {
     texture,
@@ -756,11 +835,14 @@ function planPiece(d: Dice, keyName: ImprovKey, texture: ImprovTexture): Plan {
     beat,
     flavour,
     colours,
+    form,
     sections,
     bars: bar,
-    coda,
     pentatonic: d.chance(spec.pentatonic),
-    density: d.between(spec.density[0], spec.density[1])
+    density: d.between(spec.density[0], spec.density[1]),
+    appoggiatura: d.chance(spec.appoggiatura),
+    chime: d.chance(spec.chime),
+    ring: lastRing(meter, beat, spec.rubato)
   }
 }
 
@@ -811,8 +893,14 @@ function nextDegree(
     items.push(to)
     weights.push(w)
   }
-  // Satie-like textures hold a chord for a second bar now and then.
-  if (plan.spec.hold > 0 && history[n - 1] !== history[n - 2]) {
+  // Satie-like textures hold a chord for a second bar now and then; not a
+  // dominant, which in a piece this short would start to sound like home.
+  if (
+    plan.spec.hold > 0 &&
+    history[n - 1] !== history[n - 2] &&
+    from !== 'V' &&
+    from !== 'V+'
+  ) {
     items.push(from)
     weights.push(plan.spec.hold * (ahead === from ? 0.2 : 1))
   }
@@ -859,18 +947,27 @@ function phraseDegrees(
 ): Degree[][] {
   const length = section.bars
   const bars: Array<Degree[] | undefined> = Array.from({ length })
-  const [approach, arrival] = cadenceDegrees(d, plan, section.cadence)
+  const cadence = cadenceDegrees(d, plan, section.cadence)
+  const arrival = cadence[1]
+  let approach = cadence[0]
+  // Straight after the same chord (a half cadence, then a two-bar close),
+  // the approach moves under itself rather than sitting still.
+  if (approach && length <= 2 && approach[0] === previous) {
+    approach = [d.pick(['IV', 'ii'] as const), ...approach.slice(-1)]
+  }
   bars[length - 1] = [arrival]
   if (approach) bars[length - 2] = approach
 
   if (opening) {
-    // Answer the opening phrase with its first bars, unless that would leave
-    // an applied chord hanging.
+    // Begin as the opening phrase began, unless that would leave an applied
+    // chord hanging.
     for (const [i, degrees] of opening.entries()) {
       if (bars[i] !== undefined) break
       const target = RESOLVES[degrees.at(-1)!]
       const following = bars[i + 1]?.[0]
       if (target && following !== undefined && following !== target) break
+      // Nor run into the cadence on the chord it is about to play.
+      if (following !== undefined && degrees.at(-1) === following) break
       bars[i] = [...degrees]
     }
   }
@@ -936,46 +1033,32 @@ function composeHarmony(d: Dice, plan: Plan): Span[] {
   const history: Degree[] = []
   const degreesBySection = new Map<Section, Degree[][]>()
   let a: Degree[][] | undefined
-  let b: Degree[][] | undefined
   let previous: Degree = 'I'
   for (const section of sections) {
-    if (section.role === 'intro' || section.role === 'coda') continue
+    if (section.role === 'intro') continue
+    // The return begins as the opening did; a repeated idea sometimes does,
+    // and sometimes moves to new ground.
     const opening =
-      section.role === 'A2' || section.role === 'R'
+      section.role === 'R'
         ? a?.slice(0, 2)
-        : section.role === 'B2'
-          ? b?.slice(0, 2)
+        : section.role === 'A2' && d.chance(0.5)
+          ? a?.slice(0, 1)
           : undefined
     const degrees = phraseDegrees(d, plan, section, previous, history, opening)
     degreesBySection.set(section, degrees)
     if (section.role === 'A') a = degrees
-    if (section.role === 'B') b = degrees
     previous = degrees.at(-1)!.at(-1)!
   }
 
   for (const section of sections) {
-    if (section.role === 'intro') {
-      // The intro previews the opening chords; the waltz vamps on the tonic.
-      degreesBySection.set(
-        section,
-        Array.from({ length: section.bars }, (_, i) =>
-          plan.texture === 'waltz' ? ['I'] : [...(a?.[i] ?? ['I'])]
-        )
+    if (section.role !== 'intro') continue
+    // The intro previews the opening chords; the waltz vamps on the tonic.
+    degreesBySection.set(
+      section,
+      Array.from({ length: section.bars }, (_, i) =>
+        plan.texture === 'waltz' ? ['I'] : [...(a?.[i] ?? ['I'])]
       )
-    } else if (section.role === 'coda') {
-      const tag: Degree =
-        plan.colours.has('mixture') && d.chance(0.5)
-          ? 'iv'
-          : plan.colours.has('mixolydian') && d.chance(0.5)
-            ? 'bVII'
-            : 'IV'
-      degreesBySection.set(
-        section,
-        section.bars === 1
-          ? [['I']]
-          : [[plan.coda === 'tag' ? tag : 'I'], ['I']]
-      )
-    }
+    )
   }
 
   // Each chord keeps one voicing for the piece, now and then another.
@@ -1008,7 +1091,7 @@ function composeHarmony(d: Dice, plan: Plan): Span[] {
     }
   }
 
-  // The last chord gets the most colour.
+  // The last chord, the one left to ring, gets the most colour.
   spans.at(-1)!.chord = makeChord(
     'I',
     flavour === 'plain'
@@ -1034,7 +1117,6 @@ function composeHarmony(d: Dice, plan: Plan): Span[] {
     const { section, chord } = span
     const bar = Math.floor(span.beat / meter)
     if (
-      section.role === 'coda' ||
       bar >= section.bar + section.bars - 2 ||
       chord.bass !== chord.root ||
       (chord.tones[1] !== 3 && chord.tones[1] !== 4) ||
@@ -1058,20 +1140,29 @@ function composeHarmony(d: Dice, plan: Plan): Span[] {
 // Playing it: shared state and helpers
 // ---------------------------------------------------------------------------
 
-/** A note in beats, before tempo, rubato and dynamics. */
+/** A note in beats, before tempo, rubato, pedal and dynamics. */
 type Event = {
   beat: number
-  /** Beats the key or the pedal holds it. */
+  /** Beats the key is held down. */
   len: number
   midi: number
   velocity: number
   right: boolean
-  /** Seconds to nudge the onset: rolls, graces, a leading melody. */
+  /** Seconds to nudge the onset: rolls, graces, a pushed chord. */
   shift?: number
-  /** Extra seconds the pedal holds it past `len`. */
-  ring?: number
-  /** The tune itself, which sits a touch behind the beat in some styles. */
+  /** The tune itself, which sings a touch ahead of the hands, or lays back. */
   lead?: boolean
+  /**
+   * Let go of by the pedal: a passing note, an ornament, a sliding chord. It
+   * stops `ring` seconds after its key comes up rather than ringing on to the
+   * next change of pedal.
+   */
+  dry?: boolean
+  ring?: number
+  /** Part of the last chord: held, with the pedal, until the piece ends. */
+  final?: boolean
+  /** Seconds it lingers before sounding: a phrase's high point. */
+  lean?: number
 }
 
 type Ctx = {
@@ -1083,8 +1174,12 @@ type Ctx = {
   lastBass: number
   /** Where the left hand's chords sit, so they move smoothly. */
   leftCenter: number
+  /** The left hand's last chord, for voice-leading the next. */
+  leftVoices?: number[]
   /** Highest note for the left hand. */
   leftTop: number
+  /** A lower ceiling for this bar, under the loop's figure. */
+  ceiling?: number
   /** Lowest note for anything the right hand adds under the tune. */
   rightFloor: number
   /** The melody's range, in scale degrees from home. */
@@ -1094,7 +1189,7 @@ type Ctx = {
   cell: readonly number[]
   figure: readonly number[]
   figureVoices?: number[]
-  /** A deep bass still held by the pedal. */
+  /** A deep bass still held by the hand. */
   held?: Event[]
 }
 
@@ -1173,47 +1268,130 @@ function bassFor(ctx: Ctx, span: Span) {
   return midi
 }
 
-/** `count` chord tones for the left hand: not the root, unless it runs short. */
+// The lowest a pair of neighbouring voices this many semitones apart can sit
+// before it turns to mud (index: the interval, up to a major ninth): a
+// second no lower than E3, a third C3, a fifth B♭1. An octave goes anywhere.
+const LOW_LIMITS = [
+  Infinity,
+  52,
+  51,
+  48,
+  46,
+  45,
+  46,
+  34,
+  43,
+  41,
+  41,
+  41,
+  0,
+  40,
+  38
+]
+
+/** Whether `lower` and `upper`, sounding together, would muddy the bass. */
+function muddy(lower: number, upper: number) {
+  const gap = upper - lower
+  if (gap <= 0) return true
+  return gap < LOW_LIMITS.length && lower < LOW_LIMITS[gap]!
+}
+
+/** The highest the left hand may reach in this bar. */
+function ceiling(ctx: Ctx) {
+  return Math.min(ctx.leftTop, ctx.ceiling ?? Infinity)
+}
+
+const average = (notes: readonly number[]) =>
+  notes.reduce((sum, n) => sum + n, 0) / notes.length
+
+/**
+ * `count` chord tones for the left hand, between `lo` and `hi` and clear of
+ * the `bass` under them: the chord's most telling tones (not the root,
+ * unless it runs short), each moving as little as it can from the last
+ * chord, within a hand's span and never muddy.
+ */
 function voiceLeft(
   ctx: Ctx,
   chord: Chord,
   count: number,
   lo: number,
-  hi: number
+  hi: number,
+  bass?: number
 ): number[] {
   const intervals = chord.tones.slice(1)
   if (intervals.length < count) intervals.push(0)
-  const notes: number[] = []
-  // Low voices need room; and no unisons.
-  const crowded = (m: number) =>
-    notes.some((n) => Math.abs(n - m) < (Math.min(n, m) < 55 ? 3 : 2))
-  for (const interval of intervals.slice(0, count)) {
-    const pc = mod(ctx.plan.tonic + chord.root + interval, 12)
-    let midi = place(pc, ctx.leftCenter, lo, hi)
-    if (crowded(midi) && midi + 12 <= hi && !crowded(midi + 12)) midi += 12
-    else if (crowded(midi) && midi - 12 >= lo && !crowded(midi - 12)) {
-      midi -= 12
+  const pcs = intervals
+    .slice(0, count)
+    .map((interval) => mod(ctx.plan.tonic + chord.root + interval, 12))
+  const previous = ctx.leftVoices ?? []
+
+  let best: number[] | undefined
+  let bestScore = Infinity
+  const consider = (notes: number[]) => {
+    const sorted = notes.toSorted((x, y) => x - y)
+    for (let k = 1; k < sorted.length; k++) {
+      if (muddy(sorted[k - 1]!, sorted[k]!)) return
     }
-    if (!crowded(midi)) notes.push(midi)
+    if (sorted.at(-1)! - sorted[0]! > 12) return
+    if (bass !== undefined && muddy(bass, sorted[0]!)) return
+    let score = 0.35 * Math.abs(average(sorted) - ctx.leftCenter)
+    for (const note of sorted) {
+      let move = 5
+      for (const voice of previous)
+        move = Math.min(move, Math.abs(voice - note))
+      score += move
+    }
+    // A second is colour, best kept to one.
+    for (let k = 1; k < sorted.length; k++) {
+      if (sorted[k]! - sorted[k - 1]! <= 2) score += 3
+    }
+    if (score < bestScore) {
+      best = sorted
+      bestScore = score
+    }
   }
-  notes.sort((x, y) => x - y)
-  if (notes.length > 0) {
-    const average = notes.reduce((sum, n) => sum + n, 0) / notes.length
-    // Follow the voicing, but drift back toward the middle of the hand.
-    ctx.leftCenter =
-      0.45 * ctx.leftCenter + 0.35 * average + 0.2 * (ctx.leftTop - 8)
+  const choose = (i: number, chosen: number[]) => {
+    if (i === pcs.length) {
+      consider(chosen)
+      return
+    }
+    for (let midi = lo; midi <= hi; midi++) {
+      if (mod(midi, 12) === pcs[i] && !chosen.includes(midi)) {
+        choose(i + 1, [...chosen, midi])
+      }
+    }
   }
-  return notes
+  choose(0, [])
+
+  if (!best) {
+    // Too crowded for all of them: drop the least telling.
+    return count > 1 ? voiceLeft(ctx, chord, count - 1, lo, hi, bass) : []
+  }
+  ctx.leftVoices = best
+  // Follow the voicing, but drift back toward the middle of the hand.
+  ctx.leftCenter =
+    0.55 * ctx.leftCenter + 0.25 * average(best) + 0.2 * (ctx.leftTop - 8)
+  return best
 }
 
-/** The notes an arpeggio climbs through: the bass, then chord tones above. */
+/**
+ * The notes an arpeggio climbs through: the bass, then chord tones above,
+ * the plain ones (root, third, fifth, sixth or seventh) up to the tenth and
+ * the ninths and elevenths only above it.
+ */
 function ladder(ctx: Ctx, chord: Chord, bass: number, energy: number) {
-  const pcs = chordPcs(ctx, chord)
-  const top = Math.min(bass + (energy > 0.6 ? 26 : 21), ctx.leftTop)
+  const all = chordPcs(ctx, chord)
+  const plain = new Set(
+    chord.tones
+      .filter((interval) => interval < 12)
+      .map((interval) => mod(ctx.plan.tonic + chord.root + interval, 12))
+  )
+  const top = Math.min(bass + (energy > 0.6 ? 26 : 21), ceiling(ctx) + 2)
   const rungs = [bass]
-  for (let midi = bass + 5; midi <= top; midi++) {
-    if (!pcs.has(mod(midi, 12))) continue
-    if (midi - rungs.at(-1)! < (midi < 57 ? 3 : 2)) continue
+  for (let midi = bass + 3; midi <= top; midi++) {
+    if (!(midi < bass + 16 ? plain : all).has(mod(midi, 12))) continue
+    const below = rungs.at(-1)!
+    if (midi - below < 3 || muddy(below, midi)) continue
     rungs.push(midi)
   }
   return rungs
@@ -1223,21 +1401,21 @@ function ladder(ctx: Ctx, chord: Chord, bass: number, energy: number) {
 // Left hand
 // ---------------------------------------------------------------------------
 
-/** A low bass on the beat, then a soft chord on the next, held by the pedal. */
+/** A low bass on the beat, then a soft close chord on the next, pedalled. */
 function leftWaltz(ctx: Ctx, bar: number, section: Section) {
   for (const span of spansInBar(ctx, bar)) {
     const end = span.beat + span.len
+    const bass = bassFor(ctx, span)
     ctx.events.push({
       beat: span.beat,
       len: span.len,
-      midi: bassFor(ctx, span),
+      midi: bass,
       velocity: 0.46,
-      right: false,
-      ring: 0.3
+      right: false
     })
     if (span.len < 2) continue
     const at = span.beat + 1
-    const voicing = voiceLeft(ctx, span.chord, 3, 50, ctx.leftTop)
+    const voicing = voiceLeft(ctx, span.chord, 3, 50, ceiling(ctx), bass)
     for (const [i, midi] of voicing.entries()) {
       ctx.events.push({
         beat: at,
@@ -1245,8 +1423,7 @@ function leftWaltz(ctx: Ctx, bar: number, section: Section) {
         midi,
         velocity: 0.27,
         right: false,
-        shift: i * 0.008,
-        ring: 0.25
+        shift: i * 0.008
       })
     }
     // Busier: the chord again, softer, on the last beat.
@@ -1257,8 +1434,7 @@ function leftWaltz(ctx: Ctx, bar: number, section: Section) {
           len: 1,
           midi,
           velocity: 0.2,
-          right: false,
-          ring: 0.25
+          right: false
         })
       }
     }
@@ -1276,17 +1452,13 @@ function leftArpeggio(ctx: Ctx, bar: number, section: Section) {
     const rungs = ladder(ctx, span.chord, bass, section.energy)
     for (let t = span.beat; t < end - 1e-9; t += step) {
       const i = Math.round((t - start) / step)
-      const index =
-        t === span.beat
-          ? 0
-          : ctx.cell[((step === 1 ? 2 : 1) * i) % ctx.cell.length]!
+      const index = t === span.beat ? 0 : ctx.cell[i % ctx.cell.length]!
       ctx.events.push({
         beat: t,
         len: end - t,
         midi: rungs[Math.min(index, rungs.length - 1)]!,
         velocity: (t === span.beat ? 0.4 : 0.27) + 0.012 * index,
-        right: false,
-        ring: 0.15
+        right: false
       })
     }
   }
@@ -1302,8 +1474,7 @@ function leftPulse(ctx: Ctx, bar: number, section: Section) {
       len: span.len,
       midi: bass,
       velocity: 0.44,
-      right: false,
-      ring: 0.35
+      right: false
     })
     if (span.len < 2) continue
     if (section.energy >= 0.7) {
@@ -1315,13 +1486,12 @@ function leftPulse(ctx: Ctx, bar: number, section: Section) {
           len: end - t,
           midi: rungs[Math.min(walk[i % walk.length]!, rungs.length - 1)]!,
           velocity: 0.26,
-          right: false,
-          ring: 0.15
+          right: false
         })
       }
     } else {
       const at = span.beat + (span.len >= 4 ? 2 : 1)
-      const voicing = voiceLeft(ctx, span.chord, 2, 50, ctx.leftTop)
+      const voicing = voiceLeft(ctx, span.chord, 2, 48, ceiling(ctx), bass)
       for (const [i, midi] of voicing.entries()) {
         ctx.events.push({
           beat: at,
@@ -1329,15 +1499,14 @@ function leftPulse(ctx: Ctx, bar: number, section: Section) {
           midi,
           velocity: 0.24,
           right: false,
-          shift: i * 0.012,
-          ring: 0.2
+          shift: i * 0.012
         })
       }
     }
   }
 }
 
-/** A deep bass in octaves, left ringing while the harmony above it moves. */
+/** A deep bass in octaves, held while the harmony above it moves. */
 function leftDeep(ctx: Ctx, bar: number, section: Section) {
   const { meter, tonic } = ctx.plan
   for (const span of spansInBar(ctx, bar)) {
@@ -1358,8 +1527,7 @@ function leftDeep(ctx: Ctx, bar: number, section: Section) {
         len: span.len,
         midi: bass,
         velocity: 0.42,
-        right: false,
-        ring: 0.4
+        right: false
       }
       ctx.events.push(low)
       ctx.held = [low]
@@ -1371,7 +1539,8 @@ function leftDeep(ctx: Ctx, bar: number, section: Section) {
     }
     if (section.energy >= 0.25 && span.len >= 2) {
       const at = span.beat + (span.len >= 4 ? 2 : 1)
-      const voicing = voiceLeft(ctx, span.chord, 2, 52, ctx.leftTop)
+      const below = ctx.held!.at(-1)!.midi
+      const voicing = voiceLeft(ctx, span.chord, 2, 52, ceiling(ctx), below)
       for (const [i, midi] of voicing.entries()) {
         ctx.events.push({
           beat: at,
@@ -1379,8 +1548,7 @@ function leftDeep(ctx: Ctx, bar: number, section: Section) {
           midi,
           velocity: 0.22,
           right: false,
-          shift: 0.03 * i,
-          ring: 0.3
+          shift: 0.03 * i
         })
       }
     }
@@ -1394,7 +1562,7 @@ function leftShell(ctx: Ctx, bar: number, section: Section) {
     const end = span.beat + span.len
     const bass = bassFor(ctx, span)
     const count = span.chord.tones.length >= 5 ? 3 : 2
-    const voicing = voiceLeft(ctx, span.chord, count, 50, ctx.leftTop)
+    const voicing = voiceLeft(ctx, span.chord, count, 50, ceiling(ctx), bass)
     // Now and then the change arrives an eighth early.
     const push = span.beat > 0 && span.len >= 2 && d.chance(0.22) ? 0.5 : 0
     const at = span.beat - push
@@ -1404,8 +1572,7 @@ function leftShell(ctx: Ctx, bar: number, section: Section) {
       len: end - at,
       midi: bass,
       velocity: 0.44,
-      right: false,
-      ring: 0.4
+      right: false
     })
     for (const [i, midi] of voicing.entries()) {
       ctx.events.push({
@@ -1414,8 +1581,7 @@ function leftShell(ctx: Ctx, bar: number, section: Section) {
         midi,
         velocity: 0.27,
         right: false,
-        shift: roll * (i + 1),
-        ring: 0.4
+        shift: roll * (i + 1)
       })
     }
     if (section.energy >= 0.6 && span.len >= 3) {
@@ -1427,8 +1593,7 @@ function leftShell(ctx: Ctx, bar: number, section: Section) {
           midi,
           velocity: 0.17,
           right: false,
-          shift: 0.01 * i,
-          ring: 0.3
+          shift: 0.01 * i
         })
       }
     }
@@ -1531,8 +1696,10 @@ function rightFigure(ctx: Ctx, bar: number, section: Section) {
   const { meter } = ctx.plan
   const start = bar * meter
   const bloom = section.energy >= 0.75
+  let lowest = Infinity
   for (const span of spansInBar(ctx, bar)) {
     const voices = figureVoices(ctx, span.chord, bloom)
+    lowest = Math.min(lowest, voices[0]!)
     for (let t = span.beat; t < span.beat + span.len - 1e-9; t += 0.5) {
       const i = Math.round((t - start) * 2)
       const index =
@@ -1544,11 +1711,12 @@ function rightFigure(ctx: Ctx, bar: number, section: Section) {
         len: 0.75,
         midi: voices[index]!,
         velocity: 0.3 + (i === 0 ? 0.07 : i % 2 === 0 ? 0.025 : 0),
-        right: true,
-        ring: 0.1
+        right: true
       })
     }
   }
+  // The left hand keeps under it.
+  ctx.ceiling = lowest - 2
 }
 
 type Motif = {
@@ -1570,7 +1738,18 @@ type Shape = {
   pentatonic: boolean
 }
 
-type Line = Array<{ beat: number; len: number; deg: number; velocity: number }>
+type Line = Array<{
+  beat: number
+  len: number
+  deg: number
+  velocity: number
+  /** The phrase's high point, which lingers a moment. */
+  peak?: boolean
+  /** Leaning into the last note from a step away. */
+  appoggiatura?: boolean
+  /** The piece's last melody note, the top of the last chord. */
+  final?: boolean
+}>
 
 // Bar rhythms, sparse to busy. Negative values are rests.
 const RHYTHMS: Record<
@@ -1626,14 +1805,37 @@ function rhythmCell(d: Dice, meter: 3 | 4, density: number): number[] {
   return [...d.pick(tier)]
 }
 
-/** The phrase's last bar: a long note on the downbeat, then perhaps a breath. */
-function cadenceCell(d: Dice, meter: 3 | 4, final: boolean): number[] {
-  if (final) return [meter]
+/**
+ * A phrase's last bar. Mid-piece: a long note on the downbeat, then perhaps
+ * a breath. At the very end: the last note on the downbeat, or a lean into
+ * it from a step away.
+ */
+function cadenceCell(
+  d: Dice,
+  meter: 3 | 4,
+  final: boolean,
+  lean: boolean
+): number[] {
+  if (final) {
+    if (!lean) return [meter]
+    return meter === 3
+      ? [1, 2]
+      : d.pick([
+          [1, 3],
+          [2, 2]
+        ])
+  }
   return meter === 4 ? d.pick([[4], [3, -1], [2, -2]]) : d.pick([[3], [2, -1]])
 }
 
 function makeMotif(d: Dice, meter: 3 | 4, density: number): Motif {
-  const cells = [rhythmCell(d, meter, density + 0.1)]
+  // An idea, not a held note: at least two notes in its first bar.
+  let first = rhythmCell(d, meter, density + 0.1)
+  for (let tries = 0; tries < 4; tries++) {
+    if (first.filter((value) => value > 0).length >= 2) break
+    first = rhythmCell(d, meter, density + 0.3 + 0.2 * tries)
+  }
+  const cells = [first]
   if (d.chance(0.55)) cells.push(rhythmCell(d, meter, density - 0.1))
   const count = () => cells.flat().filter((value) => value > 0).length
   while (count() < 3 && cells.length < 2) {
@@ -1703,39 +1905,42 @@ function planShape(
   const { top, bottom } = motifRange(motif)
   const fit = (deg: number) => clamp(deg, lo - bottom, hi - 1 - top)
   const a = earlier.get('A')
-  const b = earlier.get('B')
   let start: number
   switch (section.role) {
     case 'A2':
-      start = a?.start ?? fit(2)
+      // The idea again: as it was, or a step or a third away.
+      start = fit((a?.start ?? 2) + d.pick([0, 0, 1, 2, -1]))
       break
     case 'R': {
       const home = a?.start ?? fit(2)
       // Now and then the return comes back an octave up.
-      start = d.chance(0.2) && fit(home + 7) === home + 7 ? home + 7 : home
+      start = d.chance(0.15) && fit(home + 7) === home + 7 ? home + 7 : home
       break
     }
     case 'B':
       start = fit((a?.start ?? 2) + d.pick([2, 3, 4, -3]))
       break
-    case 'B2':
-      start = fit((b?.start ?? 4) + d.pick([1, 2]))
+    case 'C':
+      // A continuation climbs off the idea.
+      start = fit((a?.start ?? 2) + d.pick([1, 2, 3]))
       break
     default:
       start = fit(d.pick([2, 4, 0, 4, 2, 1]))
   }
-  const contrast = section.role === 'B' || section.role === 'B2'
-  const lift = contrast ? d.int(1, 2) : 0
-  const goal = section.final ? 0 : d.pick(GOALS[section.cadence])
+  const lift = section.role === 'B' || section.role === 'C' ? d.int(1, 2) : 0
+  // The piece mostly ends on the tonic, now and then on its third or fifth.
+  const goal = section.final
+    ? d.weighted([0, 2, 4], [5, 1.2, 1])
+    : d.pick(GOALS[section.cadence])
   // Come down to the goal a little below where the phrase began.
   const around = start - 1
   return {
     start,
     peak: Math.min(hi, start + Math.max(top, d.int(2, 4)) + lift),
-    peakAt: d.between(0.45, 0.75),
+    peakAt: d.between(0.45, 0.72),
     goal,
     end: clamp(around + mod(goal - around + 3, 7) - 3, lo, hi),
-    pentatonic: ctx.plan.pentatonic && !contrast
+    pentatonic: ctx.plan.pentatonic && section.role !== 'B'
   }
 }
 
@@ -1752,16 +1957,41 @@ function composeLine(
   const { meter } = plan
   const start = section.bar * meter
   const total = section.bars * meter
-  const density = clamp(plan.density + (section.energy - 0.4) * 0.4, 0, 1)
+  const density = clamp(
+    plan.density +
+      (section.energy - 0.4) * 0.4 +
+      (section.role === 'C' ? 0.12 : 0),
+    0,
+    1
+  )
+  const lean = section.final && plan.appoggiatura
+
+  const cells: number[][] = []
+  const free: number[] = []
+  for (let k = 0; k < section.bars; k++) {
+    if (k === section.bars - 1) {
+      cells.push(cadenceCell(d, meter, section.final, lean))
+    } else if (section.role === 'C' && k < 2 && useRhythm) {
+      // A continuation breaks the idea down to its first bar, twice.
+      cells.push(motif.cells[0]!)
+    } else if (useRhythm && k < motif.cells.length) {
+      cells.push(motif.cells[k]!)
+    } else {
+      cells.push(rhythmCell(d, meter, density))
+      free.push(k)
+    }
+  }
+  // A phrase this short can't spend itself on whole notes: at least five
+  // notes in four bars, three in two.
+  const count = () => cells.flat().filter((value) => value > 0).length
+  const fewest = Math.ceil(section.bars * 1.25)
+  for (const k of free) {
+    if (count() >= fewest) break
+    cells[k] = rhythmCell(d, meter, density + 0.35)
+  }
 
   const slots: Array<{ beat: number; len: number }> = []
-  for (let k = 0; k < section.bars; k++) {
-    const cell =
-      k === section.bars - 1
-        ? cadenceCell(d, meter, section.final)
-        : useRhythm && k < motif.cells.length
-          ? motif.cells[k]!
-          : rhythmCell(d, meter, density)
+  for (const [k, cell] of cells.entries()) {
     let t = start + k * meter
     for (const value of cell) {
       if (value > 0) slots.push({ beat: t, len: value })
@@ -1782,6 +2012,7 @@ function composeLine(
   const line: Line = []
   let deg = shape.start
   let interval = 0
+  let landing: number | undefined
   for (const [i, slot] of slots.entries()) {
     const p = (slot.beat - start) / total
     const target =
@@ -1789,6 +2020,7 @@ function composeLine(
         ? lerp(shape.start, shape.peak, p / shape.peakAt)
         : lerp(shape.peak, shape.end, (p - shape.peakAt) / (1 - shape.peakAt))
     const last = i === slots.length - 1
+    const leaning = lean && i === slots.length - 2
     let next: number
     if (i === 0) {
       next = shape.start
@@ -1812,19 +2044,26 @@ function composeLine(
       )
       next = deg + dir * size
     }
-    if (last) {
-      // Land on the goal, in the octave nearest the note before.
-      next = deg + mod(shape.goal - deg + 3, 7) - 3
-    }
-    next = reflect(next)
-
-    const chord = chordAt(ctx, slot.beat)
-    const inBar = mod(slot.beat, meter)
-    const strong =
-      inBar < 1e-9 ||
-      (meter === 4 && Math.abs(inBar - 2) < 1e-9) ||
-      slot.len >= 1.5
-    if (!last) {
+    if (leaning || last) {
+      // Land on the goal, in the octave nearest the note before; lean into
+      // it from the step above, or up from the leading tone.
+      if (landing === undefined) {
+        landing = deg + mod(shape.goal - deg + 3, 7) - 3
+        // Out of range, the same note an octave over.
+        while (landing < lo) landing += 7
+        while (landing > hi) landing -= 7
+      }
+      next = last
+        ? landing
+        : landing + (mod(landing, 7) === 0 && d.chance(0.3) ? -1 : 1)
+    } else {
+      next = reflect(next)
+      const chord = chordAt(ctx, slot.beat)
+      const inBar = mod(slot.beat, meter)
+      const strong =
+        inBar < 1e-9 ||
+        (meter === 4 && Math.abs(inBar - 2) < 1e-9) ||
+        slot.len >= 1.5
       if (strong || slot.len >= 1) {
         next = snap(ctx, next, chord, target - next, pentatonic)
       } else if (!pentatonic(next)) {
@@ -1832,31 +2071,43 @@ function composeLine(
       }
       // Never the same note three times running.
       if (line.length >= 2 && next === deg && line.at(-2)!.deg === deg) {
-        next = snap(
-          ctx,
-          deg + (target >= deg ? 1 : -1),
-          chord,
-          target - deg,
-          anything
-        )
+        const away = target >= deg ? 1 : -1
+        const repeated = deg
+        next = snap(ctx, deg + away, chord, away, (x) => x !== repeated)
+        if (next === deg) next = deg + away
       }
       next = reflect(next)
     }
 
-    // Louder toward the peak, softer into the cadence; strong beats lean.
+    // Louder toward the peak, softer into the cadence; strong beats lean,
+    // and a lean onto the last note sighs into it.
+    const inBar = mod(slot.beat, meter)
+    const strong = inBar < 1e-9 || (meter === 4 && Math.abs(inBar - 2) < 1e-9)
     const reach =
       1 - Math.abs(p - shape.peakAt) / Math.max(shape.peakAt, 1 - shape.peakAt)
     const velocity =
       0.66 *
       (0.88 + 0.2 * reach) *
       (strong ? 1.05 : 0.93) *
-      (last ? 0.92 : 1) *
+      (leaning ? 1 : last ? (lean ? 0.8 : 0.9) : 1) *
       (1 + 0.012 * (next - shape.start))
 
     interval = next - deg
     deg = next
-    line.push({ beat: slot.beat, len: slot.len, deg, velocity })
+    line.push({
+      beat: slot.beat,
+      len: slot.len,
+      deg,
+      velocity,
+      appoggiatura: leaning || undefined,
+      final: (last && section.final) || undefined
+    })
   }
+
+  // The phrase's high point, if it isn't where it starts or ends.
+  let top = 0
+  for (const [i, note] of line.entries()) if (note.deg > line[top]!.deg) top = i
+  if (top > 0 && top < line.length - 1) line[top]!.peak = true
   return line
 }
 
@@ -1879,38 +2130,50 @@ const REAL_SHAPES: ReadonlyArray<readonly number[]> = [
 
 type Planing = { shape: readonly number[]; real: boolean }
 
-/** Play a phrase's tune, dressed for the section's right-hand mode. */
+/**
+ * Play a phrase's tune, dressed for the section's right-hand mode. Returns
+ * the last note's MIDI number when it is the piece's last.
+ */
 function playLine(
   ctx: Ctx,
   section: Section,
   line: Line,
   planing: Planing,
   fill: boolean
-) {
+): number | undefined {
   const { d, plan } = ctx
   const { spec, texture } = plan
   const doubled =
     section.energy >= 0.75 && (texture === 'arpeggio' || texture === 'loop')
   let previous: Event | undefined
+  let final: number | undefined
 
   for (const note of line) {
     const chord = chordAt(ctx, note.beat)
     const midi = degreeMidi(ctx, note.deg, chord)
+    // Chord tones ring on with the pedal; passing notes, and a lean onto the
+    // last note, are let go as the next note sounds.
+    const passing = note.appoggiatura || !isStable(ctx, note.deg, chord)
     const event: Event = {
       beat: note.beat,
       len: note.len,
       midi,
-      velocity: note.velocity,
+      velocity: note.velocity * (note.peak ? 1.05 : 1),
       right: true,
-      ring: 0.05,
-      lead: true
+      lead: true,
+      dry: passing && !note.final,
+      ring: 0.04,
+      final: note.final,
+      lean: note.peak ? 0.015 + 0.05 * spec.rubato : undefined
     }
+    if (note.final) final = midi
 
     if (
       previous &&
       note.len >= 2 &&
       previous.len >= 1 &&
       Math.abs(previous.beat + previous.len - note.beat) < 1e-9 &&
+      !note.final &&
       d.chance(spec.ornament)
     ) {
       // A turn into a long note: above, on, below, then the note.
@@ -1922,10 +2185,17 @@ function playLine(
           len: 1 / 6,
           midi: degreeMidi(ctx, note.deg + offset, before),
           velocity: note.velocity * 0.6,
-          right: true
+          right: true,
+          dry: true,
+          ring: 0.03
         })
       }
-    } else if (previous && note.len >= 1 && d.chance(spec.ornament)) {
+    } else if (
+      previous &&
+      note.len >= 1 &&
+      !note.final &&
+      d.chance(spec.ornament)
+    ) {
       // A grace note: a slip up from a semitone below, or down from above.
       ctx.events.push({
         beat: note.beat,
@@ -1933,15 +2203,18 @@ function playLine(
         midi: d.chance(0.6) ? midi - 1 : degreeMidi(ctx, note.deg + 1, chord),
         velocity: note.velocity * 0.5,
         right: true,
-        shift: -0.075
+        shift: -0.075,
+        dry: true,
+        ring: 0.05
       })
     }
 
     ctx.events.push(event)
     previous = event
 
-    if (section.right === 'planing') {
-      // Chord shapes sliding under the tune in parallel.
+    if (section.right === 'planing' && !note.final) {
+      // Chord shapes sliding under the tune in parallel, each let go as the
+      // next arrives.
       const strong = mod(note.beat, 1) < 1e-9 || note.len >= 1
       if (planing.real ? note.len >= 0.5 : strong) {
         for (const [j, offset] of planing.shape.entries()) {
@@ -1956,11 +2229,12 @@ function playLine(
             velocity: note.velocity * 0.5,
             right: true,
             shift: 0.01 + 0.004 * j,
-            ring: 0.05
+            dry: true,
+            ring: 0.06
           })
         }
       }
-    } else if (section.right === 'upper' && note.len >= 1) {
+    } else if (section.right === 'upper' && note.len >= 1 && !note.final) {
       // Upper-structure colour: one or two chord tones a little below.
       const pcs = chordPcs(ctx, chord)
       const under: number[] = []
@@ -1975,11 +2249,15 @@ function playLine(
           midi: m,
           velocity: note.velocity * 0.48,
           right: true,
-          shift: d.chance(0.5) ? -0.02 : 0.015,
-          ring: 0.05
+          shift: d.chance(0.5) ? -0.02 : 0.015
         })
       }
-    } else if (doubled && note.len >= 1 && midi - 12 >= ctx.rightFloor) {
+    } else if (
+      doubled &&
+      note.len >= 1 &&
+      !note.final &&
+      midi - 12 >= ctx.rightFloor
+    ) {
       // The climax in octaves.
       ctx.events.push({
         ...event,
@@ -2008,17 +2286,21 @@ function playLine(
         len: 1 / count,
         midi: degreeMidi(ctx, deg, chord),
         velocity: 0.3 + (0.16 * j) / count,
-        right: true
+        right: true,
+        dry: true,
+        ring: 0.03
       })
     }
   }
+  return final
 }
 
 /** Neo-soul comping: a soft off-beat dyad wherever the tune rests. */
 function comp(ctx: Ctx, section: Section, line: Line) {
-  const { meter, tonic } = ctx.plan
+  const { meter, tonic, bars } = ctx.plan
   const start = section.bar * meter
-  const end = start + section.bars * meter
+  // Not over the last chord, which is left alone to ring.
+  const end = Math.min(start + section.bars * meter, (bars - 1) * meter)
   const gaps: Array<[number, number]> = []
   let cursor = start
   for (const note of line) {
@@ -2043,85 +2325,110 @@ function comp(ctx: Ctx, section: Section, line: Line) {
           ctx.rightFloor + 12
         ),
         velocity: 0.28,
-        right: true,
-        ring: 0.05
+        right: true
       })
     }
   }
 }
 
-/** Two bars from the end: the opening motif again, high and soft. */
-function playEcho(ctx: Ctx, bar: number, motif: Motif, start: number) {
-  const { meter } = ctx.plan
-  let t = bar * meter
-  const up =
-    degreeMidi(ctx, start + 7 + motifRange(motif).top, chordAt(ctx, t)) <= 91
-  let deg = start
-  let i = 0
-  for (const value of motif.cells[0]!) {
-    if (value > 0 && i < motif.steps.length) {
-      deg += motif.steps[i]!
-      i++
-      const chord = chordAt(ctx, t)
-      const snapped = snap(ctx, deg, chord, 0, anything)
-      ctx.events.push({
-        beat: t,
-        len: value,
-        midi: degreeMidi(ctx, snapped + (up ? 7 : 0), chord),
-        velocity: 0.34 - 0.03 * i,
-        right: true,
-        ring: 0.2
-      })
-    }
-    t += Math.abs(value)
-  }
-}
-
-/** The last chord: rolled up from a low tonic, and left to ring. */
-function playEnding(ctx: Ctx) {
+/**
+ * The last chord: a low tonic, rolled up through a fifth or octave and a
+ * couple of chord tones, with one or two more under the tune's last note,
+ * all held to the end.
+ */
+function playEnding(ctx: Ctx, top: number | undefined) {
   const { d, plan } = ctx
   const beat = (plan.bars - 1) * plan.meter
   const chord = chordAt(ctx, beat)
+  const pcs = chordPcs(ctx, chord)
+  const melody = top ?? degreeMidi(ctx, d.weighted([0, 2, 4], [3, 1, 1]), chord)
+
   const bass = place(plan.tonic, 40, 36, 47)
-  const left = [
-    bass,
-    bass + 7,
-    ...voiceLeft(ctx, chord, 2, bass + 10, ctx.leftTop)
-  ]
-  const roll = d.between(0.045, 0.07)
+  const second = d.chance(0.6) ? bass + 7 : bass + 12
+  const upper = voiceLeft(
+    ctx,
+    chord,
+    2,
+    second + 3,
+    Math.min(ctx.leftTop, melody - 8),
+    second
+  )
+  const left = [bass, second, ...upper]
+  const roll = d.between(0.035, 0.06) * (1 + plan.spec.rubato)
   for (const [i, midi] of left.entries()) {
     ctx.events.push({
       beat,
       len: plan.meter,
       midi,
-      velocity: i === 0 ? 0.44 : 0.28,
+      velocity: i === 0 ? 0.44 : 0.27,
       right: false,
       shift: i * roll,
-      ring: 1.6
+      final: true
     })
   }
-  const top = degreeMidi(ctx, d.weighted([0, 2, 4], [3, 1, 1]), chord)
-  const pcs = chordPcs(ctx, chord)
-  const right = [top]
-  for (let m = top - 2; m >= top - 10 && right.length < 3; m--) {
-    if (pcs.has(mod(m, 12)) && right.at(-1)! - m >= 3) right.push(m)
+
+  const right: number[] = []
+  if (top === undefined) right.push(melody)
+  let above = melody
+  const under = top === undefined ? 3 : 2
+  for (let m = melody - 3; m > left.at(-1)! + 2 && right.length < under; m--) {
+    if (!pcs.has(mod(m, 12)) || above - m < 3) continue
+    if (melody - m > 10) break
+    right.push(m)
+    above = m
   }
-  right.reverse()
   for (const [i, midi] of right.entries()) {
     ctx.events.push({
       beat,
       len: plan.meter,
       midi,
-      velocity: i === right.length - 1 ? 0.46 : 0.3,
+      velocity: midi === melody ? 0.5 : 0.28,
       right: true,
-      shift: left.length * roll + i * 0.035,
-      ring: 1.6
+      shift: left.length * roll + (right.length - i) * 0.03,
+      final: true
+    })
+  }
+}
+
+/**
+ * Over the last chord, once it has settled: a soft, high chime that climbs
+ * the tonic's pentatonic to rest on a note of its triad, above the tune.
+ */
+function playChime(ctx: Ctx, above: number) {
+  const { d, plan } = ctx
+  const { meter, tonic } = plan
+  const start = (plan.bars - 1) * meter
+  const triad = new Set([0, 4, 7].map((interval) => mod(tonic + interval, 12)))
+  const pentatonic = new Set(
+    [0, 2, 4, 7, 9].map((interval) => mod(tonic + interval, 12))
+  )
+  let top = above + 5
+  while (top <= 91 && !triad.has(mod(top, 12))) top++
+  if (top > 91) return
+
+  const count = d.int(1, 3)
+  const notes = [top]
+  for (let m = top - 2; m >= top - 9 && notes.length <= count; m--) {
+    if (pentatonic.has(mod(m, 12)) && notes.at(-1)! - m >= 2) notes.push(m)
+  }
+  notes.reverse()
+  // After the lean has resolved, and before the bar is out.
+  const from = start + (plan.appoggiatura ? 2.5 : d.pick([1.5, 2]))
+  const step = Math.min(1, (start + meter + 0.75 - from) / notes.length)
+  for (const [i, midi] of notes.entries()) {
+    ctx.events.push({
+      beat: from + i * step,
+      len: meter,
+      midi,
+      velocity: i === notes.length - 1 ? 0.32 : 0.27,
+      right: true,
+      final: true
     })
   }
 }
 
 // ---------------------------------------------------------------------------
-// Performance: tempo, rubato, dynamics, touch
+// Performance: tempo, rubato, pedal, dynamics, touch
 // ---------------------------------------------------------------------------
 
 /** Seconds at each beat, with each phrase leaning in and broadening out. */
@@ -2144,18 +2451,21 @@ function tempoMap(ctx: Ctx): (beat: number) => number {
       } else {
         e -= r * 0.06 * Math.sin((Math.PI * (k + 1)) / section.bars)
       }
-      if (bar === plan.bars - 2) e += 0.08
+      // The approach to the last chord broadens, and it arrives late.
+      let breath = 0
+      if (bar === plan.bars - 2) {
+        e += d.between(0.12, 0.25) + r * 0.2
+        breath = beat * d.between(0.12, 0.3 + r * 0.3)
+      } else if (last && bar < plan.bars - 1) {
+        // A breath between phrases.
+        breath = beat * d.between(0.05, 0.12 + r * 0.35)
+      }
       if (bar === plan.bars - 1) {
-        s += 0.1
+        s += 0.12
         e += d.between(0.45, 0.8)
       }
       from.push(s)
       to.push(e)
-      // A breath between phrases.
-      const breath =
-        last && section.role !== 'coda'
-          ? beat * d.between(0.05, 0.12 + r * 0.35)
-          : 0
       starts.push(starts[bar]! + (meter * beat * (s + e)) / 2 + breath)
     }
   }
@@ -2169,24 +2479,74 @@ function tempoMap(ctx: Ctx): (beat: number) => number {
 }
 
 function levelAt(ctx: Ctx, beat: number) {
-  const { sections, meter } = ctx.plan
+  const { sections, meter, bars } = ctx.plan
   const bar = beat / meter
   const section = sections.find((s) => bar < s.bar + s.bars) ?? sections.at(-1)!
-  const x = clamp((bar - section.bar) / section.bars, 0, 1)
-  // Each section swells a little through its middle.
+  // The last chord is played at the quiet the piece has come down to.
+  if (bar >= bars - 1) return section.levels[1]
+  // Each section swells a little through its middle; the last one holds
+  // its level, then lets go into the cadence.
+  const length = section.final ? section.bars - 1 : section.bars
+  const x = clamp((bar - section.bar) / length, 0, 1)
+  const t = section.final ? x ** 1.8 : x
   return (
-    lerp(section.levels[0], section.levels[1], x) *
+    lerp(section.levels[0], section.levels[1], t) *
     (1 + 0.05 * Math.sin(Math.PI * x))
   )
 }
 
 type Performed = ImprovNote & { right: boolean }
 
+/** Fifteen to thirty seconds, until the last key is let go. */
+const SHORTEST = 15.5
+const LONGEST = 29.5
+
 function perform(ctx: Ctx) {
   const { d, plan } = ctx
-  const { spec } = plan
+  const { spec, meter } = plan
   const time = tempoMap(ctx)
-  const spread = 0.005 + 0.012 * spec.rubato
+  const last = (plan.bars - 1) * meter
+
+  // The pedal comes up a moment after each new chord (or bass) is struck,
+  // so the old harmony is caught just into the new, then goes straight back
+  // down. Over the last chord it stays down until the end.
+  const lifts: number[] = []
+  for (const [i, span] of ctx.spans.entries()) {
+    if (i === 0) continue
+    lifts.push(time(span.beat) + d.between(0.06, 0.12) * (1 + spec.rubato))
+  }
+  const liftAfter = (t: number) => {
+    let lo = 0
+    let hi = lifts.length
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1
+      if (lifts[mid]! < t) lo = mid + 1
+      else hi = mid
+    }
+    return lifts[lo]
+  }
+
+  // A shared, wandering push and pull on each beat, so the hands move
+  // together, then a little looseness of their own.
+  const drift: number[] = [0]
+  for (let i = 1; i <= plan.bars * meter + 1; i++) {
+    drift.push(0.65 * drift[i - 1]! + d.jitter(0.006 * (1 + spec.rubato)))
+  }
+  const driftAt = (beat: number) => {
+    const i = clamp(Math.floor(beat), 0, drift.length - 2)
+    return lerp(drift[i]!, drift[i + 1]!, clamp(beat - i, 0, 1))
+  }
+  const spread = 0.004 + 0.008 * spec.rubato
+
+  const clear = liftAfter(time(last)) ?? time(last)
+
+  // Where the last chord lands, and how long it rings (past any chime).
+  let end = time(last) + plan.ring
+  for (const event of ctx.events) {
+    if (event.final && event.beat > last + 1e-9) {
+      end = Math.max(end, time(event.beat) + 2.4)
+    }
+  }
 
   const played: Performed[] = []
   for (const event of ctx.events) {
@@ -2194,16 +2554,28 @@ function perform(ctx: Ctx) {
     const beat = event.beat + (offbeat ? spec.swing : 0)
     const start =
       time(beat) +
+      driftAt(event.beat) +
       (event.shift ?? 0) +
       (event.lead ? spec.lag : 0) +
+      (event.lean ?? 0) +
       d.jitter(spread)
-    const release = time(beat + event.len) + (event.ring ?? 0)
+    let release: number
+    if (event.final) {
+      release = end
+    } else {
+      const up = time(beat + event.len)
+      release = event.dry
+        ? up + (event.ring ?? 0.03)
+        : (liftAfter(Math.max(up, start + 0.05)) ?? end)
+      // The pedal change under the last chord clears everything before it.
+      if (event.beat < last) release = Math.min(release, Math.max(up, clear))
+    }
     played.push({
       midi: event.midi,
       start,
       duration: Math.max(0.06, release - start),
       velocity: clamp(
-        event.velocity * levelAt(ctx, event.beat) * (1 + d.jitter(0.035)),
+        event.velocity * levelAt(ctx, event.beat) * (1 + d.jitter(0.03)),
         0.04,
         1
       ),
@@ -2237,16 +2609,23 @@ function perform(ctx: Ctx) {
     notes.push(note)
   }
 
-  // Keep the whole piece inside half a minute to a minute.
-  let end = 0
-  for (const note of notes) end = Math.max(end, note.start + note.duration)
-  const scale = end > 57 ? 57 / end : end < 33 ? 33 / end : 1
+  // Keep the whole piece inside fifteen to thirty seconds; the plan aims for
+  // the middle, so this rarely has much to do.
+  let length = 0
+  for (const note of notes)
+    length = Math.max(length, note.start + note.duration)
+  const scale =
+    length > LONGEST
+      ? LONGEST / length
+      : length < SHORTEST
+        ? SHORTEST / length
+        : 1
   if (scale !== 1) {
     for (const note of notes) {
       note.start *= scale
       note.duration *= scale
     }
-    end *= scale
+    length *= scale
   }
 
   // Light the letters across the right hand's whole range.
@@ -2265,7 +2644,7 @@ function perform(ctx: Ctx) {
           ? { ...note, key: span > 0 ? (note.midi - lo) / span : 0.5 }
           : note
     ),
-    duration: end,
+    duration: length,
     scale
   }
 }
@@ -2308,8 +2687,8 @@ export function improvise(
     spans: composeHarmony(d, plan),
     events: [],
     lastBass: 44,
-    leftCenter: home - 14,
-    leftTop: home - 6,
+    leftCenter: home - 15,
+    leftTop: home - 8,
     rightFloor: home - 14,
     melodyLo,
     melodyHi,
@@ -2317,31 +2696,40 @@ export function improvise(
     figure: d.pick(FIGURES[meter])
   }
 
-  // The accompaniment, bar by bar; the last bar is the final chord.
+  // The accompaniment, bar by bar, the right hand's figure first so the left
+  // can keep under it. The approach to the end calms down; the last bar is
+  // the final chord.
   for (const section of plan.sections) {
     for (let k = 0; k < section.bars; k++) {
       const bar = section.bar + k
       if (bar === plan.bars - 1) continue
-      LEFT[section.left](ctx, bar, section)
-      if (section.right === 'figure') rightFigure(ctx, bar, section)
+      const calm =
+        bar === plan.bars - 2
+          ? { ...section, energy: section.energy * 0.6 }
+          : section
+      ctx.ceiling = undefined
+      if (section.right === 'figure') rightFigure(ctx, bar, calm)
+      LEFT[section.left](ctx, bar, calm)
     }
   }
+  ctx.ceiling = undefined
 
-  // The tune: a motif, stated, answered, sequenced and brought back.
+  // The tune: a motif, stated, repeated or sequenced, and brought home.
   const motif = makeMotif(d, meter, plan.density)
   const shapes = new Map<Role, Shape>()
   const planings = new Map<'A' | 'B', Planing>()
+  let top: number | undefined
   for (const section of plan.sections) {
-    if (section.role === 'intro' || section.role === 'coda') continue
+    if (section.role === 'intro') continue
     const shape = planShape(ctx, section, motif, shapes)
     if (!shapes.has(section.role)) shapes.set(section.role, shape)
     if (!section.melody) continue
 
-    const contrast = section.role === 'B' || section.role === 'B2'
-    const group = contrast ? 'B' : 'A'
+    const away = section.role === 'B' || section.role === 'C'
+    const group = section.role === 'B' ? 'B' : 'A'
     let planing = planings.get(group)
     if (!planing) {
-      const real = contrast && texture === 'planing' && d.chance(0.45)
+      const real = group === 'B' && texture === 'planing' && d.chance(0.45)
       planing = { shape: d.pick(real ? REAL_SHAPES : DIATONIC_SHAPES), real }
       planings.set(group, planing)
     }
@@ -2350,17 +2738,15 @@ export function improvise(
       section,
       motif,
       shape,
-      !contrast || d.chance(0.5),
-      !contrast || d.chance(0.7)
+      !away || d.chance(0.6),
+      !away || d.chance(0.7)
     )
-    playLine(ctx, section, line, planing, d.chance(plan.spec.fills))
+    top =
+      playLine(ctx, section, line, planing, d.chance(plan.spec.fills)) ?? top
   }
 
-  const coda = plan.sections.at(-1)!
-  if (plan.coda === 'echo' && coda.bars > 1) {
-    playEcho(ctx, coda.bar, motif, shapes.get('A')?.start ?? 2)
-  }
-  playEnding(ctx)
+  playEnding(ctx, top)
+  if (plan.chime) playChime(ctx, top ?? home)
 
   const { notes, duration, scale } = perform(ctx)
   return {

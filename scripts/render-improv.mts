@@ -1,22 +1,26 @@
 /**
- * Render one of the homepage's piano improvisations to a WAV file, offline.
+ * Render one of the homepage's piano improvisations to a WAV or MP3 file,
+ * offline, on the same sampled piano the site plays.
  *
  *   node scripts/render-improv.mts --key E --seed 42
  *   node scripts/render-improv.mts --key B --seed 7 --texture planing --out piece.wav
- *   node scripts/render-improv.mts --seed 3 --out piece.mp3   # needs ffmpeg
+ *   node scripts/render-improv.mts --seed 3 --out piece.mp3
  *
  * Options: --key E|D|B (default: whatever the seed picks), --seed <integer>
  * (default 1), --texture waltz|arpeggio|loop|planing|neosoul (default:
  * whatever the seed picks), --out <path> (default improv-<key>-<seed>.wav in
- * the system temp directory). The same seed and key always give the same
- * piece, and the same piece the tests see for that seed.
+ * the system temp directory; a .mp3 path writes MP3). The same seed and key
+ * always give the same piece, and the same piece the tests see for that
+ * seed.
  *
- * Runs as TypeScript straight from Node (22.18+, which strips types), with
- * no dependencies. It composes with lib/improvise.ts and plays every note
- * through the site's real voice, scheduleNote() in lib/piano-voice.ts, into a
- * small stand-in for the slice of Web Audio that voice uses (oscillators,
- * gains, a lowpass biquad and their automation). Then it applies the same
- * phrase gain and limiter settings as components/wustep/PianoPhrase.tsx.
+ * Runs as TypeScript straight from Node (22.18+, which strips types). Needs
+ * ffmpeg, which decodes the samples in public/piano (and writes MP3s). It
+ * composes with lib/improvise.ts and plays every note through the site's
+ * real voice, scheduleNote() in lib/piano-voice.ts, into a small stand-in for
+ * the slice of Web Audio that voice uses (buffer sources with a playback
+ * rate, gains and their automation). It mixes in the same room, convolving
+ * with roomImpulse(), then applies the same phrase gain and limiter settings
+ * as components/wustep/PianoPhrase.tsx. Out comes stereo at 44.1 kHz.
  */
 
 import { spawnSync } from 'node:child_process'
@@ -29,229 +33,299 @@ import {
   IMPROV_KEYS,
   IMPROV_TEXTURES,
   type ImprovKey,
+  type ImprovNote,
   type ImprovTexture,
   improvise,
   seededRandom
 } from '../lib/improvise.ts'
-import { scheduleNote } from '../lib/piano-voice.ts'
+import {
+  PIANO_LAYERS,
+  PIANO_ROOTS,
+  ROOM_LEVEL,
+  roomImpulse,
+  type SampleBuffer,
+  sampleFile,
+  samplesFor,
+  scheduleNote
+} from '../lib/piano-voice.ts'
 
 const RATE = 44_100
+const SAMPLES = join(import.meta.dirname, '..', 'public', 'piano')
 
-// --- A stand-in for the parts of Web Audio that scheduleNote() touches ----
+// --- The samples, decoded by ffmpeg as a browser would ----------------------
 
-interface Automation {
-  type: 'set' | 'linear' | 'exponential'
-  value: number
-  time: number
+class Samples implements SampleBuffer {
+  readonly sampleRate = RATE
+  readonly numberOfChannels = 2
+  readonly length: number
+  readonly duration: number
+  readonly #channels: [Float32Array, Float32Array]
+
+  constructor(file: string) {
+    const result = spawnSync(
+      'ffmpeg',
+      [
+        '-loglevel',
+        'error',
+        '-i',
+        join(SAMPLES, file),
+        '-f',
+        'f32le',
+        '-ac',
+        '2',
+        '-ar',
+        String(RATE),
+        'pipe:1'
+      ],
+      { maxBuffer: 1 << 28 }
+    )
+    if (result.status !== 0) {
+      throw new Error(`ffmpeg could not decode ${file}: ${result.stderr}`)
+    }
+    const bytes = result.stdout
+    const interleaved = new Float32Array(
+      bytes.buffer,
+      bytes.byteOffset,
+      bytes.byteLength / 4
+    )
+    this.length = interleaved.length / 2
+    this.duration = this.length / RATE
+    this.#channels = [
+      new Float32Array(this.length),
+      new Float32Array(this.length)
+    ]
+    for (let i = 0; i < this.length; i++) {
+      this.#channels[0][i] = interleaved[2 * i]!
+      this.#channels[1][i] = interleaved[2 * i + 1]!
+    }
+  }
+
+  getChannelData(channel: number) {
+    return this.#channels[channel]!
+  }
 }
+
+// --- A stand-in for the parts of Web Audio that scheduleNote() touches ------
+
+type Automation =
+  | { type: 'set'; time: number; value: number }
+  | { type: 'target'; time: number; value: number; tau: number }
 
 class Param {
   value: number
   events: Automation[] = []
-  #cursor = 0
 
   constructor(value: number) {
     this.value = value
   }
 
   setValueAtTime(value: number, time: number) {
-    return this.#add('set', value, time)
-  }
-
-  linearRampToValueAtTime(value: number, time: number) {
-    return this.#add('linear', value, time)
-  }
-
-  exponentialRampToValueAtTime(value: number, time: number) {
-    return this.#add('exponential', value, time)
-  }
-
-  #add(type: Automation['type'], value: number, time: number) {
-    this.events.push({ type, value, time })
+    this.events.push({ type: 'set', time, value })
     this.events.sort((a, b) => a.time - b.time)
     return this
   }
 
-  /** The value at `time`, by the Web Audio rules; times must not go back. */
+  setTargetAtTime(value: number, time: number, tau: number) {
+    this.events.push({ type: 'target', time, value, tau })
+    this.events.sort((a, b) => a.time - b.time)
+    return this
+  }
+
+  /** The value at `time`, by the Web Audio rules for these two events. */
   at(time: number): number {
-    const { events } = this
-    if (events.length === 0) return this.value
-    while (this.#cursor < events.length && events[this.#cursor]!.time <= time) {
-      this.#cursor++
+    let value = this.value
+    for (const [i, event] of this.events.entries()) {
+      if (event.time > time) break
+      if (event.type === 'set') {
+        value = event.value
+      } else {
+        const next = this.events[i + 1]
+        const until = next && next.time <= time ? next.time : time
+        value =
+          event.value +
+          (value - event.value) * Math.exp(-(until - event.time) / event.tau)
+      }
     }
-    const before = events[this.#cursor - 1]
-    const after = events[this.#cursor]
-    if (!before) return this.value
-    if (!after || after.type === 'set') return before.value
-    const t = (time - before.time) / (after.time - before.time)
-    return after.type === 'linear'
-      ? before.value + (after.value - before.value) * t
-      : before.value * (after.value / before.value) ** t
+    return value
   }
 }
 
 class Node {
-  inputs: Node[] = []
+  outputs: Node[] = []
 
   connect(destination: Node) {
-    destination.inputs.push(this)
+    this.outputs.push(destination)
     return destination
   }
 
   disconnect() {
-    // Each note gets its own little graph, dropped once it is rendered.
-  }
-
-  pull(time: number): number {
-    let sum = 0
-    for (const input of this.inputs) sum += input.pull(time)
-    return sum
+    // Each piece gets its own graph, dropped once it is rendered.
   }
 }
 
 class Gain extends Node {
   gain = new Param(1)
-
-  override pull(time: number) {
-    return super.pull(time) * this.gain.at(time)
-  }
 }
 
-/** A lowpass biquad, by the Web Audio spec's formulas (Q in dB). */
-class Biquad extends Node {
-  type = 'lowpass'
-  frequency = new Param(350)
-  Q = new Param(1)
-  #x1 = 0
-  #x2 = 0
-  #y1 = 0
-  #y2 = 0
-  #coefficients = [0, 0, 0, 0, 0]
-  #age = Infinity
-
-  override pull(time: number) {
-    // Retune every 16 samples: the cutoff glides slowly.
-    if (this.#age++ >= 16) {
-      this.#age = 0
-      const f = Math.min(this.frequency.at(time), RATE / 2 - 1)
-      const w = (2 * Math.PI * f) / RATE
-      const alpha = Math.sin(w) / (2 * 10 ** (this.Q.at(time) / 20))
-      const cos = Math.cos(w)
-      const a0 = 1 + alpha
-      this.#coefficients = [
-        (1 - cos) / 2 / a0,
-        (1 - cos) / a0,
-        (1 - cos) / 2 / a0,
-        (-2 * cos) / a0,
-        (1 - alpha) / a0
-      ]
-    }
-    const [b0, b1, b2, a1, a2] = this.#coefficients as [
-      number,
-      number,
-      number,
-      number,
-      number
-    ]
-    const x = super.pull(time)
-    const y =
-      b0 * x + b1 * this.#x1 + b2 * this.#x2 - a1 * this.#y1 - a2 * this.#y2
-    this.#x2 = this.#x1
-    this.#x1 = x
-    this.#y2 = this.#y1
-    this.#y1 = y
-    return y
-  }
-}
-
-class Oscillator extends Node {
-  type: 'sine' | 'triangle' | 'square' | 'sawtooth' = 'sine'
-  frequency = new Param(440)
-  begin = Infinity
+class Source extends Node {
+  buffer: Samples | null = null
+  playbackRate = new Param(1)
+  when = 0
+  offset = 0
   end = Infinity
-  #phase = 0
 
-  start(time: number) {
-    this.begin = time
+  start(when: number, offset = 0) {
+    this.when = when
+    this.offset = offset
   }
 
-  stop(time: number) {
-    this.end = time
-  }
-
-  override pull(time: number) {
-    if (time < this.begin || time >= this.end) return 0
-    const phase = this.#phase
-    this.#phase = (phase + this.frequency.at(time) / RATE) % 1
-    switch (this.type) {
-      case 'sine':
-        return Math.sin(2 * Math.PI * phase)
-      case 'triangle':
-        return 4 * Math.abs(((phase + 0.75) % 1) - 0.5) - 1
-      case 'square':
-        return phase < 0.5 ? 1 : -1
-      case 'sawtooth':
-        return 2 * phase - 1
-    }
+  stop(when: number) {
+    this.end = when
   }
 }
 
 class OfflineContext {
   readonly sampleRate = RATE
   readonly currentTime = 0
-  oscillators: Oscillator[] = []
+  sources: Source[] = []
 
   createGain() {
     return new Gain()
   }
 
-  createBiquadFilter() {
-    return new Biquad()
-  }
-
-  createOscillator() {
-    const oscillator = new Oscillator()
-    this.oscillators.push(oscillator)
-    return oscillator
+  createBufferSource() {
+    const source = new Source()
+    this.sources.push(source)
+    return source
   }
 }
 
 // --- Rendering --------------------------------------------------------------
 
-/** Each note into `mix`, one at a time, so only its own nodes are live. */
-function renderNotes(notes: ReturnType<typeof improvise>['notes']) {
-  let end = 0
-  const voices: { output: Node; from: number; to: number }[] = []
+/** Every note into a stereo mix, dry, the way the browser would play it. */
+function renderNotes(
+  notes: readonly ImprovNote[],
+  buffers: ReadonlyMap<string, Samples>
+) {
+  const context = new OfflineContext()
+  const output = new Node()
   for (const note of notes) {
-    const context = new OfflineContext()
-    const output = new Node()
     scheduleNote(
       context as unknown as BaseAudioContext,
       output as unknown as AudioNode,
       note,
-      0
+      0,
+      buffers as unknown as ReadonlyMap<string, AudioBuffer>
     )
-    const from = Math.min(...context.oscillators.map((o) => o.begin))
-    const to = Math.max(...context.oscillators.map((o) => o.end))
-    voices.push({ output, from, to })
-    end = Math.max(end, to)
   }
-  const mix = new Float64Array(Math.ceil((end + 0.5) * RATE))
-  for (const { output, from, to } of voices) {
-    const last = Math.min(mix.length, Math.ceil(to * RATE))
-    for (let i = Math.floor(from * RATE); i < last; i++) {
-      mix[i]! += output.pull(i / RATE)
+
+  let end = 0
+  for (const source of context.sources) end = Math.max(end, source.end)
+  const frames = Math.ceil((end + 0.1) * RATE)
+  const mix: [Float64Array, Float64Array] = [
+    new Float64Array(frames),
+    new Float64Array(frames)
+  ]
+  for (const source of context.sources) {
+    const buffer = source.buffer!
+    // The gains between this source and the mix.
+    const gains: Param[] = []
+    let node: Node | undefined = source.outputs[0]
+    while (node && node !== output) {
+      if (node instanceof Gain) gains.push(node.gain)
+      node = node.outputs[0]
+    }
+    const rate = source.playbackRate.value
+    const left = buffer.getChannelData(0)
+    const right = buffer.getChannelData(1)
+    const from = Math.ceil(source.when * RATE)
+    const to = Math.min(frames, Math.ceil(source.end * RATE))
+    for (let i = from; i < to; i++) {
+      const t = i / RATE
+      // Linear interpolation between samples, as Chrome resamples.
+      const position = (source.offset + (t - source.when) * rate) * RATE
+      const j = Math.floor(position)
+      if (j + 1 >= buffer.length) break
+      const f = position - j
+      let gain = 1
+      for (const param of gains) gain *= param.at(t)
+      mix[0][i]! += (left[j]! + (left[j + 1]! - left[j]!) * f) * gain
+      mix[1][i]! += (right[j]! + (right[j + 1]! - right[j]!) * f) * gain
     }
   }
   return mix
 }
 
+/** In-place radix-2 FFT (inverse when `inverse`), lengths a power of two. */
+function fft(re: Float64Array, im: Float64Array, inverse = false) {
+  const n = re.length
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1
+    for (; j & bit; bit >>= 1) j ^= bit
+    j ^= bit
+    if (i < j) {
+      ;[re[i], re[j]] = [re[j]!, re[i]!]
+      ;[im[i], im[j]] = [im[j]!, im[i]!]
+    }
+  }
+  for (let size = 2; size <= n; size <<= 1) {
+    const angle = ((inverse ? 2 : -2) * Math.PI) / size
+    const wr = Math.cos(angle)
+    const wi = Math.sin(angle)
+    for (let start = 0; start < n; start += size) {
+      let cr = 1
+      let ci = 0
+      for (let k = 0; k < size / 2; k++) {
+        const a = start + k
+        const b = a + size / 2
+        const xr = re[b]! * cr - im[b]! * ci
+        const xi = re[b]! * ci + im[b]! * cr
+        re[b] = re[a]! - xr
+        im[b] = im[a]! - xi
+        re[a]! += xr
+        im[a]! += xi
+        const next = cr * wr - ci * wi
+        ci = cr * wi + ci * wr
+        cr = next
+      }
+    }
+  }
+  if (inverse) {
+    for (let i = 0; i < n; i++) {
+      re[i]! /= n
+      im[i]! /= n
+    }
+  }
+}
+
+/** `signal` convolved with `impulse` (what a ConvolverNode does). */
+function convolve(signal: Float64Array, impulse: Float32Array) {
+  let n = 1
+  while (n < signal.length + impulse.length) n <<= 1
+  const ar = new Float64Array(n)
+  const ai = new Float64Array(n)
+  const br = new Float64Array(n)
+  const bi = new Float64Array(n)
+  ar.set(signal)
+  br.set(impulse)
+  fft(ar, ai)
+  fft(br, bi)
+  for (let i = 0; i < n; i++) {
+    const r = ar[i]! * br[i]! - ai[i]! * bi[i]!
+    ai[i] = ar[i]! * bi[i]! + ai[i]! * br[i]!
+    ar[i] = r
+  }
+  fft(ar, ai, true)
+  return ar.subarray(0, signal.length + impulse.length - 1)
+}
+
 /**
  * PianoPhrase's limiter: a DynamicsCompressorNode at threshold -14 dB, ratio
  * 6, with the defaults for everything else (30 dB knee, 3 ms attack, 250 ms
- * release) and the automatic makeup gain browsers apply.
+ * release), the automatic makeup gain browsers apply, and one detector for
+ * both channels.
  */
-function limit(signal: Float64Array) {
+function limit([left, right]: [Float64Array, Float64Array]) {
   const threshold = -14
   const knee = 30
   const ratio = 6
@@ -266,37 +340,43 @@ function limit(signal: Float64Array) {
   const release = Math.exp(-1 / (0.25 * RATE))
   let reduction = 0
   let deepest = 0
-  const out = new Float64Array(signal.length)
-  for (const [i, x] of signal.entries()) {
-    const level = 20 * Math.log10(Math.abs(x) + 1e-9)
+  const out: [Float64Array, Float64Array] = [
+    new Float64Array(left.length),
+    new Float64Array(right.length)
+  ]
+  for (let i = 0; i < left.length; i++) {
+    const level =
+      20 * Math.log10(Math.max(Math.abs(left[i]!), Math.abs(right[i]!)) + 1e-9)
     const wanted = curve(level) - level
     const coefficient = wanted < reduction ? attack : release
     reduction = coefficient * reduction + (1 - coefficient) * wanted
     deepest = Math.min(deepest, reduction)
-    out[i] = x * 10 ** (reduction / 20) * makeup
+    const gain = 10 ** (reduction / 20) * makeup
+    out[0][i] = left[i]! * gain
+    out[1][i] = right[i]! * gain
   }
   return { out, deepest }
 }
 
-function wav(samples: Float64Array) {
-  const buffer = Buffer.alloc(44 + samples.length * 2)
+function wav([left, right]: [Float64Array, Float64Array]) {
+  const frames = left.length
+  const buffer = Buffer.alloc(44 + frames * 4)
   buffer.write('RIFF', 0)
-  buffer.writeUInt32LE(36 + samples.length * 2, 4)
+  buffer.writeUInt32LE(36 + frames * 4, 4)
   buffer.write('WAVEfmt ', 8)
   buffer.writeUInt32LE(16, 16)
   buffer.writeUInt16LE(1, 20) // PCM
-  buffer.writeUInt16LE(1, 22) // mono
+  buffer.writeUInt16LE(2, 22) // stereo
   buffer.writeUInt32LE(RATE, 24)
-  buffer.writeUInt32LE(RATE * 2, 28)
-  buffer.writeUInt16LE(2, 32)
+  buffer.writeUInt32LE(RATE * 4, 28)
+  buffer.writeUInt16LE(4, 32)
   buffer.writeUInt16LE(16, 34)
   buffer.write('data', 36)
-  buffer.writeUInt32LE(samples.length * 2, 40)
-  for (const [i, sample] of samples.entries()) {
-    buffer.writeInt16LE(
-      Math.round(Math.max(-1, Math.min(1, sample)) * 32_767),
-      44 + i * 2
-    )
+  buffer.writeUInt32LE(frames * 4, 40)
+  const pcm = (x: number) => Math.round(Math.max(-1, Math.min(1, x)) * 32_767)
+  for (let i = 0; i < frames; i++) {
+    buffer.writeInt16LE(pcm(left[i]!), 44 + i * 4)
+    buffer.writeInt16LE(pcm(right[i]!), 46 + i * 4)
   }
   return buffer
 }
@@ -327,25 +407,48 @@ const piece = improvise(seededRandom(seed), { key, texture })
 const out = values.out ?? join(tmpdir(), `improv-${piece.keyName}-${seed}.wav`)
 
 const started = performance.now()
-const dry = renderNotes(piece.notes)
-// PianoPhrase plays each piece through a 0.9 gain into the limiter.
-for (const [i, sample] of dry.entries()) dry[i] = sample * 0.9
-const { out: wet, deepest } = limit(dry)
+// Just the samples this piece asks for, as the site loads them.
+const files = samplesFor(piece.notes)
+const buffers = new Map(files.map((file) => [file, new Samples(file)]))
+const known = new Set(
+  PIANO_LAYERS.flatMap(({ layer }) =>
+    PIANO_ROOTS.map((root) => sampleFile(root, layer))
+  )
+)
+for (const file of files) {
+  if (!known.has(file)) throw new Error(`no such sample: ${file}`)
+}
+
+const dry = renderNotes(piece.notes, buffers)
+// The room: the dry piano plus the impulse response at ROOM_LEVEL.
+const impulse = roomImpulse(RATE)
+const mixed = dry.map((channel, c) => {
+  const wet = convolve(channel, impulse[c]!)
+  const sum = new Float64Array(wet.length)
+  for (let i = 0; i < wet.length; i++) {
+    // PianoPhrase plays each piece through a 0.9 gain into the room.
+    sum[i] = 0.9 * ((channel[i] ?? 0) + ROOM_LEVEL * wet[i]!)
+  }
+  return sum
+}) as [Float64Array, Float64Array]
+const { out: final, deepest } = limit(mixed)
 
 let peak = 0
 let clipped = 0
 let energy = 0
-for (const sample of wet) {
-  peak = Math.max(peak, Math.abs(sample))
-  if (Math.abs(sample) > 1) clipped++
-  energy += sample * sample
+for (const channel of final) {
+  for (const sample of channel) {
+    peak = Math.max(peak, Math.abs(sample))
+    if (Math.abs(sample) > 1) clipped++
+    energy += sample * sample
+  }
 }
-const rms = Math.sqrt(energy / wet.length)
+const rms = Math.sqrt(energy / (2 * final[0].length))
 
 if (out.toLowerCase().endsWith('.mp3')) {
   const scratch = mkdtempSync(join(tmpdir(), 'improv-'))
   const temporary = join(scratch, 'piece.wav')
-  writeFileSync(temporary, wav(wet))
+  writeFileSync(temporary, wav(final))
   const result = spawnSync(
     'ffmpeg',
     ['-loglevel', 'error', '-y', '-i', temporary, '-b:a', '192k', out],
@@ -354,7 +457,7 @@ if (out.toLowerCase().endsWith('.mp3')) {
   rmSync(scratch, { recursive: true, force: true })
   if (result.status !== 0) throw new Error('ffmpeg could not write the MP3')
 } else {
-  writeFileSync(out, wav(wet))
+  writeFileSync(out, wav(final))
 }
 
 const db = (x: number) => (20 * Math.log10(x)).toFixed(1)
@@ -362,7 +465,7 @@ const rightHand = piece.notes.filter((note) => note.key !== undefined).length
 console.log(
   [
     `${piece.keyName} major, ${piece.texture}, ${piece.bpm} bpm, seed ${seed}`,
-    `${piece.duration.toFixed(1)}s, ${piece.notes.length} notes (${rightHand} right hand, ${piece.notes.length - rightHand} left)`,
+    `${piece.duration.toFixed(1)}s, ${piece.notes.length} notes (${rightHand} right hand, ${piece.notes.length - rightHand} left), ${files.length} samples`,
     `peak ${db(peak)} dBFS${clipped ? ` (${clipped} samples clipped)` : ''}, RMS ${db(rms)} dBFS, limiter down to ${deepest.toFixed(1)} dB`,
     `wrote ${out} in ${((performance.now() - started) / 1000).toFixed(1)}s`
   ].join('\n')

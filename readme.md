@@ -342,4 +342,11 @@ README is kept as [readme-origin.md](readme-origin.md), and
 [contributing.md](contributing.md) covers local development and linking
 against `react-notion-x`.
 
-MIT. See [license](license).
+The homepage's piano improvisations play excerpts of the
+[Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3)
+by Alexander Holm, under
+[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). See
+[public/piano/README.md](public/piano/README.md) for what was changed.
+
+MIT, except the piano samples in `public/piano`, which stay CC BY 3.0. See
+[license](license).

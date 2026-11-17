@@ -130,6 +130,17 @@ export default withBundleAnalyzer({
               ]
             }
           ]),
+      // The homepage piano's samples never change in place (a changed sample
+      // gets a new name; see public/piano/README.md).
+      {
+        source: '/piano/:file(.*\\.mp3)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
       {
         source: '/giscus/:path',
         headers: [

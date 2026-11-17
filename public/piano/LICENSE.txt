@@ -1,0 +1,18 @@
+The MP3 files in this folder are excerpts of the Salamander Grand Piano V3
+by Alexander Holm (https://archive.org/details/SalamanderGrandPianoV3),
+trimmed, faded, level-matched and encoded to MP3 for this site. They are
+licensed under the Creative Commons Attribution 3.0 Unported License.
+
+To view a copy of this license, visit
+https://creativecommons.org/licenses/by/3.0/ or send a letter to Creative
+Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+Original credit, from the Salamander Grand Piano README:
+
+  Salamander Grand Piano V3
+  Yamaha C5
+  Author: Alexander Holm
+  Licence: CC-by, http://creativecommons.org/licenses/by/3.0/
+
+The rest of this repository is under its own license (see /license at the
+repository root); that license does not apply to these samples.
