@@ -3,8 +3,23 @@
    struck key takes the accent color and, when motion is welcome, dips a
    hair like a pressed key. `top` on a relatively positioned inline moves
    only that letter, so nothing around it reflows. */
-.phrase {
-  cursor: pointer;
+.phrase[role='button'] {
+  /* SVG first (sharp where supported), then 1x/2x PNGs, then pointer. */
+  cursor: url('./music-cursor.svg') 8 17, url('./music-cursor.png') 8 17, pointer;
+  cursor:
+    image-set(
+      url('./music-cursor.png') 1x,
+      url('./music-cursor-2x.png') 2x
+    )
+      8 17,
+    pointer;
+  cursor:
+    -webkit-image-set(
+      url('./music-cursor.png') 1x,
+      url('./music-cursor-2x.png') 2x
+    )
+      8 17,
+    pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
