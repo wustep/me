@@ -15,13 +15,16 @@ export default function ContactPage() {
       path='/contact'
     >
       <p>
-        You can find me as @wustep on <a href={xUrl}>X</a>,{' '}
-        <a href={githubUrl}>GitHub</a>, or <a href={linkedinUrl}>LinkedIn</a>,
-        or reach out to me via{' '}
+        You can find me as @wustep on <a href={xUrl}>X</a>
+        {', '}
+        <a href={githubUrl}>GitHub</a>
+        {', or '}
+        <a href={linkedinUrl}>LinkedIn</a>
+        {', or reach out to me via '}
         <a href={notionContactUrl} rel='noopener noreferrer'>
           this contact form
         </a>
-        .
+        {'.'}
       </p>
       <SanFranciscoTime />
     </SiteInfoPage>
