@@ -11,15 +11,15 @@ export default function ContactPage() {
   return (
     <SiteInfoPage
       title='Contact'
-      description='You can find me as @wustep on X, GitHub, or LinkedIn, or reach out to me via this contact form.'
+      description='You can find me as @wustep on X, LinkedIn, or GitHub, or reach out to me via this contact form.'
       path='/contact'
     >
       <p>
         You can find me as @wustep on <a href={xUrl}>X</a>
         {', '}
-        <a href={githubUrl}>GitHub</a>
-        {', or '}
         <a href={linkedinUrl}>LinkedIn</a>
+        {', or '}
+        <a href={githubUrl}>GitHub</a>
         {', or reach out to me via '}
         <a href={notionContactUrl} rel='noopener noreferrer'>
           this contact form
