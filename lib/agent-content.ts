@@ -119,7 +119,7 @@ export function getContactMarkdown() {
 
 ${siteUrl}/contact
 
-I'm easiest to find as wustep on [X](${xUrl}), [GitHub](${githubUrl}), or [LinkedIn](${linkedinUrl}). There's also a [Notion contact form](${notionContactUrl}) if you'd rather not reply in public.
+You can find me as @wustep on [X](${xUrl}), [GitHub](${githubUrl}), or [LinkedIn](${linkedinUrl}), or reach out to me via [this contact form](${notionContactUrl}).
 `
 }
 
