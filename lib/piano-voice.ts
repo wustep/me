@@ -5,8 +5,8 @@ import type { ImprovNote } from './improvise'
  * lowpass that closes as the note decays, with a hammer-like fast first
  * decay. No samples and no dependencies, so it costs nothing until played.
  *
- * Every note rings out like a held sustain pedal; `duration` only matters to
- * whoever is drawing the keys.
+ * Every note rings out like a held sustain pedal, and a note whose key or
+ * pedal is held longer than that rings on until it is released.
  */
 
 const PARTIALS: Array<[ratio: number, type: OscillatorType, level: number]> = [
@@ -15,9 +15,13 @@ const PARTIALS: Array<[ratio: number, type: OscillatorType, level: number]> = [
   [3, 'sine', 0.09]
 ]
 
-/** How long a note rings, in seconds. Low strings ring longer. */
-export function ringSeconds(midi: number) {
-  return Math.min(2.6, Math.max(1, 2.6 - (midi - 43) / 26))
+/**
+ * How long a note rings, in seconds: its natural decay (low strings ring
+ * longer), or as long as the key or pedal holds it, up to 8 seconds.
+ */
+export function ringSeconds(midi: number, held = 0) {
+  const natural = Math.min(2.6, Math.max(1, 2.6 - (midi - 43) / 26))
+  return Math.max(natural, Math.min(held, 8) + 0.25)
 }
 
 /**
@@ -32,7 +36,7 @@ export function scheduleNote(
 ) {
   const frequency = 440 * 2 ** ((note.midi - 69) / 12)
   const start = at + note.start
-  const ring = ringSeconds(note.midi)
+  const ring = ringSeconds(note.midi, note.duration)
   const peak = 0.34 * note.velocity
 
   const envelope = context.createGain()
