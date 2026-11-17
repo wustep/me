@@ -275,14 +275,12 @@ export function AboutPage() {
                 <span className={styles.bioHint}>roguelike deckbuilders</span>
               </Tooltip>
               ,{' '}
-              <Tooltip
-                inline
-                label='Click to hear a lil improv, new every time'
+              <PianoPhrase
+                className={styles.bioHint}
+                aria-label='Play a piano improvisation'
               >
-                <PianoPhrase className={styles.bioHint}>
-                  piano improvisation
-                </PianoPhrase>
-              </Tooltip>
+                piano improvisation
+              </PianoPhrase>
               , and making{' '}
               <Tooltip inline label='Check out my playground of lil tech demos'>
                 <Link href='/playground' className={styles.bioHint}>
