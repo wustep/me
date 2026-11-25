@@ -397,16 +397,80 @@ h6 {
 /**
  * ========== Notion Page Header ========== 
  */
+/* Fluid from 34px on a phone to 44px (a fixed 44px ran a long title to five
+   lines there), with its lines balanced at every width. */
 .notion-title {
-  font-size: 2.75em;
+  font-size: clamp(2.125rem, 1.5rem + 2.6vw, 2.75rem);
+  line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 0.25em;
+  text-wrap: balance;
+}
+
+/* A post's title may run a little wider than the reading column below it. */
+@media (min-width: 768px) {
+  .notion-page:not(.index-page, .auxiliary-page, .notion-full-width)
+    > .notion-title {
+    width: calc(100% + 5rem);
+    align-self: center;
+  }
 }
 
 /** Extra for main page */
 .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-title {
   font-size: 3em;
   margin-bottom: 0.5em;
+}
+
+/**
+ * ========== Reading Column ==========
+ * Prose is 17px Inter on the 628px column set by --notion-max-width in
+ * notion.css. Listing pages (.index-page, .auxiliary-page) keep 16px.
+ */
+.notion-page:not(.index-page, .auxiliary-page) .notion-page-content {
+  font-size: 1.0625rem;
+}
+
+/* Short blocks don't end on a lone word. Paragraphs keep the default wrap:
+   `pretty` re-rags their last four lines, which shows in a narrow column. */
+.notion-quote,
+.notion-asset-caption {
+  text-wrap: pretty;
+}
+
+/**
+ * Headings. Crimson Pro's x-height is about three quarters of Inter's, so
+ * react-notion-x's 1.25em H3 was no taller than the body text beside it and
+ * the three levels read as one. Each level now steps up by about a quarter,
+ * with more room above than below so a heading belongs to what follows.
+ */
+.notion-h {
+  line-height: 1.2;
+  margin-bottom: 0.1em;
+  text-wrap: balance;
+}
+
+.notion-h1 {
+  font-size: 2.1em;
+  letter-spacing: -0.015em;
+  margin-top: 1.3em;
+}
+
+.notion-h2 {
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+  margin-top: 1.3em;
+}
+
+.notion-h3 {
+  font-size: 1.35em;
+  margin-top: 1.25em;
+}
+
+/* A divider already opens the section; don't stack a full heading margin
+   on top of it. */
+.notion-hr + .notion-h {
+  margin-top: 0.5em;
 }
 
 /**
