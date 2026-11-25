@@ -1,15 +1,13 @@
 /* prism theme adjustments */
 
-.notion-code {
-  background-color: rgba(249, 250, 251, 1);
-  border: 1px solid rgba(229, 231, 235, 1);
-  border-radius: 0.375rem;
-  padding: 1.5em !important;
-}
-
+/* @wustep: the site's own quiet surface and hairline in both themes. The
+   dark block was Tailwind's navy gray-900 on a neutral near-black page. */
+.notion-code,
 .dark-mode .notion-code {
-  background-color: rgba(17, 24, 39, 1);
-  border-color: rgba(55, 65, 81, 1);
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-divider);
+  border-radius: var(--radius-md);
+  padding: 1.5em !important;
 }
 .notion code {
   color: rgba(31, 41, 55, 1);
@@ -37,7 +35,13 @@
 .token.prolog {
   color: rgba(55, 65, 81, 1);
 }
+/* @wustep: light-mode syntax colors are one or two steps darker than the
+   Tailwind 500s they replace, which measured 2.1:1 to 4.1:1 on the block
+   (AA text needs 4.5:1). Dark mode keeps the 500s, bar the string violet. */
 .token.comment {
+  color: #467a39;
+}
+.dark-mode .token.comment {
   color: #5b9b4c;
 }
 .dark-mode .token.cdata,
@@ -58,7 +62,16 @@
 .token.property,
 .token.symbol,
 .token.tag {
-  color: rgba(16, 185, 129, 1);
+  color: #047857;
+}
+.dark-mode .token.boolean,
+.dark-mode .token.constant,
+.dark-mode .token.deleted,
+.dark-mode .token.number,
+.dark-mode .token.property,
+.dark-mode .token.symbol,
+.dark-mode .token.tag {
+  color: #10b981;
 }
 .token.attr-name,
 .token.builtin,
@@ -66,28 +79,57 @@
 .token.inserted,
 .token.selector,
 .token.string {
-  color: rgba(139, 92, 246, 1);
+  color: #7c3aed;
+}
+.dark-mode .token.attr-name,
+.dark-mode .token.builtin,
+.dark-mode .token.char,
+.dark-mode .token.inserted,
+.dark-mode .token.selector,
+.dark-mode .token.string {
+  color: #a78bfa;
 }
 .language-css .token.string,
 .style .token.string,
 .token.entity,
 .token.operator,
 .token.url {
-  color: rgba(245, 158, 11, 1);
+  color: #b45309;
+}
+.dark-mode .language-css .token.string,
+.dark-mode .style .token.string,
+.dark-mode .token.entity,
+.dark-mode .token.operator,
+.dark-mode .token.url {
+  color: #f59e0b;
 }
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: rgba(59, 130, 246, 1);
+  color: #2563eb;
+}
+.dark-mode .token.atrule,
+.dark-mode .token.attr-value,
+.dark-mode .token.keyword {
+  color: #3b82f6;
 }
 .token.class-name,
 .token.function {
-  color: rgba(236, 72, 153, 1);
+  color: #be185d;
+}
+.dark-mode .token.class-name,
+.dark-mode .token.function {
+  color: #ec4899;
 }
 .token.important,
 .token.regex,
 .token.variable {
-  color: rgba(245, 158, 11, 1);
+  color: #b45309;
+}
+.dark-mode .token.important,
+.dark-mode .token.regex,
+.dark-mode .token.variable {
+  color: #f59e0b;
 }
 code[class*='language-'],
 pre[class*='language-'] {
@@ -97,12 +139,11 @@ pre[class*='language-'] {
 .dark-mode pre[class*='language-'] {
   color: rgba(249, 250, 251, 1);
 }
-pre::-webkit-scrollbar {
-  display: none;
-}
+/* @wustep: a thin scrollbar instead of none, so a block that overflows
+   sideways shows that it scrolls. */
 pre {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 .token.operator,
 .token.entity,
