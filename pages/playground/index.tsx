@@ -101,7 +101,7 @@ function useSpotlightCover(
 /* Quiet chip for the card's quick links; sits above the stretched card link
    so it stays clickable, and brightens on its own hover. */
 const quickLinkClass =
-  'flex size-7 items-center justify-center rounded-full border border-border/60 bg-background/75 text-muted-foreground backdrop-blur-sm transition-colors hover:border-border hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+  'flex size-7 items-center justify-center rounded-full border border-border/60 bg-background/75 text-muted-foreground backdrop-blur-sm transition-colors hover:border-border hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground'
 
 const parseDate = (dateStr?: string): Date => {
   if (!dateStr) return new Date(0)
@@ -155,7 +155,7 @@ export default function PlaygroundPage() {
             <Link
               href={project.url}
               aria-label={project.title}
-              className='absolute inset-0 z-[1] rounded-[16px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+              className='absolute inset-0 z-[1] rounded-[16px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background'
             />
             <CoverCell>
               {project.CoverComponent ? (
@@ -176,7 +176,11 @@ export default function PlaygroundPage() {
               )}
             </CoverCell>
             <div className='notion-collection-card-body p-4 flex-1'>
-              <h3 className='font-semibold mb-1'>{project.title}</h3>
+              {/* The /writing gallery cards' title scale (styles/wustep.css):
+                  at 16px, Crimson read smaller than the 14px line under it. */}
+              <h3 className='mb-1 text-[1.15rem] leading-[1.3] font-semibold tracking-[-0.01em]'>
+                {project.title}
+              </h3>
               <p className='text-sm text-muted-foreground'>
                 {project.summary ?? plainDescription(project.description)}
               </p>
