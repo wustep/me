@@ -249,7 +249,7 @@ export function AboutPage() {
             />
             {/* Keep in sync with bioText above */}
             <p className={styles.bio}>
-              I&apos;m Stephen, a product &amp; design engineer who now also
+              I&rsquo;m Stephen, a product &amp; design engineer who now also
               manages engineers. I think a lot about tools for thought, software
               design, and{' '}
               <Tooltip

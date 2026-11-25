@@ -40,11 +40,11 @@ export function SanFranciscoTime() {
       <span>
         {now && line ? (
           <>
-            It&apos;s <time dateTime={now.toISOString()}>{line.time}</time> in
+            It&rsquo;s <time dateTime={now.toISOString()}>{line.time}</time> in
             San Francisco{line.rest}
           </>
         ) : (
-          <>I&apos;m in San Francisco, on Pacific time.</>
+          <>I&rsquo;m in San Francisco, on Pacific time.</>
         )}
       </span>
     </p>

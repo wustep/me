@@ -28,6 +28,7 @@ import { getCanonicalPageUrl, mapPageUrl } from '@/lib/map-page-url'
 import { getPageShareOverride } from '@/lib/page-share-overrides'
 import { searchNotion } from '@/lib/search-notion'
 import { shareCardUrl } from '@/lib/share-card'
+import { smartenRecordMapQuotes } from '@/lib/smart-quotes'
 import { useDarkMode } from '@/lib/use-dark-mode'
 import { useSearchParam } from '@/lib/use-search-param'
 import { cn } from '@/lib/utils'
@@ -151,6 +152,13 @@ export function NotionPage({
   const externalUrlMap = React.useMemo(
     () =>
       recordMap ? getExternalUrlMap(recordMap) : new Map<string, string>(),
+    [recordMap]
+  )
+
+  // What the renderer draws: the same blocks with typographic quotes in
+  // their prose. Slugs, URLs and metadata keep reading `recordMap` itself.
+  const displayRecordMap = React.useMemo(
+    () => (recordMap ? smartenRecordMapQuotes(recordMap) : recordMap),
     [recordMap]
   )
 
@@ -394,7 +402,7 @@ export function NotionPage({
         )}
         darkMode={isDarkMode}
         components={components}
-        recordMap={recordMap}
+        recordMap={displayRecordMap!}
         rootPageId={site.rootNotionPageId}
         rootDomain={site.domain}
         fullPage={!isLiteMode}

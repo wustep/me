@@ -105,14 +105,14 @@ describe('sfTimeLine', () => {
     // A visitor in London (UTC+0) while it is 3:12 am in San Francisco.
     expect(sfTimeLine(new Date('2026-11-14T11:12:00Z'), 0)).toEqual({
       time: `3:12${NBSP}am`,
-      rest: ", 8 hours behind you, so I'm probably asleep."
+      rest: ', 8 hours behind you, so I’m probably asleep.'
     })
   })
 
   it('leaves the gap out for a visitor on Pacific time', () => {
     expect(sfTimeLine(new Date('2026-07-01T19:30:00Z'), -420)).toEqual({
       time: `12:30${NBSP}pm`,
-      rest: ", so I'm probably in the middle of my workday."
+      rest: ', so I’m probably in the middle of my workday.'
     })
   })
 
@@ -123,7 +123,7 @@ describe('sfTimeLine', () => {
       const date = new Date(start + step * 15 * 60_000)
       for (const visitorOffset of [-720, -480, 0, 330, 345, 765, 840]) {
         const { time, rest } = sfTimeLine(date, visitorOffset)
-        const line = `It's ${time} in San Francisco${rest}`
+        const line = `It’s ${time} in San Francisco${rest}`
         expect(line.length).toBeLessThanOrEqual(LONGEST_SF_TIME_LINE.length)
       }
     }

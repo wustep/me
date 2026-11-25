@@ -126,7 +126,7 @@ export function sfTimeLine(
   const apart = describeHoursApart(moment.offsetMinutes, visitorOffsetMinutes)
   return {
     time: formatSfTime(moment),
-    rest: `${apart ? `, ${apart},` : ','} so I'm ${guessActivity(moment)}.`
+    rest: `${apart ? `, ${apart},` : ','} so I’m ${guessActivity(moment)}.`
   }
 }
 
@@ -136,4 +136,4 @@ export function sfTimeLine(
  * clock mounts and nothing below it ever moves.
  */
 export const LONGEST_SF_TIME_LINE =
-  "It's 10:00\u00A0pm in San Francisco, 12½ hours behind you, so I'm probably at the piano or mid-run in a deckbuilder."
+  'It’s 10:00\u00A0pm in San Francisco, 12½ hours behind you, so I’m probably at the piano or mid-run in a deckbuilder.'
