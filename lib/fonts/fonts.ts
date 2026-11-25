@@ -16,7 +16,20 @@ export const inter = localFont({
   src: [
     { path: './files/inter/inter-latin.woff2', weight: '400', style: 'normal' },
     { path: './files/inter/inter-latin.woff2', weight: '500', style: 'normal' },
-    { path: './files/inter/inter-latin.woff2', weight: '600', style: 'normal' }
+    { path: './files/inter/inter-latin.woff2', weight: '600', style: 'normal' },
+    // Notion prose is set in Inter and uses italics for emphasis. The site
+    // turns font synthesis off, so without a real italic that text stays
+    // upright. Only 400 and 600 occur: regular text and bold.
+    {
+      path: './files/inter/inter-latin-italic.woff2',
+      weight: '400',
+      style: 'italic'
+    },
+    {
+      path: './files/inter/inter-latin-italic.woff2',
+      weight: '600',
+      style: 'italic'
+    }
   ],
   variable: '--font-sans',
   display: 'swap',

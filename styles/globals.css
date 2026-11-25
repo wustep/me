@@ -271,10 +271,11 @@ html {
 }
 
 body {
-  --notion-font:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', 'Noto Sans', sans-serif;
+  /* react-notion-x sets every Notion block in --notion-font. The starter
+     kit pointed it at the OS UI font, so article prose rendered in San
+     Francisco / Segoe UI / Roboto while its captions, metadata and table of
+     contents were Inter. Prose now uses the site sans like everything else. */
+  --notion-font: var(--font-sans);
   font-family: var(--notion-font);
   overflow-x: hidden;
 }

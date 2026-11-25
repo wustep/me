@@ -37,7 +37,7 @@ the fonts load.
 
 | Family         | Files                                                       | Axes in file            | Used by                              |
 | -------------- | ----------------------------------------------------------- | ----------------------- | ------------------------------------ |
-| Inter          | `inter/inter-latin.woff2` (v20)                             | wght 100–900            | `--font-sans`, site-wide             |
+| Inter          | `inter/inter-latin{,-italic}.woff2` (v20)                   | wght 100–900            | `--font-sans`, site-wide             |
 | Onest          | `onest/onest-latin.woff2` (v11)                             | wght 100–900            | `--font-display`, site-wide          |
 | Crimson Pro    | `crimson-pro/crimson-pro-latin{,-italic}.woff2` (v28)       | wght 200–900            | `--font-serif`, site-wide            |
 | Source Serif 4 | `source-serif-4/source-serif-4-latin{,-italic}.woff2` (v15) | wght 200–900, opsz 8–60 | `--pm-serif`, /prompting             |
