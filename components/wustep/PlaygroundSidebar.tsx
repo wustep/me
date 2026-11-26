@@ -185,7 +185,7 @@ export function PlaygroundSidebar({
           <span className='flex w-full items-center justify-between gap-2 text-muted-foreground'>
             <span className='truncate'>{item.title}</span>
             {item.year ? (
-              <span className='text-[11px]'>{item.year}</span>
+              <span className='text-[11px] tabular-nums'>{item.year}</span>
             ) : null}
           </span>
         ) : (
@@ -204,7 +204,7 @@ export function PlaygroundSidebar({
               ) : null}
             </span>
             {item.year ? (
-              <span className='text-[11px] text-muted-foreground'>
+              <span className='text-[11px] tabular-nums text-muted-foreground'>
                 {item.year}
               </span>
             ) : null}

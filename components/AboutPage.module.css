@@ -522,6 +522,8 @@ a.bioHint {
   font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 500;
+  /* Right-aligned and stacked: equal-width digits line the years up. */
+  font-variant-numeric: tabular-nums;
   color: var(--about-muted);
   white-space: nowrap;
 }

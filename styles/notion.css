@@ -12,7 +12,10 @@
  */
 
 .notion {
-  --notion-max-width: 720px;
+  /* @wustep: 792px, from 720px. With 16px side padding that is a 756px text
+     column: about 90 characters of 17px Inter a line, the measure the site
+     had at 16px in the system font on 720px. */
+  --notion-max-width: 792px;
   --notion-header-height: 54px;
 }
 
@@ -260,12 +263,6 @@
 .notion-block-ab9a258d6cf444f3bb40dc2600feae91 .notion-page-link {
   justify-content: center;
   padding: 2em;
-}
-
-.notion-code {
-  background: rgba(249, 250, 251, 1);
-  border: 1px solid rgba(229, 231, 235, 1);
-  border-radius: 0.375rem;
 }
 
 .notion-link {

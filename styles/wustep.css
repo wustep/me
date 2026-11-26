@@ -397,16 +397,82 @@ h6 {
 /**
  * ========== Notion Page Header ========== 
  */
+/* Fluid from 34px on a phone to 44px (a fixed 44px ran a long title to five
+   lines there), with its lines balanced at every width. */
 .notion-title {
-  font-size: 2.75em;
+  font-size: clamp(2.125rem, 1.5rem + 2.6vw, 2.75rem);
+  line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 0.25em;
+  text-wrap: balance;
+}
+
+/* A post's title may run a little wider than the reading column below it,
+   from the width where the viewport has room for the extra 5rem. */
+@media (min-width: 900px) {
+  .notion-page:not(.index-page, .auxiliary-page, .notion-full-width)
+    > .notion-title {
+    width: calc(100% + 5rem);
+    align-self: center;
+  }
 }
 
 /** Extra for main page */
 .notion-block-2bc5cb08cf2c8036a1e3cddcb2c61d97 .notion-title {
   font-size: 3em;
   margin-bottom: 0.5em;
+}
+
+/**
+ * ========== Reading Column ==========
+ * Prose is 17px Inter on the 756px column set by --notion-max-width in
+ * notion.css, about 90 characters a line. Listing pages (.index-page,
+ * .auxiliary-page) keep 16px.
+ */
+.notion-page:not(.index-page, .auxiliary-page) .notion-page-content {
+  font-size: 1.0625rem;
+}
+
+/* Short blocks don't end on a lone word. Paragraphs keep the default wrap:
+   `pretty` re-rags their last four lines, which shows in a narrow column. */
+.notion-quote,
+.notion-asset-caption {
+  text-wrap: pretty;
+}
+
+/**
+ * Headings. Crimson Pro's x-height is about three quarters of Inter's, so
+ * react-notion-x's 1.25em H3 was no taller than the body text beside it and
+ * the three levels read as one. Each level now steps up by about a quarter,
+ * with more room above than below so a heading belongs to what follows.
+ */
+.notion-h {
+  line-height: 1.2;
+  margin-bottom: 0.1em;
+  text-wrap: balance;
+}
+
+.notion-h1 {
+  font-size: 2.1em;
+  letter-spacing: -0.015em;
+  margin-top: 1.3em;
+}
+
+.notion-h2 {
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+  margin-top: 1.3em;
+}
+
+.notion-h3 {
+  font-size: 1.35em;
+  margin-top: 1.25em;
+}
+
+/* A divider already opens the section; don't stack a full heading margin
+   on top of it. */
+.notion-hr + .notion-h {
+  margin-top: 0.5em;
 }
 
 /**
@@ -461,6 +527,20 @@ h6 {
   text-overflow: ellipsis;
 }
 
+/* In the aside, a long heading wraps instead of ending in an ellipsis that
+   nothing expands. Its width follows the room beside the column: the aside
+   is (100vw - --notion-max-width) / 2 + 16px wide with the list centered in
+   it, so this keeps 24px or more between the text and the list from 1300px,
+   where the aside appears, and reaches the full 250px at 1412px. */
+.notion-aside-table-of-contents .notion-table-of-contents-item-body {
+  max-width: clamp(
+    194px,
+    calc((100vw - var(--notion-max-width)) / 2 - 60px),
+    250px
+  );
+  text-wrap: balance;
+}
+
 .notion-aside-table-of-contents .notion-table-of-contents-item {
   /* Room for descenders; overflow: hidden on the body clips a tighter box */
   line-height: 1.35;
@@ -469,6 +549,7 @@ h6 {
   font-size: 13px;
   color: var(--w-secondary);
   opacity: 1;
+  white-space: normal;
   transition: color 150ms ease;
 }
 
@@ -483,28 +564,35 @@ h6 {
   }
 }
 
+/* Color alone marks the current section. A heavier weight is wider, and now
+   that entries wrap it could push one onto a second line as you scroll. */
 .notion-aside-table-of-contents .notion-table-of-contents-active-item {
   color: var(--w-primary) !important;
-  font-weight: 500;
 }
 
 /**
  * ========== Links ==========
- * Thin currentColor underline instead of the stacked 1px border + thick
- * purple/pink hover gradient (notion.css + the previous override here).
+ * A real underline in the text's own ink, set just under the baseline so it
+ * reads as part of the word and breaks around descenders. (It was an inset
+ * box-shadow along the bottom of the line box: lower, under the trailing
+ * space of a wrapped link, and at 32% ink too faint to pick a link out.)
  */
 .notion-link {
   border-bottom: none;
   background-image: none;
-  box-shadow: inset 0 -1px 0 0 color-mix(in srgb, currentColor 32%, transparent);
-  transition: box-shadow 160ms ease;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+  transition: text-decoration-color 160ms ease;
 }
 
 .notion-link:focus,
 .notion-link:hover {
   border-bottom-color: transparent;
   background-image: none;
-  box-shadow: inset 0 -1px 0 0 currentColor;
+  text-decoration-color: currentColor;
 }
 
 /**
@@ -515,7 +603,7 @@ h6 {
 .notion-link:has([class*='_background']),
 [class$='_background'] > .notion-link {
   border-color: transparent;
-  box-shadow: none;
+  text-decoration: none;
   align-items: center;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -780,6 +868,7 @@ span[class*='_background'] {
 }
 .notion-collection-row-property .notion-property-relation .notion-link {
   border-bottom: 0.05em solid;
+  text-decoration: none;
 }
 
 /**
@@ -1105,6 +1194,11 @@ main[tabindex='-1']:focus {
   flex-shrink: 0;
 }
 
+/* Dates sit in right-aligned columns; equal-width digits line them up. */
+.notion-property-date {
+  font-variant-numeric: tabular-nums;
+}
+
 @media screen and (min-width: 769px) {
   .notion-list-item {
     padding: 0 4px 0 0 /* from 0 4px */;
@@ -1398,6 +1492,9 @@ main[tabindex='-1']:focus {
   padding: 0.1em 0 0.1em 0.9em;
   border-left: 2px solid color-mix(in srgb, currentColor 30%, transparent);
   color: var(--w-primary);
+  /* Most quotes open with a quotation mark. Hang it in the padding so the
+     words line up down the left edge (Safari only, for now). */
+  hanging-punctuation: first;
 }
 
 /**
@@ -1566,10 +1663,10 @@ main[tabindex='-1']:focus {
   height: 0.7em;
 }
 
-/* Floated left of the heading with a negative margin; below the
- * 720px page-padding breakpoint there isn't enough gutter for the
- * icon, so it hangs off-screen. Hide it there; desktop hover stays. */
-@media screen and (max-width: 720px) {
+/* Floated left of the heading with a negative margin; below 850px the
+ * 792px page leaves too little gutter for the icon, so it hangs
+ * off-screen. Hide it there; desktop hover stays. */
+@media screen and (max-width: 850px) {
   .notion-hash-link {
     display: none;
   }

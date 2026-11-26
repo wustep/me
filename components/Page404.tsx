@@ -25,7 +25,7 @@ export function Page404({ site, pageId, error }: types.PageProps) {
           <h1 className={styles.heading}>Page not found</h1>
 
           <p className={styles.description}>
-            The page you&apos;re looking for doesn&apos;t exist or has been
+            The page you&rsquo;re looking for doesn&rsquo;t exist or has been
             moved. Maybe wander somewhere else instead?
           </p>
 
@@ -65,7 +65,8 @@ export function Page404({ site, pageId, error }: types.PageProps) {
               ) : (
                 pageId && (
                   <p>
-                    Notion page &quot;{pageId}&quot; is not publicly accessible.
+                    Notion page &ldquo;{pageId}&rdquo; is not publicly
+                    accessible.
                   </p>
                 )
               )}
