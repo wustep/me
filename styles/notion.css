@@ -12,9 +12,10 @@
  */
 
 .notion {
-  /* @wustep: 664px, from 720px. With 16px side padding that is a 628px text
-     column: about 75 characters of 17px Inter a line (it was about 90). */
-  --notion-max-width: 664px;
+  /* @wustep: 792px, from 720px. With 16px side padding that is a 756px text
+     column: about 90 characters of 17px Inter a line, the measure the site
+     had at 16px in the system font on 720px. */
+  --notion-max-width: 792px;
   --notion-header-height: 54px;
 }
 

@@ -407,8 +407,9 @@ h6 {
   text-wrap: balance;
 }
 
-/* A post's title may run a little wider than the reading column below it. */
-@media (min-width: 768px) {
+/* A post's title may run a little wider than the reading column below it,
+   from the width where the viewport has room for the extra 5rem. */
+@media (min-width: 900px) {
   .notion-page:not(.index-page, .auxiliary-page, .notion-full-width)
     > .notion-title {
     width: calc(100% + 5rem);
@@ -424,8 +425,9 @@ h6 {
 
 /**
  * ========== Reading Column ==========
- * Prose is 17px Inter on the 628px column set by --notion-max-width in
- * notion.css. Listing pages (.index-page, .auxiliary-page) keep 16px.
+ * Prose is 17px Inter on the 756px column set by --notion-max-width in
+ * notion.css, about 90 characters a line. Listing pages (.index-page,
+ * .auxiliary-page) keep 16px.
  */
 .notion-page:not(.index-page, .auxiliary-page) .notion-page-content {
   font-size: 1.0625rem;
@@ -525,12 +527,17 @@ h6 {
   text-overflow: ellipsis;
 }
 
-/* In the aside, a long heading wraps to a second line instead of ending in
-   an ellipsis that nothing expands; only a third line is clamped. */
+/* In the aside, a long heading wraps instead of ending in an ellipsis that
+   nothing expands. Its width follows the room beside the column: the aside
+   is (100vw - --notion-max-width) / 2 + 16px wide with the list centered in
+   it, so this keeps 24px or more between the text and the list from 1300px,
+   where the aside appears, and reaches the full 250px at 1412px. */
 .notion-aside-table-of-contents .notion-table-of-contents-item-body {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  max-width: clamp(
+    194px,
+    calc((100vw - var(--notion-max-width)) / 2 - 60px),
+    250px
+  );
   text-wrap: balance;
 }
 
@@ -1656,10 +1663,10 @@ main[tabindex='-1']:focus {
   height: 0.7em;
 }
 
-/* Floated left of the heading with a negative margin; below the
- * 720px page-padding breakpoint there isn't enough gutter for the
- * icon, so it hangs off-screen. Hide it there; desktop hover stays. */
-@media screen and (max-width: 720px) {
+/* Floated left of the heading with a negative margin; below 850px the
+ * 792px page leaves too little gutter for the icon, so it hangs
+ * off-screen. Hide it there; desktop hover stays. */
+@media screen and (max-width: 850px) {
   .notion-hash-link {
     display: none;
   }
